@@ -1,0 +1,28 @@
+@font-face {
+	font-family: 'icomoon';
+	src: url('../fonts/icomoon.woff?-n1boxl') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+  font-family: 'Open Sans', Arial,sans-serif;
+  color: #2c2c2c;
+  margin: 0;
+  padding: 10px;
+}
+
+.chrome-bootstrap {
+  font-family: 'Open Sans', Arial,sans-serif;
+}
+
+.navigation h1:before {
+  font-family: "icomoon";
+  content: "\e600";
+  position: absolute;
+  color: #d0d0d0;
+  top: 7px;
+  font-size: 3rem;
+  z-index: -1;
+  left: 40px;
+}
