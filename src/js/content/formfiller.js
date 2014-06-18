@@ -4,7 +4,7 @@ var FormFiller = {
     Errors.init();
     var domNode = document.querySelector(selector);
     if (!domNode) {
-      Errors.add("Could not find a field by selector '" + selector + "'");
+      Errors.add("Could not find a field (" + selector + ")");
       return false;
     }
 
