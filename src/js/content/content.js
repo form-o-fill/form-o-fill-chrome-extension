@@ -10,7 +10,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     if (message.action === "fillField" && message.selector && message.value) {
       console.log("Filling " + message.selector + " with value " + message.value);
       FormFiller.fill(message.selector, message.value);
-      console.log(Errors.errors);
     }
   });
 });

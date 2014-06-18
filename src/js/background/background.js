@@ -44,7 +44,6 @@
     fillWithRuleId: function(ruleId) {
       var formFiller = this;
       ruleId = parseInt(ruleId, 10);
-      Utils.log("Filling this form with ruleId: " + ruleId);
       Rules.findById(ruleId).then(function (rule) {
         formFiller.applyRule(rule);
       });
