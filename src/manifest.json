@@ -29,10 +29,10 @@
   "options_page": "html/options.html",
   "background": {
     "scripts": [
-      "js/background/jsonf.js", 
-      "js/background/utils.js", 
-      "js/background/rule_storage.js", 
-      "js/background/rules.js",
+      "js/global/jsonf.js", 
+      "js/global/utils.js", 
+      "js/global/rule_storage.js", 
+      "js/global/rules.js",
       "js/background/background.js"
     ],
     "persistent": false

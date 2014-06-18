@@ -30,12 +30,13 @@ var Popup = {
   updateMatchingRules: function(matchingRules) {
     var ul = document.querySelectorAll("ul")[0];
     var fragment = document.createDocumentFragment();
-    matchingRules.forEach(function(rule) {
+    matchingRules.forEach(function(rule, index) {
       var li = document.createElement("li");
       li.textContent = rule.name;
       li.classList.add("select-rule");
       li.classList.add("icon-archive");
-      li.dataset.ruleId = rule.id;
+      li.dataset.ruleUrl = rule.url;
+      li.dataset.ruleIndex = index;
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);

@@ -36,8 +36,7 @@ var Rules = {
   save: function(rulesJson) {
     var that = this;
     return new Promise(function (resolve) {
-      var rules = rulesJson.map(function (ruleJson, index) {
-        ruleJson.id = index;
+      var rules = rulesJson.map(function (ruleJson) {
         return ruleJson;
       });
       that.cache = null;
@@ -52,17 +51,6 @@ var Rules = {
           return url.match(rule.matcher);
         });
         resolve(matchingRules);
-      });
-    });
-  },
-  findById: function(ruleId) {
-    var rules = this;
-    return new Promise(function (resolve) {
-      rules.load().then(function (rules) {
-        var rule = rules.filter(function(rule) {
-          return rule.id == ruleId;
-        });
-        resolve(rule[0]);
       });
     });
   }

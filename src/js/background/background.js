@@ -41,13 +41,6 @@
   };
 
   var FormFiller = {
-    fillWithRuleId: function(ruleId) {
-      var formFiller = this;
-      ruleId = parseInt(ruleId, 10);
-      Rules.findById(ruleId).then(function (rule) {
-        formFiller.applyRule(rule);
-      });
-    },
     applyRule: function(rule) {
       var message = null;
       var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
@@ -86,6 +79,6 @@
   // This event will only fire if NO POPUP is set
   // This is the case when only one rule matches
   chrome.browserAction.onClicked.addListener(function (){
-    FormFiller.fillWithRuleId(lastMatchingRules[0].id);
+    FormFiller.applyRule(lastMatchingRules[0]);
   });
 })();
