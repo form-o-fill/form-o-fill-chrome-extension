@@ -1,0 +1,27 @@
+{
+  "url_for_docs": {
+    "message": "https://developer.chrome.com/extensions/i18n"
+  },
+  "no_match_available": {
+    "message": "N/A"
+  },
+  "found_n_matches": {
+    "message": "Found $MATCHES_COUNT$ matching rules",
+    "placeholders": {
+      "matches_count": {
+        "content": "$1"
+      }
+    }
+  },
+  "found_no_matches": {
+    "message": "Found no matching rules. <a href='$URL$'>Create one</a>?",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "options": {
+    "message": "Options" 
+  }
+}

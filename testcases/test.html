@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset='utf-8' />
+    <title>Form-O-Fill Test page</title>
+  </head>
+  <body>
+    <style>
+      input, textarea, select {
+        display: block;
+        padding: 10px;
+        margin: 10px;
+      }
+    </style>
+    <form>
+      <input type="text" name="text" value="text" />
+      <input type="button" name="button" value="button" />
+      <input type="checkbox" name="checkbox" value="checkbox" />
+      <!--<input type="file" name="file" value="file" /> -->
+      <input type="image" name="image" value="image" />
+      <input type="password" name="password" value="password" />
+      <input type="radio" name="radio" value="radio" />
+
+      <textarea></textarea>
+
+      <select name="select" class="single">
+        <option name="option1" value="option1">option1</option>
+        <option name="option2" value="option2">option2</option>
+      </select>
+
+      <select name="selectmultiple" multiple="multiple">
+        <option name="multiple1" value="multiple1">multiple1</option>
+        <option name="multiple2" value="multiple2">multiple2</option>
+      </select>
+
+      <!-- HTML 5 -->
+      <input type="search" name="search" value="search" />
+      <input type="email" name="email" value="email" />
+      <input type="url" name="url" value="url" />
+      <input type="tel" name="tel" value="tel" />
+      <input type="number" name="number" value="number" />
+      <input type="range" name="range" value="0" min="0" max="125" />
+      <input type="date" name="date" value="date" />
+      <input type="month" name="month" value="month" />
+      <input type="week" name="week" value="week" />
+      <input type="time" name="time" value="time" />
+      <input type="datetime" name="datetime" value="datetime" />
+      <input type="datetime-local" name="datetime-local" value="datetime-local" />
+      <input type="color" name="color" value="color" />
+    </form>
+  </body>
+</html>

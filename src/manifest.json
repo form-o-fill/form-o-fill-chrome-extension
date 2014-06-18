@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "Form-O-Fill - Developer Form Filler",
+  "description": "This extension enables form filling via a simple button and is highly configurable via JSON. Targeted at web developers coping with long forms (eg. order processes)",
+  "version": "1.0",
+  "author": "formofillextension@gmail.com",
+  "minimum_chrome_version": "33",
+  "icons": { "128": "images/icon_128.png"},
+  "default_locale": "en",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage"
+  ],
+  "browser_action": {
+    "default_title": "Form-O-Fill",
+    "default_icon": "images/icon_19.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [ 
+        "js/content/errors.js", 
+        "js/content/formfiller.js", 
+        "js/content/content.js" 
+      ]
+    }
+  ],
+  "options_page": "html/options.html",
+  "background": {
+    "scripts": [
+      "js/background/jsonf.js", 
+      "js/background/utils.js", 
+      "js/background/rule_storage.js", 
+      "js/background/rules.js",
+      "js/background/background.js"
+    ],
+    "persistent": false
+  }
+}
