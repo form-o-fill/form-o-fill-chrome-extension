@@ -37,6 +37,7 @@ $(function() {
 
   var $menuInfo = $("#jsoneditor .menu .info");
 
+  // A function to disply a nice message in the rule editor
   var infoMsg = function(msg) {
     $menuInfo.html(msg).css({"opacity": "1"});
     setTimeout(function() {
@@ -46,6 +47,7 @@ $(function() {
     }, 1000);
   };
 
+  // Button handling for "save" and "load"
   $("#jsoneditor").on("click", "button.save", function () {
     Rules.save(editor.get()).then(function () {
       infoMsg("Rules saved");
