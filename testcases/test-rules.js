@@ -3,7 +3,12 @@ var rules = [
     url: ".*test.*",
     name: "Testcase for all <form> field types",
     fields: [
-      { selector: "input[type=text]", value: "123" },
+      {
+        selector: "input[type=text]",
+        value: function() {
+          return "function!";
+        }
+      },
       { selector: "input[type=button]", value: "123" },
       { selector: "input[type=checkbox]", value: "checkbox" },
       { selector: "input[type=image]", value: "123" },

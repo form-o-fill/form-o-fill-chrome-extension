@@ -1,4 +1,4 @@
-/*global Rules, Utils*/
+/*global Rules, Utils, JSONF*/
 (function formoFillEvents() {
   "use strict";
 
@@ -50,7 +50,7 @@
         message = {
           "action": "fillField",
           "selector": field.selector,
-          "value": field.value
+          "value": JSONF.stringify(field.value)
         };
         Utils.log("Posting to content.js: Fill " + field.selector + " with " + field.value);
         port.postMessage(message);

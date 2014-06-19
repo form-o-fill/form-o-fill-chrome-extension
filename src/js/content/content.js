@@ -1,5 +1,5 @@
 /*global FormFiller, Errors*/
-// This listens for messages comming from the background page/js
+// This listens for messages coming from the background page
 chrome.runtime.onConnect.addListener(function (port) {
   console.log("Got a connection from " + port.name);
   if(port.name != "FormOFill") {

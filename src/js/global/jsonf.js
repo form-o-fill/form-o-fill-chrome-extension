@@ -14,7 +14,7 @@ var JSONF = {
     return value;
   },
   _functionDeserializer: function(key, value) {
-    if (key === "") {
+    if (key === "" && value.indexOf("function") === -1) {
       return value;
     }
 
@@ -26,7 +26,7 @@ var JSONF = {
         var args = match[1].split(',').map(function(arg) {
           return arg.replace(/\s+/, '');
         });
-        return new Function(args, match[2]);
+        return new Function(args, match[2].trim());
       }
     }
     return value;

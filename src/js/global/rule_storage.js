@@ -1,4 +1,4 @@
-/*global Utils, JSONF*/
+/*global Utils */
 "use strict";
 var RuleStorage = {
   key: "form_o_fill_rules",

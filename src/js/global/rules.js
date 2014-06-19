@@ -1,4 +1,4 @@
-/*global RuleStorage, Utils, JSONF*/
+/*global RuleStorage, Utils */
 /*eslint no-new-func:0*/
 "use strict";
 

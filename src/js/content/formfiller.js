@@ -1,4 +1,4 @@
-/*global Errors*/
+/*global Errors, jQuery, JSONF*/
 var FormFiller = {
   fill: function(selector, value) {
     Errors.init();
@@ -10,14 +10,23 @@ var FormFiller = {
 
     // Call field specific methods
     //
-    // "fill" + the camelized verion of one of these:
+    // "fill" + the camelized version of one of these:
     // text , button , checkbox , image , password , radio , textarea , select-one , select-multiple , search
     // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
     //
     // eg. fillDatetimeLocal(value)
     var fillMethod = this[this._typeMethod(domNode.type)];
+
+    // Default is to set the value of the field if
+    // no special function is defined for that type
     if (typeof fillMethod !== "function") {
       fillMethod = this._fillDefault;
+    }
+
+    // if the value is a function, call it with the jQuery wrapped domNode
+    value = JSONF.parse(value);
+    if(typeof value === "function") {
+      value = value(jQuery(domNode));
     }
     // Fill field using the specialized method or default
     fillMethod(domNode, value, selector);

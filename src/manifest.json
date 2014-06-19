@@ -21,6 +21,8 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": [ 
+        "vendor/jquery/jquery-2.1.1.min.js", 
+        "js/global/jsonf.js", 
         "js/content/errors.js", 
         "js/content/formfiller.js", 
         "js/content/content.js" 
