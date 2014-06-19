@@ -8,9 +8,7 @@ The configuration is done via a JSON file.
 
 # TODOS
 
-- Implement options.html
 - Allow "Create one?" Link to work
-- Bootstrap for options.html?
 - Allow local file loading of JSON files and merge them last into rules
 - add de locale
 

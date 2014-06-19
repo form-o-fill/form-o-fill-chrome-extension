@@ -1,4 +1,4 @@
-/*global Utils, Rules*/
+/*global Utils, Rules, jQuery*/
 "use strict";
 var Popup = {
   currentUrl: null,
@@ -11,7 +11,24 @@ var Popup = {
         popup.updateHtml(matchingRules);
       });
     });
+    popup.attachEventHandlers();
     Utils.log("popup init done");
+  },
+  attachEventHandlers: function() {
+    jQuery("ul").on("click", "li", function () {
+      var data = jQuery(this).data();
+      var message = {
+        "action": "fillWithRule",
+        "index": data.ruleIndex
+      };
+      Utils.log("sending message " + JSON.stringify(message) + " to background.js");
+      chrome.extension.sendMessage(message, function(ok) {
+        if(ok) {
+          // Close the popup
+          window.close();
+        }
+      });
+    });
   },
   updateHtml: function(matchingRules) {
     this.updateHeadline(matchingRules);
@@ -20,7 +37,7 @@ var Popup = {
   },
   updateHeadline: function(matchingRules) {
     var matchesCount = matchingRules.length;
-    var createRuleUrl = chrome.extension.getURL("html/options.html?action=createRule&forUrl=" + encodeURI(this.currentUrl));
+    var createRuleUrl = chrome.extension.getURL("html/options.html#createRule!" + encodeURI(this.currentUrl));
     var message = chrome.i18n.getMessage("found_no_matches", [ createRuleUrl ]);
     if (matchesCount > 0) {
       message = chrome.i18n.getMessage("found_n_matches", [ matchesCount ]);

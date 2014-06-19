@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules*/
+/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule */
 /*eslint max-nested-callbacks: 0*/
 $(function() {
   var noticesVisible = false;
@@ -19,14 +19,13 @@ $(function() {
 
   $('.mainview > *:not(.selected)').css('display', 'none');
 
-  var editorNode = document.querySelector("#ruleeditor-ace");
-
   // Load Ace
+  var editorNode = document.querySelector("#ruleeditor-ace");
   var editor = ace.edit(editorNode);
   var editorSession = editor.getSession();
+  var editorDocument = editorSession.getDocument();
 
   editor.setTheme("ace/theme/jsoneditor");
-
   editorSession.setMode("ace/mode/javascript");
   editorSession.setTabSize(2);
   editorSession.setUseSoftTabs(true);
@@ -59,7 +58,6 @@ $(function() {
   // Cleans up the rules code
   // eg. remove trailing newlines
   var cleanupRulesCode = function() {
-    var editorDocument = editorSession.getDocument();
     var lastLineIndex = editorDocument.getLength() - 1;
     var line = null;
     for(var i = lastLineIndex; i > 0; i--) {
@@ -145,4 +143,46 @@ $(function() {
       }
     }
   });
+
+  // options.html called with prameters?
+  var hash = window.location.href.match(/#(.*)$/);
+  if (!hash) {
+    return;
+  }
+  var commandAndTarget = hash[1].split("!");
+  if(commandAndTarget[0] == "createRule") {
+    var prettyRule = Rule.create({
+      "url": commandAndTarget[1],
+      "name": "A rule for '" + commandAndTarget[1] + "'",
+      "fields": [{
+        "selector": "div.with-this-class",
+        "value": "what to put into that field"
+      }]
+    }).prettyPrint();
+
+    var $createRule = $("#ruleeditor .notice.create-rule");
+
+    // Append a rule to the bottom of the rulelist, display message and scroll there
+    var appendRule = function(prettyRule) {
+      var lines = [","];
+      lines = lines.concat(prettyRule.split("\n"));
+      editorDocument.insertLines(editorDocument.getLength() - 1, lines);
+      editor.scrollToRow(editorDocument.getLength());
+      $createRule.hide();
+      infoMsg("Rule added on line " + (editorDocument.getLength() - 1));
+    };
+
+    // Attach events to notice and show. Also handle buttons.
+    $createRule.show()
+    .find("pre").html(prettyRule)
+    .end().on("click", "a.cms-append-rule", function() {
+      appendRule(prettyRule); }
+    )
+    .on("click", "a.cms-discard-rule", function() {
+      $createRule.hide();
+    });
+    // Set noticeVisible to false so that it is kept visible when the editor launches
+    noticesVisible = false;
+  }
+
 });

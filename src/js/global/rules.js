@@ -1,9 +1,18 @@
-/*global RuleStorage, Utils */
+/*global RuleStorage, Utils, jQuery */
 /*eslint no-new-func:0*/
 "use strict";
 
 /* A single Rule */
 var Rule = function() {
+  this.prettyPrint = function() {
+    var clone = jQuery.extend({}, this);
+    delete clone.matcher;
+    return JSON.stringify(clone, null, 2);
+  };
+
+  this.prettyPrintHtml = function() {
+    return this.prettyPrint().replace(/\n/,"<br />");
+  };
 };
 
 Rule.create = function(options) {

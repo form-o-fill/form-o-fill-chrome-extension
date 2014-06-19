@@ -33,7 +33,7 @@ var rules = [
     ]
   },
   {
-    url: ".*?192.*?/test2.*",
+    url: ".*?192.*?/test.*",
     name: "Testform Config 2 with a very very long name and thats totally cool with me",
     fields: [
       {

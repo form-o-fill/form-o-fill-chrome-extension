@@ -44,7 +44,7 @@
     applyRule: function(rule) {
       var message = null;
       var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
-      Utils.log("Applying rule " + JSON.stringify(rule) + " to tab " + lastActiveTab.id);
+      Utils.log("Applying rule " + JSONF.stringify(rule) + " to tab " + lastActiveTab.id);
 
       rule.fields.forEach(function (field) {
         message = {
@@ -81,4 +81,15 @@
   chrome.browserAction.onClicked.addListener(function (){
     FormFiller.applyRule(lastMatchingRules[0]);
   });
+
+  // Listen for messages from the popup.js
+  // This receives the index of the rule to apply when there is more than one match
+  chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.action === "fillWithRule") {
+      Utils.log("Called by popup.js with rule index " + message.index + ", sender = " + sender);
+      FormFiller.applyRule(lastMatchingRules[message.index]);
+      sendResponse(true);
+    }
+  });
+
 })();
