@@ -27,38 +27,39 @@ body {
   left: 40px;
 }
 
-#jsoneditor {
+#ruleeditor-ace {
   width: 100%;
-  height: 600px;
+  height: 500px;
+  border: 1px solid #909090;
 }
 
-#jsoneditor button.format, button.compact, button.modes {
-  display: none;
+.editor .menu {
+  margin-bottom: 10px;
 }
 
-#jsoneditor button {
-  background-image: none;
+.editor .menu button {
   vertical-align: bottom;
   padding: 0 6px;
   width: auto;
+  outline: none;
 }
 
-#jsoneditor button:before {
+.editor .menu button:before {
   font-family: "icomoon";
   font-size: 16px;
   vertical-align: middle;
   margin-right: 4px;
 }
 
-#jsoneditor button.save:before {
+.editor .menu button.save:before {
   content: "\e603";
 }
 
-#jsoneditor button.reload:before {
+.editor .menu button.reload:before {
   content: "\e604";
 }
 
-#jsoneditor .menu .info {
+.editor .menu .info {
   color: #999;
   line-height: 32px;
   vertical-align: middle;
@@ -66,3 +67,35 @@ body {
   font-size: 11px;
 }
 
+#ruleditor .notice:last-child {
+  margin-bottom: 0;
+}
+
+#ruleeditor .notice {
+  display: none;
+  border: 1px solid #909090;
+  padding: 10px 10px 10px 36px;
+  border-radius: 5px;
+  vertical-align: middle;
+  font-size: 14px;
+  position: relative;
+  background-color: #ccc;
+  margin-bottom: 10px;
+}
+
+#ruleeditor .notice:before {
+  font-family: "icomoon";
+  font-size: 24px;
+  vertical-align: middle;
+  content: "\e602";
+  color: rgb(197, 25, 25);
+  position: absolute;
+  top: 6px;
+  left: 7px;
+}
+
+#ruleeditor .notice .code {
+  font-family: "droid sans mono", monospace, "courier new", courier, sans-serif;
+  background-color: #bbb;
+  padding: 2px 4px;
+}

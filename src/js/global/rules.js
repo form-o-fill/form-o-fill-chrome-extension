@@ -1,4 +1,5 @@
-/*global RuleStorage, Utils*/
+/*global RuleStorage, Utils, JSONF*/
+/*eslint no-new-func:0*/
 "use strict";
 
 /* A single Rule */
@@ -17,40 +18,46 @@ Rule.create = function(options) {
 /* Multiple Rules */
 var Rules = {
   cache: null,
-  load: function() {
+  matchesForUrl: function(url) {
+    var rules = this;
+    return new Promise(function (resolve) {
+      rules._load().then(function(rules) {
+        var matchingRules = rules.filter(function (rule) {
+          return url.match(rule.matcher);
+        });
+        resolve(matchingRules);
+      });
+    });
+  },
+  _load: function() {
     var that = this;
     return new Promise(function (resolve) {
       if(that.cache) {
         Utils.log("Rules.load resolved using " + that.cache.length + " cache entries");
         resolve(that.cache);
       }
-      RuleStorage.loadRules().then(function (rulesJson) {
-        var rules = rulesJson.map(function (ruleJson) {
-          return Rule.create(ruleJson);
-        });
+      RuleStorage.loadRules().then(function (rulesCode) {
+        var rules = [];
+        if(rulesCode) {
+          // remove wrapper
+          var rulesCodeMatches = rulesCode.match(/^.*?(\[[\s\S]*\];)$/m);
+
+          // This should not happen:
+          if(!rulesCodeMatches[1]) {
+            resolve(rules);
+          }
+
+          // Now we go into hell ...
+          // TODO: remove unsafe-eval from manifest and use a chrome sandbox iframe
+          var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
+          var ruleFunction = new Function(ruleCode);
+
+          rules = ruleFunction().map(function (ruleJson) {
+            return Rule.create(ruleJson);
+          });
+        }
         that.cache = rules;
         resolve(rules);
-      });
-    });
-  },
-  save: function(rulesJson) {
-    var that = this;
-    return new Promise(function (resolve) {
-      var rules = rulesJson.map(function (ruleJson) {
-        return ruleJson;
-      });
-      that.cache = null;
-      RuleStorage.saveRules(rules).then(resolve(true));
-    });
-  },
-  matchesForUrl: function(url) {
-    var rules = this;
-    return new Promise(function (resolve) {
-      rules.load().then(function(rules) {
-        var matchingRules = rules.filter(function (rule) {
-          return url.match(rule.matcher);
-        });
-        resolve(matchingRules);
       });
     });
   }

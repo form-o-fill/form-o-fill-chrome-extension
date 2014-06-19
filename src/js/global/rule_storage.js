@@ -6,20 +6,15 @@ var RuleStorage = {
     var ruleStorage = this;
     return new Promise(function (resolve) {
       chrome.storage.local.get(ruleStorage.key, function (persistedData) {
-        var rulesString = persistedData[ruleStorage.key];
-        if(typeof rulesString === "string") {
-          resolve(JSONF.parse(rulesString));
-        }
-        // No rules set so far, return empty set
-        resolve([]);
+        resolve(persistedData[ruleStorage.key]);
       });
     });
   },
-  saveRules: function (rulesJson) {
+  saveRules: function (rulesCode) {
     var ruleStorage = this;
     return new Promise(function (resolve, reject) {
       var value = {};
-      value[ruleStorage.key] = JSONF.stringify(rulesJson);
+      value[ruleStorage.key] = rulesCode;
       chrome.storage.local.set(value, function () {
         if(typeof chrome.runtime.lastError === "undefined") {
           Utils.log("RuleStorage saved " + value[ruleStorage.key]);

@@ -120,7 +120,7 @@ border-color: #000000\
 .ace-jsoneditor .ace_support.ace_function,\
 .ace-jsoneditor .ace_support.ace_other,\
 .ace-jsoneditor .ace_support.ace_type {\
-color: #C52727\
+color: #751323;\
 }\
 .ace-jsoneditor .ace_string {\
 color: green\
