@@ -2,34 +2,40 @@
 var FormFiller = {
   fill: function(selector, value) {
     Errors.init();
-    var domNode = document.querySelector(selector);
-    if (!domNode) {
+    var domNodes = document.querySelectorAll(selector);
+    var domNode = null;
+
+    if (domNodes.length === 0) {
       Errors.add("Could not find a field (" + selector + ")");
       return false;
     }
 
-    // Call field specific methods
+    var parsedValue = JSONF.parse(value);
+    // if the value is a function, call it with the jQuery wrapped domNode
+    if(typeof parsedValue === "function") {
+      parsedValue = parsedValue(jQuery(domNode));
+    }
+
+    // Fill field only if value is not null
+    if(parsedValue === null) {
+      return false;
+    }
+
+    // Call field specific method on EVERY field found
     //
-    // "fill" + the camelized version of one of these:
+    // "_fill" + the camelized version of one of these:
     // text , button , checkbox , image , password , radio , textarea , select-one , select-multiple , search
     // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
     //
-    // eg. fillDatetimeLocal(value)
-    var fillMethod = this[this._typeMethod(domNode.type)];
+    // eg. _fillDatetimeLocal(value)
+    for (var i = 0; i < domNodes.length; ++i) {
+      domNode = domNodes[i];
+      var fillMethod = this._fillMethod(domNode);
 
-    // Default is to set the value of the field if
-    // no special function is defined for that type
-    if (typeof fillMethod !== "function") {
-      fillMethod = this._fillDefault;
+      // Fill field using the specialized method or default
+      fillMethod(domNode, parsedValue, selector);
     }
 
-    // if the value is a function, call it with the jQuery wrapped domNode
-    value = JSONF.parse(value);
-    if(typeof value === "function") {
-      value = value(jQuery(domNode));
-    }
-    // Fill field using the specialized method or default
-    fillMethod(domNode, value, selector);
   },
   _fillDefault: function(domNode, value) {
     domNode.value = value;
@@ -117,6 +123,15 @@ var FormFiller = {
     return ("_fill-" + type).replace(/(\-[a-z])/g, function($1) {
       return $1.toUpperCase().replace('-','');
     });
+  },
+  _fillMethod: function(domNode) {
+    var fillMethod = this[this._typeMethod(domNode.type)];
+    // Default is to set the value of the field if
+    // no special function is defined for that type
+    if (typeof fillMethod !== "function") {
+      fillMethod = this._fillDefault;
+    }
+    return fillMethod;
   }
 };
 

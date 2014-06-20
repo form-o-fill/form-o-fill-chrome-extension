@@ -8,8 +8,6 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- when a "value" function returns null, dont't fill that field (useful if using XHR to async fill that field)
-- fill ALL matching fields not only the first that is hit by the selector
 - FormExtractor to enable quick rule generation fom existing values
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - before (and after?) function blocks for every rule defintion
