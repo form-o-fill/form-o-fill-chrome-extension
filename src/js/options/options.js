@@ -144,45 +144,13 @@ $(function() {
     }
   });
 
-  // options.html called with prameters?
-  var hash = window.location.href.match(/#(.*)$/);
-  if (!hash) {
-    return;
-  }
-  var commandAndTarget = hash[1].split("!");
-  if(commandAndTarget[0] == "createRule") {
-    var prettyRule = Rule.create({
-      "url": commandAndTarget[1],
-      "name": "A rule for '" + commandAndTarget[1] + "'",
-      "fields": [{
-        "selector": "div.with-this-class",
-        "value": "what to put into that field"
-      }]
-    }).prettyPrint();
-
-    var $createRule = $("#ruleeditor .notice.create-rule");
-
-    // Append a rule to the bottom of the rulelist, display message and scroll there
-    var appendRule = function(prettyRule) {
-      var lines = [","];
-      lines = lines.concat(prettyRule.split("\n"));
-      editorDocument.insertLines(editorDocument.getLength() - 1, lines);
-      editor.scrollToRow(editorDocument.getLength());
-      $createRule.hide();
-      infoMsg("Rule added on line " + (editorDocument.getLength() - 1));
-    };
-
-    // Attach events to notice and show. Also handle buttons.
-    $createRule.show()
-    .find("pre").html(prettyRule)
-    .end().on("click", "a.cms-append-rule", function() {
-      appendRule(prettyRule); }
-    )
-    .on("click", "a.cms-discard-rule", function() {
-      $createRule.hide();
-    });
-    // Set noticeVisible to false so that it is kept visible when the editor launches
-    noticesVisible = false;
-  }
-
+  // options.html called with parmeters?
+  //var hash = window.location.href.match(/#(.*)$/);
+  //if (!hash) {
+    //return;
+  //}
+  //var commandAndTarget = hash[1].split("!");
+  //if(commandAndTarget[0] == "wtf") {
+  //}
 });
+

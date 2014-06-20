@@ -23,7 +23,7 @@ chrome.contextMenus.onClicked.addListener(ctxHandleExtractClick);
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.contextMenus.create({
-    "title": "Form-O-Fill - Extract",
+    "title": "Form-O-Fill: Save Form",
     "contexts": ["editable", "page", "frame"],
     "id": "ctxMain"
   });

@@ -5,10 +5,6 @@
   var lastMatchingRules = [];
   var lastActiveTab = null;
 
-  var onSuspend = function () {
-    Utils.log("onSuspend called");
-  };
-
   var refreshMatchCounter = function (tab, count) {
     var txt = chrome.i18n.getMessage("no_match_available");
     if (count && count > 0) {
@@ -54,9 +50,6 @@
     }
   };
 
-  // Before the extension is put to sleep
-  chrome.runtime.onSuspend.addListener(onSuspend);
-
   // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
   chrome.tabs.onActivated.addListener(function (activeInfo) {
     onTabReady(activeInfo.tabId);
@@ -75,13 +68,21 @@
     FormFiller.applyRule(lastMatchingRules[0]);
   });
 
-  // Listen for messages from the popup.js
-  // This receives the index of the rule to apply when there is more than one match
+  // Listen for messages
   chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
+    // Fom popup.js:
+    // This receives the index of the rule to apply when there is more than one match
     if (message.action === "fillWithRule") {
-      Utils.log("Called by popup.js with rule index " + message.index + ", sender = " + sender);
+      Utils.log("[bg.js] Called by popup.js with rule index " + message.index + ", sender = " + sender);
       FormFiller.applyRule(lastMatchingRules[message.index]);
       sendResponse(true);
+    }
+
+    // Open an intern URL (aka. options).
+    // Callable by content script that otherwise isn't allowed to open intern urls.
+    if(message.action === "openIntern" && message.url) {
+      Utils.log("[bg.js] received 'openIntern' with url '" + message.url + "'");
+      chrome.tabs.create({ "active": true, "url": message.url });
     }
   });
 

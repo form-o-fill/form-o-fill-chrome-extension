@@ -1,10 +1,8 @@
 /*global Utils */
 "use strict";
 var RuleStorage = {
-  key: "form_o_fill_rules",
   loadRules: function(keyToLoadFrom) {
-    var ruleStorage = this;
-    var key = keyToLoadFrom || ruleStorage.key;
+    var key = keyToLoadFrom || Utils.keys.rules;
     return new Promise(function (resolve) {
       chrome.storage.local.get(key, function (persistedData) {
         resolve(persistedData[key]);
@@ -12,14 +10,13 @@ var RuleStorage = {
     });
   },
   saveRules: function (rulesCode, keyToSaveTo) {
-    var ruleStorage = this;
     return new Promise(function (resolve, reject) {
       var value = {};
-      var key = keyToSaveTo || ruleStorage.key;
+      var key = keyToSaveTo || Utils.keys.rules;
       value[key] = rulesCode;
       chrome.storage.local.set(value, function () {
         if(typeof chrome.runtime.lastError === "undefined") {
-          Utils.log("RuleStorage saved " + value[key]);
+          Utils.log("[rule_storage.js] Saved '" + key + "' = " + value[key]);
           resolve(true);
         } else {
           reject(Error(chrome.runtime.lastError));
@@ -27,7 +24,17 @@ var RuleStorage = {
       });
     });
   },
-  deleteRule: function (key) {
+  deleteRules: function (key) {
+    return new Promise(function (resolve, reject) {
+      chrome.storage.local.remove(key, function () {
+        if(typeof chrome.runtime.lastError === "undefined") {
+          Utils.log("[rule_storage.js] Removed key '" + key + "'");
+          resolve(true);
+        } else {
+          reject(Error(chrome.runtime.lastError));
+        }
+      });
+    });
   }
 };
 

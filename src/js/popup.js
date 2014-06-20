@@ -29,6 +29,12 @@ var Popup = {
         }
       });
     });
+
+    // Show Extract Overlay when use clicks "create one" link
+    jQuery("#popup").on("click", "a.cmd-how-extract-overlay", function () {
+      Utils.showExtractOverlay();
+      window.close();
+    });
   },
   updateHtml: function(matchingRules) {
     this.updateHeadline(matchingRules);
