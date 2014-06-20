@@ -1,16 +1,27 @@
 # Form-O-Fill Chrome Extension
 
-This is a chrome extension for filling forms in webpages.
+This is a chrome extension for filling out forms in webpages.
 
 This extension is targeted at web developers who frequently must fill out long \<form>s while working on a website.
 
-The configuration is done via a JSON file.
+The configuration is done via a rule definition file written in javascript.
 
-# TODOS
+# TODOS (in that order)
 
-- Allow "Create one?" Link to work
-- Allow local file loading of JSON files and merge them last into rules
-- add de locale
+- when a "value" function returns null, dont't fill that field (useful if using XHR to async fill that field)
+- fill ALL matching fields not only the first that is hit by the selector
+- FormExtractor to enable quick rule generation fom existing values
+- vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
+- before (and after?) function blocks for every rule defintion
+- describe permissions requirements in "about"
+- <del>Allow local file loading of JSON files and merge them last into rules</del> Won't work. API limitations. Browser security.
+- Import Rule Definitions from other URLs via XHR (But how to validate them?)
+- help menu entry
+- changelog menu entry in options
+- Wrap "value" functions in Promise. Too complicated to use resolve(value) instead of return value in async value-functions?
+- Extract ALL strings/texts to messages
+- add "de" locale at least
+- autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
 
 # LICENSE
 
