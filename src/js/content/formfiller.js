@@ -4,6 +4,7 @@ var FormFiller = {
     Errors.init();
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
+    var fillMethod = null;
 
     if (domNodes.length === 0) {
       Errors.add("Could not find a field (" + selector + ")");
@@ -11,10 +12,6 @@ var FormFiller = {
     }
 
     var parsedValue = JSONF.parse(value);
-    // if the value is a function, call it with the jQuery wrapped domNode
-    if(typeof parsedValue === "function") {
-      parsedValue = parsedValue(jQuery(domNode));
-    }
 
     // Fill field only if value is not null
     if(parsedValue === null) {
@@ -30,7 +27,12 @@ var FormFiller = {
     // eg. _fillDatetimeLocal(value)
     for (var i = 0; i < domNodes.length; ++i) {
       domNode = domNodes[i];
-      var fillMethod = this._fillMethod(domNode);
+      fillMethod = this._fillMethod(domNode);
+
+      // if the value is a function, call it with the jQuery wrapped domNode
+      if(typeof parsedValue === "function") {
+        parsedValue = parsedValue(jQuery(domNode));
+      }
 
       // Fill field using the specialized method or default
       fillMethod(domNode, parsedValue, selector);
