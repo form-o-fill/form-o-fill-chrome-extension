@@ -3,15 +3,42 @@
   <head>
     <meta charset='utf-8' />
     <title>Form-O-Fill Test page</title>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
   </head>
   <body>
     <style>
+      body {
+        overflow: hidden;
+      }
+
       input, textarea, select {
         display: block;
         padding: 10px;
         margin: 10px;
       }
+
+      form {
+        float: left;
+      }
     </style>
+    <div style="width: 100px; float: left;">Something</div>
+    <form>
+      <input type="text" name="text" value="text" id="a_id" class="a_class a_class_2" />
+      <input type="radio" name="radio" value="radio" />
+      <input type="radio" name="radio" value="radio2" checked />
+      <input type="checkbox" name="checkbox[]" value="checkbox" />
+      <input type="checkbox" name="checkbox[]" value="checkbox2" checked />
+
+      <select name="select" class="single">
+        <option name="option1" value="option1">option1</option>
+        <option name="option2" value="option2" selected>option2</option>
+      </select>
+
+      <select name="selectmultiple" multiple="multiple">
+        <option name="multiple1" value="multiple1" selected>multiple1</option>
+        <option name="multiple2" value="multiple2" selected>multiple2</option>
+      </select>
+    </form>
     <form>
       <input type="text" name="text" value="text" />
       <input type="button" name="button" value="button" />
@@ -21,7 +48,7 @@
       <input type="password" name="password" value="password" />
       <input type="radio" name="radio" value="radio" />
 
-      <textarea></textarea>
+      <textarea name="textarea"></textarea>
 
       <select name="select" class="single">
         <option name="option1" value="option1">option1</option>

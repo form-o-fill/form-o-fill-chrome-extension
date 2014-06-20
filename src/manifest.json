@@ -5,12 +5,17 @@
   "version": "1.0",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "33",
-  "icons": { "128": "images/icon_128.png"},
+  "icons": { 
+    "16": "images/icon_16.png",
+    "48": "images/icon_48.png",
+    "128": "images/icon_128.png"
+  },
   "default_locale": "en",
   "permissions": [
     "activeTab",
     "tabs",
     "storage",
+    "contextMenus",
     "http://*/",
     "https://*/"
   ],
@@ -24,21 +29,30 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [ 
         "vendor/jquery/jquery-2.1.1.min.js", 
+        "js/global/utils.js", 
         "js/global/jsonf.js", 
+        "js/global/rules.js", 
         "js/content/errors.js", 
-        "js/content/formfiller.js", 
+        "js/content/form_filler.js", 
+        "js/content/form_extractor.js", 
+        "js/content/extract_instrumentation.js" ,
         "js/content/content.js" 
+      ],
+      "css": [
+        "css/content.css"
       ]
     }
   ],
   "options_page": "html/options.html",
   "background": {
     "scripts": [
+      "vendor/jquery/jquery-2.1.1.min.js", 
       "js/global/jsonf.js", 
       "js/global/utils.js", 
       "js/global/rule_storage.js", 
       "js/global/rules.js",
-      "js/background/background.js"
+      "js/background/background.js",
+      "js/background/context_menu.js"
     ],
     "persistent": false
   }

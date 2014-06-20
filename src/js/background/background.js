@@ -5,10 +5,6 @@
   var lastMatchingRules = [];
   var lastActiveTab = null;
 
-  var onInit = function () {
-    Utils.log("onInit called");
-  };
-
   var onSuspend = function () {
     Utils.log("onSuspend called");
   };
@@ -57,9 +53,6 @@
       });
     }
   };
-
-  // When browser updates / extension is first installed
-  chrome.runtime.onInstalled.addListener(onInit);
 
   // Before the extension is put to sleep
   chrome.runtime.onSuspend.addListener(onSuspend);
