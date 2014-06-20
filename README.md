@@ -8,14 +8,13 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- FormExtractor to enable quick rule generation fom existing values
 - show Errors somewhere (while filling)
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
 - <del>Allow local file loading of JSON files and merge them last into rules</del> Won't work. API limitations. Browser security.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
-- help menu entry
+- help entry content
 - changelog menu entry in options
 - Wrap "value" functions in Promise. Too complicated to use resolve(value) instead of return value in async value-functions?
 - Extract ALL strings/texts to messages
