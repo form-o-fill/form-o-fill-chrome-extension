@@ -16,6 +16,10 @@ body {
   font-family: 'Open Sans', Arial,sans-serif;
 }
 
+.chrome-bootstrap .frame .view, .chrome-bootstrap .frame .content {
+  width: 900px;
+}
+
 .navigation h1:before {
   font-family: "icomoon";
   content: "\e600";
@@ -28,7 +32,7 @@ body {
 }
 
 #ruleeditor-ace {
-  width: 100%;
+  width: 800px;
   height: 500px;
   border: 1px solid #909090;
 }
