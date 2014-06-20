@@ -43,6 +43,16 @@ $(function() {
     editor.setValue(ruleString, -1);
   });
 
+  // Check for freshly extracted rules
+  RuleStorage.loadRules(Utils.keys.extractedRules).then(function (ruleString) {
+    // There are extracted rules
+    if (typeof ruleString !== "undefined") {
+      Utils.log("[options.js] Appending extracted rules to the end of the definition");
+      // Append rules
+      // Clear Storage
+    }
+  });
+
   var $menuInfo = $(".editor .menu .info");
 
   // A function to disply a nice message in the rule editor
