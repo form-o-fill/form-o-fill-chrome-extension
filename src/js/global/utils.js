@@ -21,7 +21,11 @@ var Utils = {
     }
     chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
   },
-  log: function (msg) {
+  log: function (msg, obj) {
+    if (obj) {
+      console.log("[Form-O-Fill] %O %O", msg, obj);
+      return;
+    }
     console.log("[Form-O-Fill] %O", msg);
   }
 };
