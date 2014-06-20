@@ -12,6 +12,7 @@ The configuration is done via a rule definition file written in javascript.
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
+- use gulp.js to build a minimized optimized fabulized version<del>ized</del>
 - <del>Allow local file loading of JSON files and merge them last into rules</del> Won't work. API limitations. Browser security.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
 - help entry content
