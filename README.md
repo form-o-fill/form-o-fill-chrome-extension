@@ -8,6 +8,7 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
+- Add "source prettify" button!
 - show Errors somewhere (while filling)
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - before (and after?) function blocks for every rule defintion
