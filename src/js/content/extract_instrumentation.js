@@ -46,10 +46,12 @@ chrome.runtime.onMessage.addListener(function (message) {
       if(targetForm) {
         // looks good, start extraction
         var ruleCode = FormExtractor.extract(targetForm);
+        Utils.log("[extract_instr.js] Extracted: " + ruleCode);
         // Save Rule and goto options.html
         RuleStorage.saveRules(ruleCode, Utils.keys.extractedRule);
-        // Open Options
-        Utils.openOptions();
+
+        // This is just to try out notification :)
+        chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
       }
     });
 

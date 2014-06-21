@@ -1,5 +1,7 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule */
+/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, js_beautify */
 /*eslint max-nested-callbacks: 0*/
+// This file is a big bag of mixed responsibilities.
+// Break this into parts!
 $(function() {
   var noticesVisible = false;
 
@@ -38,21 +40,6 @@ $(function() {
     }
   });
 
-  // Fill with data from storage
-  RuleStorage.loadRules().then(function (ruleString) {
-    editor.setValue(ruleString, -1);
-  });
-
-  // Check for freshly extracted rules
-  RuleStorage.loadRules(Utils.keys.extractedRules).then(function (ruleString) {
-    // There are extracted rules
-    if (typeof ruleString !== "undefined") {
-      Utils.log("[options.js] Appending extracted rules to the end of the definition");
-      // Append rules
-      // Clear Storage
-    }
-  });
-
   var $menuInfo = $(".editor .menu .info");
 
   // A function to disply a nice message in the rule editor
@@ -64,6 +51,57 @@ $(function() {
       });
     }, 1000);
   };
+
+  // Fill with data from storage
+  RuleStorage.loadRules().then(function (ruleString) {
+    editor.setValue(ruleString, -1);
+  });
+
+  var appendRule = function(prettyRule, responseCallback) {
+    // Use
+    Rules.load().then(function(rulesFunction) {
+      var lines = [];
+      if(rulesFunction.length > 0) {
+        lines.push(",");
+      }
+      lines = lines.concat(prettyRule.split("\n"));
+      editorDocument.insertLines(editorDocument.getLength() - 1, lines);
+      // Prettify code a little
+      var prettyCode = js_beautify(editorSession.getValue(), {
+        "indent_size": 2,
+        "indent_char": " ",
+        "preserve_newlines": false,
+        "brace_style": "expand",
+        "space_before_conditional": true,
+        "unescape_strings": false
+      });
+      if(/\}\];$/.test(prettyCode)) {
+        prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
+      }
+      editorSession.setValue(prettyCode);
+      editor.scrollToRow(editorDocument.getLength());
+      responseCallback();
+      infoMsg("Rule added on line " + (editorDocument.getLength() - 1));
+    });
+  };
+
+  // Check for freshly extracted rules
+  RuleStorage.loadRules(Utils.keys.extractedRule).then(function (extractedRule) {
+    // There are extracted rules
+    if (typeof extractedRule !== "undefined") {
+      var $notice = $("#ruleeditor .notice.extracted-present");
+      $notice.show();
+      $("#ruleeditor button.append-extracted").removeAttr("disabled");
+      $("#ruleeditor .cmd-append-extracted, #ruleeditor .append-extracted").on("click", function () {
+        Utils.log("[options.js] Appending extracted rules to the end of the definition");
+        appendRule(extractedRule, function() {
+          $("#ruleeditor button.append-extracted").prop("disabled","disabled");
+          $notice.hide();
+          RuleStorage.deleteRules(Utils.keys.extractedRule);
+        });
+      });
+    }
+  });
 
   // Cleans up the rules code
   // eg. remove trailing newlines
@@ -132,8 +170,6 @@ $(function() {
   // Try to fix the erronous structure of the rules
   $("a.cmd-fix-var-needed").on("click", function() {
     if(noticesVisible) {
-      var editorDocument = editorSession.getDocument();
-
       // Fix the first line not correctly containing "var rules = ["
       var lineStart = editorDocument.getLine(0);
       var lineCount = editorDocument.getLength();

@@ -27,10 +27,11 @@ Rule.create = function(options) {
 /* Multiple Rules */
 var Rules = {
   cache: null,
+  ruleCount: 0,
   matchesForUrl: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
-      rules._load().then(function(rules) {
+      rules.load().then(function(rules) {
         var matchingRules = rules.filter(function (rule) {
           return url.match(rule.matcher);
         });
@@ -38,7 +39,7 @@ var Rules = {
       });
     });
   },
-  _load: function() {
+  load: function() {
     var that = this;
     return new Promise(function (resolve) {
       if(that.cache) {
@@ -60,8 +61,10 @@ var Rules = {
           // TODO: remove unsafe-eval from manifest and use a chrome sandbox iframe
           var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
           var ruleFunction = new Function(ruleCode);
+          that.ruleCount = 0;
 
           rules = ruleFunction().map(function (ruleJson) {
+            that.ruleCount += 1;
             return Rule.create(ruleJson);
           });
         }

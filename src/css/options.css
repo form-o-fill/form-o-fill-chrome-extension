@@ -63,6 +63,10 @@ body {
   content: "\e604";
 }
 
+.editor .menu button.append-extracted:before {
+  content: "\e607";
+}
+
 .editor .menu .info {
   color: #999;
   line-height: 32px;

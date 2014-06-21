@@ -84,6 +84,27 @@
       Utils.log("[bg.js] received 'openIntern' with url '" + message.url + "'");
       chrome.tabs.create({ "active": true, "url": message.url });
     }
+
+    // Display a notification to the user that the extract has finished
+    if(message.action === "extractFinishedNotification") {
+      Utils.log("[bg.js] received 'extractFinishedNotification'");
+      var formNotificationId = null;
+      chrome.notifications.create("", {
+        "iconUrl": chrome.runtime.getURL("images/icon_48.png"),
+        "type": "basic",
+        "title": "Form-O-Fill",
+        "message": "Extracted your form. Click here to check the options panel for more info.",
+        "isClickable": true
+      }, function(notificationId) {
+        formNotificationId = notificationId;
+      });
+
+      chrome.notifications.onClicked.addListener(function (notificationId) {
+        if(notificationId === formNotificationId) {
+          Utils.openOptions();
+        }
+      });
+    }
   });
 
 })();
