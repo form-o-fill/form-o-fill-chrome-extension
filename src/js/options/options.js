@@ -5,6 +5,26 @@
 $(function() {
   var noticesVisible = false;
 
+  var pages = ["help", "about", "notices"];
+  var supportedLanguages = [ "en" ];
+
+  // Localization of options pages
+  // move it somewhere better than here
+  var uiLang = chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
+  var lang = supportedLanguages.filter(function (supportedLanguage) {
+    return supportedLanguage === uiLang;
+  });
+  if(lang.length === 1) {
+    lang = lang[0];
+  } else {
+    lang = supportedLanguages[0];
+  }
+  pages.forEach(function (pageName) {
+    $.get(chrome.runtime.getURL("html/options/_" + pageName + "_" + lang + ".html"), function (html) {
+      $("#" + pageName).html(html).show();
+    });
+  });
+
   // Menu functionality for chrome-bootstrap
   $('.menu').on("click", "a", function(ev) {
     ev.preventDefault();
@@ -156,6 +176,7 @@ $(function() {
     });
   }).on("click", "button.format", function () {
     editor.setValue(Rules.format(editor.getValue()), -1);
+    infoMsg("Rules formatted bit not saved");
   });
 
   // Try to fix the erronous structure of the rules
