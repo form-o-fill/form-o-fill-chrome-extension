@@ -67,6 +67,10 @@ body {
   content: "\e607";
 }
 
+.editor .menu button.format:before {
+  content: "\e608";
+}
+
 .editor .menu .info {
   color: #999;
   line-height: 32px;

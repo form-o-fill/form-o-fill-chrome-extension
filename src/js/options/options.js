@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, js_beautify */
+/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule */
 /*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -67,18 +67,7 @@ $(function() {
       lines = lines.concat(prettyRule.split("\n"));
       editorDocument.insertLines(editorDocument.getLength() - 1, lines);
       // Prettify code a little
-      var prettyCode = js_beautify(editorSession.getValue(), {
-        "indent_size": 2,
-        "indent_char": " ",
-        "preserve_newlines": false,
-        "brace_style": "expand",
-        "space_before_conditional": true,
-        "unescape_strings": false
-      });
-      if(/\}\];$/.test(prettyCode)) {
-        prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
-      }
-      editorSession.setValue(prettyCode);
+      editorSession.setValue(Rules.format(editorSession.getValue()));
       editor.scrollToRow(editorDocument.getLength());
       responseCallback();
       infoMsg("Rule added on line " + (editorDocument.getLength() - 1));
@@ -165,6 +154,8 @@ $(function() {
       editor.setValue(ruleJson, -1);
       infoMsg("Rules loaded from disc");
     });
+  }).on("click", "button.format", function () {
+    editor.setValue(Rules.format(editor.getValue()), -1);
   });
 
   // Try to fix the erronous structure of the rules
@@ -189,14 +180,5 @@ $(function() {
       }
     }
   });
-
-  // options.html called with parmeters?
-  //var hash = window.location.href.match(/#(.*)$/);
-  //if (!hash) {
-    //return;
-  //}
-  //var commandAndTarget = hash[1].split("!");
-  //if(commandAndTarget[0] == "wtf") {
-  //}
 });
 
