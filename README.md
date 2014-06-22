@@ -8,17 +8,15 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- Add "source prettify" button!
 - show Errors somewhere (while filling)
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
-- <del>Allow local file loading of JSON files and merge them last into rules</del> Won't work. API limitations. Browser security.
+- Allow local file loading of JSON files and merge them last into rules. Use File API.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
 - help entry content
 - changelog menu entry in options
-- Wrap "value" functions in Promise. Too complicated to use resolve(value) instead of return value in async value-functions?
 - Extract ALL strings/texts to messages
 - add "de" locale at least
 - autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
