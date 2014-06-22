@@ -1,4 +1,4 @@
-/*global RuleStorage, Utils, jQuery */
+/*global RuleStorage, Utils, jQuery, js_beautify */
 /*eslint no-new-func:0*/
 "use strict";
 
@@ -72,6 +72,21 @@ var Rules = {
         resolve(rules);
       });
     });
+  },
+  format: function(rulesCodeString) {
+    // Prettify code a little
+    var prettyCode = js_beautify(rulesCodeString, {
+      "indent_size": 2,
+      "indent_char": " ",
+      "preserve_newlines": false,
+      "brace_style": "expand",
+      "space_before_conditional": true,
+      "unescape_strings": false
+    });
+    if(/\}\];$/.test(prettyCode)) {
+      prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
+    }
+    return prettyCode;
   }
 };
 
