@@ -10,6 +10,7 @@ The configuration is done via a rule definition file written in javascript.
 
 - show Errors somewhere (while filling)
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
+- add an options panel to add extarnal libs to form-o-fill via XHR
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
@@ -20,6 +21,7 @@ The configuration is done via a rule definition file written in javascript.
 - Extract ALL strings/texts to messages
 - add "de" locale at least
 - autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
+- search dropdown to support faster finding of rules in long rule definitions
 
 # LICENSE
 

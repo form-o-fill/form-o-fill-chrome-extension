@@ -1,69 +1,28 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule */
+/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor */
 /*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
+//
+var editor = new Editor("#ruleeditor-ace");
+
 $(function() {
   var noticesVisible = false;
 
-  var pages = ["help", "about", "notices"];
-  var supportedLanguages = [ "en" ];
+  I18n.loadPages(["help", "about", "notices"]);
+  ChromeBootstrap.init();
 
-  // Localization of options pages
-  // move it somewhere better than here
-  var uiLang = chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
-  var lang = supportedLanguages.filter(function (supportedLanguage) {
-    return supportedLanguage === uiLang;
-  });
-  if(lang.length === 1) {
-    lang = lang[0];
-  } else {
-    lang = supportedLanguages[0];
-  }
-  pages.forEach(function (pageName) {
-    $.get(chrome.runtime.getURL("html/options/_" + pageName + "_" + lang + ".html"), function (html) {
-      $("#" + pageName).html(html).show();
-    });
-  });
-
-  // Menu functionality for chrome-bootstrap
-  $('.menu').on("click", "a", function(ev) {
-    ev.preventDefault();
-    $('.mainview > *').removeClass("selected");
-    $('.menu li').removeClass("selected");
-    $('.mainview > *:not(.selected)').css('display', 'none');
-
-    $(ev.currentTarget).parent().addClass("selected");
-    var currentView = $($(ev.currentTarget).attr('href'));
-    currentView.css('display', 'block');
-    currentView.addClass("selected");
-    $('body')[0].scrollTop = 0;
-  });
-
-  $('.mainview > *:not(.selected)').css('display', 'none');
-
-  // Load Ace
-  var editorNode = document.querySelector("#ruleeditor-ace");
-  var editor = ace.edit(editorNode);
-  var editorSession = editor.getSession();
-  var editorDocument = editorSession.getDocument();
-
-  editor.setTheme("ace/theme/jsoneditor");
-  editorSession.setMode("ace/mode/javascript");
-  editorSession.setTabSize(2);
-  editorSession.setUseSoftTabs(true);
-
-  // reset notices once the user starts typing again
-  editorSession.on("change", function(){
+  // Initialize the Ace editor
+  editor.on("change", function() {
+    // reset notices once the user starts typing again
     if(noticesVisible) {
       $("#ruleeditor .notice").hide();
       noticesVisible = false;
     }
   });
 
-  var $menuInfo = $(".editor .menu .info");
-
-  // A function to disply a nice message in the rule editor
+  // A function to display a nice message in the rule editor
   var infoMsg = function(msg) {
+    var $menuInfo = $(".editor .menu .info");
     $menuInfo.html(msg).css({"opacity": "1"});
     setTimeout(function() {
       $menuInfo.animate({"opacity": 0}, 1000, function() {
@@ -85,16 +44,16 @@ $(function() {
         lines.push(",");
       }
       lines = lines.concat(prettyRule.split("\n"));
-      editorDocument.insertLines(editorDocument.getLength() - 1, lines);
+      editor.document().insertLines(editor.document().getLength() - 1, lines);
       // Prettify code a little
-      editorSession.setValue(Rules.format(editorSession.getValue()));
-      editor.scrollToRow(editorDocument.getLength());
+      editor.session().setValue(Rules.format(editor.session().getValue()));
+      editor.scrollToRow(editor.document().getLength());
       responseCallback();
-      infoMsg("Rule added on line " + (editorDocument.getLength() - 1));
+      infoMsg("Rule added on line " + (editor.document().getLength() - 1));
     });
   };
 
-  // Check for freshly extracted rules
+  // Check for freshly extracted rules and show UI
   RuleStorage.loadRules(Utils.keys.extractedRule).then(function (extractedRule) {
     // There are extracted rules
     if (typeof extractedRule !== "undefined") {
@@ -112,53 +71,21 @@ $(function() {
     }
   });
 
-  // Cleans up the rules code
-  // eg. remove trailing newlines
-  var cleanupRulesCode = function() {
-    var lastLineIndex = editorDocument.getLength() - 1;
-    var line = null;
-    for(var i = lastLineIndex; i > 0; i--) {
-      line = editorDocument.getLine(i).trim();
-      if(line === "") {
-        editorDocument.removeLines(i,i);
-      } else {
-        break;
-      }
-    }
-    return true;
-  };
-
   // Simple checks for the neccessary structure of the rules
   // and displays a nice notice
-  var syntaxCheckRulesOk = function() {
-    var errors = [];
 
-    // Check if there are some ACE Annotations (aka. errors) present
-    var annotationCount =  editorSession.getAnnotations().length;
-    if(annotationCount > 0) {
-      errors.push("annotations-present");
-    }
-
-    // Check structure of rules code
-    if(!/^(var\s+)?([a-z_])+\s+=\s+\[\s?$/i.test(editorSession.getLine(0)) ||
-       !/^\s*\];\s*$/.test(editorSession.getLine(editorSession.getLength() - 1))) {
-      errors.push("var-needed");
-    }
-
+  // Save the rules
+  var saveRules = function() {
+    var errors = Rules.syntaxCheck(editor);
     if(errors.length > 0) {
       errors.forEach(function (errorClass) {
         $("#ruleeditor .notice." + errorClass).show();
       });
       infoMsg("Rules invalid, not saved");
       noticesVisible = true;
-      return false;
     }
-    return true;
-  };
 
-  // Save the rules
-  var saveRules = function() {
-    if(cleanupRulesCode() && syntaxCheckRulesOk()) {
+    if(editor.cleanUp() && !noticesVisible) {
       $("#ruleeditor .notice").hide();
       RuleStorage.saveRules(editor.getValue()).then(function () {
         infoMsg("Rules saved");
@@ -166,40 +93,24 @@ $(function() {
     }
   };
 
-  // Button handling for "save" and "load"
-  $(".editor .menu").on("click", "button.save", function () {
-    saveRules();
-  }).on("click", "button.reload", function () {
+  var loadRules = function() {
     RuleStorage.loadRules().then(function (ruleJson) {
       editor.setValue(ruleJson, -1);
       infoMsg("Rules loaded from disc");
     });
+  };
+
+  // Button handling for "save" and "load"
+  $(".editor .menu").on("click", "button.save", function () {
+    saveRules();
+  }).on("click", "button.reload", function () {
+    loadRules();
   }).on("click", "button.format", function () {
-    editor.setValue(Rules.format(editor.getValue()), -1);
-    infoMsg("Rules formatted bit not saved");
+    editor.format(Rules);
+    infoMsg("Rules formatted but not saved");
   });
 
   // Try to fix the erronous structure of the rules
-  $("a.cmd-fix-var-needed").on("click", function() {
-    if(noticesVisible) {
-      // Fix the first line not correctly containing "var rules = ["
-      var lineStart = editorDocument.getLine(0);
-      var lineCount = editorDocument.getLength();
-      var lineEnd = editorDocument.getLine(lineCount - 1);
-
-      if(lineStart.indexOf("{") > -1) {
-        // Assume "var rules = [" is missing
-        editorDocument.insertLines(0, [ "var rules = [" ]);
-      } else {
-        var AceRange = ace.require('ace/range').Range;
-        editorDocument.replace(new AceRange(0,0,0,999), "var rules = [");
-      }
-
-      // Fix the last line not containing "];"
-      if(!/^\s*\];\s*$/.test(lineEnd)) {
-        editorDocument.insertLines(lineCount, [ "];" ]);
-      }
-    }
-  });
+  $(document).on("click", "a.cmd-fix-var-needed", editor.fixRules);
 });
 

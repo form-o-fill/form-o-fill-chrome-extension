@@ -87,6 +87,24 @@ var Rules = {
       prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
     }
     return prettyCode;
+  },
+  // Simple checks for the neccessary structure of the rules
+  syntaxCheck: function(editor) {
+    var errors = [];
+
+    // Check if there are some ACE Annotations (aka. errors) present
+    var annotationCount =  editor.session().getAnnotations().length;
+    if(annotationCount > 0) {
+      errors.push("annotations-present");
+    }
+
+    // Check structure of rules code
+    if(!/^(var\s+)?([a-z_])+\s+=\s+\[\s?$/i.test(editor.session().getLine(0)) ||
+       !/^\s*\];\s*$/.test(editor.session().getLine(editor.session().getLength() - 1))) {
+      errors.push("var-needed");
+    }
+
+    return errors;
   }
 };
 
