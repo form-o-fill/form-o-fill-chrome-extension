@@ -37,6 +37,7 @@ $(function() {
     editor.setValue(ruleString, -1);
   });
 
+  // Append text to the end of the rule definitions
   var appendRule = function(prettyRule, responseCallback) {
     // Use
     Rules.load().then(function(rulesFunction) {
@@ -71,9 +72,6 @@ $(function() {
       });
     }
   });
-
-  // Simple checks for the neccessary structure of the rules
-  // and displays a nice notice
 
   // Save the rules
   var saveRules = function() {
