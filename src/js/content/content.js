@@ -10,8 +10,17 @@ chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (message) {
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
-      Utils.log("Filling " + message.selector + " with value " + JSONF.stringify(message.value));
+      Utils.log("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
       FormFiller.fill(message.selector, message.value);
+    }
+
+    if (message.action === "getErrors") {
+      Utils.log("[content.js] Returning " + Errors.errors.length + " errors to bg.js");
+      var response = {
+        "action": "getErrors",
+        "errors": Errors.errors
+      };
+      port.postMessage(response);
     }
   });
 });
