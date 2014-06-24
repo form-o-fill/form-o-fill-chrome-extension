@@ -1,16 +1,14 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor */
+/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
 /*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 //
 
 var editor = new Editor("#ruleeditor-ace");
-var errorsWhileFilling = [];
-
 $(function() {
   var noticesVisible = false;
 
-  I18n.loadPages(["help", "about", "notices"]);
+  I18n.loadPages(["help", "about"]);
   ChromeBootstrap.init();
 
   editor.on("change", function() {
@@ -117,9 +115,23 @@ $(function() {
 
   // Listener for messages
   chrome.runtime.onMessage.addListener(function (message) {
-    if(message.action === "showFillErrors") {
-      errorsWhileFilling = message.errors;
-      //TODO continue here
+    Utils.log("[options.js] Received a message '" + JSONF.stringify(message));
+
+    if(message.action === "showFillErrors" && message.errors && message.rule) {
+      // Test with: chrome.runtime.sendMessage({"action": "showFillErrors", "errors": '[{"selector": "s", "value": "v", "message": "m"}]', "rule": { "name": "name", "url": "/abc/"}});
+      Utils.log("[options.js] Received 'showFillErrors' with errors = " + JSONF.stringify(message.errors) + ", rule = " + JSONF.stringify(message.rule));
+      var errors = JSONF.parse(message.errors);
+      var rule = message.rule;
+
+      var $notice = $("#ruleeditor .notice.form-fill-errors");
+      var tableTrs = [];
+      errors.forEach(function (error) {
+        tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+      });
+      $notice.find("table").append(tableTrs.join("\n"));
+      $notice.find(".rule-name").html(rule.name);
+      $notice.find(".rule-url").html(rule.url);
+      $notice.show();
       // create editor annotations
       // make notice visible with errors
     }

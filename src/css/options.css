@@ -111,3 +111,22 @@ body {
   background-color: #bbb;
   padding: 2px 4px;
 }
+
+.form-fill-errors table {
+  font-family: monospace, Arial, Helvetica;
+  border: 1px solid #bbb;
+}
+
+.form-fill-errors th {
+    text-align: left;
+    background-color: transparent;
+}
+
+.form-fill-errors tr:first-child {
+  background-color: #ddd;
+}
+
+.form-fill-errors td {
+    padding: 0 10px 0 0;
+}
+

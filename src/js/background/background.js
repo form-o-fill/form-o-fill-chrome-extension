@@ -1,4 +1,4 @@
-/*global Rules, Utils, FormUtil, Notification*/
+/*global Rules, Utils, FormUtil, Notification, JSONF*/
 /* eslint complexity:0 */
 (function formoFillEvents() {
   "use strict";
@@ -58,7 +58,7 @@
   // Listen for messages
   chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
-    Utils.log("[bj.js] received message " + message);
+    Utils.log("[bj.js] Received message " + JSONF.stringify(message));
 
     // From popup.js:
     // This receives the index of the rule to apply when there is more than one match

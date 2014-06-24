@@ -31,7 +31,29 @@
         </header>
         <div class="content">
           <div class="editor">
-            <div id="notices"></div>
+            <div id="notices">
+            
+              <div class="notice var-needed">
+                Please start your rules with <span class="code">rules = [</span> and end it with <span class="code">];</span>.
+                <a href="#" class="cmd-fix-var-needed">Fix it!</a>
+              </div>
+              <div class="notice annotations-present">
+                There are syntax errors present (check the gutter annotations in the editor).
+              </div>
+              <div class="notice extracted-present">
+                There is an extracted form present, press the "<a href="#" class="cmd-append-extracted">Append extracted rule</a>" button below to append the rule at the bottom of your rule definition.
+              </div>
+              <div class="notice form-fill-errors">
+                There have been errors while filling the form. The rule used was '<span class="rule-name"></span>' (url: '<span class="rule-url"></span>')
+                <table>
+                  <tr>
+                    <th>selector</th>
+                    <th>value</th>
+                    <th>error</th>
+                  </tr>
+                </table>
+              </div>
+            </div>
             <div class="menu">
               <button class='save'>Save rules</button>
               <button class='reload'>Reload saved rules</button>

@@ -1,21 +1,21 @@
-/*global Errors, jQuery, JSONF*/
+/*global FormError, jQuery, JSONF*/
+/*eslint complexity:0*/
 var FormFiller = {
+  error: null,
   fill: function(selector, value) {
-    Errors.init();
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
     var fillMethod = null;
 
     if (domNodes.length === 0) {
-      Errors.add("Could not find a field (" + selector + ")");
-      return false;
+      return new FormError(selector, value, "Could not find field");
     }
 
     var parsedValue = JSONF.parse(value);
 
     // Fill field only if value is not null
     if(parsedValue === null) {
-      return false;
+      return null;
     }
 
     // Call field specific method on EVERY field found
@@ -36,7 +36,7 @@ var FormFiller = {
       }
 
       // Fill field using the specialized method or default
-      fillMethod(domNode, parsedValue, selector);
+      return fillMethod(domNode, parsedValue, selector) || null;
     }
 
   },
@@ -77,49 +77,49 @@ var FormFiller = {
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'date' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-formats");
+      return new FormError(selector, value, "'date' field cannot be filled with this. See http://bit.ly/formofill-formats");
     }
   },
   _fillMonth: function(domNode, value, selector) {
     if(/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'month' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-month");
+      return new FormError(selector, value, "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month");
     }
   },
   _fillWeek: function(domNode, value, selector) {
     if(/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'week' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-week");
+      return new FormError(selector, value, "'week' field cannot be filled with tihs value. See http://bit.ly/formofill-format-week");
     }
   },
   _fillTime: function(domNode, value, selector) {
     if(/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'time' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-time");
+      return new FormError(selector, value, "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time");
     }
   },
   _fillDatetime: function(domNode, value, selector) {
     if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'datetime' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-date-time");
+      return new FormError(selector, value, "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time");
     }
   },
   _fillDatetimeLocal: function(domNode, value, selector) {
     if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'datetime-local' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-date-time-local");
+      return new FormError(selector, value, "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local");
     }
   },
   _fillColor: function(domNode, value, selector) {
     if(/^#[0-9a-f]{6}$/i.test(value)) {
       domNode.value = value;
     } else {
-      Errors.add("'color' field (" + selector + ") cannot be filled with '" + value + "'. See http://bit.ly/formofill-format-color");
+      return new FormError(selector, value, "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color");
     }
   },
   _typeMethod: function(type) {
