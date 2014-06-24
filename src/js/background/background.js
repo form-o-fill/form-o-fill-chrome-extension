@@ -1,4 +1,5 @@
-/*global Rules, Utils, FormUtil*/
+/*global Rules, Utils, FormUtil, Notification*/
+/* eslint complexity:0 */
 (function formoFillEvents() {
   "use strict";
 
@@ -56,7 +57,10 @@
 
   // Listen for messages
   chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
-    // Fom popup.js:
+
+    Utils.log("[bj.js] received message " + message);
+
+    // From popup.js:
     // This receives the index of the rule to apply when there is more than one match
     if (message.action === "fillWithRule") {
       Utils.log("[bg.js] Called by popup.js with rule index " + message.index + ", sender = " + sender);
@@ -74,22 +78,7 @@
     // Display a notification to the user that the extract has finished
     if(message.action === "extractFinishedNotification") {
       Utils.log("[bg.js] received 'extractFinishedNotification'");
-      var formNotificationId = null;
-      chrome.notifications.create("", {
-        "iconUrl": chrome.runtime.getURL("images/icon_48.png"),
-        "type": "basic",
-        "title": "Form-O-Fill",
-        "message": "Extracted your form. Click here to check the options panel for more info.",
-        "isClickable": true
-      }, function(notificationId) {
-        formNotificationId = notificationId;
-      });
-
-      chrome.notifications.onClicked.addListener(function (notificationId) {
-        if(notificationId === formNotificationId) {
-          Utils.openOptions();
-        }
-      });
+      Notification.create("Extracted your form. Click here to check the options panel for more info.", Utils.openOptions);
     }
   });
 
