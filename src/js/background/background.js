@@ -1,10 +1,11 @@
-/*global Rules, Utils, JSONF*/
+/*global Rules, Utils, FormUtil*/
 (function formoFillEvents() {
   "use strict";
 
   var lastMatchingRules = [];
   var lastActiveTab = null;
 
+  // Shows number of matches in the extension's icon
   var refreshMatchCounter = function (tab, count) {
     var txt = chrome.i18n.getMessage("no_match_available");
     if (count && count > 0) {
@@ -14,6 +15,7 @@
     chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tab.id});
   };
 
+  // When the user changes a tab, search for matching ules fo that url
   var onTabReady = function(tabId) {
     chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
     Utils.log("onTabReady on Tab " + tabId);
@@ -24,30 +26,14 @@
         Rules.matchesForUrl(tab.url).then(function (matchingRules) {
           lastMatchingRules = matchingRules;
           refreshMatchCounter(tab, matchingRules.length);
+          // No matches? Multipe Matches? Show popup when the user clicks in the icon
+          // A single match should just fill the form (see below)
           if (matchingRules.length != 1) {
             chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
           }
         });
       }
     });
-  };
-
-  var FormFiller = {
-    applyRule: function(rule) {
-      var message = null;
-      var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
-      Utils.log("Applying rule " + JSONF.stringify(rule) + " to tab " + lastActiveTab.id);
-
-      rule.fields.forEach(function (field) {
-        message = {
-          "action": "fillField",
-          "selector": field.selector,
-          "value": JSONF.stringify(field.value)
-        };
-        Utils.log("Posting to content.js: Fill " + field.selector + " with " + field.value);
-        port.postMessage(message);
-      });
-    }
   };
 
   // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
@@ -65,7 +51,7 @@
   // This event will only fire if NO POPUP is set
   // This is the case when only one rule matches
   chrome.browserAction.onClicked.addListener(function (){
-    FormFiller.applyRule(lastMatchingRules[0]);
+    FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
   });
 
   // Listen for messages
@@ -74,7 +60,7 @@
     // This receives the index of the rule to apply when there is more than one match
     if (message.action === "fillWithRule") {
       Utils.log("[bg.js] Called by popup.js with rule index " + message.index + ", sender = " + sender);
-      FormFiller.applyRule(lastMatchingRules[message.index]);
+      FormUtil.applyRule(lastMatchingRules[message.index], lastActiveTab);
       sendResponse(true);
     }
 

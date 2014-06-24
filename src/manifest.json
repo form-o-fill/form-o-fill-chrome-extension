@@ -53,6 +53,7 @@
       "js/global/utils.js", 
       "js/global/rule_storage.js", 
       "js/global/rules.js",
+      "js/background/form_util.js",
       "js/background/background.js",
       "js/background/context_menu.js"
     ],
