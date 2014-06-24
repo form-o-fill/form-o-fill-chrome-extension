@@ -22,10 +22,11 @@ var FormUtil = {
     port.onMessage.addListener(function (message) {
       // Make errors form content scripts available here
       if(message.action === "getErrors") {
-        Utils.log("[firm_util.js] received 'getErrors'");
+        Utils.log("[firm_util.js] received 'getErrors' with " + message.errors.length + " errors");
         if(message.errors.length > 0) {
           Notification.create("There were some errors when filling this form. Click here to view them.", function() {
-            Utils.openOptions("#fillErrors");
+            // Forward the messages to options.js
+            chrome.runtime.sendMessage({"action": "showFillErrors", "errors": message.errors});
           });
         }
       }

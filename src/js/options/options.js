@@ -5,13 +5,14 @@
 //
 
 var editor = new Editor("#ruleeditor-ace");
+var errorsWhileFilling = [];
+
 $(function() {
   var noticesVisible = false;
 
   I18n.loadPages(["help", "about", "notices"]);
   ChromeBootstrap.init();
 
-  // Initialize the Ace editor
   editor.on("change", function() {
     // reset notices once the user starts typing again
     if(noticesVisible) {
@@ -112,6 +113,16 @@ $(function() {
   // Try to fix the erronous structure of the rules
   $(document).on("click", "a.cmd-fix-var-needed", function() {
     editor.fixRules();
+  });
+
+  // Listener for messages
+  chrome.runtime.onMessage.addListener(function (message) {
+    if(message.action === "showFillErrors") {
+      errorsWhileFilling = message.errors;
+      //TODO continue here
+      // create editor annotations
+      // make notice visible with errors
+    }
   });
 });
 
