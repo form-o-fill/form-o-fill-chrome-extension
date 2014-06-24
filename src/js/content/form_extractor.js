@@ -95,7 +95,7 @@ var FormExtractor = {
   },
   _valueRadio: function(domNode) {
     // if checked include the radiobutton in the rule
-    return domNode.checked ? true : null;
+    return domNode.checked ? domNode.value : null;
   },
   _valueSelectOne: function(domNode) {
     var optionNode = null;

@@ -25,7 +25,8 @@ var FormFiller = {
     // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
     //
     // eg. _fillDatetimeLocal(value)
-    for (var i = 0; i < domNodes.length; ++i) {
+    var i;
+    for (i = 0; i < domNodes.length; ++i) {
       domNode = domNodes[i];
       fillMethod = this._fillMethod(domNode);
 
@@ -43,7 +44,7 @@ var FormFiller = {
     domNode.value = value;
   },
   _fillCheckbox: function(domNode, value) {
-    domNode.checked = value;
+    domNode.checked = (domNode.value == value);
   },
   _fillRadio: function(domNode, value) {
     domNode.checked = (domNode.value === value);
