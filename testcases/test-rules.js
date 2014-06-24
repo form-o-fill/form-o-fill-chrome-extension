@@ -1,6 +1,6 @@
 var rules = [
   {
-    url: ".*test.*",
+    url: /.*test.*/,
     name: "Testcase for all <form> field types",
     fields: [
       {
