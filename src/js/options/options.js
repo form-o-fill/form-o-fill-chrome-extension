@@ -3,8 +3,8 @@
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 //
-var editor = new Editor("#ruleeditor-ace");
 
+var editor = new Editor("#ruleeditor-ace");
 $(function() {
   var noticesVisible = false;
 
@@ -22,13 +22,14 @@ $(function() {
 
   // A function to display a nice message in the rule editor
   var infoMsg = function(msg) {
+    var fadeAfterMSec = 1000;
     var $menuInfo = $(".editor .menu .info");
     $menuInfo.html(msg).css({"opacity": "1"});
     setTimeout(function() {
       $menuInfo.animate({"opacity": 0}, 1000, function() {
         $(this).html("");
       });
-    }, 1000);
+    }, fadeAfterMSec);
   };
 
   // Fill with data from storage
@@ -111,6 +112,8 @@ $(function() {
   });
 
   // Try to fix the erronous structure of the rules
-  $(document).on("click", "a.cmd-fix-var-needed", editor.fixRules);
+  $(document).on("click", "a.cmd-fix-var-needed", function() {
+    editor.fixRules();
+  });
 });
 
