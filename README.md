@@ -8,6 +8,7 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
+- slashes in "url" must be escaped! very counter intuitive
 - show Errors somewhere (while filling)
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - add an options panel to add extarnal libs to form-o-fill via XHR
