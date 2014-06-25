@@ -13,11 +13,6 @@ var FormFiller = {
 
     var parsedValue = JSONF.parse(value);
 
-    // Fill field only if value is not null
-    if(parsedValue === null) {
-      return null;
-    }
-
     // Call field specific method on EVERY field found
     //
     // "_fill" + the camelized version of one of these:
@@ -35,8 +30,11 @@ var FormFiller = {
         parsedValue = parsedValue(jQuery(domNode));
       }
 
-      // Fill field using the specialized method or default
-      return fillMethod(domNode, parsedValue, selector) || null;
+      // Fill field only if value is not null or not defined
+      if(parsedValue !== null && typeof parsedValue !== "undefined") {
+        // Fill field using the specialized method or default
+        return fillMethod(domNode, parsedValue, selector) || null;
+      }
     }
 
   },

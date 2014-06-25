@@ -2,7 +2,8 @@
 var Utils = {
   keys: {
     extractedRule: "form-o-fill-extracted",
-    rules: "fom-o-fill-rules"
+    rules: "form-o-fill-rules",
+    errors: "form-o-fill-errors"
   },
   showExtractOverlay: function() {
     var message = {

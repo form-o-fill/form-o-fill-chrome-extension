@@ -72,6 +72,25 @@ $(function() {
     }
   });
 
+  // Check for rule filling errors
+  RuleStorage.loadRules(Utils.keys.errors).then(function (errorsStorage) {
+    if(typeof errorsStorage !== "undefined") {
+      var rule = errorsStorage.rule;
+      var errors = errorsStorage.errors;
+      var $notice = $("#ruleeditor .notice.form-fill-errors");
+      var tableTrs = [];
+      errors.forEach(function (error) {
+        tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+      });
+      $notice.find("table").append(tableTrs.join("\n"));
+      $notice.find(".rule-name").html(rule.name);
+      $notice.find(".rule-url").html(rule.url);
+      $notice.show();
+      // create editor annotations
+      // remove errors from storage
+    }
+  });
+
   // Save the rules
   var saveRules = function() {
     var errors = Rules.syntaxCheck(editor);
@@ -113,28 +132,5 @@ $(function() {
     editor.fixRules();
   });
 
-  // Listener for messages
-  chrome.runtime.onMessage.addListener(function (message) {
-    Utils.log("[options.js] Received a message '" + JSONF.stringify(message));
-
-    if(message.action === "showFillErrors" && message.errors && message.rule) {
-      // Test with: chrome.runtime.sendMessage({"action": "showFillErrors", "errors": '[{"selector": "s", "value": "v", "message": "m"}]', "rule": { "name": "name", "url": "/abc/"}});
-      Utils.log("[options.js] Received 'showFillErrors' with errors = " + JSONF.stringify(message.errors) + ", rule = " + JSONF.stringify(message.rule));
-      var errors = JSONF.parse(message.errors);
-      var rule = message.rule;
-
-      var $notice = $("#ruleeditor .notice.form-fill-errors");
-      var tableTrs = [];
-      errors.forEach(function (error) {
-        tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
-      });
-      $notice.find("table").append(tableTrs.join("\n"));
-      $notice.find(".rule-name").html(rule.name);
-      $notice.find(".rule-url").html(rule.url);
-      $notice.show();
-      // create editor annotations
-      // make notice visible with errors
-    }
-  });
 });
 

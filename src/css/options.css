@@ -112,7 +112,12 @@ body {
   padding: 2px 4px;
 }
 
+#ruleeditor .notice.form-fill-errors span {
+  text-decoration: underline;
+}
+
 .form-fill-errors table {
+  margin-top: 10px;
   font-family: monospace, Arial, Helvetica;
   border: 1px solid #bbb;
 }
