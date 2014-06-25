@@ -83,11 +83,9 @@ $(function() {
         tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
       });
       $notice.find("table").append(tableTrs.join("\n"));
-      $notice.find(".rule-name").html(rule.name);
-      $notice.find(".rule-url").html(rule.url);
+      $notice.find(".rule-name").html(rule.nameClean);
       $notice.show();
-      // create editor annotations
-      // remove errors from storage
+      RuleStorage.deleteRules(Utils.keys.errors);
     }
   });
 
@@ -130,6 +128,21 @@ $(function() {
   // Try to fix the erronous structure of the rules
   $(document).on("click", "a.cmd-fix-var-needed", function() {
     editor.fixRules();
+  });
+
+  // Event handler for notices
+  $(".notice.form-fill-errors").on("click", function () {
+    RuleStorage.deleteRules(Utils.keys.errors);
+    $(this).hide();
+  });
+
+  $(".notice.extracted-present").on("click", function () {
+    RuleStorage.deleteRules(Utils.keys.extractedRule);
+    $(this).hide();
+  });
+
+  $(".notice.annotations-present, .notice.var-needed").on("click", function () {
+    $(this).hide();
   });
 
 });

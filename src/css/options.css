@@ -86,13 +86,14 @@ body {
 #ruleeditor .notice {
   display: none;
   border: 1px solid #909090;
-  padding: 10px 10px 10px 36px;
+  padding: 10px 25px 10px 36px;
   border-radius: 5px;
   vertical-align: middle;
   font-size: 14px;
   position: relative;
   background-color: #ccc;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 #ruleeditor .notice:before {
@@ -104,6 +105,17 @@ body {
   position: absolute;
   top: 6px;
   left: 7px;
+}
+
+#ruleeditor .notice:after {
+  font-family: "icomoon";
+  font-size: 18px;
+  content: "\e609";
+  padding: 2px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #999;
 }
 
 #ruleeditor .notice .code {

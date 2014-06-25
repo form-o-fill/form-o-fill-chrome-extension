@@ -21,6 +21,7 @@ Rule.create = function(options) {
     rule[key] = options[key];
   });
   rule.matcher = new RegExp(rule.url);
+  rule.nameClean = this.name.replace("<", "&lt;");
   return rule;
 };
 
