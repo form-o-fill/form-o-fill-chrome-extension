@@ -1,9 +1,9 @@
 # Form-O-Fill Chrome Extension
 
+### A programmable form filler for developers.
+
 This is a chrome extension for filling out forms in webpages.
-
 This extension is targeted at web developers who frequently must fill out long \<form>s while working on a website.
-
 The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
