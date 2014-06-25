@@ -30,14 +30,18 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [ 
         "vendor/jquery/jquery-2.1.1.min.js", 
+        "vendor/chance.js/chance.js" ,
+        "vendor/moment.js/moment-with-langs.js" ,
         "js/global/utils.js", 
         "js/global/jsonf.js", 
         "js/global/rules.js", 
         "js/global/rule_storage.js", 
+        "js/global/i18n.js",
         "js/content/form_errors.js", 
         "js/content/form_filler.js", 
         "js/content/form_extractor.js", 
         "js/content/extract_instrumentation.js" ,
+        "js/content/libs.js",
         "js/content/content.js" 
       ],
       "css": [
