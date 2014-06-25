@@ -8,8 +8,6 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- show annotations in editor for all errors
-- vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - add an options panel to add external libs to form-o-fill via XHR
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
@@ -22,6 +20,7 @@ The configuration is done via a rule definition file written in javascript.
 - add "de" locale at least
 - autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
 - search dropdown to support faster finding of rules in long rule definitions
+- show annotations in editor for all errors
 
 # LICENSE
 
