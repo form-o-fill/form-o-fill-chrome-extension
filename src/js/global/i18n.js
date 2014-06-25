@@ -10,7 +10,7 @@ var I18n = {
     if(this._lang) {
       return this._lang;
     }
-    var uiLang = chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
+    var uiLang = this.userLocale();
     var chosenLang = this.supportedLanguages.filter(function (supportedLanguage) {
       return supportedLanguage === uiLang;
     });
@@ -20,6 +20,9 @@ var I18n = {
       this._lang = this.supportedLanguages[0];
     }
     return this._lang;
+  },
+  userLocale: function() {
+    return chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
   },
   loadPages: function(pages) {
     var i18n = this;
