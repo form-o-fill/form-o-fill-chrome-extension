@@ -1,4 +1,4 @@
-/*global FormError, jQuery, JSONF*/
+/*global FormError, jQuery, JSONF, Utils*/
 /*eslint complexity:0*/
 var FormFiller = {
   error: null,
@@ -27,7 +27,14 @@ var FormFiller = {
 
       // if the value is a function, call it with the jQuery wrapped domNode
       if(typeof parsedValue === "function") {
-        parsedValue = parsedValue(jQuery(domNode));
+        try {
+          parsedValue = parsedValue(jQuery(domNode));
+        } catch (e) {
+          Utils.log("[form_filler.js] Got an exception executing value function: " + parsedValue);
+          Utils.log("[form_filler.js] Original exception: " + e);
+          Utils.log("[form_filler.js] Original stack: " + e.stack);
+          return new FormError(selector, value, "Error while executing value-function: " + JSONF.stringify(e.message));
+        }
       }
 
       // Fill field only if value is not null or not defined
