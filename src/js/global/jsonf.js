@@ -14,12 +14,12 @@ var JSONF = {
     return value;
   },
   _functionDeserializer: function(key, value) {
-    if (key === "" && value.indexOf("function") === -1) {
+    if (key === "" && value.indexOf("function") !== 0) {
       return value;
     }
 
     if (typeof value === "string") {
-      var rfunc = /function[^\(]*\(([^\)]*)\)[^\{]*{([^\}]*)\}/;
+      var rfunc = /^function[^\(]*\(([^\)]*)\)[^\{]*{([^\}]*)\}/;
       var match = value.match(rfunc);
 
       if (match) {
