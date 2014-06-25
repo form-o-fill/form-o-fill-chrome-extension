@@ -8,7 +8,6 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- show Errors somewhere. TODO: remove errors when filling again or clicking the close button (crate X button first) 
 - show annotations in editor for all errors
 - vendor chance.js + moment.js and make them available in value function (lib namespace or not?)
 - add an options panel to add external libs to form-o-fill via XHR
