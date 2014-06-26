@@ -28,8 +28,13 @@ var FormFiller = {
       // if the value is a function, call it with the jQuery wrapped domNode
       if(typeof parsedValue === "function") {
         try {
-          // wrap pasedValue function into function(beforeData) { return ORIGINAL(); } and execute
-          parsedValue = parsedValue(jQuery(domNode));
+          // wrap parsedValue function into function(beforeData) { return ORIGINAL(); } so that
+          // ORIGINAL can use beforeData inside it
+          /*eslint-disable */
+          parsedValue = (function($data) {
+            return parsedValue(jQuery(domNode));
+          })(beforeData);
+          /*eslint-enable */
         } catch (e) {
           Utils.log("[form_filler.js] Got an exception executing value function: " + parsedValue);
           Utils.log("[form_filler.js] Original exception: " + e);
