@@ -8,7 +8,6 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- add an options panel to add external libs to form-o-fill via XHR
 - before (and after?) function blocks for every rule defintion
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
