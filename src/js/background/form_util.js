@@ -4,22 +4,48 @@ var FormUtil = {
   applyRule: function(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;
-    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
-    Utils.log("Applying rule " + JSONF.stringify(this.lastRule) + " to tab " + lastActiveTab.id);
+    var beforeData;
 
-    rule.fields.forEach(function (field) {
-      message = {
-        "action": "fillField",
-        "selector": field.selector,
-        "value": JSONF.stringify(field.value)
-      };
-      port.postMessage(message);
-      Utils.log("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+    // Open long standing connection to the tab containing the form to be worked on
+    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+
+    // Default instantaneous resolving promise:
+    var beforeFunction = new Promise(function(resolve) {
+      resolve(null);
     });
 
-    // Get errors. Receiver is in content.js
-    Utils.log("[form_util.js] Posted to content.js: 'getErrors'");
-    port.postMessage({"action": "getErrors"});
+    Utils.log("Applying rule " + JSONF.stringify(this.lastRule) + " to tab " + lastActiveTab.id);
+
+    // Is there a 'before' block?
+    if(typeof rule.before === "function") {
+      // Wrap the function into an Promise
+      // check for Promise and resolve(...); first
+      beforeFunction = rule.before;
+      Utils.log("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
+    }
+
+    // call either the default - instantaneously resolving Promise (default) or
+    // the before function defined in the rule.
+    beforeFunction().then(function(data) {
+      beforeData = data;
+      Utils.log("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+
+      rule.fields.forEach(function (field) {
+        message = {
+          "action": "fillField",
+          "selector": field.selector,
+          "value": JSONF.stringify(field.value),
+          "beforeData": beforeData
+        };
+        port.postMessage(message);
+        Utils.log("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+      });
+
+      // Get errors. Receiver is in content.js
+      // TODO: Not sure if the getErrors call can occur BEFORE all fillField calls have been accomplished?!
+      Utils.log("[form_util.js] Posted to content.js: 'getErrors'");
+      port.postMessage({"action": "getErrors"});
+    });
 
     port.onMessage.addListener(function (message) {
       // Make errors from content scripts available here

@@ -2,7 +2,7 @@
 /*eslint complexity:0*/
 var FormFiller = {
   error: null,
-  fill: function(selector, value) {
+  fill: function(selector, value, beforeData) {
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
     var fillMethod = null;
@@ -28,6 +28,7 @@ var FormFiller = {
       // if the value is a function, call it with the jQuery wrapped domNode
       if(typeof parsedValue === "function") {
         try {
+          // wrap pasedValue function into function(beforeData) { return ORIGINAL(); } and execute
           parsedValue = parsedValue(jQuery(domNode));
         } catch (e) {
           Utils.log("[form_filler.js] Got an exception executing value function: " + parsedValue);

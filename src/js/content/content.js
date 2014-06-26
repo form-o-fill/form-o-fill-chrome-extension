@@ -16,7 +16,12 @@ chrome.runtime.onConnect.addListener(function (port) {
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
       Utils.log("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
-      currentError = FormFiller.fill(message.selector, message.value);
+      // BUILD: remove start
+      if (message.beforeData && message.beforeData !== null) {
+        Utils.log("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
+      }
+      // BUILD: remove end
+      currentError = FormFiller.fill(message.selector, message.value, message.beforeData);
       if(currentError !== null) {
         Utils.log("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
