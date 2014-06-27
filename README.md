@@ -8,7 +8,7 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- before (and after?) function blocks for every rule defintion
+- Add multiple tabs / rules to ruleditor
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
