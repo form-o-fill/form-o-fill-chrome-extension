@@ -1,4 +1,4 @@
-/*global RuleStorage, Utils, jQuery, js_beautify */
+/*global Storage, Utils, jQuery, js_beautify */
 /*eslint no-new-func:0*/
 "use strict";
 
@@ -47,7 +47,7 @@ var Rules = {
         Utils.log("Rules.load resolved using " + that.cache.length + " cache entries");
         resolve(that.cache);
       }
-      RuleStorage.loadRules().then(function (rulesCode) {
+      Storage.load().then(function (rulesCode) {
         var rules = [];
         if(rulesCode) {
           // remove wrapper

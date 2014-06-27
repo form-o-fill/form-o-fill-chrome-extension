@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, RuleStorage, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
+/*global $, JSONEditor, ace, Storage, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
 /*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -32,7 +32,7 @@ $(function() {
   };
 
   // Fill with data from storage
-  RuleStorage.loadRules().then(function (ruleString) {
+  Storage.load().then(function (ruleString) {
     editor.setValue(ruleString, -1);
   });
 
@@ -55,7 +55,7 @@ $(function() {
   };
 
   // Check for freshly extracted rules and show UI
-  RuleStorage.loadRules(Utils.keys.extractedRule).then(function (extractedRule) {
+  Storage.load(Utils.keys.extractedRule).then(function (extractedRule) {
     // There are extracted rules
     if (typeof extractedRule !== "undefined") {
       var $notice = $("#ruleeditor .notice.extracted-present");
@@ -66,14 +66,14 @@ $(function() {
         appendRule(extractedRule, function() {
           $("#ruleeditor button.append-extracted").prop("disabled","disabled");
           $notice.hide();
-          RuleStorage.deleteRules(Utils.keys.extractedRule);
+          Storage.delete(Utils.keys.extractedRule);
         });
       });
     }
   });
 
   // Check for rule filling errors
-  RuleStorage.loadRules(Utils.keys.errors).then(function (errorsStorage) {
+  Storage.load(Utils.keys.errors).then(function (errorsStorage) {
     if(typeof errorsStorage !== "undefined") {
       var rule = errorsStorage.rule;
       var errors = errorsStorage.errors;
@@ -85,7 +85,7 @@ $(function() {
       $notice.find("table").append(tableTrs.join("\n"));
       $notice.find(".rule-name").html(rule.nameClean);
       $notice.show();
-      RuleStorage.deleteRules(Utils.keys.errors);
+      Storage.delete(Utils.keys.errors);
     }
   });
 
@@ -102,14 +102,14 @@ $(function() {
 
     if(editor.cleanUp() && !noticesVisible) {
       $("#ruleeditor .notice").hide();
-      RuleStorage.saveRules(editor.getValue()).then(function () {
+      Storage.save(editor.getValue()).then(function () {
         infoMsg("Rules saved");
       });
     }
   };
 
   var loadRules = function() {
-    RuleStorage.loadRules().then(function (ruleJson) {
+    Storage.load().then(function (ruleJson) {
       editor.setValue(ruleJson, -1);
       infoMsg("Rules loaded from disc");
     });
@@ -132,12 +132,12 @@ $(function() {
 
   // Event handler for notices
   $(".notice.form-fill-errors").on("click", function () {
-    RuleStorage.deleteRules(Utils.keys.errors);
+    Storage.delete(Utils.keys.errors);
     $(this).hide();
   });
 
   $(".notice.extracted-present").on("click", function () {
-    RuleStorage.deleteRules(Utils.keys.extractedRule);
+    Storage.delete(Utils.keys.extractedRule);
     $(this).hide();
   });
 

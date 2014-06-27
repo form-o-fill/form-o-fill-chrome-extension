@@ -1,4 +1,4 @@
-/* global Utils, JSONF, Notification, RuleStorage */
+/* global Utils, JSONF, Notification, Storage */
 var FormUtil = {
   lastRule: null,
   applyRule: function(rule, lastActiveTab) {
@@ -55,7 +55,7 @@ var FormUtil = {
         if(errors.length > 0) {
           Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
             // Save the errors to local storage
-            RuleStorage.saveRules({
+            Storage.save({
                 "errors": errors,
                 "rule": rule}, Utils.keys.errors).then(function () {
               // Open options and forward the messages to options.js
