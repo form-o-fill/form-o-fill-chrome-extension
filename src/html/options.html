@@ -31,8 +31,9 @@
         </header>
         <div class="content">
           <div class="editor">
-            <div id="notices">
             
+            <!-- I18n needed -->
+            <div id="notices">
               <div class="notice var-needed">
                 Please start your rules with <span class="code">rules = [</span> and end it with <span class="code">];</span>.
                 <a href="#" class="cmd-fix-var-needed">Fix it!</a>
@@ -54,6 +55,15 @@
                 </table>
               </div>
             </div>
+
+            <div class="tabcontainer">
+              <ul class="tabs">
+                <li class="tab current cmd-tabs-rename">Standard <a href="#" class="cms-tabs-close"></a></li>
+                <li class="tab cmd-tabs-rename">Standard <a href="#" class="cms-tabs-close"></a></li>
+                <li class="tab">&nbsp; <a href="#" class="cms-tabs-close"></a></li>
+              </ul>
+            </div>
+
             <div class="menu">
               <button class='save'>Save rules</button>
               <button class='reload'>Reload saved rules</button>
