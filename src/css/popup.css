@@ -78,9 +78,13 @@ a, a:visited, a:hover, a:active {
   display: none;
 }
 
-a.to-options {
+a.to-options, a.cmd-show-extract-overlay {
   color: #333;
   font-size: 9px;
   float: right;
   margin-bottom: 10px;
+}
+
+a.cmd-show-extract-overlay {
+  margin-left: 10px;
 }

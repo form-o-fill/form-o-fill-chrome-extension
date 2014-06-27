@@ -31,7 +31,7 @@ var Popup = {
     });
 
     // Show Extract Overlay when use clicks "create one" link
-    jQuery("#popup").on("click", "a.cmd-how-extract-overlay", function () {
+    jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
       Utils.showExtractOverlay();
       window.close();
     });
