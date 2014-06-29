@@ -9,6 +9,11 @@ The configuration is done via a rule definition file written in javascript.
 # TODOS (in that order)
 
 - Add multiple tabs / rules to ruleditor
+- move util.log to debug/Log.js so it can be excluded when building
+- Move config from Utils to Config
+- save logentries into localstorage (clear onInstalled)
+- auto prefix loglines via argument.caller
+- Add logviewer (dev build only) via localstorage
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
