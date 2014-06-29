@@ -1,4 +1,4 @@
-/*global jQuery, FormExtractor, Storage, Utils*/
+/*global jQuery, FormExtractor, Storage, Log, Utils*/
 
 // Create HTML overlays for form masking
 var getOverlays = function() {
@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener(function (message) {
       if(targetForm) {
         // looks good, start extraction
         var ruleCode = FormExtractor.extract(targetForm);
-        Utils.log("[extract_instr.js] Extracted: " + ruleCode);
+        Log.log("[extract_instr.js] Extracted: " + ruleCode);
         // Save Rule and goto options.html
         Storage.save(ruleCode, Utils.keys.extractedRule);
 

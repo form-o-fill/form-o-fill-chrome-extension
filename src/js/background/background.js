@@ -1,4 +1,4 @@
-/*global Rules, Utils, FormUtil, Notification, JSONF*/
+/*global Rules, Log, Utils, FormUtil, Notification, JSONF*/
 /* eslint complexity:0 */
 (function formoFillEvents() {
   "use strict";
@@ -19,7 +19,7 @@
   // When the user changes a tab, search for matching ules fo that url
   var onTabReady = function(tabId) {
     chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
-    Utils.log("onTabReady on Tab " + tabId);
+    Log.log("onTabReady on Tab " + tabId);
     chrome.tabs.get(tabId, function (tab) {
       lastMatchingRules = null;
       if (tab.active) {
@@ -58,12 +58,12 @@
   // Listen for messages
   chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
-    Utils.log("[bj.js] Received message " + JSONF.stringify(message));
+    Log.log("[bj.js] Received message " + JSONF.stringify(message));
 
     // From popup.js:
     // This receives the index of the rule to apply when there is more than one match
     if (message.action === "fillWithRule") {
-      Utils.log("[bg.js] Called by popup.js with rule index " + message.index + ", sender = " + sender);
+      Log.log("[bg.js] Called by popup.js with rule index " + message.index + ", sender = " + sender);
       FormUtil.applyRule(lastMatchingRules[message.index], lastActiveTab);
       sendResponse(true);
     }
@@ -71,13 +71,13 @@
     // Open an intern URL (aka. options).
     // Callable by content script that otherwise isn't allowed to open intern urls.
     if(message.action === "openIntern" && message.url) {
-      Utils.log("[bg.js] received 'openIntern' with url '" + message.url + "'");
+      Log.log("[bg.js] received 'openIntern' with url '" + message.url + "'");
       chrome.tabs.create({ "active": true, "url": message.url });
     }
 
     // Display a notification to the user that the extract has finished
     if(message.action === "extractFinishedNotification") {
-      Utils.log("[bg.js] received 'extractFinishedNotification'");
+      Log.log("[bg.js] received 'extractFinishedNotification'");
       Notification.create("Extracted your form. Click here to check the options panel for more info.", Utils.openOptions);
     }
   });

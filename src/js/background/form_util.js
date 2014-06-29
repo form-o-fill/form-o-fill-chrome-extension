@@ -1,4 +1,4 @@
-/* global Utils, JSONF, Notification, Storage */
+/* global Utils, Log, JSONF, Notification, Storage */
 var FormUtil = {
   lastRule: null,
   applyRule: function(rule, lastActiveTab) {
@@ -14,21 +14,21 @@ var FormUtil = {
       resolve(null);
     });
 
-    Utils.log("Applying rule " + JSONF.stringify(this.lastRule) + " to tab " + lastActiveTab.id);
+    Log.log("Applying rule " + JSONF.stringify(this.lastRule) + " to tab " + lastActiveTab.id);
 
     // Is there a 'before' block?
     if(typeof rule.before === "function") {
       // Wrap the function into an Promise
       // check for Promise and resolve(...); first
       beforeFunction = rule.before;
-      Utils.log("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
+      Log.log("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
     }
 
     // call either the default - instantaneously resolving Promise (default) or
     // the before function defined in the rule.
     beforeFunction().then(function(data) {
       beforeData = data;
-      Utils.log("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+      Log.log("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
       rule.fields.forEach(function (field) {
         message = {
@@ -38,12 +38,12 @@ var FormUtil = {
           "beforeData": beforeData
         };
         port.postMessage(message);
-        Utils.log("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+        Log.log("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
       });
 
       // Get errors. Receiver is in content.js
       // TODO: Not sure if the getErrors call can occur BEFORE all fillField calls have been accomplished?!
-      Utils.log("[form_util.js] Posted to content.js: 'getErrors'");
+      Log.log("[form_util.js] Posted to content.js: 'getErrors'");
       port.postMessage({"action": "getErrors"});
     });
 
@@ -51,7 +51,7 @@ var FormUtil = {
       // Make errors from content scripts available here
       if(message.action === "getErrors") {
         var errors = JSONF.parse(message.errors);
-        Utils.log("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
+        Log.log("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
         if(errors.length > 0) {
           Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
             // Save the errors to local storage

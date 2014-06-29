@@ -1,4 +1,4 @@
-/*global FormFiller, FormExtractor, FormErrors, JSONF, jQuery, Utils*/
+/*global FormFiller, FormExtractor, FormErrors, JSONF, jQuery, Log, Utils*/
 
 // This listens for messages coming from the background page
 // This is a long running communication channel
@@ -6,7 +6,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
   var currentError = null;
 
-  Utils.log("Got a connection from " + port.name);
+  Log.log("Got a connection from " + port.name);
 
   if(port.name != "FormOFill") {
     return;
@@ -15,22 +15,22 @@ chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (message) {
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
-      Utils.log("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
+      Log.log("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
       // BUILD: remove start
       if (message.beforeData && message.beforeData !== null) {
-        Utils.log("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
+        Log.log("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
       }
       // BUILD: remove end
       currentError = FormFiller.fill(message.selector, message.value, message.beforeData);
       if(currentError !== null) {
-        Utils.log("[content.js] Got error " + JSONF.stringify(currentError));
+        Log.log("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
       }
     }
 
     // request to return all accumulated errors
     if (message.action === "getErrors") {
-      Utils.log("[content.js] Returning " + errors.length + " errors to bg.js");
+      Log.log("[content.js] Returning " + errors.length + " errors to bg.js");
       var response = {
         "action": "getErrors",
         "errors": JSONF.stringify(errors)

@@ -1,4 +1,4 @@
-/*global jQuery, Utils*/
+/*global jQuery */
 
 /* Much to be learned here.
  * Simple things ca take much longer than expected.

@@ -1,4 +1,4 @@
-/*global Utils, Rules, jQuery*/
+/*global Utils, Log, Rules, jQuery*/
 "use strict";
 var Popup = {
   currentUrl: null,
@@ -12,7 +12,7 @@ var Popup = {
       });
     });
     popup.attachEventHandlers();
-    Utils.log("popup init done");
+    Log.log("popup init done");
   },
   attachEventHandlers: function() {
     jQuery("ul").on("click", "li", function () {
@@ -21,7 +21,7 @@ var Popup = {
         "action": "fillWithRule",
         "index": data.ruleIndex
       };
-      Utils.log("sending message " + JSON.stringify(message) + " to background.js");
+      Log.log("sending message " + JSON.stringify(message) + " to background.js");
       chrome.extension.sendMessage(message, function(ok) {
         if(ok) {
           // Close the popup
