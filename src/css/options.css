@@ -163,23 +163,23 @@ body {
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
-  padding:  6px;
+  padding: 6px;
   display: inline-block;
   margin-left:  10px;
-  margin-bottom: -2px;
+  margin-bottom: -1px;
   border-radius: 3px 3px 0 0;
+  cursor: pointer;
+  height: 21px;
 }
 
 .tabs .tab:first-child {
   margin-left: 0
 }
 
-.tabs .tab.cmd-tabs-rename {
+.tabs .tab input {
   cursor: pointer;
-}
-
-.tabs .tab.cmd-tabs-rename:hover {
-  color: #999;
+  width: 75px;
+  color: #bbb;
 }
 
 .tabs .tab a {
@@ -200,13 +200,25 @@ body {
   color: #ddd;
 }
 
+.tabs .tab:last-child input {
+  width: 10px;
+}
+
 .tabs .tab:last-child a:after {
   content: "\e606";
 }
 
 .tabs .tab.current {
   border-bottom: 1px solid #fff;
-  height: 17px;
+}
+
+.tabs .tab.current input {
+  color: #111
+}
+
+.tabs .tab input[type=text] {
+  border: 0;
+  padding: 0;
 }
 
 #help .topics a {

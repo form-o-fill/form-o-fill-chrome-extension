@@ -144,6 +144,5 @@ $(function() {
   $(".notice.annotations-present, .notice.var-needed").on("click", function () {
     $(this).hide();
   });
-
 });
 
