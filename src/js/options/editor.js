@@ -39,7 +39,8 @@ Editor.prototype.on = function(eventName, callback) {
 Editor.prototype.cleanUp = function() {
   var lastLineIndex = this._document.getLength() - 1;
   var line = null;
-  for(var i = lastLineIndex; i > 0; i--) {
+  var i;
+  for(i = lastLineIndex; i > 0; i--) {
     line = this._document.getLine(i).trim();
     if(line === "") {
       this._document.removeLines(i,i);

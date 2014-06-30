@@ -1,4 +1,4 @@
-/*global Utils, Log */
+/*global Utils, Logger */
 "use strict";
 var Storage = {
   load: function(keyToLoadFrom) {
@@ -16,7 +16,7 @@ var Storage = {
       value[key] = rulesCode;
       chrome.storage.local.set(value, function () {
         if(typeof chrome.runtime.lastError === "undefined") {
-          Log.log("[storage.js] Saved '" + key + "' = " + value[key]);
+          Logger.info("[storage.js] Saved '" + key + "' = " + value[key]);
           resolve(true);
         } else {
           reject(Error(chrome.runtime.lastError));
@@ -28,7 +28,7 @@ var Storage = {
     return new Promise(function (resolve, reject) {
       chrome.storage.local.remove(key, function () {
         if(typeof chrome.runtime.lastError === "undefined") {
-          Log.log("[storage.js] Removed key '" + key + "'");
+          Logger.info("[storage.js] Removed key '" + key + "'");
           resolve(true);
         } else {
           reject(Error(chrome.runtime.lastError));

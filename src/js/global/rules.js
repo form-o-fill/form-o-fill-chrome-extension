@@ -1,4 +1,4 @@
-/*global Storage, Log, jQuery, js_beautify */
+/*global Storage, Logger, jQuery, js_beautify */
 /*eslint no-new-func:0*/
 "use strict";
 
@@ -44,7 +44,7 @@ var Rules = {
     var that = this;
     return new Promise(function (resolve) {
       if(that.cache) {
-        Log.log("Rules.load resolved using " + that.cache.length + " cache entries");
+        Logger.info("Rules.load resolved using " + that.cache.length + " cache entries");
         resolve(that.cache);
       }
       Storage.load().then(function (rulesCode) {

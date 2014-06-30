@@ -32,7 +32,7 @@
         "vendor/jquery/jquery-2.1.1.min.js", 
         "vendor/chance.js/chance.js" ,
         "vendor/moment.js/moment-with-langs.js" ,
-        "js/debug/log.js", 
+        "js/debug/logger.js", 
         "js/global/utils.js", 
         "js/global/jsonf.js", 
         "js/global/rules.js", 
@@ -54,7 +54,7 @@
   "background": {
     "scripts": [
       "vendor/jquery/jquery-2.1.1.min.js", 
-      "js/debug/log.js", 
+      "js/debug/logger.js", 
       "js/global/jsonf.js", 
       "js/global/utils.js", 
       "js/global/storage.js", 

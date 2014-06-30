@@ -1,4 +1,4 @@
-/*global jQuery, Rule, Log, Utils*/
+/*global jQuery, Rule, Logger, Utils*/
 var FormExtractor = {
   _knownElements: null,
   knownElements: function() {
@@ -46,9 +46,9 @@ var FormExtractor = {
     };
 
     this.knownElements().forEach(function (selector) {
-      Log.log("[Extract] Looking for '" + selector + "'");
+      Logger.info("[Extract] Looking for '" + selector + "'");
       $form.find(selector).each(function() {
-        Log.log("[Extract] Found a '" + this.type + "' (" + this.value + ")");
+        Logger.info("[Extract] Found a '" + this.type + "' (" + this.value + ")");
         var value = extractor._valueFor(this);
         // Only include field if value !== null
         if(value !== null) {

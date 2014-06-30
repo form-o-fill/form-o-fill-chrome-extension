@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, Storage, Log, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
 /*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -62,7 +62,7 @@ $(function() {
       $notice.show();
       $("#ruleeditor button.append-extracted").removeAttr("disabled");
       $("#ruleeditor .cmd-append-extracted, #ruleeditor .append-extracted").on("click", function () {
-        Log.log("[options.js] Appending extracted rules to the end of the definition");
+        Logger.info("[options.js] Appending extracted rules to the end of the definition");
         appendRule(extractedRule, function() {
           $("#ruleeditor button.append-extracted").prop("disabled","disabled");
           $notice.hide();

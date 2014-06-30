@@ -1,4 +1,4 @@
-/*global FormError, jQuery, JSONF, Log, Utils*/
+/*global FormError, jQuery, JSONF, Logger, Utils*/
 /*eslint complexity:0*/
 var FormFiller = {
   error: null,
@@ -30,9 +30,9 @@ var FormFiller = {
         try {
           parsedValue = parsedValue(jQuery(domNode), beforeData);
         } catch (e) {
-          Log.log("[form_filler.js] Got an exception executing value function: " + parsedValue);
-          Log.log("[form_filler.js] Original exception: " + e);
-          Log.log("[form_filler.js] Original stack: " + e.stack);
+          Logger.info("[form_filler.js] Got an exception executing value function: " + parsedValue);
+          Logger.info("[form_filler.js] Original exception: " + e);
+          Logger.info("[form_filler.js] Original stack: " + e.stack);
           return new FormError(selector, value, "Error while executing value-function: " + JSONF.stringify(e.message));
         }
       }
