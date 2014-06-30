@@ -1,4 +1,4 @@
-/*global Storage, Logger, jQuery, js_beautify */
+/*global Storage, Logger, jQuery, js_beautify, Utils */
 /*eslint no-new-func:0*/
 "use strict";
 
@@ -27,7 +27,6 @@ Rule.create = function(options) {
 
 /* Multiple Rules */
 var Rules = {
-  cache: null,
   ruleCount: 0,
   matchesForUrl: function(url) {
     var rules = this;
@@ -40,14 +39,10 @@ var Rules = {
       });
     });
   },
-  load: function() {
+  load: function(forTabId) {
     var that = this;
     return new Promise(function (resolve) {
-      if(that.cache) {
-        Logger.info("Rules.load resolved using " + that.cache.length + " cache entries");
-        resolve(that.cache);
-      }
-      Storage.load().then(function (rulesCode) {
+      Storage.load(Utils.keys.rules + "-tab-" + forTabId).then(function (rulesCode) {
         var rules = [];
         if(rulesCode) {
           // remove wrapper
@@ -69,8 +64,14 @@ var Rules = {
             return Rule.create(ruleJson);
           });
         }
-        that.cache = rules;
         resolve(rules);
+      });
+    });
+  },
+  save: function(ruleCode, activeTabId) {
+    return new Promise(function (resolve) {
+      Storage.save(ruleCode, Utils.keys.rules + "-tab-" + activeTabId).then(function () {
+        resolve(true);
       });
     });
   },

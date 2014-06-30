@@ -196,6 +196,20 @@ body {
   color: #bbb;
 }
 
+.tabs .tab:first-child a {
+  display: none;
+}
+
+.tabs .tab a.edit:after {
+  content: "\e603";
+  color: #008000;
+}
+
+.tabs .tab a.edit:hover:after {
+  content: "\e603";
+  color: #008000;
+}
+
 .tabs .tab a:hover:after {
   color: #ddd;
 }

@@ -5,6 +5,7 @@
 //
 
 var editor = new Editor("#ruleeditor-ace");
+
 $(function() {
   var noticesVisible = false;
 
@@ -19,22 +20,10 @@ $(function() {
     }
   });
 
-  // A function to display a nice message in the rule editor
-  var infoMsg = function(msg) {
-    var fadeAfterMSec = 1000;
-    var $menuInfo = $(".editor .menu .info");
-    $menuInfo.html(msg).css({"opacity": "1"});
-    setTimeout(function() {
-      $menuInfo.animate({"opacity": 0}, 1000, function() {
-        $(this).html("");
-      });
-    }, fadeAfterMSec);
+  // Current active tab id
+  var currentTabId = function() {
+    return $(".tab.current").data("tab-id");
   };
-
-  // Fill with data from storage
-  Storage.load().then(function (ruleString) {
-    editor.setValue(ruleString, -1);
-  });
 
   // Append text to the end of the rule definitions
   var appendRule = function(prettyRule, responseCallback) {
@@ -50,7 +39,7 @@ $(function() {
       editor.session().setValue(Rules.format(editor.session().getValue()));
       editor.scrollToRow(editor.document().getLength());
       responseCallback();
-      infoMsg("Rule added on line " + (editor.document().getLength() - 1));
+      Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
     });
   };
 
@@ -90,39 +79,42 @@ $(function() {
   });
 
   // Save the rules
-  var saveRules = function() {
+  var saveRules = function(tabId) {
     var errors = Rules.syntaxCheck(editor);
     if(errors.length > 0) {
       errors.forEach(function (errorClass) {
         $("#ruleeditor .notice." + errorClass).show();
       });
-      infoMsg("Rules invalid, not saved");
+      Utils.infoMsg("Rules invalid, not saved");
       noticesVisible = true;
     }
 
     if(editor.cleanUp() && !noticesVisible) {
       $("#ruleeditor .notice").hide();
-      Storage.save(editor.getValue()).then(function () {
-        infoMsg("Rules saved");
+      Rules.save(editor.getValue(), tabId).then(function () {
+        Utils.infoMsg("Rules saved");
       });
     }
   };
 
-  var loadRules = function() {
-    Storage.load().then(function (ruleJson) {
+  var loadRules = function(tabId) {
+    Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleJson) {
       editor.setValue(ruleJson, -1);
-      infoMsg("Rules loaded from disc");
+      Utils.infoMsg("Rules loaded from disc");
     });
   };
 
+  // Load data from tab 1 and prefill editor
+  loadRules(1);
+
   // Button handling for "save" and "load"
   $(".editor .menu").on("click", "button.save", function () {
-    saveRules();
+    saveRules(currentTabId());
   }).on("click", "button.reload", function () {
-    loadRules();
+    loadRules(currentTabId());
   }).on("click", "button.format", function () {
     editor.format(Rules);
-    infoMsg("Rules formatted but not saved");
+    Utils.infoMsg("Rules formatted but not saved");
   });
 
   // Try to fix the erronous structure of the rules

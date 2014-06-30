@@ -1,9 +1,10 @@
-"use strict";
+/*global jQuery */
 var Utils = {
   keys: {
     extractedRule: "form-o-fill-extracted",
     rules: "form-o-fill-rules",
-    errors: "form-o-fill-errors"
+    errors: "form-o-fill-errors",
+    tabs: "form-o-fill-tabs"
   },
   showExtractOverlay: function() {
     var message = {
@@ -28,5 +29,16 @@ var Utils = {
       return;
     }
     console.log("[Form-O-Fill] %O", msg);
+  },
+  infoMsg: function(msg) {
+    // A function to display a nice message in the rule editor
+    var fadeAfterMSec = 1000;
+    var $menuInfo = jQuery(".editor .menu .info");
+    $menuInfo.html(msg).css({"opacity": "1"});
+    setTimeout(function() {
+      $menuInfo.animate({"opacity": 0}, 1000, function() {
+        jQuery(this).html("");
+      });
+    }, fadeAfterMSec);
   }
 };
