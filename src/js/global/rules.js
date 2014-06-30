@@ -1,5 +1,5 @@
 /*global Storage, Logger, jQuery, js_beautify, Utils */
-/*eslint no-new-func:0*/
+/*eslint no-new-func:0, max-nested-callbacks:[1,4]*/
 "use strict";
 
 /* A single Rule */
@@ -15,13 +15,16 @@ var Rule = function() {
   };
 };
 
-Rule.create = function(options) {
+Rule.create = function(options, tabId, ruleIndex) {
   var rule = new Rule();
   Object.keys(options).forEach(function(key) {
     rule[key] = options[key];
   });
   rule.matcher = new RegExp(rule.url);
-  rule.nameClean = this.name.replace("<", "&lt;");
+  rule.nameClean = rule.name.replace("<", "&lt;");
+  rule.urlClean = rule.url.toString();
+  rule.id = tabId + "-" + ruleIndex;
+  Logger.info("[rule.js] created rule", rule);
   return rule;
 };
 
@@ -31,7 +34,7 @@ var Rules = {
   matchesForUrl: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
-      rules.load().then(function(rules) {
+      rules.all().then(function(rules) {
         var matchingRules = rules.filter(function (rule) {
           return url.match(rule.matcher);
         });
@@ -59,12 +62,39 @@ var Rules = {
           var ruleFunction = new Function(ruleCode);
           that.ruleCount = 0;
 
-          rules = ruleFunction().map(function (ruleJson) {
+          rules = ruleFunction().map(function (ruleJson, index) {
             that.ruleCount += 1;
-            return Rule.create(ruleJson);
+            return Rule.create(ruleJson, forTabId, index);
           });
         }
         resolve(rules);
+      });
+    });
+  },
+  all: function() {
+    return new Promise(function (resolve) {
+      Logger.info("[rules.js] Fetching all rules");
+      Storage.load(Utils.keys.tabs).then(function(tabSettings) {
+        var promises = [];
+        var rules = [];
+
+        // Generate a Promise for all tab to be loaded
+        tabSettings.forEach(function (tabSetting) {
+          promises.push(Rules.load(tabSetting.id));
+        });
+
+        // Wait until resolved
+        Promise.all(promises).then(function (values) {
+          // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
+          values.forEach(function (ruleSetForTab) {
+            // Inner Loop: An array of rules [Rule, Rule]
+            ruleSetForTab.forEach(function (ruleSet) {
+              rules.push(ruleSet);
+            });
+          });
+          Logger.info("[rules.js] Fetched " + rules.length + " rules");
+          resolve(rules);
+        });
       });
     });
   },

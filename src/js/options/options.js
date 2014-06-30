@@ -69,12 +69,22 @@ $(function() {
       var $notice = $("#ruleeditor .notice.form-fill-errors");
       var tableTrs = [];
       errors.forEach(function (error) {
+        Logger.info("[options.js] Got error " + JSONF.stringify(error) + " for rule " + JSONF.stringify(rule));
         tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
       });
       $notice.find("table").append(tableTrs.join("\n"));
       $notice.find(".rule-name").html(rule.nameClean);
+      $notice.find(".rule-url").html(rule.urlClean);
       $notice.show();
       Storage.delete(Utils.keys.errors);
+
+      // Activate the tab with the rule
+      var match = rule.id.match(/^([0-9]+)/);
+      if(match) {
+        // TODO: continue: doesn't work:
+        Logger.info("[options.js] Activating tab #" + match[1]);
+        $(".tab[data-tab-id=" + match[1] + "]").trigger("click");
+      }
     }
   });
 

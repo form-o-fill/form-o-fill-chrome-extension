@@ -17,9 +17,11 @@ var Popup = {
   attachEventHandlers: function() {
     jQuery("ul").on("click", "li", function () {
       var data = jQuery(this).data();
+      Logger.info("[popup.js] fill with rule " + data.ruleIndex + " clicked");
       var message = {
         "action": "fillWithRule",
-        "index": data.ruleIndex
+        "index": data.ruleIndex,
+        "id": data.ruleId
       };
       Logger.info("sending message " + JSON.stringify(message) + " to background.js");
       chrome.extension.sendMessage(message, function(ok) {
@@ -51,6 +53,7 @@ var Popup = {
     document.querySelectorAll("h3")[0].innerHTML = message;
   },
   updateMatchingRules: function(matchingRules) {
+    Logger.info("[popup.js] updating popup to display " + matchingRules.length + " rules");
     var ul = document.querySelectorAll("ul")[0];
     var fragment = document.createDocumentFragment();
     matchingRules.forEach(function(rule, index) {
@@ -60,6 +63,7 @@ var Popup = {
       li.classList.add("icon-archive");
       li.dataset.ruleUrl = rule.url;
       li.dataset.ruleIndex = index;
+      li.dataset.ruleId = rule.id;
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);

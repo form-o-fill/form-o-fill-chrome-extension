@@ -7,14 +7,20 @@ var FormUtil = {
     var beforeData;
 
     // Open long standing connection to the tab containing the form to be worked on
+    if(typeof lastActiveTab === "undefined") {
+      Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
+      return;
+    }
     var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
 
     // Default instantaneous resolving promise:
-    var beforeFunction = new Promise(function(resolve) {
-      resolve(null);
-    });
+    var beforeFunction = function() {
+      return new Promise(function(resolve) {
+       resolve(null);
+      });
+    };
 
-    Logger.info("Applying rule " + JSONF.stringify(this.lastRule) + " to tab " + lastActiveTab.id);
+    Logger.info("Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // Is there a 'before' block?
     if(typeof rule.before === "function") {
@@ -28,7 +34,10 @@ var FormUtil = {
     // the before function defined in the rule.
     beforeFunction().then(function(data) {
       beforeData = data;
-      Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+      // beforeData is null when there is no before action defined in the rule definition
+      if(beforeData !== null) {
+        Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+      }
 
       rule.fields.forEach(function (field) {
         message = {
@@ -42,7 +51,6 @@ var FormUtil = {
       });
 
       // Get errors. Receiver is in content.js
-      // TODO: Not sure if the getErrors call can occur BEFORE all fillField calls have been accomplished?!
       Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
       port.postMessage({"action": "getErrors"});
     });
