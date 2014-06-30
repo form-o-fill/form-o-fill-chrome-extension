@@ -42,7 +42,7 @@ var Rules = {
   load: function(forTabId) {
     var that = this;
     return new Promise(function (resolve) {
-      Storage.load(Utils.keys.rules + "-tab-" + forTabId).then(function (rulesCode) {
+      Storage.load(that._nameForTabId(forTabId)).then(function (rulesCode) {
         var rules = [];
         if(rulesCode) {
           // remove wrapper
@@ -70,10 +70,16 @@ var Rules = {
   },
   save: function(ruleCode, activeTabId) {
     return new Promise(function (resolve) {
-      Storage.save(ruleCode, Utils.keys.rules + "-tab-" + activeTabId).then(function () {
+      Storage.save(ruleCode, Rules._nameForTabId(activeTabId)).then(function () {
         resolve(true);
       });
     });
+  },
+  delete: function(tabId) {
+    Storage.delete(this._nameForTabId(tabId));
+  },
+  _nameForTabId: function(tabId) {
+    return Utils.keys.rules + "-tab-" + tabId;
   },
   format: function(rulesCodeString) {
     // Prettify code a little

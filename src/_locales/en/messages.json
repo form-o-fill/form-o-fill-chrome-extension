@@ -23,5 +23,11 @@
   },
   "options": {
     "message": "Options" 
+  },
+  "tabs_default_name": {
+    "message": "Rules"
+  },
+  "tabs_default_new_name": {
+    "message": "New Rules"
   }
 }

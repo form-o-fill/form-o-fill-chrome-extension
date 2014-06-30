@@ -197,7 +197,11 @@ body {
 }
 
 .tabs .tab:first-child a {
-  display: none;
+  visibility: hidden;
+}
+
+.tabs .tab a.edit {
+  visibility: visible;
 }
 
 .tabs .tab a.edit:after {
