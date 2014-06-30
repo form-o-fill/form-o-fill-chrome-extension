@@ -16,5 +16,16 @@ var ChromeBootstrap = {
     });
 
     jQuery('.mainview > *:not(.selected)').css('display', 'none');
+
+    // Activate navigationitem via hashtag
+    jQuery(window).on("load", function () {
+      if (window.location.hash) {
+        var $nav = jQuery(".navigation a[href='" + window.location.hash + "']");
+        if($nav.length === 1) {
+          $nav.trigger("click");
+        }
+      }
+    });
+
   }
 };
