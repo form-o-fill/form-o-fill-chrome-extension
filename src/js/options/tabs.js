@@ -36,6 +36,7 @@ jQuery(function () {
       activeTabId = 1;
     }
     activeTabId = activeTabId.toString();
+    Logger.info("[tabs.js] Active Tab = " + activeTabId);
 
     Storage.load(Utils.keys.tabs).then(function(tabSettings) {
       var tabs = jQuery();

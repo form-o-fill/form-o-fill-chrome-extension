@@ -22,7 +22,11 @@ $(function() {
 
   // Current active tab id
   var currentTabId = function() {
-    return $(".tab.current").data("tab-id");
+    var currentTab = $(".tab.current");
+    if(currentTab.length === 1) {
+      return currentTab.data("tab-id");
+    }
+    return 1;
   };
 
   // Append text to the end of the rule definitions
@@ -36,7 +40,7 @@ $(function() {
       lines = lines.concat(prettyRule.split("\n"));
       editor.document().insertLines(editor.document().getLength() - 1, lines);
       // Prettify code a little
-      editor.session().setValue(Rules.format(editor.session().getValue()));
+      editor.session().setValue(Rules.format(editor.session().getValue()), -1);
       editor.scrollToRow(editor.document().getLength());
       responseCallback();
       Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
@@ -83,7 +87,7 @@ $(function() {
       if(match) {
         // TODO: continue: doesn't work:
         Logger.info("[options.js] Activating tab #" + match[1]);
-        $(".tab[data-tab-id=" + match[1] + "]").trigger("click");
+        $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
       }
     }
   });
@@ -114,8 +118,8 @@ $(function() {
     });
   };
 
-  // Load data from tab 1 and prefill editor
-  loadRules(1);
+  // Load data from tab and prefill editor
+  loadRules(currentTabId());
 
   // Button handling for "save" and "load"
   $(".editor .menu").on("click", "button.save", function () {
