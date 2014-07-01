@@ -3,7 +3,6 @@
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 //
-
 var editor = new Editor("#ruleeditor-ace");
 
 $(function() {
@@ -113,7 +112,11 @@ $(function() {
 
   var loadRules = function(tabId) {
     Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleJson) {
+      if(typeof ruleJson === "undefined") {
+        ruleJson = "";
+      }
       editor.setValue(ruleJson, -1);
+      editor.fixRules();
       Utils.infoMsg("Rules loaded from disc");
     });
   };
