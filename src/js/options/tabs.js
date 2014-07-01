@@ -1,64 +1,58 @@
 /*global Logger, jQuery, Storage, Utils, infoMsg, Rules, editor */
-jQuery(function () {
 
-  // returns the jQuery wrapped DOM representation of a tab
-  var jTab = function(tabIndex, name, isCurrent) {
-    return jQuery('<li class="tab' + (isCurrent ? " current" : "") + '" data-tab-id="' + tabIndex + '"><input type="text" value="' + name + '" disabled /><a href="#" class="cmd-tabs-close"></a></li>');
-  };
+// returns the jQuery wrapped DOM representation of a tab
+var jTab = function(tabIndex, name, isCurrent) {
+  return jQuery('<li class="tab' + (isCurrent ? " current" : "") + '" data-tab-id="' + tabIndex + '"><input type="text" value="' + name + '" disabled /><a href="#" class="cmd-tabs-close"></a></li>');
+};
 
-  // Save tab settings
-  var saveTabsSetting = function() {
-    Logger.info("[tabs.js] Saving tab setting");
-    var tabConfig = [];
-    jQuery("#ruleeditor .tabs .tab").each(function () {
-      // Exclude pseudo ab "more" at the end
-      if (typeof this.dataset.tabId !== "undefined") {
-        tabConfig.push({
-          "id": this.dataset.tabId,
-          "name": jQuery(this).find("input").val()
-        });
-      }
-    });
-    Storage.save(tabConfig, Utils.keys.tabs).then(function () {
-      jQuery(this).removeClass("edit");
-      jQuery(".tab.current input").attr("disabled", true);
-      jQuery(".tab a.edit").removeClass("edit").addClass("cmd-tabs-close");
-      Utils.infoMsg("Tab setting saved");
-    });
-  };
-
-  // Load current tab settings
-  var loadTabsSettings = function() {
-    Logger.info("[tabs.js] Loading tab setting");
-
-    var activeTabId = jQuery(".tab.current").data("tab-id");
-    if(typeof activeTabId === "undefined") {
-      activeTabId = 1;
+// Save tab settings
+var saveTabsSetting = function() {
+  Logger.info("[tabs.js] Saving tab setting");
+  var tabConfig = [];
+  jQuery("#ruleeditor .tabs .tab").each(function () {
+    // Exclude pseudo ab "more" at the end
+    if (typeof this.dataset.tabId !== "undefined") {
+      tabConfig.push({
+        "id": this.dataset.tabId,
+        "name": jQuery(this).find("input").val()
+      });
     }
-    activeTabId = activeTabId.toString();
-    Logger.info("[tabs.js] Active Tab = " + activeTabId);
+  });
+  Storage.save(tabConfig, Utils.keys.tabs).then(function () {
+    jQuery(this).removeClass("edit");
+    jQuery(".tab.current input").attr("disabled", true);
+    jQuery(".tab a.edit").removeClass("edit").addClass("cmd-tabs-close");
+    Utils.infoMsg("Tab setting saved");
+  });
+};
 
-    Storage.load(Utils.keys.tabs).then(function(tabSettings) {
-      var tabs = jQuery();
-      if (typeof tabSettings !== "undefined") {
-        tabSettings.forEach(function (tabSetting) {
-          tabs = tabs.add(jTab(tabSetting.id, tabSetting.name, (tabSetting.id === activeTabId)));
-        });
-      } else {
-        // No tabs? create default.
-        // This only happens on first call
-        Logger.info("[tabs.js] No tabs present, creating default tab");
-        tabs = tabs.add(jTab(1, chrome.i18n.getMessage("tabs_default_name")));
-      }
+// Load current tab settings
+var loadTabsSettings = function() {
+  Logger.info("[tabs.js] Loading tab setting");
 
-      // Add "more" tab
-      tabs = tabs.add(jQuery('<li class="tab more"><input type="text" value="" disabled /><a href="#" class="cmd-tabs-open"></a></li>'));
+  var activeTabId = jQuery(".tab.current").data("tab-id");
+  if(typeof activeTabId === "undefined") {
+    activeTabId = 1;
+  }
+  activeTabId = activeTabId.toString();
+  Logger.info("[tabs.js] Active Tab = " + activeTabId);
 
-      // Add tabs in one swoop
-      jQuery(".tabs").html(tabs);
-    });
-  };
+  Storage.load(Utils.keys.tabs).then(function(tabSettings) {
+    var tabs = jQuery();
+    if (typeof tabSettings !== "undefined") {
+      tabSettings.forEach(function (tabSetting) {
+        tabs = tabs.add(jTab(tabSetting.id, tabSetting.name, (tabSetting.id.toString() === activeTabId)));
+      });
+    }
+    // Add "more" tab
+    tabs = tabs.add(jQuery('<li class="tab more"><input type="text" value="" disabled /><a href="#" class="cmd-tabs-open"></a></li>'));
 
+    // Add tabs in one swoop
+    jQuery(".tabs").html(tabs);
+  });
+};
+
+jQuery(function () {
   // Click on tab
   jQuery(document).on("click", ".tab", function (e) {
     if(this.classList.contains("more")) {
@@ -132,5 +126,4 @@ jQuery(function () {
   });
 
   loadTabsSettings();
-
 });
