@@ -4,6 +4,7 @@
 
 var lastMatchingRules = [];
 var lastActiveTab = null;
+var portToContent = null;
 
 // Shows number of matches in the extension's icon
 var refreshMatchCounter = function (tab, count) {
@@ -18,11 +19,13 @@ var refreshMatchCounter = function (tab, count) {
 // When the user changes a tab, search for matching ules fo that url
 var onTabReady = function(tabId) {
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
-  Logger.info("onTabReady on Tab " + tabId);
+  Logger.info("[bg.js] onTabReady on Tab " + tabId);
   chrome.tabs.get(tabId, function (tab) {
     lastMatchingRules = null;
     if (tab.active) {
       lastActiveTab = tab;
+      portToContent = chrome.tabs.connect(tab.id, {name: "FormOFill"});
+      portToContent.onMessage.addListener(portToContentListener);
       Rules.matchesForUrl(tab.url).then(function (matchingRules) {
         lastMatchingRules = matchingRules;
         refreshMatchCounter(tab, matchingRules.length);
@@ -99,3 +102,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 
 });
+
+var portToContentListener = function(message) {
+  Logger.info(message);
+};
+

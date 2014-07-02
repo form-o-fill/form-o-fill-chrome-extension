@@ -46,9 +46,9 @@ var FormExtractor = {
     };
 
     this.knownElements().forEach(function (selector) {
-      Logger.info("[Extract] Looking for '" + selector + "'");
+      Logger.info("[form_extractor.js] Looking for '" + selector + "'");
       $form.find(selector).each(function() {
-        Logger.info("[Extract] Found a '" + this.type + "' (" + this.value + ")");
+        Logger.info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ")");
         var value = extractor._valueFor(this);
         // Only include field if value !== null
         if(value !== null) {

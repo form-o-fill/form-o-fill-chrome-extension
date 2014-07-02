@@ -12,7 +12,7 @@ var Popup = {
       });
     });
     popup.attachEventHandlers();
-    Logger.info("popup init done");
+    Logger.info("[popup.js] popup init done");
   },
   attachEventHandlers: function() {
     jQuery("ul").on("click", "li", function () {
@@ -23,7 +23,7 @@ var Popup = {
         "index": data.ruleIndex,
         "id": data.ruleId
       };
-      Logger.info("sending message " + JSON.stringify(message) + " to background.js");
+      Logger.info("[popup.js] sending message " + JSON.stringify(message) + " to background.js");
       chrome.extension.sendMessage(message, function(ok) {
         if(ok) {
           // Close the popup

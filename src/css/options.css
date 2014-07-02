@@ -41,34 +41,38 @@ body {
   margin-bottom: 10px;
 }
 
-.editor .menu button {
+.menu button {
   vertical-align: bottom;
   padding: 0 6px;
   width: auto;
   outline: none;
 }
 
-.editor .menu button:before {
+.menu button:before {
   font-family: "icomoon";
   font-size: 16px;
   vertical-align: middle;
   margin-right: 4px;
 }
 
-.editor .menu button.save:before {
+.menu button.save:before {
   content: "\e603";
 }
 
-.editor .menu button.reload:before {
+.menu button.reload:before {
   content: "\e604";
 }
 
-.editor .menu button.append-extracted:before {
+.menu button.append-extracted:before {
   content: "\e607";
 }
 
-.editor .menu button.format:before {
+.menu button.format:before {
   content: "\e608";
+}
+
+.menu button.empty:before {
+  content: "\e600";
 }
 
 .editor .menu .info {
@@ -260,3 +264,25 @@ body {
   background-color: #ccc;
 }
 
+.log-entries table {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.log-entries td:first-child {
+  white-space: nowrap;
+}
+
+.log-entries td {
+  padding: 5px;
+  vertical-align: top;
+}
+
+.log-entries th {
+  background-color: #ddd;
+  padding:  5px 2px;
+}
+
+.log-entries tr:nth-child(even) {
+  background-color: #eee;
+}

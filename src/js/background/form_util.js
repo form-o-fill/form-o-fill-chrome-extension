@@ -20,7 +20,7 @@ var FormUtil = {
       });
     };
 
-    Logger.info("Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
+    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // Is there a 'before' block?
     if(typeof rule.before === "function") {

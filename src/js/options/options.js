@@ -9,6 +9,11 @@ $(function() {
   var noticesVisible = false;
 
   I18n.loadPages(["help", "about"]);
+
+  if(Utils.debug) {
+    I18n.loadPages(["logs"]);
+  }
+
   ChromeBootstrap.init();
 
   editor.on("change", function() {

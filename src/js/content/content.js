@@ -6,7 +6,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
   var currentError = null;
 
-  Logger.info("Got a connection from " + port.name);
+  Logger.info("[content.js] Got a connection from " + port.name, port);
 
   if(port.name != "FormOFill") {
     return;
@@ -15,15 +15,15 @@ chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (message) {
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
-      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
+      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value), port);
       // BUILD: remove start
       if (message.beforeData && message.beforeData !== null) {
-        Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
+        Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData), port);
       }
       // BUILD: remove end
       currentError = FormFiller.fill(message.selector, message.value, message.beforeData);
       if(currentError !== null) {
-        Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
+        Logger.info("[content.js] Got error " + JSONF.stringify(currentError), port);
         errors.push(currentError);
       }
     }

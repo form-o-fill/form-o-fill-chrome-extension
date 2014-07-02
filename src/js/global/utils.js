@@ -1,10 +1,13 @@
 /*global jQuery */
 var Utils = {
+  // Set to false in BUILD:
+  debug: true,
   keys: {
     extractedRule: "form-o-fill-extracted",
     rules: "form-o-fill-rules",
     errors: "form-o-fill-errors",
-    tabs: "form-o-fill-tabs"
+    tabs: "form-o-fill-tabs",
+    logs: "form-o-fill-logs"
   },
   showExtractOverlay: function() {
     var message = {
