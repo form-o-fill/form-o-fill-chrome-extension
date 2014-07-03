@@ -24,9 +24,10 @@ var FormUtil = {
 
     // Is there a 'before' block?
     if(typeof rule.before === "function") {
-      // Wrap the function into an Promise
-      // check for Promise and resolve(...); first
-      beforeFunction = rule.before;
+      // Wrap the function into a promise
+      beforeFunction = new Promise(function(resolve) {
+        rule.before(resolve);
+      });
       Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
     }
 
