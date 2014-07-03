@@ -2,6 +2,7 @@
 "use strict";
 var Logger = {
   info: function (msg, obj) {
+    // TODO: open port here!
     if(typeof obj !== "undefined" && typeof obj.sender !== "undefined") {
       // A port object. So we communicate with bg.js
       obj.postMessage({"action": "log", "message": msg});

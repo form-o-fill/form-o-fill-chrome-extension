@@ -46,7 +46,7 @@ chrome.runtime.onMessage.addListener(function (message) {
       if(targetForm) {
         // looks good, start extraction
         var ruleCode = FormExtractor.extract(targetForm);
-        Logger.info("[extract_instr.js] Extracted: " + ruleCode);
+        Logger.info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
         // Save Rule and goto options.html
         Storage.save(ruleCode, Utils.keys.extractedRule);
 
