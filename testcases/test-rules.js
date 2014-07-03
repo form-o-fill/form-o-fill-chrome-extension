@@ -1,23 +1,19 @@
+/*global jQuery, Libs */
 var rules = [
 {
   url: /.*test.*/,
   name: "Testcase for all <form> field types",
-  before: function() {
-    // This Promise gies away!
-    return new Promise(function(resolve) {
-      jQuery.getJSON("http://www.openthesaurus.de/synonyme/search?q=test&format=application/json").done(function(data) {
-        resolve(data);
-      });
+  before: function(resolve) {
+    jQuery.getJSON("http://www.openthesaurus.de/synonyme/search?q=test&format=application/json").done(function(data) {
+      resolve(data);
     });
   },
   fields: [
   {
     selector: "input[type=text]",
-    value: function(e, $data)
-    {
-      var item = Math.round(Math.random()*($data.synsets.length-1));
-      console.log(item);
-      return $data.synsets[item2].terms[0].term;
+    value: function(e, $data) {
+      var item = Math.round(Math.random() * ($data.synsets.length - 1));
+      return $data.synsets[item].terms[0].term;
     }
   },
   {
@@ -78,8 +74,7 @@ var rules = [
   },
   {
     selector: "input[type=date]",
-    value: function()
-    {
+    value: function() {
       return Libs.moment().format("YYYY-MM-DD");
     }
   },
