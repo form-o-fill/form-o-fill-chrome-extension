@@ -16,13 +16,6 @@ var refreshMatchCounter = function (tab, count) {
   chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tab.id});
 };
 
-// When the content scripts logs something we need to put it in localstorage
-var portToContentListener = function(message) {
-  if(message.action === "log" && message.message) {
-    Logger.store(message);
-  }
-};
-
 // When the user changes a tab, search for matching ules fo that url
 var onTabReady = function(tabId) {
   // Clear popup HTML
@@ -33,10 +26,6 @@ var onTabReady = function(tabId) {
     lastMatchingRules = null;
     if (tab.active) {
       lastActiveTab = tab;
-
-      // Connect to the content tab and listen for messages
-      portToContent = chrome.tabs.connect(tab.id, {name: "FormOFill"});
-      portToContent.onMessage.addListener(portToContentListener);
 
       Rules.matchesForUrl(tab.url).then(function (matchingRules) {
         lastMatchingRules = matchingRules;
@@ -93,6 +82,13 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   if(message.action === "extractFinishedNotification") {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
     Notification.create("Extracted your form. Click here to check the options panel for more info.", Utils.openOptions);
+  }
+});
+
+// Messages from content.js
+chrome.runtime.onMessage.addListener(function (message) {
+  if(message.action === "log" && message.message) {
+    Logger.store(message.message);
   }
 });
 

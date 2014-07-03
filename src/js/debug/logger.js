@@ -1,22 +1,19 @@
-/*global Storage, Utils */
+/*global Storage, Utils, JSONF */
 "use strict";
 var Logger = {
   info: function (msg, obj) {
-    // TODO: open port here!
-    if(typeof obj !== "undefined" && typeof obj.sender !== "undefined") {
-      // A port object. So we communicate with bg.js
-      obj.postMessage({"action": "log", "message": msg});
-      return;
-    }
+    // Port to background.js
+    var port = chrome.runtime.connect();
+    port.postMessage({
+      "action": "log",
+      "message": msg
+    });
 
     if (obj) {
       console.log("%s %O", msg, obj);
       return;
     }
     console.log("%O", msg);
-    if(Utils.debug) {
-      this.store(msg);
-    }
   },
   delete: function() {
     chrome.storage.local.remove(Utils.keys.logs);
