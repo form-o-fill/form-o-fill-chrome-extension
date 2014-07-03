@@ -112,6 +112,7 @@ chrome.runtime.onInstalled.addListener(function () {
     }
   });
 
-
+  // remove log entries
+  Logger.delete();
 });
 
