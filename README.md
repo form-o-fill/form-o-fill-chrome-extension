@@ -8,10 +8,8 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- save logentries into localstorage (clear onInstalled)
-- Move config from Utils to Config
-- auto prefix loglines via argument.caller
-- Add logviewer (dev build only) via localstorage
+- use event to transsport content scritp events to BG and save there.
+- syntax check for "before: function(resolve)". Must include "resolve"
 - describe permissions requirements in "about"
 - use gulp.js to build a minimized optimized fabulized version<del>ized</del>
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
