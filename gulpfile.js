@@ -12,9 +12,22 @@ var eslint = require('gulp-eslint');
 var stripdebug = require('gulp-strip-debug');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var through2 = require('through2');
 
 var manifest = require('./src/manifest');
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
+var replaceOpts = {
+    patterns: [
+      {
+        match: /debug\s*:\s*true,/g,
+        replacement: "debug: false,"
+      },
+      {
+        match: /.*Logger.*/g,
+        replacement: ""
+      }
+    ]
+  };
 
 // Detect scripts common between two passed in arrays of file names
 var commonBetween = function(one, two) {
@@ -43,7 +56,7 @@ gulp.task('announce', function() {
 });
 
 gulp.task('clean', function() {
- return gulp.src('build', {read: false})
+ return gulp.src('build/**R', {read: false})
     .pipe(clean());
 });
 
@@ -54,31 +67,46 @@ gulp.task('lint', function () {
   .pipe(eslint.format());
 });
 
+gulp.task('globalJs', function () {
+  gulp.src("src/js/global/*.js")
+  .pipe(replace(replaceOpts))
+  .pipe(concat('global.js'))
+  .pipe(stripdebug())
+  .pipe(uglify())
+  .pipe(gulp.dest('build/js/'));
+});
 
-gulp.task('commonJs', function () {
-  var bgJs = manifest.background.scripts;
-  var contentJs = manifest.content_scripts[0].js;
+gulp.task('backgroundJs', function () {
+  gulp.src("src/js/background/*.js")
+  .pipe(replace(replaceOpts))
+  .pipe(concat('background.js'))
+  .pipe(stripdebug())
+  .pipe(uglify())
+  .pipe(gulp.dest('build/js/'));
+});
 
-  var common = commonBetween(bgJs, contentJs).filter(function (jsFileName) {
-    return (jsFileName.indexOf("logger.js") === -1);
-  });
+gulp.task('contentJs', function () {
+  gulp.src("src/js/content/*.js")
+  .pipe(replace(replaceOpts))
+  .pipe(concat('content.js'))
+  .pipe(stripdebug())
+  .pipe(uglify())
+  .pipe(gulp.dest('build/js/'));
+});
 
-  gulpUtil.log("Found", chalk.cyan(common.length), "common JS files (" + common.join(", ") + ")");
+gulp.task('optionsJs', function () {
+  gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
+  .pipe(replace(replaceOpts))
+  .pipe(concat('options.js'))
+  .pipe(stripdebug())
+  .pipe(uglify())
+  .pipe(gulp.dest('build/js/'));
+});
 
-  gulp.src(common)
-  .pipe(replace({
-    patterns: [
-      {
-        match: /debug\s*:\s*true,/g,
-        replacement: "debug: false,"
-      },
-      {
-        match: /.*Logger.*/g,
-        replacement: ""
-      }
-    ]
-  }))
-  .pipe(concat('common.js'))
+gulp.task('PopupJs', function () {
+  gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
+  .pipe(replace(replaceOpts))
+  .pipe(concat('options.js'))
   .pipe(stripdebug())
   .pipe(uglify())
   .pipe(gulp.dest('build/js/'));
@@ -90,7 +118,6 @@ gulp.task('copyUnchanged', ['clean'],  function() {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
   });
-  gulp.src('src/manifest.json').pipe(gulp.dest('build'));
 });
 
 // Copies HTML files and removes comment and blocks designated
@@ -108,6 +135,14 @@ gulp.task('copyHtml', ['copyUnchanged'],  function() {
     .pipe(gulp.dest('build/html'));
 });
 
+gulp.task('mangleHtml', ['copyHtml'], function() {
+
+});
+
+gulp.task('mangleManifest', [ 'clean' ], function() {
+  gulp.src('src/manifest.json').pipe(gulp.dest('build'));
+});
+
 // running "gulp" will execute this
-gulp.task('default', ['announce', 'lint', 'copyHtml', 'commonJs'], function() {
+gulp.task('default', ['announce', 'lint', 'copyHtml', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'mangleManifest', 'mangleHtml'], function() {
 });

@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Form-O-Fill",
-  "description": "This extension enables form filling via a simple button and is highly configurable via JSON. Targeted at web developers coping with long forms (eg. order processes)",
+  "description": "A programmable form filler for developers",
   "version": "1.0",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "33",

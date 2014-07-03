@@ -26,7 +26,8 @@
     "gulp-replace-task": "0.0.6",
     "gulp-strip-debug": "^0.3.0",
     "gulp-uglify": "^0.3.1",
-    "gulp-util": "^2.2.19"
+    "gulp-util": "^2.2.19",
+    "through2": "^0.5.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
