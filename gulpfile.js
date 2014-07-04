@@ -17,34 +17,32 @@ var through2 = require('through2');
 var manifest = require('./src/manifest');
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
 var replaceOpts = {
-    patterns: [
-      {
-        match: /debug\s*:\s*true,/g,
-        replacement: "debug: false,"
-      },
-      {
-        match: /.*Logger.*/g,
-        replacement: ""
-      }
-    ]
-  };
-
-// Detect scripts common between two passed in arrays of file names
-var commonBetween = function(one, two) {
-  var common = [];
-
-  // Detect common javascripts between content and background scripts
-  one.forEach(function (bg) {
-    if (two.indexOf(bg) !== -1) {
-      common.push(bg);
-    }
-  });
-
-  common = common.map(function(jsFileName) {
-    return "src/" + jsFileName;
-  });
-
-  return common;
+  patterns: [
+  {
+    match: /debug\s*:\s*true,/g,
+    replacement: "debug: false,"
+  },
+  {
+    match: /.*Logger.*/g,
+    replacement: ""
+  },
+  {
+    match: /^.*\/\/ REMOVE START[\s\S]*?\/\/ REMOVE END.*$/gm,
+    replacement: ""
+  },
+  {
+    match: /<!-- REMOVE START[\s\S]*?REMOVE END -->/gm,
+    replacement: ""
+  },
+  {
+    match: /<!-- BUILD START/g,
+    replacement: ""
+  },
+  {
+    match: /BUILD END -->/g,
+    replacement: ""
+  }
+  ]
 };
 
 gulp.task('announce', function() {
@@ -56,8 +54,8 @@ gulp.task('announce', function() {
 });
 
 gulp.task('clean', function() {
- return gulp.src('build/**R', {read: false})
-    .pipe(clean());
+  return gulp.src('build', {read: false, force: true})
+  .pipe(clean());
 });
 
 // ESLINT the javascript BEFORE uglifier ran over them
@@ -103,13 +101,12 @@ gulp.task('optionsJs', function () {
   .pipe(gulp.dest('build/js/'));
 });
 
-gulp.task('PopupJs', function () {
-  gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
+gulp.task('popupJs', function () {
+  gulp.src("src/js/popup.js")
   .pipe(replace(replaceOpts))
-  .pipe(concat('options.js'))
   .pipe(stripdebug())
   .pipe(uglify())
-  .pipe(gulp.dest('build/js/'));
+  .pipe(gulp.dest('build/js/popup.js'));
 });
 
 // Copies files that can be xopied without changes
@@ -124,15 +121,10 @@ gulp.task('copyUnchanged', ['clean'],  function() {
 // with <!-- REMOVE START -->
 // to <!-- REMOVE END -->
 gulp.task('copyHtml', ['copyUnchanged'],  function() {
-    gulp.src('src/html/**/*.html')
-    .pipe(cleanhtml())
-    .pipe(replace({
-      patterns: [{
-        match: /<!-- REMOVE START[\s\S]*?REMOVE END -->/gm,
-        replacement: ""
-      }]
-    }))
-    .pipe(gulp.dest('build/html'));
+  gulp.src(['src/html/**/*.html', '!src/html/option/_logs_*.html'])
+  .pipe(replace(replaceOpts))
+  .pipe(cleanhtml())
+  .pipe(gulp.dest('build/html'));
 });
 
 gulp.task('mangleHtml', ['copyHtml'], function() {
@@ -144,5 +136,5 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
 });
 
 // running "gulp" will execute this
-gulp.task('default', ['announce', 'lint', 'copyHtml', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'mangleManifest', 'mangleHtml'], function() {
+gulp.task('default', ['announce', 'lint', 'copyHtml', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest', 'mangleHtml'], function() {
 });

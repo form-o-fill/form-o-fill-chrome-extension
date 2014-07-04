@@ -85,12 +85,14 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   }
 });
 
+// REMOVE START
 // Messages from content.js
 chrome.runtime.onMessage.addListener(function (message) {
   if(message.action === "log" && message.message) {
     Logger.store(message.message);
   }
 });
+// REMOVE END
 
 // Fires when the extension is install or updated
 chrome.runtime.onInstalled.addListener(function () {
