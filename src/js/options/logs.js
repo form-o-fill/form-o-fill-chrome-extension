@@ -21,3 +21,15 @@ var displayLogs = function() {
   });
 };
 
+jQuery(document).on("click", "a[href='#logs']", function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+  logsInterval = setInterval(displayLogs, 500);
+  displayLogs();
+}).on("click", "a[href^=#]", function () {
+  if (!/#logs$/.test(this.href)) {
+    clearInterval(logsInterval);
+  }
+}).on("click", "button.cmd-empty-logs", function () {
+  Logger.delete();
+});
