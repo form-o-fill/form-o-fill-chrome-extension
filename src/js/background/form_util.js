@@ -16,7 +16,7 @@ var FormUtil = {
     // Default instantaneous resolving promise:
     var beforeFunction = function() {
       return new Promise(function(resolve) {
-       resolve(null);
+        resolve(null);
       });
     };
 
@@ -25,9 +25,11 @@ var FormUtil = {
     // Is there a 'before' block?
     if(typeof rule.before === "function") {
       // Wrap the function into a promise
-      beforeFunction = new Promise(function(resolve) {
-        rule.before(resolve);
-      });
+      beforeFunction = function() {
+        return new Promise(function(resolve) {
+          rule.before(resolve);
+        });
+      };
       Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
     }
 
