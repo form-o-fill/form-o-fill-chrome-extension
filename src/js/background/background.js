@@ -87,6 +87,14 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
 // REMOVE START
 // Messages from content.js
+chrome.runtime.onConnect.addListener(function (port) {
+  port.onMessage.addListener(function(message) {
+    if(message.action === "log" && message.message) {
+      Logger.store(message.message);
+    }
+  });
+});
+
 chrome.runtime.onMessage.addListener(function (message) {
   if(message.action === "log" && message.message) {
     Logger.store(message.message);
