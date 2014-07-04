@@ -1,7 +1,8 @@
 /*eslint-env node */
 "use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm
+// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2
+
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
 var chalk = require('chalk');
@@ -13,6 +14,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var through2 = require('through2');
 var rm = require('gulp-rm');
+var zip = require('gulp-zip');
 
 var manifest = require('./src/manifest');
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
@@ -62,15 +64,15 @@ var replaceOpts = {
   ]
 };
 
-gulp.task('announce', ['clean'], function() {
+gulp.task('announce', function() {
   gulpUtil.log(
     'Building version', chalk.cyan(manifest.version),
     'of', chalk.cyan(manifest.name),
-    'as', chalk.cyan("build/" + distFilename)
+    'as', chalk.cyan("dist/" + distFilename)
   );
 });
 
-gulp.task('clean', function() {
+gulp.task('clean', ["announce"], function() {
   return gulp.src('build', {read: false, force: true})
   .pipe(rm());
 });
@@ -147,18 +149,12 @@ gulp.task('copyHtml', ['copyUnchanged'],  function() {
 gulp.task('mangleManifest', [ 'clean' ], function() {
   gulp.src('src/manifest.json')
   .pipe(replace(replaceOpts))
-  .pipe(replace({
-      patterns: [
-        {
-          match: /"jsBuild"/g,
-          replacement: "\"js\""
-        }
-      ]
-    }
-  ))
   .pipe(gulp.dest('build'));
 });
 
 // running "gulp" will execute this
 gulp.task('default', ['announce', 'lint', 'copyHtml', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+  gulp.src(['build/**'])
+  .pipe(zip(distFilename))
+  .pipe(gulp.dest('dist'));
 });

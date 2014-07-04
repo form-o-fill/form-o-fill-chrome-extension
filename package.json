@@ -8,25 +8,27 @@
     "eslint": "^0.6.2",
     "gulp": "^3.8.5",
     "gulp-cleanhtml": "^0.0.2",
-    "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.2.0",
     "gulp-eslint": "^0.1.7",
     "gulp-replace-task": "^0.0.6",
     "gulp-strip-debug": "^0.3.0",
     "gulp-uglify": "^0.3.1",
-    "gulp-util": "^2.2.19",
-    "rimraf": "^2.2.8"
+    "gulp-util": "^2.2.19"
   },
   "devDependencies": {
     "chalk": "^0.4.0",
+    "eslint": "^0.6.2",
+    "grunt-zip": "^0.15.0",
     "gulp": "^3.8.5",
     "gulp-cleanhtml": "0.0.2",
     "gulp-concat": "^2.2.0",
+    "gulp-eslint": "^0.1.7",
     "gulp-replace-task": "0.0.6",
     "gulp-rm": "^0.2.0",
     "gulp-strip-debug": "^0.3.0",
     "gulp-uglify": "^0.3.1",
     "gulp-util": "^2.2.19",
+    "gulp-zip": "^0.4.0",
     "through2": "^0.5.1"
   },
   "scripts": {
