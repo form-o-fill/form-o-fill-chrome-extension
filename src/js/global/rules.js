@@ -7,6 +7,9 @@ var Rule = function() {
   this.prettyPrint = function() {
     var clone = jQuery.extend({}, this);
     delete clone.matcher;
+    delete clone.nameClean;
+    delete clone.urlClean;
+    delete clone.id;
     return JSON.stringify(clone, null, 2);
   };
 
