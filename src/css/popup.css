@@ -88,3 +88,9 @@ a.to-options, a.cmd-show-extract-overlay {
 a.cmd-show-extract-overlay {
   margin-left: 10px;
 }
+
+h3 .cmd-show-extract-overlay {
+  font-size: inherit;
+  float: none;
+  margin-left: 0;
+}

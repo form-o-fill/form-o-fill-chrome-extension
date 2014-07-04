@@ -264,6 +264,32 @@ body {
   background-color: #ccc;
 }
 
+#help .topic li .li-block {
+  display: block;
+  margin-left: 16px;
+}
+
+#help .topic li {
+  text-indent: -14px;
+  margin-left: 14px;
+}
+
+#help .topic li:before {
+  font-family: icomoon;
+  content: "\e600";
+}
+
+#help .topic li img {
+  vertical-align: middle;
+}
+
+#help .warning:before {
+  font-family: "icomoon";
+  vertical-align: middle;
+  content: "\e602";
+  color: rgb(197, 25, 25);
+}
+
 .log-entries table {
   margin: 10px 0;
   width: 100%;
@@ -286,3 +312,4 @@ body {
 .log-entries tr:nth-child(even) {
   background-color: #eee;
 }
+
