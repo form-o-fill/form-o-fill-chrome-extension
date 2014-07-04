@@ -28,6 +28,13 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
+      "jsBuild": [
+        "vendor/jquery/jquery-2.1.1.min.js", 
+        "vendor/chance.js/chance.js" ,
+        "vendor/moment.js/moment-with-langs.js",
+        "js/global.js",
+        "js/content.js"
+      ],
       "js": [ 
         "vendor/jquery/jquery-2.1.1.min.js", 
         "vendor/chance.js/chance.js" ,
@@ -52,6 +59,11 @@
   ],
   "options_page": "html/options.html",
   "background": {
+    "scriptsBuild": [
+      "vendor/jquery/jquery-2.1.1.min.js", 
+      "js/global.js",
+      "js/background.js"
+    ],
     "scripts": [
       "vendor/jquery/jquery-2.1.1.min.js", 
       "js/debug/logger.js", 

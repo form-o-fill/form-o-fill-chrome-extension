@@ -20,10 +20,10 @@
   "devDependencies": {
     "chalk": "^0.4.0",
     "gulp": "^3.8.5",
-    "gulp-clean": "^0.3.1",
     "gulp-cleanhtml": "0.0.2",
     "gulp-concat": "^2.2.0",
     "gulp-replace-task": "0.0.6",
+    "gulp-rm": "^0.2.0",
     "gulp-strip-debug": "^0.3.0",
     "gulp-uglify": "^0.3.1",
     "gulp-util": "^2.2.19",
