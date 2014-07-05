@@ -8,13 +8,12 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- use event to transsport content scritp events to BG and save there.
+- help entry content
 - syntax check for "before: function(resolve)". Must include "resolve"
 - describe permissions requirements in "about"
-- use gulp.js to build a minimized optimized fabulized version<del>ized</del>
+- request permissions for http and https nly optional via https://developer.chrome.com/extensions/permissions
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
-- help entry content
 - changelog menu entry in options
 - Extract ALL strings/texts to messages
 - add "de" locale at least
