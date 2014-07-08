@@ -24,12 +24,24 @@ var I18n = {
   userLocale: function() {
     return chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
   },
-  loadPages: function(pages) {
+  loadPages: function(pages, prefix) {
     var i18n = this;
+    var path = [];
+    var appendDomSelector = "";
     pages.forEach(function (pageName) {
-      jQuery.get(chrome.runtime.getURL("html/options/_" + pageName + "_" + i18n.currentLocale() + ".html"), function (html) {
-        jQuery("#" + pageName).html(html).show();
-      });
+      appendDomSelector = "#" + pageName;
+      path = [ "html", "options" ];
+      if (typeof prefix !== "undefined") {
+        path.push(prefix);
+        appendDomSelector = "#" + prefix + " " + appendDomSelector;
+      }
+      path.push("_" + pageName + "_" + i18n.currentLocale() + ".html");
+      i18n._getAndInsert(path, appendDomSelector);
+    });
+  },
+  _getAndInsert: function(path, appendDomSelector) {
+    jQuery.get(chrome.runtime.getURL(path.join("/")), function (html) {
+      jQuery(appendDomSelector).html(html).show().trigger("i18n-loaded", [ path.join("/") ]);
     });
   }
 };

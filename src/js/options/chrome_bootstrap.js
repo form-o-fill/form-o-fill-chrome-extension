@@ -3,7 +3,6 @@ var ChromeBootstrap = {
   init: function() {
     // Menu functionality for chrome-bootstrap
     jQuery('.menu').on("click", "a", function(ev) {
-      ev.preventDefault();
       jQuery('.mainview > *').removeClass("selected");
       jQuery('.menu li').removeClass("selected");
       jQuery('.mainview > *:not(.selected)').css('display', 'none');

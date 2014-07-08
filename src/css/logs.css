@@ -1,0 +1,22 @@
+.log-entries table {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.log-entries td:first-child {
+  white-space: nowrap;
+}
+
+.log-entries td {
+  padding: 5px;
+  vertical-align: top;
+}
+
+.log-entries th {
+  background-color: #ddd;
+  padding:  5px 2px;
+}
+
+.log-entries tr:nth-child(even) {
+  background-color: #eee;
+}
