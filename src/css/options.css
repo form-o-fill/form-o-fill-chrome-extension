@@ -55,23 +55,23 @@ body {
   margin-right: 4px;
 }
 
-.menu button.save:before {
+button.save:before {
   content: "\e603";
 }
 
-.menu button.reload:before {
+button.reload:before {
   content: "\e604";
 }
 
-.menu button.append-extracted:before {
+button.append-extracted:before {
   content: "\e607";
 }
 
-.menu button.format:before {
+button.format:before {
   content: "\e608";
 }
 
-.menu button.empty:before {
+button.empty:before {
   content: "\e600";
 }
 
@@ -313,3 +313,6 @@ body {
   background-color: #eee;
 }
 
+.overlay .close-button {
+  cursor: pointer;
+}

@@ -5,6 +5,7 @@
 
   <div class="menu">
     <button class="cmd-empty-logs empty">Empty Log</button>
+    <button class="cmd-download-logs save">Download Logs</button>
   </div>
 
   <table>
@@ -25,4 +26,29 @@
       <td></td>
     </tr>
   </template>
+  <div class="overlay modal-download-logs" style="display: none;">
+    <div class="page">
+      <h1>Download Logfile</h1>
+      <div class="close-button"></div>
+      <div class="content-area">
+        <p>
+          Clicking on the download button below will save your logfiles to your filesystem.
+        </p>
+        <p>
+          Be aware that a Form-O-Fill Log export <em>can include passwords or other sensitive data</em> if present in your rule definitions.
+        </p>
+        <p>
+          Please look at the logfile's content before sending it somewhere (eg. for debugging purposes).
+        </p>
+      </div>
+      <div class="action-area">
+        <div class="action-area-right">
+          <div class="button-strip">
+            <button class="cmd-cancel-download">Cancel Download</button>
+            <button class="cmd-download-logs-ok">Ok, I understand. Start download!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
