@@ -84,6 +84,12 @@ gulp.task('lint', function () {
   .pipe(eslint.format());
 });
 
+gulp.task('css', ['clean'], function () {
+  gulp.src("src/css/*.css")
+  .pipe(concat('formofill.css'))
+  .pipe(gulp.dest('build/css/'));
+});
+
 gulp.task('globalJs', ['clean'], function () {
   gulp.src("src/js/global/*.js")
   .pipe(replace(replaceOpts))
@@ -128,9 +134,9 @@ gulp.task('popupJs', ['clean'], function () {
   .pipe(gulp.dest('build/js'));
 });
 
-// Copies files that can be xopied without changes
+// Copies files that can be copied without changes
 gulp.task('copyUnchanged', ['clean'],  function() {
-  ["fonts", "images", "css", "vendor", "_locales"].forEach(function (dir) {
+  ["fonts", "images", "vendor", "_locales"].forEach(function (dir) {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
   });
@@ -153,7 +159,7 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
 });
 
 // running "gulp" will execute this
-gulp.task('default', ['announce', 'lint', 'copyHtml', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+gulp.task('default', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
   .pipe(gulp.dest('dist'));
