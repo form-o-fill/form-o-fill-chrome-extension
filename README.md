@@ -8,17 +8,19 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- help entry content
+- write help for adding libraries dynamically via before function
+- write help for general editor use (tabs, buttons)
+- make context click extract that form instead of showing the overlay.
 - syntax check for "before: function(resolve)". Must include "resolve"
 - describe permissions requirements in "about"
-- request permissions for http and https nly optional via https://developer.chrome.com/extensions/permissions
+- limit the number of tabs, add dropdown if too many.
+- request permissions for http and https adhoc using https://developer.chrome.com/extensions/permissions
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
 - changelog menu entry in options
 - Extract ALL strings/texts to messages
 - add "de" locale at least
 - autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
-- search dropdown to support faster finding of rules in long rule definitions
 - show annotations in editor for all errors
 
 # LICENSE
