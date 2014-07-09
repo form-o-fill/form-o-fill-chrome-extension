@@ -8,6 +8,7 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
+- cleanup createObjectURL() in logs.js after the user has clicked on it 
 - write help for adding libraries dynamically via before function
 - write help for general editor use (tabs, buttons)
 - allow #help-basic to jump to #help and then #help-basic
