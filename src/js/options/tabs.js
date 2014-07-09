@@ -5,6 +5,9 @@ var jTab = function(tabIndex, name, isCurrent) {
   return jQuery('<li class="tab' + (isCurrent ? " current" : "") + '" data-tab-id="' + tabIndex + '"><input type="text" value="' + name + '" disabled /><a href="#" class="cmd-tabs-close"></a></li>');
 };
 
+// maximal tab count including (+)-tab
+var maxTabs = 7;
+
 // Save tab settings
 var saveTabsSetting = function() {
   Logger.info("[tabs.js] Saving tab setting");
@@ -112,6 +115,11 @@ jQuery(function () {
 
   // Add a new tab
   jQuery(".tabs").on("click", "a.cmd-tabs-open", function (e) {
+    if (jQuery(".tab").length === maxTabs) {
+      Logger.info("[tabs.js] Max tab count reached");
+      Utils.infoMsg("Maximum of open tabs reached");
+      return;
+    }
     Logger.info("[tabs.js] Opening a new tab");
     e.preventDefault();
     e.stopPropagation();
