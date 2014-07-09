@@ -10,6 +10,7 @@ The configuration is done via a rule definition file written in javascript.
 
 - write help for adding libraries dynamically via before function
 - write help for general editor use (tabs, buttons)
+- allow #help-basic to jump to #help and then #help-basic
 - make context click extract that form instead of showing the overlay.
 - syntax check for "before: function(resolve)". Must include "resolve"
 - describe permissions requirements in "about"
