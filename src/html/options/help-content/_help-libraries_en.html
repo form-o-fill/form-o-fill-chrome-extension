@@ -1,0 +1,101 @@
+<a name="help-basic"></a>
+<h3>Using libraries</h3>
+<p>
+  Form-O-Fill ships with two powerful libraries for creating test data.<br />
+  To create random data you can use <a href="http://chancejs.com/#basics" target="_blank">chance.js</a>.<br />
+  To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a>.<br />
+</p>
+<p>
+  Both libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
+</p>
+<p>
+  This is how to use them:
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Inside a field definition ...
+  </div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Find the field ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use <a href="http://chancejs.com/#basics" target="_blank">chance.js</a> to create some data ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    .. like a random name
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return Libs.chance.name();
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Find a date field ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type=date]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use <a href="http://momentjs.com/docs/" target="_blank">moment.js</a> to fill it ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    .. with the current date (in you locale)
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return Libs.moment().format();
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }]
+  </div>
+</div>

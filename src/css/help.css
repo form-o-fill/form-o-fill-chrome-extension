@@ -1,3 +1,7 @@
+#help p {
+  line-height: 18px;
+}
+
 #help .topics a {
   display: inline-block;
   padding:  10px;
@@ -22,7 +26,7 @@
 #help .topic {
   border-bottom: 1px solid #ccc;
   padding: 10px 0;
-  line-height: 24px;
+  line-height: 15px;
 }
 
 #help .topic li .li-block {
@@ -55,3 +59,30 @@
   color: rgb(197, 25, 25);
 }
 
+#help code {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+#help .block-of-code {
+  overflow: hidden;
+  line-height: 18px;
+}
+
+#help .explaining {
+  padding: 2px;
+  float: left;
+  width: 33%;
+  background-color: #eee;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+#help .code {
+  padding: 5px;
+  float: right;
+  font-family: monospace;
+  width: 64%;
+}

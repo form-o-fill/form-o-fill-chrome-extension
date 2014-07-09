@@ -1,0 +1,105 @@
+<a name="help-basic"></a>
+<h3>Declaring a before function</h3>
+<p>
+  On of the most powerful features of Form-O-Fill is the ability to run a block of code <em>before</em> the form filling starts
+  and use the data retrieved there to fill in the values.
+</p>
+<p>
+  This is called a "before function". There can only be one before function per rule.
+</p>
+<p>
+  Using a before function you can fetch test data from a service to use later in your value functions.
+  <!-- TODO: ... or add a asynchronously fetched library so Form-O-Fill cn use it : EXAMPLE! -->
+</p>
+<p>
+  Defining a before function is easy:
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Just under the <code>name:</code> definition of your rule ...
+  </div>
+  <div class="code">
+    name: "Before functions rock!",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Add a before function. The first parameter will be the <code>resolve</code> function which you will need to call with the data you generated.<br />
+  </div>
+  <div class="code">
+    before: function(resolve) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Now request some data. You can use the globally accessible <code>jQuery</code> for that like so:
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;jQuery.getJSON("http://www.openthesaurus.de/synonyme/search?q=versprechen&format=application/json").done(function(data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    When the data has been fetched (asynchronously), return the data using <code>resolve(data)</code>
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;resolve(data.synsets);
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    You can use the data resolved in a before function inside you value functions
+  </div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Find the field ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use the second parameter to the value function (<code>$data</code>).<br />
+    It contains the structure you resolved in the before function.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return $data[Math.round(Math.random()*10)+$data.length].terms[0];
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<a name="help-basic"></a>
+<h3>Basic rule syntax</h3>
+<p>
+  Rules are written as a javascript object.<br />
+  You should always start with <code>var rules = [];</code>.<br />
+  If you do not start your rule definition with that, Form-O-Fill will complain and offer to fix that for you.
+</p>
+<p>
+  This is the structure of a basic rule:
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Define an array of rules. Rules must always start with this.
+  </div>
+  <div class="code">
+    var rules = [
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Start of one rule
+  </div>
+  <div class="code">
+    {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    A regular expression that is matched against the current URL (including http:// and the like).
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;url: /^http.*test.html$/,
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    A name for this rule. Used when multiple matches are available.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;name: "This is my first rule. So excited!",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    This is an array of fields you want to fill.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;fields: [
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    A field hat a <code>selector</code> and an <code>value</code>.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    A jQuery compatible selector. (Actually <code>document.querySelectorAll</code>)
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;selector: "#myfield",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    The value to fill the field with.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;value: "Nyan Nyan Nyan"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp; 
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }];
+  </div>
+</div>

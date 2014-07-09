@@ -1,0 +1,51 @@
+<a name="help-basic"></a>
+<h3>Using functions as values</h3>
+<p>
+  Using static strings/text as values when filling out forms isn't enough.<br />
+  You can use functions as values and dynamically create the value to fill the field with.
+</p>
+<p>
+  This is how it works:
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Inside a field definition ...
+  </div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Find the field ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Create a function. The function will receive two paramters:<br />
+    <code>$element</code>: The jQuery wrapped element that is going to be filled. <br />
+    <code>$data</code>: Data from <a href="#help-before">before functions</a> [optional]<br />
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Return the value the field should be filled with.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return $element.val().toLowerCase();
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>
