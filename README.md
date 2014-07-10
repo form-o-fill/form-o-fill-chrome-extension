@@ -8,13 +8,14 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
+- Document that libs can only be loaded from https:// URLS (CSP limitation) (see testcases/rule-add-library.js)
+  Move libs.js to global and make it available inside the promise wrapped before function (form_utils.js)
 - write help for adding libraries dynamically via before function
 - allow #help-basic to jump to #help and then #help-basic
 - make context click extract that form instead of showing the overlay.
 - syntax check for "before: function(resolve)". Must include "resolve"
 - describe permissions requirements in "about"
 - limit the number of tabs, add dropdown if too many.
-- request permissions for http and https adhoc using https://developer.chrome.com/extensions/permissions
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
 - changelog menu entry in options

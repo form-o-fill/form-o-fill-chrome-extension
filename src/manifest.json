@@ -20,7 +20,7 @@
     "http://*/",
     "https://*/"
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://; object-src 'self'",
   "browser_action": {
     "default_title": "Form-O-Fill",
     "default_icon": "images/icon_19.png"
