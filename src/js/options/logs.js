@@ -36,6 +36,7 @@ var downloadLogs = function() {
 
   document.querySelector("body").appendChild(a);
   a.click();
+  window.URL.revokeObjectURL(url);
 };
 
 var showModalDownload = function() {
