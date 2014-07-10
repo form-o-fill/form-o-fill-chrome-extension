@@ -7,6 +7,7 @@
   padding:  10px;
   background-color: #eee;
   margin-left: 10px;
+  margin-top: 10px;
   text-decoration: none;
   color: #111;
 }
@@ -28,6 +29,12 @@
   padding: 10px 0;
   line-height: 15px;
 }
+
+#help .topic > a[name] {
+  margin-top: 60px;
+  display: block;
+}
+
 
 #help .topic li .li-block {
   display: block;
