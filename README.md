@@ -8,7 +8,6 @@ The configuration is done via a rule definition file written in javascript.
 
 # TODOS (in that order)
 
-- Try to sandbox all Function() / eval operations
 - Document that libs can only be loaded from https:// URLS (CSP limitation) (see testcases/rule-add-library.js)
   Move libs.js to global and make it available inside the promise wrapped before function (form_utils.js)
 - write help for adding libraries dynamically via before function
