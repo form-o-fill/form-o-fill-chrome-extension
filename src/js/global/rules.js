@@ -60,7 +60,6 @@ var Rules = {
           }
 
           // Now we go into hell ...
-          // TODO: remove unsafe-eval from manifest and use a chrome sandbox iframe
           var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
           var ruleFunction = new Function(ruleCode);
           that.ruleCount = 0;

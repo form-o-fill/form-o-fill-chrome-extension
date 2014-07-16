@@ -89,7 +89,6 @@ $(function() {
       // Activate the tab with the rule
       var match = rule.id.match(/^([0-9]+)/);
       if(match) {
-        // TODO: continue: doesn't work:
         Logger.info("[options.js] Activating tab #" + match[1]);
         $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
       }
