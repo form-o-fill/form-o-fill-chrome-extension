@@ -1,9 +1,39 @@
-What it does
+Developers like working on cool apps but every once in a while THE FORM™ comes along to suck all fun out of the developers life.
+
+Working on such form entry processes is in itself usually not fun but filling out a form for test purposes again and again is even worse.
+
+FORM-O-FILL is there to easy that pain.
 
 Features:
-Use unicode
+✓ Use javascript to program the rules.
+✓ Extract already entered forms to auto-create the rule definition with the click of a button (or two).
+✓ Use static values or dynamically generated values for every field (value functions are just javascript).
+✓ Get nice error reporting when applying the rule to the form doesn't work.
+✓ Use before functions to fetch or generate data that can then be used in value functions.
+✓ Organize your work into tabs. All tabs are searched for matching rules.
+✓ One click apply of a matching rule.
+✓ Two click apply when there are multiple matching rules.
+✓ Browser notifications to show you what happened.
+✓ Modern design (is that even a feature?).
 
-Permissions requiered:
+Requires:
+Chrome 33+
+
+Permissions requested:
+- Read all open tabs (Used for finding the tab to fill a form in)
+- Read all http/https URLs (Well its a form filler and it should be able to fill data everywhere) 
+- Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.0.0
+- First live version. Be gentle.
 
+Find the source at
+https://github.com/form-o-fill/form-o-fill-chrome-extension
+
+Pull requests always welcome!
+
+Form-O-Fill icon taken from the Entypo Pictogram suite
+(http://www.entypo.com/)
+
+Licensed under the MIT license.
