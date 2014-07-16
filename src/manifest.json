@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Form-O-Fill",
-  "description": "A programmable form filler for developers",
-  "version": "1.0",
+  "name": "Form-O-Fill - The programmable form filler",
+  "short_name": "Form-O-Fill",
+  "description": "The programmable form filler for developers. Fill your forms using javascript functions. Use dynamic or static values. Fetch data using JSON XHRs.",
+  "version": "1.0.0",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "33",
   "icons": { 
