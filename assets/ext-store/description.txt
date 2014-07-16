@@ -1,0 +1,9 @@
+What it does
+
+Features:
+Use unicode
+
+Permissions requiered:
+
+Changelog:
+
