@@ -20,7 +20,6 @@ The configuration is done via a rule definition file written in javascript.
 - Allow local file loading of JSON files and merge them last into rules. Use File API.
 - Import Rule Definitions from other URLs via XHR (But how to validate them?)
 - changelog menu entry in options
-- CONTRIBUTING.markdown (eslint, feature branch, PR)
 - Extract ALL strings/texts to messages
 - add "de" locale at least
 - autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
@@ -47,6 +46,17 @@ Here are a few steps to make the error debugging easier on our side:
 - Perhaps ... a pull request to fix that bug :)
 
 # CONTRIBUTING
+
+You want to contribute to Form-O-Fill? That is awesome!  
+Here are a few "rules" we like to adhere to:
+
+- fork the repo and create a branch named after the thing you are fixing / implementing (```git checkout -b implement-a-flux-capacitator```)
+- We use eslint to check our code. Please install it with [npm install -g esilint](http://eslint.org).
+- Implement and check your code with eslint (``èslint src```)
+- Everything works and eslint is happy?
+- Commit push and PULL REQUEST away.
+- Thank you!
+
 # LICENSE
 
 ## The MIT License (MIT)
