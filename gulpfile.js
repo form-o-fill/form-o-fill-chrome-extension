@@ -1,7 +1,7 @@
 /*eslint-env node */
 "use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2
+// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins
 
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
@@ -15,9 +15,33 @@ var uglify = require('gulp-uglify');
 var through2 = require('through2');
 var rm = require('gulp-rm');
 var zip = require('gulp-zip');
+var minifyCSS = require('gulp-minify-css');
 
+// Load the manifest as JSON
 var manifest = require('./src/manifest');
+
+// The final .zip filename that gets uploaded to https://chrome.google.com/webstore/developer/dashboard
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
+
+//
+// Replacements config for gulp-replace
+//
+// 1. Sets debug: false (in utils.js)
+// 2. Removes Logger statements
+// 3. Remove everything in .js files between "// REMOVE START" and "REMOVE END"
+//    These blocks contain development code that gets optimized away
+// 4. Remove everything in .html files between "<!-- REMOVE START" and "REMOVE END -->"
+//    These blocks contain development code that gets optimized away
+// 5. Activate blocks between "<!-- BUILD START" and "BUILD END -->"
+//    These contain the optimized files for the final build
+// 6. Remove the "js:" array from the manifest
+//    These blocks contain development code that gets optimized away
+// 7. Remove the "scripts:" array from the manifest
+//    These blocks contain development code that gets optimized away
+// 8. Rename the "jsBuild" part in the manifest to be the "js" part
+//    These contain the optimized files for the final build
+// 9. Rename the "scriptsBuild" part in the manifest to be the "scripts" part
+//    These contain the optimized files for the final build
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
@@ -64,6 +88,7 @@ var replaceOpts = {
   ]
 };
 
+// Output which version to build where to
 gulp.task('announce', function() {
   gulpUtil.log(
     'Building version', chalk.cyan(manifest.version),
@@ -72,28 +97,32 @@ gulp.task('announce', function() {
   );
 });
 
+// Cleans build and dist dirs
+// I sense a bug here!
 gulp.task('clean', ["announce"], function() {
-  gulp.src('build', {read: false, force: true})
-  .pipe(rm());
-  gulp.src('dist', {read: false, force: true})
-  .pipe(rm());
+  return gulp.src(['build/**'], {read: false})
+  .pipe(rm({async: false}));
 });
 
 // ESLINT the javascript BEFORE uglifier ran over them
 gulp.task('lint', function () {
-  gulp.src(['src/js/**/*.js'])
+  return gulp.src(['src/js/**/*.js'])
   .pipe(eslint())
-  .pipe(eslint.format());
+  .pipe(eslint.format())
+  .pipe(eslint.failOnError());
 });
 
+// Optimize CSS
 gulp.task('css', ['clean'], function () {
-  gulp.src(["src/css/*.css", "!src/css/content.css", "!src/css/popup.css"])
+  return gulp.src(["src/css/*.css", "!src/css/content.css", "!src/css/popup.css"])
   .pipe(concat('formofill.css'))
+  .pipe(minifyCSS())
   .pipe(gulp.dest('build/css/'));
 });
 
+// Build global.js
 gulp.task('globalJs', ['clean'], function () {
-  gulp.src("src/js/global/*.js")
+  return gulp.src("src/js/global/*.js")
   .pipe(replace(replaceOpts))
   .pipe(concat('global.js'))
   .pipe(stripdebug())
@@ -101,8 +130,9 @@ gulp.task('globalJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+// Build background.js
 gulp.task('backgroundJs', ['clean'], function () {
-  gulp.src("src/js/background/*.js")
+  return gulp.src("src/js/background/*.js")
   .pipe(replace(replaceOpts))
   .pipe(concat('background.js'))
   .pipe(stripdebug())
@@ -110,8 +140,9 @@ gulp.task('backgroundJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+// Build content.js
 gulp.task('contentJs', ['clean'], function () {
-  gulp.src("src/js/content/*.js")
+  return gulp.src("src/js/content/*.js")
   .pipe(replace(replaceOpts))
   .pipe(concat('content.js'))
   .pipe(stripdebug())
@@ -119,8 +150,9 @@ gulp.task('contentJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+// Build options.js
 gulp.task('optionsJs', ['clean'], function () {
-  gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
+  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
   .pipe(replace(replaceOpts))
   .pipe(concat('options.js'))
   .pipe(stripdebug())
@@ -128,8 +160,9 @@ gulp.task('optionsJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+// Build popup.js
 gulp.task('popupJs', ['clean'], function () {
-  gulp.src("src/js/popup.js")
+  return gulp.src("src/js/popup.js")
   .pipe(replace(replaceOpts))
   .pipe(stripdebug())
   .pipe(uglify())
@@ -142,32 +175,31 @@ gulp.task('copyUnchanged', ['clean'],  function() {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
   });
-  // Copy small css file to make the overlay work
-  gulp.src('src/css/content.css')
-  .pipe(gulp.dest('build/css'));
-  gulp.src('src/css/popup.css')
+
+  return gulp.src(['src/css/content.css', 'src/css/popup.css'])
+  .pipe(minifyCSS())
   .pipe(gulp.dest('build/css'));
 });
 
-// Copies HTML files and removes comment and blocks designated
-// with <!-- REMOVE START -->
-// to <!-- REMOVE END -->
+// Copies HTML files and removes comment and blocks (see above)
 gulp.task('copyHtml', ['copyUnchanged'],  function() {
-  gulp.src(['src/html/**/*.html', '!src/html/option/_logs_*.html'])
+  return gulp.src(['src/html/**/*.html', '!src/html/option/_logs_*.html'])
   .pipe(replace(replaceOpts))
   .pipe(cleanhtml())
   .pipe(gulp.dest('build/html'));
 });
 
+// Copies and replaces the manifest.json file (see above)
 gulp.task('mangleManifest', [ 'clean' ], function() {
-  gulp.src('src/manifest.json')
+  return gulp.src('src/manifest.json')
   .pipe(replace(replaceOpts))
   .pipe(gulp.dest('build'));
 });
 
 // running "gulp" will execute this
+// Ends with zipping up the build dir
 gulp.task('default', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
-  .pipe(gulp.dest('dist'));
+  .pipe(gulp.dest('.'));
 });

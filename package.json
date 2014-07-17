@@ -1,7 +1,7 @@
 {
   "name": "form-o-fill-chrome-extension",
   "version": "1.0.0",
-  "description": "Programmable form filler for developers",
+  "description": "The programmable form filler for developers",
   "main": "gulpfile.js",
   "dependencies": {
     "chalk": "^0.4.0",
@@ -23,6 +23,7 @@
     "gulp-cleanhtml": "0.0.2",
     "gulp-concat": "^2.2.0",
     "gulp-eslint": "^0.1.7",
+    "gulp-minify-css": "^0.3.6",
     "gulp-replace-task": "0.0.6",
     "gulp-rm": "^0.2.0",
     "gulp-strip-debug": "^0.3.0",
@@ -43,5 +44,5 @@
   "bugs": {
     "url": "https://github.com/form-o-fill/form-o-fill-chrome-extension/issues"
   },
-  "homepage": "https://github.com/form-o-fill/form-o-fill-chrome-extension"
+  "homepage": "http://form-o-fill.github.io"
 }
