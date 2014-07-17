@@ -16,6 +16,10 @@ var Rule = function() {
   this.prettyPrintHtml = function() {
     return this.prettyPrint().replace(/\n/,"<br />");
   };
+
+  this._escapeForRegexp = function(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  };
 };
 
 Rule.create = function(options, tabId, ruleIndex) {
@@ -23,7 +27,15 @@ Rule.create = function(options, tabId, ruleIndex) {
   Object.keys(options).forEach(function(key) {
     rule[key] = options[key];
   });
-  rule.matcher = new RegExp(rule.url);
+
+  // RegExp in URL or string?
+  if(typeof rule.url.test !== "undefined") {
+    // RegExp
+    rule.matcher = new RegExp(rule.url);
+  } else {
+    // String (match full url only)
+    rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
+  }
   rule.nameClean = rule.name.replace("<", "&lt;");
   rule.urlClean = rule.url.toString();
   rule.id = tabId + "-" + ruleIndex;
