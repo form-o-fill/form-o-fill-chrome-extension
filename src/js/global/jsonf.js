@@ -14,7 +14,7 @@ var JSONF = {
     return value;
   },
   _functionDeserializer: function(key, value) {
-    if (key === "" && value.indexOf("function") !== 0) {
+    if (key === "" && typeof value === "string" && value.indexOf("function") !== 0) {
       return value;
     }
 
