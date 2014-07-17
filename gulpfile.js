@@ -85,7 +85,7 @@ gulp.task('lint', function () {
 });
 
 gulp.task('css', ['clean'], function () {
-  gulp.src("src/css/*.css")
+  gulp.src(["src/css/*.css", "!src/css/content.css", "!src/css/popup.css"])
   .pipe(concat('formofill.css'))
   .pipe(gulp.dest('build/css/'));
 });
@@ -140,6 +140,11 @@ gulp.task('copyUnchanged', ['clean'],  function() {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
   });
+  // Copy small css file to make the overlay work
+  gulp.src('src/css/content.css')
+  .pipe(gulp.dest('build/css'));
+  gulp.src('src/css/popup.css')
+  .pipe(gulp.dest('build/css'));
 });
 
 // Copies HTML files and removes comment and blocks designated
