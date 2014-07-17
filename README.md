@@ -6,24 +6,8 @@ This is a chrome extension for filling out forms in webpages.
 This extension is targeted at web developers who frequently must fill out long \<form>s while working on a website.
 The configuration is done via a rule definition file written in javascript.
 
-# TODOS (in that order)
-
-- Document that libs can only be loaded from https:// URLS (CSP limitation) (see testcases/rule-add-library.js)
-  Move libs.js to global and make it available inside the promise wrapped before function (form_utils.js)
-- Options -> Libs add url (https) with reload button and name -> add via Libs.add for all rules
-- write help for adding libraries dynamically via before function
-- allow #help-basic to jump to #help and then #help-basic
-- make context click extract that form instead of showing the overlay.
-- syntax check for "before: function(resolve)". Must include "resolve"
-- describe permissions requirements in "about"
-- limit the number of tabs, add dropdown if too many.
-- Allow local file loading of JSON files and merge them last into rules. Use File API.
-- Import Rule Definitions from other URLs via XHR (But how to validate them?)
-- changelog menu entry in options
-- Extract ALL strings/texts to messages
-- add "de" locale at least
-- autocomplete for moment.js and chance.js in ACE (see http://plnkr.co/edit/6MVntVmXYUbjR0DI82Cr?p=preview)
-- show annotations in editor for all errors
+# TODOS
+[We use github issues for this](https://github.com/form-o-fill/form-o-fill-chrome-extension/issues?labels=enhancement&page=1&state=open)
 
 # HOW TO REPORT ERRORS
 Got an error you want to report? Perfect!  
