@@ -73,7 +73,9 @@ gulp.task('announce', function() {
 });
 
 gulp.task('clean', ["announce"], function() {
-  return gulp.src('build', {read: false, force: true})
+  gulp.src('build', {read: false, force: true})
+  .pipe(rm());
+  gulp.src('dist', {read: false, force: true})
   .pipe(rm());
 });
 
