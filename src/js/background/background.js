@@ -103,8 +103,15 @@ chrome.runtime.onMessage.addListener(function (message) {
 // REMOVE END
 
 // Fires when the extension is install or updated
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(function (details) {
   Logger.info("[bg.js] runtime.onInstalled fired");
+
+  // Called on very first install
+  if (details.reason === "install") {
+    Notification.create(chrome.i18n.getMessage("first_install_notification"), function () {
+      Utils.openOptions("#help");
+    });
+  }
 
   // Check if tabs are saved or we start from scratch
   Storage.load(Utils.keys.tabs).then(function (tabSettings) {

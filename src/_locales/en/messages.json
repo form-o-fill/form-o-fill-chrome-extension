@@ -29,5 +29,8 @@
   },
   "tabs_default_new_name": {
     "message": "New Rules"
+  },
+  "first_install_notification": {
+    "message": "Thanks for installing Form-O-Fill!\nClick here get some help on how to start."
   }
 }
