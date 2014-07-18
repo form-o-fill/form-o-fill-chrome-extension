@@ -1,5 +1,4 @@
 /*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
-/*eslint max-nested-callbacks: 0*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 //
@@ -16,8 +15,8 @@ $(function() {
 
   ChromeBootstrap.init();
 
+  // reset notices once the user starts typing again
   editor.on("change", function() {
-    // reset notices once the user starts typing again
     if(noticesVisible) {
       $("#ruleeditor .notice").hide();
       noticesVisible = false;
