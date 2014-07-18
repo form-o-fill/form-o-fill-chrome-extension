@@ -19,7 +19,7 @@ var JSONF = {
     }
 
     if (typeof value === "string") {
-      var rfunc = /^function[^\(]*\(([^\)]*)\)[^\{]*{([^\}]*)\}/;
+      var rfunc = /^function\s*\((.*?)\).*?\{([\s\S]*)\}/m;
       var match = value.match(rfunc);
 
       if (match) {
