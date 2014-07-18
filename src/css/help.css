@@ -30,11 +30,14 @@
   line-height: 15px;
 }
 
+#help .topic h3 {
+  font-size: 2em;
+}
+
 #help .topic > a[name] {
   margin-top: 60px;
   display: block;
 }
-
 
 #help .topic li .li-block {
   display: block;

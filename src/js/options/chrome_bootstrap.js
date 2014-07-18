@@ -18,10 +18,19 @@ var ChromeBootstrap = {
 
     // Activate navigationitem via hashtag
     jQuery(window).on("load", function () {
-      if (window.location.hash) {
-        var $nav = jQuery(".navigation a[href='" + window.location.hash + "']");
-        if($nav.length === 1) {
+      var hash = window.location.hash;
+      if (hash) {
+        var main = hash.replace(/-.*$/, "");
+        var sub = hash.replace(/^.*?-/, "");
+        var $nav = jQuery(".navigation a[href='" + main + "']");
+        if ($nav.length === 1) {
           $nav.trigger("click");
+        }
+
+        // Activate sub-item
+        if (sub !== "") {
+          window.location.hash = "#help";
+          window.location.hash = hash;
         }
       }
     });
