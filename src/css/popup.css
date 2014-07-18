@@ -37,6 +37,11 @@ body {
   padding: 10px;
 }
 
+body.fresh-install {
+  padding-left: 70px;
+  background: url("../../images/icon_48.png") 10px 11px no-repeat;
+}
+
 h3 {
   font-size: 14px;
   margin: 0 0 10px 0;

@@ -33,7 +33,7 @@ var onTabReady = function(tabId) {
         // No matches? Multipe Matches? Show popup when the user clicks on the icon
         // A single match should just fill the form (see below)
         if (matchingRules.length != 1) {
-          chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+          chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup/main.html"});
         }
       });
     }
@@ -103,7 +103,7 @@ chrome.runtime.onMessage.addListener(function (message) {
 // REMOVE END
 
 // Fires when the extension is install or updated
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(function (details) {
   Logger.info("[bg.js] runtime.onInstalled fired");
 
   // Check if tabs are saved or we start from scratch
@@ -120,5 +120,11 @@ chrome.runtime.onInstalled.addListener(function () {
 
   // remove log entries
   Logger.delete();
+
+  // First time install
+  if(details.reason === "install") {
+    Logger.info("[bg.js] Fresh install. Opening popup");
+    chrome.browserAction.setPopup({"popup": "html/popup/fresh_install.html"});
+  }
 });
 

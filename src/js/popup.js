@@ -4,13 +4,15 @@ var Popup = {
   currentUrl: null,
   init: function() {
     var popup = this;
-    // last active tab in focused window is the query url
-    chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
-      popup.currentUrl = tabs[0].url;
-      Rules.matchesForUrl(popup.currentUrl).then(function (matchingRules) {
-        popup.updateHtml(matchingRules);
+    if(!document.querySelector("body").classList.contains("fresh-install")) {
+      // last active tab in focused window is the query url
+      chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
+        popup.currentUrl = tabs[0].url;
+        Rules.matchesForUrl(popup.currentUrl).then(function (matchingRules) {
+          popup.updateHtml(matchingRules);
+        });
       });
-    });
+    }
     popup.attachEventHandlers();
     Logger.info("[popup.js] popup init done");
   },
@@ -37,6 +39,13 @@ var Popup = {
       Utils.showExtractOverlay();
       window.close();
     });
+
+    // Jump to help
+    jQuery("#popup").on("click", "a.cmd-to-help", function () {
+      Utils.openOptions("#help");
+      window.close();
+    });
+
   },
   updateHtml: function(matchingRules) {
     this.updateHeadline(matchingRules);
