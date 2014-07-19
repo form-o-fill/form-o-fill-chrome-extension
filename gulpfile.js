@@ -201,5 +201,5 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
 gulp.task('default', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
-  .pipe(gulp.dest('.'));
+  .pipe(gulp.dest('dist'));
 });
