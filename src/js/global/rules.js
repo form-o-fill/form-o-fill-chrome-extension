@@ -1,4 +1,4 @@
-/*global Storage, Logger, jQuery, js_beautify, Utils */
+/*global Storage, Logger, jQuery, js_beautify, Utils, JSONF */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4]*/
 "use strict";
 
@@ -29,15 +29,20 @@ Rule.create = function(options, tabId, ruleIndex) {
   });
 
   // RegExp in URL or string?
-  if(typeof rule.url.test !== "undefined") {
+  if(typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
     // RegExp
     rule.matcher = new RegExp(rule.url);
-  } else {
+  } else if(typeof rule.url !== "undefined") {
     // String (match full url only)
     rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
   }
+
+  if (typeof rule.url !== "undefined") {
+    rule.urlClean = rule.url.toString();
+  } else {
+    rule.urlClean = "n/a";
+  }
   rule.nameClean = rule.name.replace("<", "&lt;");
-  rule.urlClean = rule.url.toString();
   rule.id = tabId + "-" + ruleIndex;
   Logger.info("[rule.js] created rule", rule);
   return rule;
@@ -46,12 +51,43 @@ Rule.create = function(options, tabId, ruleIndex) {
 /* Multiple Rules */
 var Rules = {
   ruleCount: 0,
+  match: function(url, content) {
+    var rules = this;
+    return new Promise(function (resolve) {
+      Promise.all([rules.matchesForContent(content), rules.matchesForUrl(url)]).then(function (matches) {
+        matches = [].concat.apply(matches[0], matches[1]);
+
+        // Unique:
+        var finalMatches = [];
+        var keys = {};
+        matches.forEach(function (rule) {
+          if (typeof keys[rule.id] === "undefined") {
+            finalMatches.push(rule);
+            keys[rule.id] = true;
+          }
+        });
+
+        resolve(finalMatches);
+      });
+    });
+  },
+  matchesForContent: function(content) {
+    var rules = this;
+    return new Promise(function (resolve) {
+      rules.all().then(function(rules) {
+        var matchingRules = rules.filter(function (rule) {
+          return typeof rule.content !== "undefined" && content.match(rule.content);
+        });
+        resolve(matchingRules);
+      });
+    });
+  },
   matchesForUrl: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
       rules.all().then(function(rules) {
         var matchingRules = rules.filter(function (rule) {
-          return url.match(rule.matcher);
+          return typeof rule.url !== "undefined" && url.match(rule.matcher);
         });
         resolve(matchingRules);
       });
@@ -157,6 +193,20 @@ var Rules = {
     }
 
     return errors;
+  },
+  lastMatchingRules: function(rules) {
+    return new Promise(function (resolve) {
+      // Load or save rules
+      if(typeof rules === "undefined") {
+        Storage.load(Utils.keys.lastMatchingRules).then(function (serializedRules) {
+          resolve(JSONF.parse(serializedRules));
+        });
+      } else {
+        Storage.save(JSONF.stringify(rules), Utils.keys.lastMatchingRules).then(function () {
+          resolve(true);
+        });
+      }
+    });
   }
 };
 

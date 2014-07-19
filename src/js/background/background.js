@@ -27,15 +27,21 @@ var onTabReady = function(tabId) {
     if (tab.active) {
       lastActiveTab = tab;
 
-      Rules.matchesForUrl(tab.url).then(function (matchingRules) {
-        lastMatchingRules = matchingRules;
-        refreshMatchCounter(tab, matchingRules.length);
-        // No matches? Multipe Matches? Show popup when the user clicks on the icon
-        // A single match should just fill the form (see below)
-        if (matchingRules.length != 1) {
-          chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
-        }
+      chrome.tabs.sendMessage(tabId, { "action": "getContent" }, function (content) {
+        Rules.match(tab.url, content).then(function (matchingRules) {
+          lastMatchingRules = matchingRules;
+          // Save to localStorage for popup to load
+          Rules.lastMatchingRules(lastMatchingRules);
+          // Show matches in badge
+          refreshMatchCounter(tab, matchingRules.length);
+          // No matches? Multipe Matches? Show popup when the user clicks on the icon
+          // A single match should just fill the form (see below)
+          if (matchingRules.length !== 1) {
+            chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+          }
+        });
       });
+
     }
   });
 };

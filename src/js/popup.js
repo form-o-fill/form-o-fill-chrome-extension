@@ -4,17 +4,17 @@ var Popup = {
   currentUrl: null,
   init: function() {
     var popup = this;
-    // last active tab in focused window is the query url
-    chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
-      popup.currentUrl = tabs[0].url;
-      Rules.matchesForUrl(popup.currentUrl).then(function (matchingRules) {
-        popup.updateHtml(matchingRules);
-      });
+
+    // Load last matching Rules
+    Rules.lastMatchingRules().then(function (matchingRules) {
+      popup.updateHtml(matchingRules);
     });
+
     popup.attachEventHandlers();
     Logger.info("[popup.js] popup init done");
   },
   attachEventHandlers: function() {
+    // User selects on of many rules in the popup
     jQuery("ul").on("click", "li", function () {
       var data = jQuery(this).data();
       Logger.info("[popup.js] fill with rule " + data.ruleIndex + " clicked");
@@ -32,7 +32,7 @@ var Popup = {
       });
     });
 
-    // Show Extract Overlay when use clicks "create one" link
+    // Show Extract Overlay when user clicks "create one" link
     jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
       Utils.showExtractOverlay();
       window.close();

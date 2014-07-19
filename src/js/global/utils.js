@@ -7,7 +7,8 @@ var Utils = {
     rules: "form-o-fill-rules",
     errors: "form-o-fill-errors",
     tabs: "form-o-fill-tabs",
-    logs: "form-o-fill-logs"
+    logs: "form-o-fill-logs",
+    lastMatchingRules: "form-o-fill-lastmatchingrules"
   },
   showExtractOverlay: function() {
     var message = {

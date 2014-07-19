@@ -30,7 +30,7 @@ var cleanupOverlays = function() {
 };
 
 // This is a one-off message listener
-chrome.runtime.onMessage.addListener(function (message) {
+chrome.runtime.onMessage.addListener(function (message, sender, responseCallback) {
   // Request to start extracting a form to rules
   if (message && message.action === "showExtractOverlay") {
     // Add event listener to DOM
@@ -57,5 +57,10 @@ chrome.runtime.onMessage.addListener(function (message) {
 
     // Attach overlays to DOM
     jQuery("body").append(getOverlays());
+  }
+
+  // Request to return the HTML
+  if (message && message.action === "getContent") {
+    responseCallback(document.querySelector("body").outerHTML);
   }
 });
