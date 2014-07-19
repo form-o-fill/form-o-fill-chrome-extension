@@ -25,6 +25,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.1.0
+- Allow selection of rules by matching the HTML of the page with the 'content' attribute.
+  
 ★ Version 1.0.0
 - First live version. Be gentle.
 

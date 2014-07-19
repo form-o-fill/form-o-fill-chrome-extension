@@ -26,12 +26,22 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    A regular expression that is matched against the current URL (including http:// and the like).<br />
+    A regular expression that is matched against the current full URL.<br />
+    Can be omitted if you use <code>content</code>.<br />
     Can also be a string like<br />
     <code>url: "http://example.com/test.html"</code>. In this case the rule matches when the complete URL matches.
   </div>
   <div class="code">
     &nbsp;&nbsp;url: /^http.*test.html$/,
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    A regular expression that is matched against the HTML content of the page.<br />
+    Can be omitted if you use <code>url</code>.<br />
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;content: /Something/,
   </div>
 </div>
 <div class="block-of-code">

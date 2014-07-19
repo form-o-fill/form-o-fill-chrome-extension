@@ -79,6 +79,7 @@
 #help .block-of-code {
   overflow: hidden;
   line-height: 18px;
+  margin-bottom: 1px;
 }
 
 #help .explaining {
@@ -88,6 +89,7 @@
   background-color: #eee;
   font-size: 12px;
   margin-right: 10px;
+  min-height: 24px;
 }
 
 #help .code {
