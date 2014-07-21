@@ -51,6 +51,7 @@
         "js/content/form_extractor.js", 
         "js/content/extract_instrumentation.js" ,
         "js/content/libs.js",
+        "js/content/context_menu.js",
         "js/content/content.js" 
       ],
       "css": [

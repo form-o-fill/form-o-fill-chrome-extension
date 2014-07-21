@@ -29,6 +29,18 @@ var cleanupOverlays = function() {
   jQuery(".form-o-fill-overlay-form, .form-o-fill-overlay-cover").remove();
 };
 
+var extractRules = function(targetForm) {
+  // looks good, start extraction
+  var ruleCode = FormExtractor.extract(targetForm);
+  Logger.info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
+
+  // Save Rule and goto options.html
+  Storage.save(ruleCode, Utils.keys.extractedRule);
+
+  // This is just to try out notification :)
+  chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
+};
+
 // This is a one-off message listener
 chrome.runtime.onMessage.addListener(function (message, sender, responseCallback) {
   // Request to start extracting a form to rules
@@ -44,14 +56,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
       cleanupOverlays();
 
       if(targetForm) {
-        // looks good, start extraction
-        var ruleCode = FormExtractor.extract(targetForm);
-        Logger.info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
-        // Save Rule and goto options.html
-        Storage.save(ruleCode, Utils.keys.extractedRule);
-
-        // This is just to try out notification :)
-        chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
+        extractRules(targetForm);
       }
     });
 
