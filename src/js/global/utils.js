@@ -11,13 +11,12 @@ var Utils = {
     lastMatchingRules: "form-o-fill-lastmatchingrules"
   },
   showExtractOverlay: function() {
-    var message = {
-      "action": "showExtractOverlay"
-    };
-
     // Send message to content script
-    chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, message);
+    chrome.runtime.sendMessage({"action": "lastActiveTabId"}, function(tabId) {
+      var message = {
+        "action": "showExtractOverlay"
+      };
+      chrome.tabs.sendMessage(tabId, message);
     });
   },
   openOptions: function(parameter) {
