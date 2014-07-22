@@ -10,13 +10,14 @@ var Utils = {
     logs: "form-o-fill-logs",
     lastMatchingRules: "form-o-fill-lastmatchingrules"
   },
-  showExtractOverlay: function() {
+  showExtractOverlay: function(whenFinishedCallback) {
     // Send message to content script
     chrome.runtime.sendMessage({"action": "lastActiveTabId"}, function(tabId) {
       var message = {
         "action": "showExtractOverlay"
       };
       chrome.tabs.sendMessage(tabId, message);
+      whenFinishedCallback();
     });
   },
   openOptions: function(parameter) {

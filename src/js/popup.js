@@ -34,8 +34,9 @@ var Popup = {
 
     // Show Extract Overlay when user clicks "create one" link
     jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
-      Utils.showExtractOverlay();
-      window.close();
+      Utils.showExtractOverlay(function() {
+        window.close();
+      });
     });
   },
   updateHtml: function(matchingRules) {
