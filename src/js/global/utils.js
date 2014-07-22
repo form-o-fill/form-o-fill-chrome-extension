@@ -27,13 +27,6 @@ var Utils = {
     }
     chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
   },
-  log: function (msg, obj) {
-    if (obj) {
-      console.log("[Form-O-Fill] %O %O", msg, obj);
-      return;
-    }
-    console.log("[Form-O-Fill] %O", msg);
-  },
   infoMsg: function(msg) {
     // A function to display a nice message in the rule editor
     var fadeAfterMSec = 1000;
