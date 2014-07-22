@@ -89,6 +89,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
     Notification.create("Extracted your form. Click here to check the options panel for more info.", Utils.openOptions);
   }
+
+  // Return the last active tab id
+  if(message.action === "lastActiveTabId" && lastActiveTab !== null) {
+    Logger.info("[bg.js] received 'lastActiveTabId'. Sending tabId " + lastActiveTab.id);
+    sendResponse(lastActiveTab.id);
+  }
 });
 
 // REMOVE START
