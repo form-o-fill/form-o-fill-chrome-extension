@@ -10,6 +10,7 @@ var Rule = function() {
     delete clone.nameClean;
     delete clone.urlClean;
     delete clone.id;
+    delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
   };
 
