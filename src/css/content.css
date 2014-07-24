@@ -48,5 +48,6 @@
   padding:  20px;
   border-radius: 5px;
   font-size: 20px;
-  -webkit-animation: working0 250ms 99 alternate;
+  -webkit-animation: working0 250ms 20 alternate;
+  box-shadow: #999 5px 5px 5px;
 }
