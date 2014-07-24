@@ -1,3 +1,8 @@
+@-webkit-keyframes working0 {
+  from   { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
 .form-o-fill-overlay-cover {
   position: fixed;
   width: 100%;
@@ -26,4 +31,22 @@
   font-size: 12px;
   color: #fff;
   padding: 10px;
+}
+
+#form-o-fill-working-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 20%;
+  margin-left: -10%;
+  background-color: #000;
+  opacity: 0.5;
+  color: #fff;
+  font-family: Arial, Helvetica, sans serif;
+  text-align: center;
+  vertical-align: middle;
+  padding:  20px;
+  border-radius: 5px;
+  font-size: 20px;
+  -webkit-animation: working0 250ms 99 alternate;
 }

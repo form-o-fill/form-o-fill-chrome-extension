@@ -13,6 +13,8 @@ var FormUtil = {
     }
     var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
 
+    port.postMessage({"action": "showWorkingOverlay"});
+
     // Default instantaneous resolving promise:
     var beforeFunction = function() {
       return new Promise(function(resolve) {
@@ -74,6 +76,7 @@ var FormUtil = {
             });
           });
         }
+        port.postMessage({"action": "hideWorkingOverlay"});
       }
     });
   }
