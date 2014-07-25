@@ -2,7 +2,7 @@
 "use strict";
 var JSONF = {
   stringify: function(object) {
-    return JSON.stringify(object, this._serializer);
+    return JSON.stringify(object, this._serializer, 2);
   },
   parse: function(jsonString) {
     return JSON.parse(jsonString, this._deserializer);
