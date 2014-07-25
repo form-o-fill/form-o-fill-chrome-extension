@@ -27,6 +27,7 @@ var cleanupOverlays = function() {
     jQuery(this).removeAttr("form-o-fill-id");
   });
   jQuery(".form-o-fill-overlay-form, .form-o-fill-overlay-cover").remove();
+  jQuery(document).off("click", ".form-o-fill-overlay-form").off("click", "body");
 };
 
 var extractRules = function(targetForm) {
@@ -48,6 +49,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
     // Add event listener to DOM
     jQuery(document).on("click", ".form-o-fill-overlay-form", function (e) {
       e.preventDefault();
+      e.stopPropagation();
 
       // This is the form we must extract
       var targetForm = document.querySelector("form[data-form-o-fill-id='" + this.dataset.formOFillId + "']");
@@ -57,6 +59,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
 
       if(targetForm) {
         extractRules(targetForm);
+      }
+    }).on("click", "body", function () {
+      cleanupOverlays();
+    }).on("keyup", function(e) {
+      if(e.which === 27) {
+        cleanupOverlays();
       }
     });
 
