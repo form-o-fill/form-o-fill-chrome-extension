@@ -37,5 +37,16 @@ var Utils = {
         jQuery(this).html("");
       });
     }, fadeAfterMSec);
+  },
+  download: function(data, filename, mimeType) {
+    var blob = new Blob([data], { type: mimeType});
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.download = filename;
+    a.href = url;
+    document.querySelector("body").appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.querySelector("body").removeChild(a);
   }
 };
