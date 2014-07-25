@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'icomoon';
-  src: url('../fonts/icomoon.woff?-n1boxl') format('woff');
+  font-family: 'formofill';
+  src: url('../fonts/formofill.woff?-n1boxl') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -21,7 +21,7 @@ body {
 }
 
 .navigation h1:before {
-  font-family: "icomoon";
+  font-family: "formofill";
   content: "\e600";
   position: absolute;
   color: #d0d0d0;
@@ -49,7 +49,7 @@ body {
 }
 
 .menu button:before {
-  font-family: "icomoon";
+  font-family: "formofill";
   font-size: 16px;
   vertical-align: middle;
   margin-right: 4px;
@@ -60,11 +60,7 @@ button.save:before {
 }
 
 button.reload:before {
-  content: "\e604";
-}
-
-button.append-extracted:before {
-  content: "\e607";
+  content: "\e60a";
 }
 
 button.format:before {
@@ -73,6 +69,14 @@ button.format:before {
 
 button.empty:before {
   content: "\e600";
+}
+
+button.export:before {
+  content: "\e605";
+}
+
+button.import:before {
+  content: "\e604";
 }
 
 .editor .menu .info {
@@ -101,7 +105,7 @@ button.empty:before {
 }
 
 #ruleeditor .notice:before {
-  font-family: "icomoon";
+  font-family: "formofill";
   font-size: 24px;
   vertical-align: middle;
   content: "\e602";
@@ -112,9 +116,9 @@ button.empty:before {
 }
 
 #ruleeditor .notice:after {
-  font-family: "icomoon";
+  font-family: "formofill";
   font-size: 18px;
-  content: "\e609";
+  content: "\e607";
   padding: 2px;
   position: absolute;
   top: 0;

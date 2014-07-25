@@ -51,7 +51,7 @@
 }
 
 #help .topic li:before {
-  font-family: icomoon;
+  font-family: formofill;
   content: "\e600";
 }
 
@@ -63,7 +63,7 @@
 }
 
 #help .warning:before {
-  font-family: "icomoon";
+  font-family: "formofill";
   vertical-align: middle;
   content: "\e602";
   color: rgb(197, 25, 25);

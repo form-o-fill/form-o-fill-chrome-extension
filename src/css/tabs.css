@@ -40,8 +40,8 @@
 }
 
 .tabs .tab a:after {
-  font-family: icomoon;
-  content: "\e605";
+  font-family: formofill;
+  content: "\e609";
   font-size: 16px;
   margin-left: 6px;
   color: #bbb;

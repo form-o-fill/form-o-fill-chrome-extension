@@ -1,12 +1,12 @@
 @font-face {
-	font-family: 'icomoon';
-	src: url('../fonts/icomoon.woff?-n1boxl') format('woff');
+	font-family: 'formofill';
+	src: url('../fonts/formofill.woff?-n1boxl') format('woff');
 	font-weight: normal;
 	font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-	font-family: 'icomoon';
+	font-family: 'formofill';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
