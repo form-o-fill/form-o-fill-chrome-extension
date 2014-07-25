@@ -72,8 +72,8 @@ jQuery(function () {
       Logger.info("[tabs.js] Click on tab triggered change of current tab");
       jQuery(".tab").removeClass("current");
       $this.addClass("current");
-      Storage.load(Utils.keys.rules + "-tab-" + $this.data("tab-id")).then(function (ruleCode) {
-        editor.setValue(ruleCode);
+      Storage.load(Utils.keys.rules + "-tab-" + $this.data("tab-id")).then(function (ruleData) {
+        editor.setValue(ruleData.code);
       });
     }
   });

@@ -56,11 +56,9 @@ $(function() {
     if (typeof extractedRule !== "undefined") {
       var $notice = $("#ruleeditor .notice.extracted-present");
       $notice.show();
-      $("#ruleeditor button.append-extracted").removeAttr("disabled");
-      $("#ruleeditor .cmd-append-extracted, #ruleeditor .append-extracted").on("click", function () {
+      $("#ruleeditor .cmd-append-extracted").on("click", function () {
         Logger.info("[options.js] Appending extracted rules to the end of the definition");
         appendRule(extractedRule, function() {
-          $("#ruleeditor button.append-extracted").prop("disabled","disabled");
           $notice.hide();
           Storage.delete(Utils.keys.extractedRule);
         });
@@ -114,13 +112,32 @@ $(function() {
   };
 
   var loadRules = function(tabId) {
-    Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleJson) {
+    Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleData) {
+      var ruleJson = ruleData.code;
       if(typeof ruleJson === "undefined") {
         ruleJson = "";
       }
       editor.setValue(ruleJson, -1);
       editor.fixRules();
       Utils.infoMsg("Rules loaded from disc");
+    });
+  };
+
+  var exportRules = function() {
+    var promises = [];
+    Storage.load(Utils.keys.tabs).then(function(tabSettings) {
+      tabSettings.forEach(function (setting) {
+        promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
+      });
+
+      Promise.all(promises).then(function(rulesFromAllTabs) {
+        var exportJson = {
+          "tabSettings": tabSettings,
+          "rules": rulesFromAllTabs
+        };
+        Logger.info("[options.js] Exporting " + JSONF.stringify(exportJson));
+        Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export.json", "application/json");
+      });
     });
   };
 
@@ -135,6 +152,9 @@ $(function() {
   }).on("click", "button.format", function () {
     editor.format(Rules);
     Utils.infoMsg("Rules formatted but not saved");
+  }).on("click", "button.export", exportRules)
+  .on("click", "button.import", function () {
+    // Import from disk
   });
 
   // Try to fix the erronous structure of the rules

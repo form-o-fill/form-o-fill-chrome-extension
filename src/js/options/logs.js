@@ -26,17 +26,7 @@ var displayLogs = function() {
 // https://developer.mozilla.org/en-US/docs/Web/API/Blob
 var downloadLogs = function() {
   var logTable = document.querySelector(".log-entries table");
-  var logsBlob = new Blob([logTable.outerHTML], { type: "text/html"});
-  var url = window.URL.createObjectURL(logsBlob);
-
-  var a = document.createElement("a");
-  a.download = "form-o-fill-logs.html";
-  a.classList.add("download");
-  a.href = url;
-
-  document.querySelector("body").appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
+  Utils.download(logTable.outerHTML, "form-o-fill-logs.html", "text/html");
 };
 
 var showModalDownload = function() {

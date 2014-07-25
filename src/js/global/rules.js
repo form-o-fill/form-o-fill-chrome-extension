@@ -97,11 +97,11 @@ var Rules = {
   load: function(forTabId) {
     var that = this;
     return new Promise(function (resolve) {
-      Storage.load(that._nameForTabId(forTabId)).then(function (rulesCode) {
+      Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
         var rules = [];
-        if(rulesCode) {
+        if(rulesData) {
           // remove wrapper
-          var rulesCodeMatches = rulesCode.match(/^.*?(\[[\s\S]*\];)$/m);
+          var rulesCodeMatches = rulesData.code.match(/^.*?(\[[\s\S]*\];)$/m);
 
           // This should not happen:
           if(!rulesCodeMatches[1]) {
@@ -151,7 +151,11 @@ var Rules = {
   },
   save: function(ruleCode, activeTabId) {
     return new Promise(function (resolve) {
-      Storage.save(ruleCode, Rules._nameForTabId(activeTabId)).then(function () {
+      var rulesData = {
+        tabId: activeTabId,
+        code: ruleCode
+      };
+      Storage.save(rulesData, Rules._nameForTabId(activeTabId)).then(function () {
         resolve(true);
       });
     });
