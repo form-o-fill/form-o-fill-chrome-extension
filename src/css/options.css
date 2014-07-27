@@ -158,3 +158,8 @@ button.import:before {
 .overlay .close-button {
   cursor: pointer;
 }
+
+#modalimport {
+  display: none;
+}
+

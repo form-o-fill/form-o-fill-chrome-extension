@@ -7,7 +7,7 @@ var editor = new Editor("#ruleeditor-ace");
 $(function() {
   var noticesVisible = false;
 
-  I18n.loadPages(["help", "about"]);
+  I18n.loadPages(["help", "about", "modalimport"]);
 
   if(Utils.debug) {
     I18n.loadPages(["logs"]);
@@ -123,6 +123,7 @@ $(function() {
     });
   };
 
+  // export rules to disk
   var exportRules = function() {
     var promises = [];
     Storage.load(Utils.keys.tabs).then(function(tabSettings) {
@@ -141,6 +142,14 @@ $(function() {
     });
   };
 
+  // import rules from disc
+  var importRules = function() {
+    $("#modalimport").show();
+    // Tell use that the rules will replace all current rules
+    // Modal dialog
+    // import
+  };
+
   // Load data from tab and prefill editor
   loadRules(currentTabId());
 
@@ -153,13 +162,16 @@ $(function() {
     editor.format(Rules);
     Utils.infoMsg("Rules formatted but not saved");
   }).on("click", "button.export", exportRules)
-  .on("click", "button.import", function () {
-    // Import from disk
-  });
+  .on("click", "button.import", importRules);
 
   // Try to fix the erronous structure of the rules
   $(document).on("click", "a.cmd-fix-var-needed", function() {
     editor.fixRules();
+  });
+
+  // Export all rules (for modal import dialog)
+  $(document).on("click", "a.cmd-export-all-rules", function() {
+    exportRules();
   });
 
   // Event handler for notices

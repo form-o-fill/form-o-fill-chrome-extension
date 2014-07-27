@@ -52,7 +52,7 @@ jQuery(document).on("click", "a[href='#logs']", function (e) {
 }).on("click", "button.cmd-download-logs", function () {
   // Open the overlay (download logs)
   showModalDownload();
-}).on("click", ".overlay .close-button, .overlay .cmd-cancel-download", function () {
+}).on("click", ".overlay .close-button, .overlay .cmd-cancel-download, button.cmd-cancel", function () {
   // Close the overlay
   jQuery(this).parents(".overlay").hide();
 }).on("click", ".overlay .cmd-download-logs-ok", function() {
