@@ -55,40 +55,10 @@ var Rules = {
   match: function(url, content) {
     var rules = this;
     return new Promise(function (resolve) {
-      Promise.all([rules.matchesForContent(content), rules.matchesForUrl(url)]).then(function (matches) {
-        matches = [].concat.apply(matches[0], matches[1]);
-
-        // Unique:
-        var finalMatches = [];
-        var keys = {};
-        matches.forEach(function (rule) {
-          if (typeof keys[rule.id] === "undefined") {
-            finalMatches.push(rule);
-            keys[rule.id] = true;
-          }
-        });
-
-        resolve(finalMatches);
-      });
-    });
-  },
-  matchesForContent: function(content) {
-    var rules = this;
-    return new Promise(function (resolve) {
       rules.all().then(function(rules) {
         var matchingRules = rules.filter(function (rule) {
-          return typeof rule.content !== "undefined" && content.match(rule.content);
-        });
-        resolve(matchingRules);
-      });
-    });
-  },
-  matchesForUrl: function(url) {
-    var rules = this;
-    return new Promise(function (resolve) {
-      rules.all().then(function(rules) {
-        var matchingRules = rules.filter(function (rule) {
-          return typeof rule.url !== "undefined" && url.match(rule.matcher);
+          return (typeof rule.content !== "undefined" && !!content.match(rule.content)) ||
+                 (typeof rule.url !== "undefined" && url.match(rule.url));
         });
         resolve(matchingRules);
       });
