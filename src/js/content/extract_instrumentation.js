@@ -1,4 +1,4 @@
-/*global jQuery, FormExtractor, Storage, Logger, Utils*/
+/*global jQuery, FormExtractor, Storage, Logger, Utils, JSONF*/
 
 // Create HTML overlays for form masking
 var getOverlays = function() {
@@ -72,10 +72,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
     jQuery("body").append(getOverlays());
   }
 
-  // Request to return the HTML
-  if (message && message.action === "getContent") {
+  // Request to match rules against content
+  // Done here to not send the whole HTML to bg.js
+  if (message && message.action === "matchContent" && message.rules) {
     var content = document.querySelector("body").outerHTML;
-    Logger.info("[extract_instr.js] Sending " + content.length + " bytes of content back to bg.js");
-    responseCallback(content);
+    var matches = [];
+    var rules = JSONF.parse(message.rules);
+    rules.forEach(function (rule) {
+      if(typeof rule.content.test === "function" && rule.content.test(content)) {
+        matches.push(rule);
+      }
+    });
+    Logger.info("[extract_instr.js] Matched content against " + rules.length + " rules with " + matches.length + " content matches");
+    responseCallback(JSONF.stringify(matches));
   }
 });

@@ -1,5 +1,5 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage*/
-/* eslint complexity:0 */
+/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule*/
+/* eslint complexity:0, max-nested-callback: [1,4] */
 "use strict";
 
 var lastMatchingRules = [];
@@ -16,35 +16,52 @@ var refreshMatchCounter = function (tab, count) {
   chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tab.id});
 };
 
-// When the user changes a tab, search for matching ules fo that url
+// When the user changes a tab, search for matching rules for that url
 var onTabReady = function(tabId) {
   // Clear popup HTML
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
   Logger.info("[bg.js] onTabReady on Tab " + tabId);
 
   chrome.tabs.get(tabId, function (tab) {
-    lastMatchingRules = null;
+    lastMatchingRules = [];
     if (tab.active) {
       lastActiveTab = tab;
 
-      chrome.tabs.sendMessage(tabId, { "action": "getContent" }, function (content) {
-        if (typeof content === "undefined") {
-          Logger.info("[background.js] got 'undefined' content back form content script");
-        }
-        Rules.match(tab.url, content).then(function (matchingRules) {
-          lastMatchingRules = matchingRules;
-          // Save to localStorage for popup to load
-          Rules.lastMatchingRules(lastMatchingRules);
-          // Show matches in badge
-          refreshMatchCounter(tab, matchingRules.length);
-          // No matches? Multipe Matches? Show popup when the user clicks on the icon
-          // A single match should just fill the form (see below)
-          if (matchingRules.length !== 1) {
-            chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+      // This is a little bit complicated.
+      // First filter all rules that have content matchers
+      Rules.all().then(function (rules) {
+        var relevantRules = rules.filter(function (rule) {
+          return typeof rule.content !== "undefined";
+        });
+        // Send these rules to the content script so it can return the matching
+        // rules based on the regex and the pages content
+        chrome.tabs.sendMessage(tabId, { "action": "matchContent", "rules": JSONF.stringify(relevantRules)}, function (matchingContentRules) {
+          if(typeof matchingContentRules !== "undefined") {
+            // Convert the objects to Rules
+            matchingContentRules = JSONF.parse(matchingContentRules).map(function (ruleLike) {
+              return Rule.create(ruleLike);
+            });
+            lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
+          } else {
+            matchingContentRules = [];
           }
+          Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
+          // Now match those rules that have a "url" matcher
+          Rules.match(tab.url).then(function (matchingRules) {
+            Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
+            lastMatchingRules = lastMatchingRules.concat(matchingRules);
+            // Save to localStorage for popup to load
+            Rules.lastMatchingRules(lastMatchingRules);
+            // Show matches in badge
+            refreshMatchCounter(tab, lastMatchingRules.length);
+            // No matches? Multipe Matches? Show popup when the user clicks on the icon
+            // A single match should just fill the form (see below)
+            if (lastMatchingRules.length !== 1) {
+              chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+            }
+          });
         });
       });
-
     }
   });
 };
