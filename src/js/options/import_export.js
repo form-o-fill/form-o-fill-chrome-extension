@@ -1,4 +1,4 @@
-/*global Logger, Storage, $, Utils, JSONF*/
+/*global Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings*/
 // export rules to disk
 var exportRules = function() {
   var promises = [];
@@ -18,11 +18,7 @@ var exportRules = function() {
   });
 };
 
-// import rules from disc
-var importRules = function() {
-  $("#modalimport").show();
-};
-
+// Handler if user clicks "Import"
 $(document).on("click", "#modalimport .cmd-import-all-rules", function () {
   var $warning = $("#modalimport .only-json");
   $warning.hide();
@@ -33,10 +29,23 @@ $(document).on("click", "#modalimport .cmd-import-all-rules", function () {
     var reader = new FileReader();
     reader.onload = function(e) {
       var parsed = JSONF.parse(e.target.result);
-      Storage.save(parsed.tabSettings, Utils.keys.tabs).then(function () {
-        debugger;
+      var promises = [];
+
+      // Save all tabs separatly
+      parsed.rules.forEach(function (editorTabAndRules) {
+        promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
+      });
+      // save tabsetting
+      promises.push(Storage.save(parsed.tabSettings, Utils.keys.tabs));
+
+      Promise.all(promises).then(function () {
+        $("#modalimport").hide();
+        loadTabsSettings();
+        loadRules(1);
       });
     };
+
+    // Read file. This calls "onload" above
     reader.readAsText(fileToImport);
   }
 });

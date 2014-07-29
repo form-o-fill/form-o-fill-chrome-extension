@@ -43,6 +43,9 @@ var loadTabsSettings = function() {
   Storage.load(Utils.keys.tabs).then(function(tabSettings) {
     var tabs = jQuery();
     if (typeof tabSettings !== "undefined") {
+      if(tabSettings.length < activeTabId) {
+        activeTabId = "1";
+      }
       tabSettings.forEach(function (tabSetting) {
         tabs = tabs.add(jTab(tabSetting.id, tabSetting.name, (tabSetting.id.toString() === activeTabId)));
       });
