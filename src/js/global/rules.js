@@ -24,6 +24,12 @@ var Rule = function() {
 };
 
 Rule.create = function(options, tabId, ruleIndex) {
+  delete options.matcher;
+  delete options.nameClean;
+  delete options.urlClean;
+  delete options._escapeForRegexp;
+  delete options.prettyPrint;
+  delete options.prettyPrintHtml;
   var rule = new Rule();
   Object.keys(options).forEach(function(key) {
     rule[key] = options[key];
@@ -44,7 +50,9 @@ Rule.create = function(options, tabId, ruleIndex) {
     rule.urlClean = "n/a";
   }
   rule.nameClean = rule.name.replace("<", "&lt;");
-  rule.id = tabId + "-" + ruleIndex;
+  if(typeof rule.id === "undefined") {
+    rule.id = tabId + "-" + ruleIndex;
+  }
   Logger.info("[rule.js] created rule", rule);
   return rule;
 };
@@ -52,13 +60,12 @@ Rule.create = function(options, tabId, ruleIndex) {
 /* Multiple Rules */
 var Rules = {
   ruleCount: 0,
-  match: function(url, content) {
+  match: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
       rules.all().then(function(rules) {
         var matchingRules = rules.filter(function (rule) {
-          return (typeof rule.content !== "undefined" && !!content.match(rule.content)) ||
-                 (typeof rule.url !== "undefined" && url.match(rule.url));
+          return typeof rule.url !== "undefined" && url.match(rule.url);
         });
         resolve(matchingRules);
       });
