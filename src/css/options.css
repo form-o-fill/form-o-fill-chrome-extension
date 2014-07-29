@@ -163,3 +163,6 @@ button.import:before {
   display: none;
 }
 
+#modalimport .only-json {
+  display: none;
+}
