@@ -28,6 +28,9 @@ var onTabReady = function(tabId) {
       lastActiveTab = tab;
 
       chrome.tabs.sendMessage(tabId, { "action": "getContent" }, function (content) {
+        if (typeof content === "undefined") {
+          Logger.info("[background.js] got 'undefined' content back form content script");
+        }
         Rules.match(tab.url, content).then(function (matchingRules) {
           lastMatchingRules = matchingRules;
           // Save to localStorage for popup to load

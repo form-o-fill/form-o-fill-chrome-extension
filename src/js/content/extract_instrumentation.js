@@ -74,6 +74,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
 
   // Request to return the HTML
   if (message && message.action === "getContent") {
-    responseCallback(document.querySelector("body").outerHTML);
+    var content = document.querySelector("body").outerHTML;
+    Logger.info("[extract_instr.js] Sending " + content.length + " bytes of content back to bg.js");
+    responseCallback(content);
   }
 });
