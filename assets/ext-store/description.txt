@@ -25,6 +25,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.2.0
+- Export and import rules
+
 ★ Version 1.1.1
 - context menu click on form element extracts that form without showing the selection overlay.
 - Display a busy notice on screen when Form-O-Fill takes some time (eg. slow connection while fetching JSON in before functions).
