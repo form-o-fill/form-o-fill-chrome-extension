@@ -1,5 +1,5 @@
 /*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule*/
-/* eslint complexity:0, max-nested-callback: [1,4] */
+/* eslint complexity:0, max-nested-callbacks: [1,4] */
 "use strict";
 
 var lastMatchingRules = [];
