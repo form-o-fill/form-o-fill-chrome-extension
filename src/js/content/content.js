@@ -6,7 +6,8 @@ chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
   var currentError = null;
   var workingOverlayId = "form-o-fill-working-overlay";
-  var workingOverlayHtml = "<div id='" + workingOverlayId + "'>Form-O-Fill is working, please wait!</div>";
+  var workingOverlayHtml = "<div id='" + workingOverlayId + "' style='display: none;'>Form-O-Fill is working, please wait!</div>";
+  var workingTimeout = null;
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
@@ -46,12 +47,15 @@ chrome.runtime.onConnect.addListener(function (port) {
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
         jQuery("body").append(workingOverlayHtml);
       }
-      jQuery("#" + workingOverlayId).show();
+      workingTimeout = setTimeout(function() {
+        jQuery("#" + workingOverlayId).show();
+      }, 350);
     }
 
     if (message.action === "hideWorkingOverlay") {
       Logger.info("[content.js] Hiding working overlay");
       jQuery("#" + workingOverlayId).hide();
+      clearTimeout(workingTimeout);
     }
   });
 });
