@@ -48,4 +48,6 @@ $(document).on("click", "#modalimport .cmd-import-all-rules", function () {
     // Read file. This calls "onload" above
     reader.readAsText(fileToImport);
   }
+}).on("click", "#modalimport .close-button, #modalimport .cmd-cancel", function () {
+  $("#modalimport").hide();
 });
