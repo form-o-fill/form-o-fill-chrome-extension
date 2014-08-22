@@ -128,12 +128,14 @@ jQuery(function () {
     e.stopPropagation();
 
     var $insertAfterTab = jQuery(".tab[data-tab-id]:last");
-    var tab = jTab(($insertAfterTab.data("tab-id") + 1), chrome.i18n.getMessage("tabs_default_new_name"));
+    var nextTabId = $insertAfterTab.data("tab-id") + 1;
+    var tab = jTab(nextTabId, chrome.i18n.getMessage("tabs_default_new_name"));
     jQuery(".tab").removeClass("current");
     tab.addClass("current");
     $insertAfterTab.after(tab);
-    editor.setValue("");
+    editor.setValue("var rules = [\n];\n");
     saveTabsSetting();
+    saveRules(nextTabId);
   });
 
   loadTabsSettings();
