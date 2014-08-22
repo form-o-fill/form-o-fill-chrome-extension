@@ -1,4 +1,4 @@
-/*global Logger, jQuery, Storage, Utils, infoMsg, Rules, editor */
+/*global Logger, jQuery, Storage, Utils, infoMsg, Rules, editor, saveRules */
 
 // returns the jQuery wrapped DOM representation of a tab
 var jTab = function(tabIndex, name, isCurrent) {
