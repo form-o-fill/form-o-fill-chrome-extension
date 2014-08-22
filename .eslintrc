@@ -69,6 +69,7 @@
     no-unreachable: 2 # disallow unreachable statements after a return, throw, continue, or break statement
     use-isnan: 2 # disallow comparisons with the value NaN
     valid-typeof: 2 #Ensure that the results of typeof are compared against a valid string
+    eol-last: 0 # Its ok to have  NL at the end of the file
 
     # Best practises:
     block-scoped-var: 2 #treat var statements as if they were block scoped
@@ -93,8 +94,9 @@
     no-self-compare: 2 # disallow comparisons where both sides are exactly the same
     no-warning-comments: 2 # disallow usage of configurable warning terms in comments: 2 #e.g. TODO or FIXME
     no-with: 2 # disallow use of the with statement
-    no-yoda: 2 # disallow Yoda conditions
+    yoda: "never" # disallow Yoda conditions
     radix: 2 #require use of the second argument for parseInt()
+    eol-last: 0 # Its ok to have  NL at the end of the file
 
     # variables
     no-catch-shadow: 2 # disallow the catch clause parameter name being the same as a variable in the outer scope

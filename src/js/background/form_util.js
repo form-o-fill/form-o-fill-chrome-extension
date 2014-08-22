@@ -1,4 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage */
+/* eslint no-unused-vars: 0 */
 var FormUtil = {
   lastRule: null,
   applyRule: function(rule, lastActiveTab) {

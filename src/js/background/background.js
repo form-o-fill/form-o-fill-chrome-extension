@@ -4,7 +4,6 @@
 
 var lastMatchingRules = [];
 var lastActiveTab = null;
-var portToContent = null;
 
 // Shows number of matches in the extension's icon
 var refreshMatchCounter = function (tab, count) {

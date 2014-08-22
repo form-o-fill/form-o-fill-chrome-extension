@@ -1,4 +1,5 @@
 /*global Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings*/
+/*eslint no-unused-vars: 0*/
 // export rules to disk
 var exportRules = function() {
   var promises = [];

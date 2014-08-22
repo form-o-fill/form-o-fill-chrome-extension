@@ -1,4 +1,5 @@
 /*global jQuery */
+/* eslint no-unused-vars: 0 */
 //
 // Small abstraction over i18n supplied by chome API
 //

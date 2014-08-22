@@ -1,4 +1,5 @@
 /*global jQuery */
+/*eslint no-unused-vars: 0*/
 var Utils = {
   // Set to false in BUILD:
   debug: true,

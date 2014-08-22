@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: 0 */
 var Notification = {
   create: function(message, onClickCallback) {
     var formNotificationId = null;

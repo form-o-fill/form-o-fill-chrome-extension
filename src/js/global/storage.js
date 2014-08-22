@@ -1,4 +1,5 @@
 /*global Utils, Logger, JSONF */
+/* eslint no-unused-vars: 0 */
 "use strict";
 var Storage = {
   load: function(keyToLoadFrom) {
@@ -20,7 +21,7 @@ var Storage = {
           Logger.info("[storage.js] Saved '" + key + "' = " + JSONF.stringify(value[key]));
           resolve(true);
         } else {
-          reject(Error(chrome.runtime.lastError));
+          reject(new Error(chrome.runtime.lastError));
         }
       });
     });
@@ -32,7 +33,7 @@ var Storage = {
           Logger.info("[storage.js] Removed key '" + key + "'");
           resolve(true);
         } else {
-          reject(Error(chrome.runtime.lastError));
+          reject(new Error(chrome.runtime.lastError));
         }
       });
     });

@@ -1,5 +1,5 @@
-/*global FormError, jQuery, JSONF, Logger, Utils*/
-/*eslint complexity:0*/
+/*global FormError, jQuery, JSONF, Logger*/
+/*eslint complexity:0, no-unused-vars: 0*/
 var FormFiller = {
   error: null,
   fill: function(selector, value, beforeData) {

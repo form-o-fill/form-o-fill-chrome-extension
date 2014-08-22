@@ -1,1 +1,6 @@
-src/js/vendor
+**/ace/*.js
+**/chance.js/*.js
+**/chrome-bootstrap/*.js
+**/jquery/*.js
+**/js-beautifier/*.js
+**/moment.js/*.js

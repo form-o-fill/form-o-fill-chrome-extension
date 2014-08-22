@@ -1,4 +1,4 @@
-/*global FormFiller, FormExtractor, FormErrors, JSONF, jQuery, Logger, Utils*/
+/*global FormFiller, JSONF, jQuery, Logger*/
 /*eslint complexity:0 */
 // This listens for messages coming from the background page
 // This is a long running communication channel

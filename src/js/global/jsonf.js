@@ -1,4 +1,5 @@
 /*eslint no-new-func:0*/
+/* eslint no-unused-vars: 0 */
 "use strict";
 var JSONF = {
   stringify: function(object) {

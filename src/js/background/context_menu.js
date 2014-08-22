@@ -1,5 +1,3 @@
-/*global jQuery, Logger */
-
 /* Much to be learned here.
  * Simple things can take much longer than expected.
  * The documentation for using the chrome.contextMenus is simple aweful and wrong in some places.

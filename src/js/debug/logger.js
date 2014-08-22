@@ -1,4 +1,5 @@
-/*global Storage, Utils, JSONF */
+/*global Utils */
+/* eslint no-unused-vars: 0 */
 "use strict";
 var Logger = {
   info: function (msg, obj) {

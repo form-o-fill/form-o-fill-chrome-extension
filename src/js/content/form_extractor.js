@@ -1,4 +1,5 @@
 /*global jQuery, Rule, Logger, Utils*/
+/* eslint no-unused-vars: 0 */
 var FormExtractor = {
   _knownElements: null,
   knownElements: function() {

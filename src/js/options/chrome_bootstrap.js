@@ -1,4 +1,5 @@
 /*global jQuery */
+/*eslint no-unused-vars: 0*/
 var ChromeBootstrap = {
   init: function() {
     // Menu functionality for chrome-bootstrap
