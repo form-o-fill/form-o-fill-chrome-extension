@@ -16,6 +16,8 @@ var FormUtil = {
 
     port.postMessage({"action": "showWorkingOverlay"});
 
+    var context = { url: Utils.parseUrl(lastActiveTab.url) };
+
     // Default instantaneous resolving promise:
     var beforeFunction = function() {
       return new Promise(function(resolve) {
@@ -30,7 +32,7 @@ var FormUtil = {
       // Wrap the function into a promise
       beforeFunction = function() {
         return new Promise(function(resolve) {
-          rule.before(resolve);
+          rule.before(resolve, context);
         });
       };
       Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
