@@ -49,5 +49,18 @@ var Utils = {
     a.click();
     window.URL.revokeObjectURL(url);
     document.querySelector("body").removeChild(a);
+  },
+  parseUrl: function(url) {
+    var parser = document.createElement('a');
+    parser.href = url;
+    return {
+      url: url,
+      protocol: parser.protocol,
+      host: parser.hostname,
+      port: parser.port,
+      path: parser.pathname,
+      query: parser.search,
+      hash: parser.hash
+    };
   }
 };
