@@ -25,6 +25,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.3.0
+- before functions receive the environment as second parameter (see help). Super useful addition by github user @floj
+
 ★ Version 1.2.0
 - Export and import rules
 
