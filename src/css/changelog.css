@@ -1,0 +1,11 @@
+#changelog li {
+  text-indent: -14px;
+  margin-left: 28px;
+  margin-bottom: 5px;
+}
+
+#changelog li:before {
+  font-family: formofill;
+  content: "\e600";
+  margin-right: 10px;
+}
