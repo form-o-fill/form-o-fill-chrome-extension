@@ -182,7 +182,7 @@ $(".notice.extracted-present").on("click", function () {
   $(this).hide();
 });
 
-$(".notice.annotations-present, .notice.var-needed").on("click", function () {
+$(".notice.annotations-present, .notice.error").on("click", function () {
   $(this).hide();
 });
 

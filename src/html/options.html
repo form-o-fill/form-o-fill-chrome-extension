@@ -51,7 +51,7 @@
             
             <!-- I18n needed -->
             <div id="notices">
-              <div class="notice var-needed">
+              <div class="notice error var-needed">
                 Please start your rules with <span class="code">rules = [</span> and end it with <span class="code">];</span>.
                 <a href="#" class="cmd-fix-var-needed">Fix it!</a>
               </div>
@@ -60,6 +60,15 @@
               </div>
               <div class="notice extracted-present">
                 There is an extracted form present, click <a href="#" class="cmd-append-extracted">here</a> to append the rule at the bottom of your current rules.
+              </div>
+              <div class="notice error before-function-needs-to-be-a-function">
+                Please use a function for 'before' blocks like this: <span class="code">before: function(resolve) { ...}</span>
+              </div>
+              <div class="notice error before-function-needs-resolve-argument">
+                The definition of a before function needs 'resolve' as its first argument: <span class="code">before: function(resolve) { ...}</span>
+              </div>
+              <div class="notice error before-function-needs-resolve-call">
+                Please call your 'resolve' function somewhere in the 'before' function:<br /><span class="code">before: function(resolve) { ... resolve(myData); }</span>
               </div>
               <div class="notice form-fill-errors">
                 There have been errors while filling the form. The rule used was '<span class="rule-name"></span>' (url: '<span class="rule-url"></span>')

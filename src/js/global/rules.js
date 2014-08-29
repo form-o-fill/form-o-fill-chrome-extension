@@ -1,5 +1,5 @@
 /*global Storage, Logger, jQuery, js_beautify, Utils, JSONF */
-/*eslint no-new-func:0, max-nested-callbacks:[1,4]*/
+/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
 "use strict";
 
 /* A single Rule */
@@ -197,19 +197,21 @@ var Rules = {
   checkBeforeFunction: function(ruleFunction, errors) {
     // Not a function!
     if(typeof ruleFunction !== "function") {
-      errors.add("before-function-needs-to-be-a-function");
+      errors.push("before-function-needs-to-be-a-function");
     }
     if(typeof ruleFunction === "function") {
       // Fetch the name of the first argument
       var resolveMatches = ruleFunction.toString().match(/function[\s]*\((.*?)[,\)]/);
+      var resolveFunctionName = resolveMatches[1];
 
-      if(resolveMatches[1] === "") {
+      if(resolveFunctionName === "") {
         errors.push("before-function-needs-resolve-argument");
       } else {
         // Look for usage of the first ergument (presumly "resolve") in the code
-        var regex = "\\{[\\s\\S]*" + resolveMatches[1] + "[\\s\\S]*\\}.*$";
+        var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S]*\\}.*$";
         resolveMatches = ruleFunction.toString().match(regex);
-        if(resolveMatches === null) {
+        // No call to resolve?
+        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "[\\s]*\\("))) {
           errors.push("before-function-needs-resolve-call");
         }
       }
