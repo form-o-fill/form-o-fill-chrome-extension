@@ -211,7 +211,7 @@ var Rules = {
         var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S]*\\}.*$";
         resolveMatches = ruleFunction.toString().match(regex);
         // No call to resolve?
-        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "[\\s]*\\("))) {
+        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*\\(|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
           errors.push("before-function-needs-resolve-call");
         }
       }
