@@ -77,20 +77,15 @@ var Rules = {
       Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
         var rules = [];
         if(rulesData) {
-          // remove wrapper
-          var rulesCodeMatches = rulesData.code.match(/^.*?(\[[\s\S]*\];)$/m);
+          var ruleFunction = that.text2function(rulesData.code);
 
-          // This should not happen:
-          if(!rulesCodeMatches[1]) {
+          if(ruleFunction === null) {
             resolve(rules);
           }
 
-          // Now we go into hell ...
-          var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
-          var ruleFunction = new Function(ruleCode);
           that.ruleCount = 0;
 
-          rules = ruleFunction().map(function (ruleJson, index) {
+          rules = ruleFunction.map(function (ruleJson, index) {
             that.ruleCount += 1;
             return Rule.create(ruleJson, forTabId, index);
           });
@@ -98,6 +93,18 @@ var Rules = {
         resolve(rules);
       });
     });
+  },
+  text2function: function(codeText) {
+    // remove wrapper
+    // results in [ code ... code ]
+    var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
+
+    if(!rulesCodeMatches[1]) {
+      return false;
+    }
+
+    var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
+    return new Function(ruleCode)();
   },
   all: function() {
     return new Promise(function (resolve) {
@@ -160,6 +167,7 @@ var Rules = {
   },
   // Simple checks for the neccessary structure of the rules
   syntaxCheck: function(editor) {
+    var that = this;
     var errors = [];
 
     // Check if there are some ACE Annotations (aka. errors) present
@@ -174,7 +182,38 @@ var Rules = {
       errors.push("var-needed");
     }
 
+    // Check for before function structure
+    if (errors.length == 0) {
+      var ruleCodeCheck = this.text2function(editor.getValue());
+      ruleCodeCheck.forEach(function (ruleFunction) {
+        if(ruleFunction.hasOwnProperty("before")) {
+          Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
+          that.checkBeforeFunction(ruleFunction.before, errors);
+        }
+      });
+    }
     return errors;
+  },
+  checkBeforeFunction: function(ruleFunction, errors) {
+    // Not a function!
+    if(typeof ruleFunction !== "function") {
+      errors.add("before-function-needs-to-be-a-function");
+    }
+    if(typeof ruleFunction === "function") {
+      // Fetch the name of the first argument
+      var resolveMatches = ruleFunction.toString().match(/function[\s]*\((.*?)[,\)]/);
+
+      if(resolveMatches[1] === "") {
+        errors.push("before-function-needs-resolve-argument");
+      } else {
+        // Look for usage of the first ergument (presumly "resolve") in the code
+        var regex = "\\{[\\s\\S]*" + resolveMatches[1] + "[\\s\\S]*\\}.*$";
+        resolveMatches = ruleFunction.toString().match(regex);
+        if(resolveMatches === null) {
+          errors.push("before-function-needs-resolve-call");
+        }
+      }
+    }
   },
   lastMatchingRules: function(rules) {
     return new Promise(function (resolve) {
