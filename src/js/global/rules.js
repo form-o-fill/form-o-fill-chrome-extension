@@ -178,7 +178,7 @@ var Rules = {
     }
 
     // Check structure of rules code
-    if(!/^(var\s+)?([a-z_])+\s+=\s+\[\s?$/i.test(editor.session().getLine(0)) ||
+    if(!/^var\s+?([a-z_])+\s+=\s+\[/i.test(editor.session().getLine(0)) ||
        !/^\s*\];\s*$/.test(editor.session().getLine(editor.session().getLength() - 1))) {
       errors.push("var-needed");
     }
