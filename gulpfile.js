@@ -14,7 +14,6 @@ var mocha = require('gulp-mocha');
 var replace = require('gulp-replace-task');
 var rm = require('gulp-rm');
 var stripdebug = require('gulp-strip-debug');
-var through2 = require('through2');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 
