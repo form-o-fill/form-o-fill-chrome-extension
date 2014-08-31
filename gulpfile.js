@@ -1,21 +1,22 @@
 /*eslint-env node */
 "use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins
+// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-mocha sinon sinon-chai
 
+var chalk = require('chalk');
+var cleanhtml = require('gulp-cleanhtml');
+var concat = require('gulp-concat');
+var eslint = require('gulp-eslint');
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
-var chalk = require('chalk');
-var replace = require('gulp-replace-task');
-var cleanhtml = require('gulp-cleanhtml');
-var eslint = require('gulp-eslint');
-var stripdebug = require('gulp-strip-debug');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var through2 = require('through2');
-var rm = require('gulp-rm');
-var zip = require('gulp-zip');
 var minifyCSS = require('gulp-minify-css');
+var mocha = require('gulp-mocha');
+var replace = require('gulp-replace-task');
+var rm = require('gulp-rm');
+var stripdebug = require('gulp-strip-debug');
+var through2 = require('through2');
+var uglify = require('gulp-uglify');
+var zip = require('gulp-zip');
 
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
@@ -196,10 +197,30 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
   .pipe(gulp.dest('build'));
 });
 
-// running "gulp" will execute this
 // Ends with zipping up the build dir
-gulp.task('default', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+gulp.task('build', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
   .pipe(gulp.dest('dist'));
+});
+
+// Build a distribution
+gulp.task('build', ['test', 'announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+  gulp.src(['build/**'])
+  .pipe(zip(distFilename))
+  .pipe(gulp.dest('dist'));
+});
+
+// Run tests
+gulp.task('test', function () {
+  gulpUtil.log('Running tests');
+  return gulp.src('test/*_spec.js', {read: false})
+  .pipe(mocha({reporter: 'dot'}))
+  .on('error', function(err) {
+    throw err;
+  });
+});
+
+// running "gulp" will execute this
+gulp.task('default', ['test'], function () {
 });

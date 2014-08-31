@@ -1,0 +1,11 @@
+# vim: set ft=yaml
+# eslint config file
+---
+env:
+  node: true
+  amd: true
+globals:
+  describe: true
+  it: true
+rules:
+  no-unused-expressions: 0 # allow it for chai expectations
