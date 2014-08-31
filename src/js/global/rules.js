@@ -158,6 +158,7 @@ var Rules = {
       "preserve_newlines": false,
       "brace_style": "collapse",
       "space_before_conditional": true,
+      "keep_function_indentation": true,
       "unescape_strings": false
     });
     if(/\}\];$/.test(prettyCode)) {
