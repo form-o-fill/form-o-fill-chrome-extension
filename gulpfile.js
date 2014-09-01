@@ -10,7 +10,7 @@ var eslint = require('gulp-eslint');
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
 var minifyCSS = require('gulp-minify-css');
-var mocha = require('gulp-mocha');
+var mocha = require('gulp-spawn-mocha');
 var replace = require('gulp-replace-task');
 var rm = require('gulp-rm');
 var stripdebug = require('gulp-strip-debug');
@@ -87,6 +87,14 @@ var replaceOpts = {
     }
   ]
 };
+
+function runTests() {
+ return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
+    R: 'dot',
+    c: true,
+    debug: true
+  })).on('error', console.warn.bind(console));
+}
 
 // Output which version to build where to
 gulp.task('announce', function() {
@@ -213,13 +221,12 @@ gulp.task('build', ['test', 'announce', 'lint', 'copyHtml', 'css', 'globalJs', '
 // Run tests
 gulp.task('test', function () {
   gulpUtil.log('Running tests');
-  return gulp.src('test/*_spec.js', {read: false})
-  .pipe(mocha({reporter: 'dot'}))
-  .on('error', function(err) {
-    throw err;
+  return runTests().on('error', function (e) {
+    throw e;
   });
 });
 
 // running "gulp" will execute this
-gulp.task('default', ['test'], function () {
+gulp.task('default', function () {
+  runTests();
 });

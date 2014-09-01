@@ -1,7 +1,7 @@
 // This should be everywhere on top:
-var chai = require("chai");
-var sinon = require("sinon");
-var expect = chai.expect;
+//var chai = require("chai");
+//var sinon = require("sinon");
+//var expect = chai.expect;
 
 // Mocha: See http://visionmedia.github.io/mocha/
 //        Base testing framework providing describe/it/...
