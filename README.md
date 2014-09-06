@@ -43,6 +43,16 @@ Here are a few "rules" we like to adhere to:
 - Commit push and PULL REQUEST away.
 - Thank you!
 
+# TESTING
+*Mocha*: See http://visionmedia.github.io/mocha/
+Base testing framework providing describe/it/...
+
+*Chai*: http://chaijs.com/
+Provides Matchets and the expect() syntax familar to rspec users
+
+*Sinon*: http://sinonjs.org/
+Mocking and Stubbing
+
 # LICENSE
 
 ## The MIT License (MIT)

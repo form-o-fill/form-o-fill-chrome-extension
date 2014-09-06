@@ -7,5 +7,6 @@ env:
 globals:
   describe: true
   it: true
+  expect: true
 rules:
   no-unused-expressions: 0 # allow it for chai expectations

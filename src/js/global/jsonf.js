@@ -42,3 +42,8 @@ var JSONF = {
     return value;
   }
 };
+// REMOVE START
+if(typeof exports === "object") {
+  exports.clazz = JSONF;
+}
+// REMOVE END

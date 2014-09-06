@@ -13,6 +13,7 @@
     chrome: true
     Promise: true
     console: true
+    exports: true
   rules:
     # Rules comming from jshint:
     no-bitwise: 2 # Prohibit bitwise operators (&, |, ^, etc.).
