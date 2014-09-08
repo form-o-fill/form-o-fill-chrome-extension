@@ -17,7 +17,34 @@ describe("JSONF", function(){
   });
 
   it("serializes functions", function(){
-    var actual = JSONF.stringify(function() { 1; });
-    expect(actual).to.eq("\"function () { 1; }\"");
+    var func = function() {
+      return 42;
+    };
+    var serialized = JSONF.stringify(func);
+    expect(serialized).to.eq("\"function () {\\n      return 42;\\n    }\"");
+
+    expect(JSONF.parse(serialized)()).to.eq(42);
+  });
+
+  it("works with different formatted functions (#27)", function(){
+    /*eslint-disable brace-style*/
+    var func = function()
+    {
+      return 42;
+    };
+    /*eslint-enable brace-style*/
+    var serialized = JSONF.stringify(func);
+    expect(serialized).to.eq("\"function ()\\n    {\\n      return 42;\\n    }\"");
+    expect(JSONF.parse(serialized)()).to.eq(42);
+  });
+
+  it("works with {} curly brackets (#16)", function(){
+    /*eslint-disable no-undef, no-unused-vars, block-scoped-var*/
+    var func = function (a) {
+      return {a:42};
+    };
+    /*eslint-enable no-undef, no-unused-vars, block-scoped-var*/
+    var serialized = JSONF.stringify(func);
+    expect(JSONF.parse(serialized)()).to.eql({a:42});
   });
 });
