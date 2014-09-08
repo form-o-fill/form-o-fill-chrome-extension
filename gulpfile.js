@@ -88,13 +88,13 @@ var replaceOpts = {
   ]
 };
 
-function runTests() {
+var runTests = function() {
  return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
     R: 'dot',
     c: true,
     debug: true
   })).on('error', console.warn.bind(console));
-}
+};
 
 // Output which version to build where to
 gulp.task('announce', function() {
@@ -224,6 +224,11 @@ gulp.task('test', function () {
   return runTests().on('error', function (e) {
     throw e;
   });
+});
+
+// Run tests through watching
+gulp.task('watch', function () {
+  gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
 
 // running "gulp" will execute this
