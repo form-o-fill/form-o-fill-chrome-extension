@@ -2,7 +2,7 @@ Developers like working on cool apps but every once in a while THE FORM™ comes
 
 Working on such form entry processes is in itself usually not fun but filling out a form for test purposes again and again is even worse.
 
-FORM-O-FILL is there to easy that pain.
+FORM-O-FILL is there to ease that pain.
 
 Features:
 ✓ Use javascript to program the rules.
@@ -25,21 +25,18 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.3.1
+- More syntax checking for before functions
+- Keep the users function indention when formatting the rule code
+
 ★ Version 1.3.0
 - before functions receive the environment as second parameter (see help). Super useful addition by github user @floj
 
 ★ Version 1.2.0
 - Export and import rules
 
-★ Version 1.1.1
-- context menu click on form element extracts that form without showing the selection overlay.
-- Display a busy notice on screen when Form-O-Fill takes some time (eg. slow connection while fetching JSON in before functions).
-
-★ Version 1.1.0
-- Allow selection of rules by matching the HTML of the page with the 'content' attribute.
-  
-★ Version 1.0.0
-- First live version. Be gentle.
+★ Version 1.1.1 - 1.0.0
+- See "Changelog" in extension options
 
 Find the source at
 https://github.com/form-o-fill/form-o-fill-chrome-extension
