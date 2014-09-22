@@ -25,6 +25,10 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+★ Version 1.3.2
+- Remove fixing errors in rules. So broken.
+- Auto resize editor window
+
 ★ Version 1.3.1
 - Changelog in options
 - More syntax checking for before functions
