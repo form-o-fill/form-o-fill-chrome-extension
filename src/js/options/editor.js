@@ -1,11 +1,19 @@
 /*global ace*/
 var Editor = function(selector) {
+  this._resizeTimeout = null;
+
+  // Resize the editor DIV to max
+  this.resize();
+  window.addEventListener("resize", this._resizeThrottler(this), false);
+
   this._editor = ace.edit(document.querySelector(selector));
   this._session = this._editor.getSession();
   this._document = this._session.getDocument();
   this._editor.setTheme("ace/theme/jsoneditor");
+  this._editor.setAutoScrollEditorIntoView(true);
   this._session.setMode("ace/mode/javascript");
   this._session.setTabSize(2);
+  this._session.setUseSoftTabs(true);
   this._session.setUseSoftTabs(true);
 };
 
@@ -51,6 +59,8 @@ Editor.prototype.cleanUp = function() {
   return true;
 };
 
+// Fix broken rules in editor
+// ATTENTION! This is broken at the moment
 Editor.prototype.fixRules = function() {
   // Fix the first line not correctly containing "var rules = ["
   var lineStart = this._document.getLine(0);
@@ -77,6 +87,26 @@ Editor.prototype.fixRules = function() {
   }
 };
 
+// Format the rules
 Editor.prototype.format = function(Rules) {
   this._editor.setValue(Rules.format(this._editor.getValue()), -1);
+};
+
+// resize the editor DOM to a max size
+Editor.prototype.resize = function() {
+  var maxEditorHeight = document.querySelector("#ruleeditor").clientHeight - document.querySelector(".tabcontainer").clientHeight - document.querySelector(".menu").clientHeight - document.querySelector("header").clientHeight + 40;
+  var editorDomNode = document.querySelector("#ruleeditor-ace");
+  editorDomNode.setAttribute("style", "height: " + maxEditorHeight + "px");
+};
+
+// Throttle the resize down so the screen doesn't flicker
+Editor.prototype._resizeThrottler = function(editor) {
+  return function() {
+    if(!editor._resizeTimeout) {
+      editor._resizeTimeout = setTimeout(function() {
+        editor._resizeTimeout = null;
+        editor.resize();
+       }, 200);
+    }
+  };
 };

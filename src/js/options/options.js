@@ -2,7 +2,6 @@
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
-//
 var editor = new Editor("#ruleeditor-ace");
 
 var noticesVisible = false;
@@ -118,7 +117,7 @@ var loadRules = function(tabId) {
       ruleJson = "";
     }
     editor.setValue(ruleJson, -1);
-    editor.fixRules();
+    //BROKEN! editor.fixRules();
     Utils.infoMsg("Rules loaded from disc");
   });
 };

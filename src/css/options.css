@@ -31,9 +31,13 @@ body {
   left: 40px;
 }
 
+#ruleeditor {
+  height: 100%;
+}
+
 #ruleeditor-ace {
   width: 800px;
-  height: 500px;
+  height: 100%;
   border: 1px solid #909090;
 }
 
