@@ -25,7 +25,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       }
       // BUILD: remove end
       currentError = FormFiller.fill(message.selector, message.value, message.beforeData);
-      if(currentError !== null) {
+      if(typeof currentError !== "undefined" && currentError !== null) {
         Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
       }
