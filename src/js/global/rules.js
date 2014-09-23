@@ -178,10 +178,11 @@ var Rules = {
     }
 
     // Check structure of rules code
-    if(!/^var\s+?([a-z_])+\s+=\s+\[/i.test(editor.session().getLine(0)) ||
-       !/^\s*\];\s*$/.test(editor.session().getLine(editor.session().getLength() - 1))) {
-      errors.push("var-needed");
-    }
+    // BROKEN!
+    //if(!/^var\s+?([a-z_])+\s+=\s+\[/i.test(editor.session().getLine(0)) ||
+       //!/^\s*\];\s*$/.test(editor.session().getLine(editor.session().getLength() - 1))) {
+      //errors.push("var-needed");
+    //}
 
     // Check for before function structure
     if (errors.length == 0) {
