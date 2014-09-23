@@ -1,7 +1,6 @@
-/*eslint no-new-func:0*/
-/* eslint no-unused-vars: 0 */
-"use strict";
+/*eslint no-new-func:0, complexity: 0*/
 var JSONF = {
+  _undef: "**JSONF-UNDEFINED**",
   stringify: function(object) {
     return JSON.stringify(object, this._serializer, 2);
   },
@@ -9,8 +8,13 @@ var JSONF = {
     return JSON.parse(jsonString, this._deserializer);
   },
   _serializer: function(key, value) {
+    // undefined
+    if (typeof value === "undefined") {
+      return JSONF._undef;
+    }
+
     // Is a FUNCTION or REGEXP ?
-    if (typeof (value) === "function" || typeof value.test === "function") {
+    if (typeof value === "function" || typeof value.test === "function") {
       return value.toString();
     }
     return value;
@@ -37,6 +41,11 @@ var JSONF = {
       match = value.match(rregexp);
       if (match) {
         return new RegExp(match[1]);
+      }
+
+      // Undefined?
+      if(value === JSONF._undef) {
+        return undefined;
       }
     }
     return value;

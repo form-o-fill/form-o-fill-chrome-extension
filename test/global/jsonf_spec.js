@@ -5,6 +5,13 @@ describe("JSONF", function(){
     expect(JSONF.stringify({"a" : "simple", "b": [ "JS", "Object", "Literal" ]})).to.eq("{\n  \"a\": \"simple\",\n  \"b\": [\n    \"JS\",\n    \"Object\",\n    \"Literal\"\n  ]\n}");
   });
 
+  it("serializes and deserializes 'undefined'", function(){
+    var serialized = JSONF.stringify({a: undefined});
+    expect(serialized).to.eql("{\n  \"a\": \"**JSONF-UNDEFINED**\"\n}");
+    var parsed = JSONF.parse(serialized);
+    expect(parsed.a).to.be_undefined;
+  });
+
   it("deserializes simple JS objects", function(){
     var actual = JSONF.parse("{\n  \"a\": \"simple\",\n  \"b\": [\n    \"JS\",\n    \"Object\",\n    \"Literal\"\n  ]\n}");
     expect(actual.a).to.eql("simple");
@@ -47,4 +54,5 @@ describe("JSONF", function(){
     var serialized = JSONF.stringify(func);
     expect(JSONF.parse(serialized)()).to.eql({a:42});
   });
+
 });
