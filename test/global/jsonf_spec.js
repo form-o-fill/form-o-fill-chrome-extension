@@ -1,4 +1,4 @@
-var JSONF = require("../../src/js/global/jsonf.js").clazz;
+var JSONF = require("../../src/js/global/jsonf.js");
 
 describe("JSONF", function(){
   it('serializes simple JS objects', function(){

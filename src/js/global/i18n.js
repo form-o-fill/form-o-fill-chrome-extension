@@ -23,7 +23,7 @@ var I18n = {
     return this._lang;
   },
   userLocale: function() {
-    return chrome.i18n.getUILanguage().replace(/-.*$/,"").toLowerCase();
+    return chrome.i18n.getUILanguage().replace(/_.*$/,"").toLowerCase();
   },
   loadPages: function(pages, prefix) {
     var i18n = this;
@@ -48,10 +48,7 @@ var I18n = {
 };
 
 // REMOVE START
-// When running inside node we assume we are being unit-tested.
-// Use like this in your tests:
-// var JSONF = require("../../src/js/global/jsonf.js").clazz;
 if(typeof exports === "object") {
-  exports.clazz = I18n;
+  module.exports = I18n;
 }
 // REMOVE END

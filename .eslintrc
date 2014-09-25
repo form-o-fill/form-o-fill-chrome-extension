@@ -10,6 +10,7 @@
   env:
     browser: true
   globals:
+    module: true
     chrome: true
     Promise: true
     console: true

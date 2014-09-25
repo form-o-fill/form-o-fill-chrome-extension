@@ -53,6 +53,6 @@ var JSONF = {
 };
 // REMOVE START
 if(typeof exports === "object") {
-  exports.clazz = JSONF;
+  module.exports = JSONF;
 }
 // REMOVE END
