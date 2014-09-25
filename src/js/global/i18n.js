@@ -1,7 +1,7 @@
 /*global jQuery */
 /* eslint no-unused-vars: 0 */
 //
-// Small abstraction over i18n supplied by chome API
+// Small abstraction over i18n supplied by chrome API
 //
 var I18n = {
   supportedLanguages: [
@@ -46,3 +46,12 @@ var I18n = {
     });
   }
 };
+
+// REMOVE START
+// When running inside node we assume we are being unit-tested.
+// Use like this in your tests:
+// var JSONF = require("../../src/js/global/jsonf.js").clazz;
+if(typeof exports === "object") {
+  exports.clazz = I18n;
+}
+// REMOVE END
