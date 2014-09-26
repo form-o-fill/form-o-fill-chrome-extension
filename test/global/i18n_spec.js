@@ -33,9 +33,38 @@ describe("I18n", function(){
     });
   });
 
-  xdescribe(".load_pages", function() {
-    it("loads localized pages", sinon.test(function(){
+  describe(".load_pages", function() {
+
+    beforeEach(function() {
+      sinon.stub(jQuery, "ajax").yieldsTo("success", "<div></div>");
+    });
+
+    afterEach(function() {
+      jQuery.ajax.restore();
+    });
+
+    it("loads localized pages and triggers a custom event", sinon.test(function(){
+      var triggerSpy = this.spy(jQuery.prototype, "trigger");
+
       I18n.loadPages(["about"]);
+
+      expect(triggerSpy).to.have.been.calledWith("i18n-loaded", ["html/options/_about_en.html"]);
+    }));
+
+    it("inserts the loaded page into the DOM", sinon.test(function(){
+      var spy = this.spy(I18n, "_getAndInsert");
+
+      I18n.loadPages(["about"]);
+
+      expect(spy).to.have.been.calledWith(["html", "options", "_about_en.html"], "#about");
+    }));
+
+    it("prefixes pages to be loaded", sinon.test(function(){
+      var triggerSpy = this.spy(jQuery.prototype, "trigger");
+
+      I18n.loadPages(["about"], "prefix");
+
+      expect(triggerSpy).to.have.been.calledWith("i18n-loaded", ["html/options/prefix/_about_en.html"]);
     }));
   });
 });
