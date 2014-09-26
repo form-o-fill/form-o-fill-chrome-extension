@@ -6,12 +6,18 @@ env:
   amd: true
 globals:
   describe: true
+  xdescribe: true
   it: true
+  xit: true
   expect: true
   beforeEach: true
   afterEach: true
   sinon: true
   jQuery: true
+  jsdom: true
+  sources: true
+  testRoot: true
 rules:
-  no-unused-expressions: 0 # allow it for chai expectations
+  no-unused-expressions: 0
   max-nested-callbacks: 0
+  handle-callback-err: 0
