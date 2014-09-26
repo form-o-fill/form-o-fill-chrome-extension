@@ -4,13 +4,18 @@
 // chromeApi.setConfig("someThing", "someReturnValue");
 var chrome = {
   config: {},
+  setConfig: function(key, value) {
+    this.config[key] = value;
+  },
   i18n: {
     getUILanguage: function() {
       return chrome.config.uiLanguage || "en_US";
     }
   },
-  setConfig: function(key, value) {
-    this.config[key] = value;
+  runtime: {
+    getURL: function(url) {
+      return "chrome://" + url;
+    }
   }
 };
 
