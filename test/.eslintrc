@@ -8,5 +8,10 @@ globals:
   describe: true
   it: true
   expect: true
+  beforeEach: true
+  afterEach: true
+  sinon: true
+  jQuery: true
 rules:
   no-unused-expressions: 0 # allow it for chai expectations
+  max-nested-callbacks: 0
