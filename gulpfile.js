@@ -1,7 +1,7 @@
 /*eslint-env node */
 "use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-mocha sinon sinon-chai
+// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-mocha sinon sinon-chai jsdom
 
 var chalk = require('chalk');
 var cleanhtml = require('gulp-cleanhtml');
