@@ -1,7 +1,7 @@
 /*global jQuery */
 /*eslint no-unused-vars: 0*/
 var Utils = {
-  // Set to false in BUILD:
+  // Will be set to false in BUILD:
   debug: true,
   keys: {
     extractedRule: "form-o-fill-extracted",
