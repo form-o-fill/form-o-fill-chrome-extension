@@ -12,10 +12,6 @@ var Rule = function() {
     return JSON.stringify(clone, null, 2);
   };
 
-  this.prettyPrintHtml = function() {
-    return this.prettyPrint().replace(/\n/,"<br />");
-  };
-
   this._escapeForRegexp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   };
@@ -27,7 +23,6 @@ Rule.create = function(options, tabId, ruleIndex) {
   delete options.urlClean;
   delete options._escapeForRegexp;
   delete options.prettyPrint;
-  delete options.prettyPrintHtml;
   var rule = new Rule();
   Object.keys(options).forEach(function(key) {
     rule[key] = options[key];
@@ -54,3 +49,9 @@ Rule.create = function(options, tabId, ruleIndex) {
   Logger.info("[rule.js] created rule", rule);
   return rule;
 };
+
+// REMOVE START
+if(typeof exports === "object") {
+  module.exports = Rule;
+}
+// REMOVE END
