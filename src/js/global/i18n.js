@@ -1,24 +1,21 @@
-/*global jQuery */
+/*global jQuery, Utils */
 /* eslint no-unused-vars: 0 */
 //
 // Small abstraction over i18n supplied by chrome API
 //
 var I18n = {
-  supportedLanguages: [
-    "en"
-  ],
+  supportedLanguages: function() {
+    return ["en"];
+  },
   currentLocale: function() {
-    if(this._lang) {
-      return this._lang;
-    }
     var uiLang = this.userLocale();
-    var chosenLang = this.supportedLanguages.filter(function (supportedLanguage) {
+    var chosenLang = this.supportedLanguages().filter(function (supportedLanguage) {
       return supportedLanguage === uiLang;
     });
     if(chosenLang.length === 1) {
       this._lang = chosenLang[0];
     } else {
-      this._lang = this.supportedLanguages[0];
+      this._lang = this.supportedLanguages()[0];
     }
     return this._lang;
   },
