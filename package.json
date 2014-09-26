@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The programmable form filler for developers",
   "main": "gulpfile.js",
+  "private": true,
   "dependencies": {
     "chalk": "^0.4.0",
     "eslint": "^0.6.2",
@@ -34,13 +35,14 @@
     "gulp-uglify": "^0.3.2",
     "gulp-util": "^2.2.20",
     "gulp-zip": "^2.0.2",
+    "jsdom": "^1.0.0-pre.7",
     "mocha": "^1.21.4",
     "sinon": "^1.10.3",
     "sinon-chai": "^2.5.0",
     "through2": "^0.6.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive test/**/*_spec.js"
   },
   "repository": {
     "type": "git",
