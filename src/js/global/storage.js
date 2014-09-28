@@ -1,6 +1,5 @@
 /*global Utils, Logger, JSONF */
 /* eslint no-unused-vars: 0 */
-"use strict";
 var Storage = {
   load: function(keyToLoadFrom) {
     var key = keyToLoadFrom || Utils.keys.rules;

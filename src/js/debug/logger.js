@@ -1,6 +1,5 @@
 /*global Utils */
 /* eslint no-unused-vars: 0 */
-"use strict";
 var Logger = {
   info: function (msg, obj) {
     // Port to background.js

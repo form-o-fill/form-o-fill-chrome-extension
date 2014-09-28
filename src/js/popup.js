@@ -1,5 +1,4 @@
 /*global Utils, Logger, Rules, jQuery*/
-"use strict";
 var Popup = {
   currentUrl: null,
   init: function() {
