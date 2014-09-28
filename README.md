@@ -59,7 +59,7 @@ Mocking and Stubbing
 *jsdom*: https://github.com/tmpvar/jsdom  
 DOM simulation when using jQuery.
 
-All of this is initialized via ``test/support/spech_helper.js``. Take a look.
+All of this is initialized via ``test/support/spec_helper.js``. Take a look.
 
 # LICENSE
 
