@@ -47,19 +47,19 @@ Here are a few "rules" we like to adhere to:
 - Thank you!
 
 # TESTING
-*Mocha*: See http://visionmedia.github.io/mocha/
+*Mocha*: See http://visionmedia.github.io/mocha/  
 Base testing framework providing describe/it/...
 
-*Chai*: http://chaijs.com/
+*Chai*: http://chaijs.com/  
 Provides Matchets and the expect() syntax familar to rspec users
 
-*Sinon*: http://sinonjs.org/
+*Sinon*: http://sinonjs.org/  
 Mocking and Stubbing
 
-*jsdom*: https://github.com/tmpvar/jsdom
+*jsdom*: https://github.com/tmpvar/jsdom  
 DOM simulation when using jQuery.
 
-All ofthis is initilized via ``test/support/spech_helper.js``. Take a look.
+All of this is initialized via ``test/support/spech_helper.js``. Take a look.
 
 # LICENSE
 
