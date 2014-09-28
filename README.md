@@ -20,14 +20,14 @@ Here are a few steps to make the error debugging easier on our side:
 - Notice which version of Form-O-Fill you are using (Tools -> Extensions)
 - Checkout (clone) this repository
 - Checkout the version tag you noted earlier (eg. git checkout v1.0.0)
-- If a rule does strange things, copy that rule from the rule editor and save it somewhere (eg. form-o-fill-v1.0.0-error-rules.txt)
+- If a rule does strange things, export or copy that rule from the rule editor using the export button.
 - Deactivate the version of Form-O-Fill you got from the chrome web store.
 - In Tools -> Extensions click on "Developer Mode" (top right) then click on "Load unpacked extension ..." and choose the "src" path of the git clone.
   See https://developer.chrome.com/extensions/getstarted#unpacked for details.
 - Paste your saved rule in the rule editor.
 - Bug still reproducable? Very good.
 - File an issue (https://github.com/form-o-fill/form-o-fill-chrome-extension/issues)
-- Attach the errornous rule, a test HTML file activating that rule.
+- Attach the errornous rule and ideally a test HTML file activating that rule.
 - If possible also export the logs you get with the cloned Form-O-Fill: Form-O-Fill Options -> Logs -> Download Logs
   Check that file for private / sensitive imformation and attach a gist to the issue you filed.
 - The Form-O-Fill Team thanks you for taking the time.
@@ -38,9 +38,10 @@ Here are a few steps to make the error debugging easier on our side:
 You want to contribute to Form-O-Fill? That is awesome!  
 Here are a few "rules" we like to adhere to:
 
-- fork the repo and create a branch named after the thing you are fixing / implementing (```git checkout -b implement-a-flux-capacitator```)
+- fork the repo and create a branch named after the thing you are fixing / implementing (``git checkout -b implement-a-flux-capacitator``)
 - We use eslint to check our code. Please install it with [npm install -g esilint](http://eslint.org).
-- Implement and check your code with eslint (``èslint src```)
+- Implement and check your code with eslint (``eslint src``)
+- Test your code using mocha, chai and sinon. Executing ``gulp`` will run all tests (there's also ``gulp watch``).
 - Everything works and eslint is happy?
 - Commit push and PULL REQUEST away.
 - Thank you!
@@ -54,6 +55,11 @@ Provides Matchets and the expect() syntax familar to rspec users
 
 *Sinon*: http://sinonjs.org/
 Mocking and Stubbing
+
+*jsdom*: https://github.com/tmpvar/jsdom
+DOM simulation when using jQuery.
+
+All ofthis is initilized via ``test/support/spech_helper.js``. Take a look.
 
 # LICENSE
 
