@@ -1,6 +1,7 @@
 // Expectation Framework
 global.chai = require("chai");
 global.chai.use(require("sinon-chai"));
+global.chai.use(require("chai-as-promised"));
 global.expect = require("chai").expect;
 
 // Sinon for stubbing/mocking
@@ -15,6 +16,10 @@ global.chrome = require("./support/chrome_api.js");
 // jQuery loaded with the jsDOM window
 global.jQuery = require("./support/jquery.js")(jsdom.jsdom().parentWindow);
 
+// Stub out the normal logger from ogger.js
 global.Logger = {
   info: function() {}
 };
+
+// Replacement for chromes promise API
+global.Promise = require("promise/lib/core");
