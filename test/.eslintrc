@@ -11,7 +11,9 @@ globals:
   xit: true
   expect: true
   beforeEach: true
+  before: true
   afterEach: true
+  after: true
   sinon: true
   jQuery: true
   jsdom: true
