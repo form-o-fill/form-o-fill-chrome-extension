@@ -64,6 +64,13 @@ describe("Rules", function() {
   });
 
   describe(".text2function", function() {
+    it("returns the executed rulecode", sinon.test(function(){
+      expect(Rules.text2function("var rules=[{'a':1}];")).to.eql([{'a':1}]);
+    }));
+
+    it("returns false if there are no executable rules", sinon.test(function(){
+      expect(Rules.text2function("var rules = null;")).to.eql(false);
+    }));
   });
 
   describe(".all", function() {

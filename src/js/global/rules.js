@@ -53,10 +53,9 @@ var Rules = {
     // remove wrapper
     // results in [ code ... code ]
     var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
-    if(!rulesCodeMatches[1]) {
+    if(!rulesCodeMatches || !rulesCodeMatches[1]) {
       return false;
     }
-
     var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
     return new Function(ruleCode)();
   },
