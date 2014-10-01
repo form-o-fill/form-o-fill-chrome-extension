@@ -22,4 +22,7 @@ global.Logger = {
 };
 
 // Replacement for chromes promise API
-global.Promise = require("promise/lib/core");
+global.Promise = require("promise");
+
+global.Storage = require("../src/js/global/storage.js");
+global.Utils = require("../src/js/global/utils.js");

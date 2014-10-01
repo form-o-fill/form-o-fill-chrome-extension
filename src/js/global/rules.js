@@ -1,9 +1,18 @@
-/*global Storage, Logger, js_beautify, Utils, JSONF, Rule */
+/*global Logger, js_beautify, JSONF, Rule */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
+
+// REMOVE START
+/*eslint-disable no-undef, block-scoped-var */
+if(typeof exports === "object") {
+  var Utils = require("./utils.js");
+  var Storage = require("./storage.js");
+  var Rule = require("./rule.js");
+}
+/*eslint-enable no-undef, block-scoped-var */
+// REMOVE END
 
 /* Multiple Rules */
 var Rules = {
-  ruleCount: 0,
   match: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
@@ -15,7 +24,7 @@ var Rules = {
       });
     });
   },
-  load: function(forTabId) {
+  load: function(forTabId, ruleIndex) {
     var that = this;
     return new Promise(function (resolve) {
       Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
@@ -27,14 +36,16 @@ var Rules = {
             resolve(rules);
           }
 
-          that.ruleCount = 0;
-
           rules = ruleFunction.map(function (ruleJson, index) {
-            that.ruleCount += 1;
             return Rule.create(ruleJson, forTabId, index);
           });
         }
-        resolve(rules);
+
+        if(typeof ruleIndex !== "undefined") {
+          resolve(rules[ruleIndex - 1]);
+        } else {
+          resolve(rules);
+        }
       });
     });
   },
@@ -42,7 +53,6 @@ var Rules = {
     // remove wrapper
     // results in [ code ... code ]
     var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
-
     if(!rulesCodeMatches[1]) {
       return false;
     }

@@ -64,3 +64,9 @@ var Utils = {
     };
   }
 };
+
+// REMOVE START
+if(typeof exports === "object") {
+  module.exports = Utils;
+}
+// REMOVE END

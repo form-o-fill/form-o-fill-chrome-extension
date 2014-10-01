@@ -39,3 +39,8 @@ var Storage = {
   }
 };
 
+// REMOVE START
+if(typeof exports === "object") {
+  module.exports = Storage;
+}
+// REMOVE END
