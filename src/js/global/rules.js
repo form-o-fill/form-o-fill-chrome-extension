@@ -30,6 +30,7 @@ var Rules = {
       Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
         var rules = [];
         if(rulesData) {
+
           var ruleFunction = that.text2function(rulesData.code);
 
           if(ruleFunction === null) {
@@ -185,6 +186,10 @@ var Rules = {
         });
       }
     });
+  },
+  countRulesInCode: function(ruleCode) {
+    var rules = this.text2function(ruleCode);
+    return rules.length;
   }
 };
 

@@ -21,6 +21,7 @@
   border-radius: 3px 3px 0 0;
   cursor: pointer;
   height: 21px;
+  position: relative;
 }
 
 .tabs .tab:first-child {
@@ -88,4 +89,9 @@
 .tabs .tab input[type=text] {
   border: 0;
   padding: 0;
+}
+
+.tabs .tab .rule-count {
+  vertical-align: top;
+  font-size: 11px;
 }

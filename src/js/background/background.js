@@ -25,6 +25,7 @@ var onTabReady = function(tabId) {
       lastActiveTab = tab;
 
       // This is a little bit complicated.
+      // I wish the chromium API would implement Promises for all that.
       // First filter all rules that have content matchers
       Rules.all().then(function (rules) {
         var relevantRules = rules.filter(function (rule) {
@@ -32,7 +33,8 @@ var onTabReady = function(tabId) {
         });
         // Send these rules to the content script so it can return the matching
         // rules based on the regex and the pages content
-        chrome.tabs.sendMessage(tabId, { "action": "matchContent", "rules": JSONF.stringify(relevantRules)}, function (matchingContentRules) {
+        var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
+        chrome.tabs.sendMessage(tabId, message, function (matchingContentRules) {
           if(typeof matchingContentRules !== "undefined") {
             // Convert the objects to Rules
             matchingContentRules = JSONF.parse(matchingContentRules).map(function (ruleLike) {
@@ -43,6 +45,7 @@ var onTabReady = function(tabId) {
             matchingContentRules = [];
           }
           Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
+
           // Now match those rules that have a "url" matcher
           Rules.match(tab.url).then(function (matchingRules) {
             Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
@@ -51,7 +54,7 @@ var onTabReady = function(tabId) {
             Rules.lastMatchingRules(lastMatchingRules);
             // Show matches in badge
             refreshMatchCounter(tab, lastMatchingRules.length);
-            // No matches? Multipe Matches? Show popup when the user clicks on the icon
+            // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)
             if (lastMatchingRules.length !== 1) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});

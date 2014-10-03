@@ -3,6 +3,7 @@
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 var editor = new Editor("#ruleeditor-ace");
+editor.resize();
 
 var noticesVisible = false;
 
