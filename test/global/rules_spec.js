@@ -2,13 +2,19 @@
 var Rules = require("../../src/js/global/rules.js");
 
 describe("Rules", function() {
-  describe(".match", function() {
+  var stubRules = function(out) {
+    sinon.stub(Rules, "all").returns(new Promise(function(resolve) {
+      resolve(out);
+    }));
+  };
 
-    var stubRules = function(out) {
-      sinon.stub(Rules, "all").returns(new Promise(function(resolve) {
-        resolve(out);
-      }));
-    };
+  var stubStorage = function(rulesData) {
+    sinon.stub(Storage, "load").returns(new Promise(function(resolve) {
+      resolve(rulesData);
+    }));
+  };
+
+  describe(".match", function() {
 
     afterEach(function () {
       Rules.all.restore();
@@ -32,23 +38,17 @@ describe("Rules", function() {
 
   describe(".load", function() {
 
-    var stub = function(rulesData) {
-      sinon.stub(Storage, "load").returns(new Promise(function(resolve) {
-        resolve(rulesData);
-      }));
-    };
-
     afterEach(function () {
       Storage.load.restore();
     });
 
     it("returns an empty array when rulesData is null", sinon.test(function(){
-      stub(null);
+      stubStorage(null);
       return expect(Rules.load(1)).to.eventually.eql([]);
     }));
 
     it("returns an array of Rule instances", sinon.test(function(){
-      stub({
+      stubStorage({
         "code": "var rules = [{ 'url': 'url', 'name': 'name' }];",
         "tabId": "1"
       });
@@ -74,6 +74,14 @@ describe("Rules", function() {
   });
 
   describe(".all", function() {
+    it("returns an flattened array of all rules of all tabs", sinon.test(function(){
+      stubStorage([{"id": "1", "name": "Rules"},{"id": "2", "name": "Rules2"} ]);
+      sinon.stub(Rules, "load").returns(new Promise(function(resolve) {
+        resolve([{url: /test\.html/}, {url: /test2\.html/}]);
+      }));
+
+      return expect(Rules.all()).to.eventually.have.length(4);
+    }));
   });
 
   describe(".save", function() {
