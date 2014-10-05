@@ -6,6 +6,7 @@ var editor = new Editor("#ruleeditor-ace");
 editor.resize();
 
 var noticesVisible = false;
+var rulesStats = {};
 
 I18n.loadPages(["help", "about", "changelog", "modalimport"]);
 
@@ -92,6 +93,24 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
   }
 });
 
+// Read all rules to update stats
+var updateTabStats = function() {
+  Rules.all().then(function (rules) {
+    rulesStats = {};
+    rules.forEach(function (rule) {
+      if (typeof rulesStats[rule.tabId] === "undefined") {
+        rulesStats[rule.tabId] = 0;
+      }
+      rulesStats[rule.tabId] += 1;
+    });
+
+    // rulesStats has now a count of all rules per tab
+    Object.keys(rulesStats).forEach(function (key) {
+      $(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats[key] + ")");
+    });
+  });
+};
+
 // Save the rules
 var saveRules = function(tabId) {
   var errors = Rules.syntaxCheck(editor);
@@ -107,6 +126,7 @@ var saveRules = function(tabId) {
     $("#ruleeditor .notice").hide();
     Rules.save(editor.getValue(), tabId).then(function () {
       Utils.infoMsg("Rules saved");
+      updateTabStats();
     });
   }
 };
@@ -149,6 +169,7 @@ var importRules = function() {
 
 // Load data from tab and prefill editor
 loadRules(currentTabId());
+updateTabStats();
 
 // Button handling for "save" and "load"
 $(".editor .menu").on("click", "button.save", function () {

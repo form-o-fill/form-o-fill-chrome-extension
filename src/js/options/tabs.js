@@ -2,7 +2,7 @@
 
 // returns the jQuery wrapped DOM representation of a tab
 var jTab = function(tabIndex, name, isCurrent) {
-  return jQuery('<li class="tab' + (isCurrent ? " current" : "") + '" data-tab-id="' + tabIndex + '"><input type="text" value="' + name + '" disabled /><a href="#" class="cmd-tabs-close"></a></li>');
+  return jQuery('<li class="tab' + (isCurrent ? " current" : "") + '" data-tab-id="' + tabIndex + '"><input type="text" value="' + name + '" disabled /><a href="#" class="cmd-tabs-close"></a><span class="rule-count"></span></li>');
 };
 
 // maximal tab count including (+)-tab
