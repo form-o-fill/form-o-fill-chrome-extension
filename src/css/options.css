@@ -170,3 +170,9 @@ button.import:before {
 #modalimport .only-json {
   display: none;
 }
+
+#rules-overview {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}

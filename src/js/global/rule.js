@@ -8,6 +8,7 @@ var Rule = function() {
     delete clone.nameClean;
     delete clone.urlClean;
     delete clone.id;
+    delete clone.tabId;
     delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
   };
@@ -46,6 +47,7 @@ Rule.create = function(options, tabId, ruleIndex) {
   if(typeof rule.id === "undefined") {
     rule.id = tabId + "-" + ruleIndex;
   }
+  rule.tabId = tabId;
   Logger.info("[rule.js] created rule", rule);
   return rule;
 };

@@ -6,7 +6,6 @@ var editor = new Editor("#ruleeditor-ace");
 editor.resize();
 
 var noticesVisible = false;
-var rulesStats = {};
 
 I18n.loadPages(["help", "about", "changelog", "modalimport"]);
 
@@ -94,20 +93,41 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
 });
 
 // Read all rules to update stats
+// Also fill quickjump select
 var updateTabStats = function() {
   Rules.all().then(function (rules) {
-    rulesStats = {};
+    var rulesStats = { tabCount: {}, rules: []};
     rules.forEach(function (rule) {
-      if (typeof rulesStats[rule.tabId] === "undefined") {
-        rulesStats[rule.tabId] = 0;
+      // Sort all rules and count them
+      if (typeof rulesStats.tabCount[rule.tabId] === "undefined") {
+        rulesStats.tabCount[rule.tabId] = 0;
       }
-      rulesStats[rule.tabId] += 1;
+      rulesStats.tabCount[rule.tabId] += 1;
+      rulesStats.rules.push({
+        name: rule.nameClean,
+        id: rule.id
+      });
     });
 
     // rulesStats has now a count of all rules per tab
-    Object.keys(rulesStats).forEach(function (key) {
-      $(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats[key] + ")");
+    Object.keys(rulesStats.tabCount).forEach(function (key) {
+      $(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats.tabCount[key] + ")");
     });
+
+    // Fill <select> rules overview
+    var options = ["<option value=''>- quickjump to rule -</option>"];
+    rulesStats.rules.sort(function (a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    }).forEach(function (rule) {
+      options.push("<option value='" + rule.id + "'>" + rule.name + "</option>");
+    });
+    $("#rules-overview").html(options.join(""));
   });
 };
 
@@ -167,6 +187,20 @@ var importRules = function() {
   $("#modalimport").show();
 };
 
+var quickJumpToRule = function() {
+  var selected = $(this).find("option:selected");
+  var tabId = selected.val().split("-")[0];
+  var name = selected.text();
+
+  // If the target tab is not the active one, click to trigger
+  if($(".tab.current").data("tab-id").toString() !== tabId) {
+    $(".tab[data-tab-id=" + tabId + "]").trigger("click");
+  }
+
+  var found = editor.editor().find(name, { backwards: false, skipCurrent: false }, false);
+  editor.editor().gotoLine(found.start.row, 1, false);
+};
+
 // Load data from tab and prefill editor
 loadRules(currentTabId());
 updateTabStats();
@@ -191,6 +225,9 @@ $(document).on("click", "a.cmd-fix-var-needed", function() {
 $(document).on("click", "a.cmd-export-all-rules", function() {
   exportRules();
 });
+
+// Support for the quickjump <select>
+$("#rules-overview").on("change", quickJumpToRule);
 
 // Event handler for notices
 $(".notice.form-fill-errors").on("click", function () {
