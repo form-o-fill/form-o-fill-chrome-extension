@@ -186,10 +186,6 @@ var Rules = {
         });
       }
     });
-  },
-  countRulesInCode: function(ruleCode) {
-    var rules = this.text2function(ruleCode);
-    return rules.length;
   }
 };
 
