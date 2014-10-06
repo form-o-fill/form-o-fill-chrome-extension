@@ -3,14 +3,19 @@
 var lastMatchingRules = [];
 var lastActiveTab = null;
 
+// set the browser action badge
+var setBadge = function(txt, tabId) {
+  chrome.browserAction.setBadgeText({"text": txt, "tabId": tabId});
+  chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tabId});
+};
+
 // Shows number of matches in the extension's icon
 var refreshMatchCounter = function (tab, count) {
   var txt = chrome.i18n.getMessage("no_match_available");
   if (count && count > 0) {
     txt = count.toString();
+    setBadge(txt, tab.id);
   }
-  chrome.browserAction.setBadgeText({"text": txt, "tabId": tab.id});
-  chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tab.id});
 };
 
 // When the user changes a tab, search for matching rules for that url
@@ -50,10 +55,13 @@ var onTabReady = function(tabId) {
           Rules.match(tab.url).then(function (matchingRules) {
             Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
             lastMatchingRules = lastMatchingRules.concat(matchingRules);
+
             // Save to localStorage for popup to load
             Rules.lastMatchingRules(lastMatchingRules);
+
             // Show matches in badge
             refreshMatchCounter(tab, lastMatchingRules.length);
+
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)
             if (lastMatchingRules.length !== 1) {
