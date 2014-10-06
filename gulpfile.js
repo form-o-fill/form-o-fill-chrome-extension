@@ -204,15 +204,8 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
   .pipe(gulp.dest('build'));
 });
 
-// Ends with zipping up the build dir
-gulp.task('build', ['announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
-  gulp.src(['build/**'])
-  .pipe(zip(distFilename))
-  .pipe(gulp.dest('dist'));
-});
-
 // Build a distribution
-gulp.task('build', ['test', 'announce', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
   .pipe(gulp.dest('dist'));
