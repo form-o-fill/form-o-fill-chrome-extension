@@ -59,5 +59,10 @@ describe("Rule", function() {
       var rule = Rule.create({name: "with <a> tag", id: "5-5"}, 1, 2);
       expect(rule.id).to.eql("5-5");
     }));
+
+    it("sets the autorun property to false by default", sinon.test(function(){
+      var rule = Rule.create({name: ""});
+      expect(rule.autorun).to.be.false;
+    }));
   });
 });

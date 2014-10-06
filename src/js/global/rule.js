@@ -18,6 +18,7 @@ var Rule = function() {
   };
 };
 
+/*eslint-disable complexity*/
 Rule.create = function(options, tabId, ruleIndex) {
   delete options.matcher;
   delete options.nameClean;
@@ -43,14 +44,22 @@ Rule.create = function(options, tabId, ruleIndex) {
   } else {
     rule.urlClean = "n/a";
   }
+
   rule.nameClean = rule.name.replace("<", "&lt;");
+
   if(typeof rule.id === "undefined") {
     rule.id = tabId + "-" + ruleIndex;
   }
+
+  if(typeof rule.autorun === "undefined") {
+    rule.autorun = false;
+  }
+
   rule.tabId = tabId;
   Logger.info("[rule.js] created rule", rule);
   return rule;
 };
+/*eslint-enable complexity*/
 
 // REMOVE START
 if(typeof exports === "object") {

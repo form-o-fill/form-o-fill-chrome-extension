@@ -58,6 +58,11 @@ var onTabReady = function(tabId) {
             // A single match should just fill the form (see below)
             if (lastMatchingRules.length !== 1) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+            } else if (lastMatchingRules[0].autorun === true) {
+              // If the rule is marked as "autorun", execute the rule if only
+              // one was found
+              Logger.info("[bj.js] Rule is set to autorun");
+              FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
             }
           });
         });
