@@ -25,7 +25,9 @@ Rule.create = function(options, tabId, ruleIndex) {
   delete options.urlClean;
   delete options._escapeForRegexp;
   delete options.prettyPrint;
+
   var rule = new Rule();
+
   Object.keys(options).forEach(function(key) {
     rule[key] = options[key];
   });
