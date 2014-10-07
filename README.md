@@ -1,5 +1,5 @@
 # Form-O-Fill Chrome Extension
-<img src="https://api.travis-ci.org/form-o-fill/form-o-fill-chrome-extension.svg?branch=master" style="float: right;" />
+ <img src="https://api.travis-ci.org/form-o-fill/form-o-fill-chrome-extension.svg?branch=master" style="float: right;" />
 
 ### The programmable form filler for developers.
 
