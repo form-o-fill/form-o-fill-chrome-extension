@@ -61,8 +61,11 @@
               <div class="notice extracted-present">
                 There is an extracted form present, click <a href="#" class="cmd-append-extracted">here</a> to append the rule at the bottom of your current rules.
               </div>
-              <div class="notice error before-function-needs-to-be-a-function">
-                Please use a function for 'before' blocks like this: <span class="code">before: function(resolve) { ...}</span>
+              <div class="notice error before-function-needs-to-be-a-function-or-array">
+                Please use a function for 'before' blocks like this: <span class="code">before: function(resolve) { ...}</span> or an array of functions (<span class="code">before: [ function(resolve, env) {}, function(resolve, env) {}]</span>).
+              </div>
+              <div class="notice error before-function-needs-functions">
+                Need at least one before function for array usage: <span class="code">before: [ function(resolve, env) {} ]</span>.
               </div>
               <div class="notice error before-function-needs-resolve-argument">
                 The definition of a before function needs 'resolve' as its first argument: <span class="code">before: function(resolve) { ...}</span>

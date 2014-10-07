@@ -27,24 +27,39 @@ var FormUtil = {
 
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
-    // Is there a 'before' block?
+    var wrapInPromise = function(func) {
+      return new Promise(function(resolve) {
+        func(resolve, context);
+      });
+    };
+
+    // Is there a 'before' block with an function or an array of functions?
+    var beforeFunctions;
     if(typeof rule.before === "function") {
-      // Wrap the function into a promise
-      beforeFunction = function() {
-        return new Promise(function(resolve) {
-          rule.before(resolve, context);
-        });
-      };
+      beforeFunctions = [ wrapInPromise(rule.before) ];
+    } else if(typeof rule.before === "object") {
+      beforeFunctions = rule.before.map(function (func) {
+        return wrapInPromise(func);
+      });
+    }
+
+    if(typeof beforeFunctions !== "undefined") {
       Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
     }
 
     // call either the default - instantaneously resolving Promise (default) or
-    // the before function defined in the rule.
-    beforeFunction().then(function(data) {
+    // the arrray of before functions defined in the rule.
+    Promise.all(beforeFunctions).then(function(data) {
       beforeData = data;
       // beforeData is null when there is no before action defined in the rule definition
       if(beforeData !== null) {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+      }
+
+      // If there was only one rule
+      // reduce data array to one element
+      if(beforeData.length === 1) {
+        beforeData = beforeData[0];
       }
 
       rule.fields.forEach(function (field) {

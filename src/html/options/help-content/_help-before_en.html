@@ -106,6 +106,7 @@
 <p>
   Hint: If the fetched json data needs no transformation, <code>resolve</code> can also be passed as a function reference to <code>done</code>: <code>jQuery.getJSON('...').done(resolve);</code>.
 </p>
+<h3>The context object in before functions</h3>
 <p>
   The context object passed as the before functions second parameter has a certain structure.
   Assuming the tab to be filled has an url like
@@ -129,3 +130,24 @@
     }
   }
 </pre>
+
+<h3>Providing multiple before functin in an array</h3>
+
+<div class="block-of-code">
+  <div class="explaining">
+    You call also pass an array of functions to <code>"before"</code>.<br />
+    Those will be resolved and the resulting <code>data</code> argument to a value function will then be an array of resolved data.
+  </div>
+  <div class="code">
+    before: [<br />
+    &nbsp;&nbsp;function(resolve) { resolve("a"); },<br />
+    &nbsp;&nbsp;function(resolve) { resolve("b"); }<br />
+    ],<br />
+    fields: [{<br />
+    &nbsp;&nbsp;selector: "input",<br />
+    &nbsp;&nbsp;value: function(dataArray, env) {<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;// dataArray === ["a", "b"]<br />
+    &nbsp;&nbsp;}<br />
+    }]
+  </div>
+</div>

@@ -151,26 +151,55 @@ var Rules = {
     return errors;
   },
   checkBeforeFunction: function(ruleFunction, errors) {
-    // Not a function!
-    if(typeof ruleFunction !== "function") {
-      errors.push("before-function-needs-to-be-a-function");
+    // before function can be either a function or an array of functions
+    // Not a function or an array of functions
+    if(typeof ruleFunction !== "function" && typeof ruleFunction.length === "undefined") {
+      errors.push("before-function-needs-to-be-a-function-or-array");
     }
+
+    // Create an array to make checking easier
     if(typeof ruleFunction === "function") {
+      ruleFunction = [ ruleFunction ];
+    }
+
+    var ruleFuncErrors = {
+      needResolveArg: false,
+      needResolveCall: false,
+      needFunctions: false
+    };
+
+    // Used an array? Check for t least one rule
+    if(ruleFunction.length === 0) {
+      ruleFuncErrors.needFunctions = true;
+    }
+
+    // If it is a function check if it uses resolve()
+    ruleFunction.forEach(function (ruleFunc) {
       // Fetch the name of the first argument
-      var resolveMatches = ruleFunction.toString().match(/function[\s]*\((.*?)[,\)]/);
+      var resolveMatches = ruleFunc.toString().match(/function[\s]*\((.*?)[,\)]/);
       var resolveFunctionName = resolveMatches[1];
 
       if(resolveFunctionName === "") {
-        errors.push("before-function-needs-resolve-argument");
+        ruleFuncErrors.needResolveArg = true;
       } else {
-        // Look for usage of the first ergument (presumly "resolve") in the code
+        // Look for usage of the first argument (presumly "resolve") in the code
         var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S]*\\}.*$";
-        resolveMatches = ruleFunction.toString().match(regex);
+        resolveMatches = ruleFunc.toString().match(regex);
         // No call to resolve?
         if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*\\(|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
-          errors.push("before-function-needs-resolve-call");
+          ruleFuncErrors.needResolveCall = true;
         }
       }
+    });
+
+    if(ruleFuncErrors.needResolveArg) {
+      errors.push("before-function-needs-resolve-argument");
+    }
+    if(ruleFuncErrors.needResolveCall) {
+      errors.push("before-function-needs-resolve-call");
+    }
+    if(ruleFuncErrors.needFunctions) {
+      errors.push("before-function-needs-functions");
     }
   },
   lastMatchingRules: function(rules) {
