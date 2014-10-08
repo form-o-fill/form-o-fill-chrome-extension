@@ -17,7 +17,7 @@ body {
 }
 
 .chrome-bootstrap .frame .view, .chrome-bootstrap .frame .content {
-  width: 900px;
+  width: 100%;
 }
 
 .navigation h1:before {
@@ -33,6 +33,7 @@ body {
 
 #ruleeditor {
   height: 100%;
+  width: 80%;
 }
 
 #ruleeditor-ace {
@@ -176,3 +177,12 @@ button.import:before {
   right: 1em;
   top: 1em;
 }
+
+span.version {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  color: #ccc;
+  display: block;
+}
+

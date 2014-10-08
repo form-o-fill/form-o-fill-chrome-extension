@@ -150,6 +150,7 @@
   position: absolute;
   top: 0;
   display: block;
+  width: 80%;
 }
 .chrome-bootstrap .frame .mainview > .selected {
   -webkit-margin-start: 0;
@@ -161,9 +162,10 @@
 .chrome-bootstrap header {
   position: fixed;
   background-image: -webkit-linear-gradient(#ffffff, #ffffff 40%, rgba(255, 255, 255, 0.92));
-  width: 738px;
+  width: 80%;
   z-index: 2;
 }
+
 .chrome-bootstrap header h1 {
   padding: 21px 0 13px;
   margin: 0;

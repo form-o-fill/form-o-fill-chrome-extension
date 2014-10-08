@@ -26,22 +26,23 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 //
 // Replacements config for gulp-replace
 //
-// 1. Sets debug: false (in utils.js)
-// 2. Removes Logger statements
-// 3. Remove everything in .js files between "// REMOVE START" and "REMOVE END"
-//    These blocks contain development code that gets optimized away
-// 4. Remove everything in .html files between "<!-- REMOVE START" and "REMOVE END -->"
-//    These blocks contain development code that gets optimized away
-// 5. Activate blocks between "<!-- BUILD START" and "BUILD END -->"
-//    These contain the optimized files for the final build
-// 6. Remove the "js:" array from the manifest
-//    These blocks contain development code that gets optimized away
-// 7. Remove the "scripts:" array from the manifest
-//    These blocks contain development code that gets optimized away
-// 8. Rename the "jsBuild" part in the manifest to be the "js" part
-//    These contain the optimized files for the final build
-// 9. Rename the "scriptsBuild" part in the manifest to be the "scripts" part
-//    These contain the optimized files for the final build
+// 1.  Sets debug: false (in utils.js)
+// 2.  Removes Logger statements
+// 3.  Remove everything in .js files between "// REMOVE START" and "REMOVE END"
+//     These blocks contain development code that gets optimized away
+// 4.  Remove everything in .html files between "<!-- REMOVE START" and "REMOVE END -->"
+//     These blocks contain development code that gets optimized away
+// 5.  Activate blocks between "<!-- BUILD START" and "BUILD END -->"
+//     These contain the optimized files for the final build
+// 6.  Remove the "js:" array from the manifest
+//     These blocks contain development code that gets optimized away
+// 7.  Remove the "scripts:" array from the manifest
+//     These blocks contain development code that gets optimized away
+// 8.  Rename the "jsBuild" part in the manifest to be the "js" part
+//     These contain the optimized files for the final build
+// 9.  Rename the "scriptsBuild" part in the manifest to be the "scripts" part
+//     These contain the optimized files for the final build
+// 10. Replace ##VERSION## with the correct version string from the manifest
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
@@ -84,6 +85,10 @@ var replaceOpts = {
     {
       match: /"scriptsBuild"/g,
       replacement: "\"scripts\""
+    },
+    {
+      match: /##VERSION##/g,
+      replacement: manifest.version
     }
   ]
 };
@@ -123,6 +128,7 @@ gulp.task('lint', function () {
 // Optimize CSS
 gulp.task('css', ['clean'], function () {
   return gulp.src(["src/css/*.css", "!src/css/content.css", "!src/css/popup.css"])
+  .pipe(replace(replaceOpts))
   .pipe(concat('formofill.css'))
   .pipe(minifyCSS())
   .pipe(gulp.dest('build/css/'));
@@ -186,6 +192,7 @@ gulp.task('copyUnchanged', ['clean'],  function() {
 
   return gulp.src(['src/css/content.css', 'src/css/popup.css'])
   .pipe(minifyCSS())
+  .pipe(replace(replaceOpts))
   .pipe(gulp.dest('build/css'));
 });
 

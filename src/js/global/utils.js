@@ -3,6 +3,7 @@
 var Utils = {
   // Will be set to false in BUILD:
   debug: true,
+  version: "##VERSION##",
   keys: {
     extractedRule: "form-o-fill-extracted",
     rules: "form-o-fill-rules",
