@@ -26,6 +26,9 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.3.5.1
+- Quickfix for CSP changes in chrome 39. Bit me just now.
+
 ★ Version 1.3.5
 - New "autorun" property to automatically execute a rule when only one matches
 - Allow "before" property to be an array of functions (for better maintainability)
