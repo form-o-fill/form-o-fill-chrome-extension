@@ -7,6 +7,11 @@ if(typeof exports === "object") {
   var Utils = require("./utils.js");
   var Storage = require("./storage.js");
   var Rule = require("./rule.js");
+  /*eslint-disable camelcase*/
+  var js_beautify = function(code) {
+    return code;
+  };
+  /*eslint-enable camelcase*/
 }
 /*eslint-enable no-undef, block-scoped-var */
 // REMOVE END

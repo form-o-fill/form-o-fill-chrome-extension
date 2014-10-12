@@ -85,12 +85,32 @@ describe("Rules", function() {
   });
 
   describe(".save", function() {
+    it("saves the rules", sinon.test(function(){
+      var stub = sinon.stub(Storage, "save").returns(new Promise(function(resolve) {
+        resolve(true);
+      }));
+      Rules.save("var rules=[];", 1);
+      expect(stub).to.have.been.calledWith({ code: "var rules=[];", tabId: 1 });
+    }));
   });
 
   describe(".delete", function() {
+    it("deletes rules of a tabId", sinon.test(function(){
+      var spy = sinon.stub(Storage, "delete");
+      Rules.delete(1);
+      expect(spy).to.have.been.calledWith("form-o-fill-rules-tab-1");
+    }));
+  });
+
+  describe("._nameForTabId", function() {
+    it("returns the storage name for a tab", sinon.test(function(){
+      expect(Rules._nameForTabId(1)).to.eql("form-o-fill-rules-tab-1");
+    }));
   });
 
   describe(".format", function() {
+    var actual = Rules.format("var rules=[{}];");
+    expect(actual).to.eql("var rules=[{}\n];");
   });
 
   describe(".syntaxCheck", function() {
