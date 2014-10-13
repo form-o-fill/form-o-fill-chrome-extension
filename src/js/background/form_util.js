@@ -19,7 +19,7 @@ var FormUtil = {
     var context = { url: Utils.parseUrl(lastActiveTab.url) };
 
     // Default instantaneous resolving promise:
-    var beforeFunction = function() {
+    var beforeFunctions = function() {
       return new Promise(function(resolve) {
         resolve(null);
       });
@@ -34,7 +34,6 @@ var FormUtil = {
     };
 
     // Is there a 'before' block with an function or an array of functions?
-    var beforeFunctions;
     if(typeof rule.before === "function") {
       beforeFunctions = [ wrapInPromise(rule.before) ];
     } else if(typeof rule.before === "object") {
@@ -44,7 +43,7 @@ var FormUtil = {
     }
 
     if(typeof beforeFunctions !== "undefined") {
-      Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunction));
+      Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunctions));
     }
 
     // call either the default - instantaneously resolving Promise (default) or
