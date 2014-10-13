@@ -16,7 +16,11 @@ var FormUtil = {
 
     port.postMessage({"action": "showWorkingOverlay"});
 
-    var context = { url: Utils.parseUrl(lastActiveTab.url) };
+    // The context is passed as the second argument to the before function.
+    // It represents to environment in which the rule is executed.
+    var context = {
+      url: Utils.parseUrl(lastActiveTab.url)
+    };
 
     // Default instantaneous resolving promise:
     var beforeFunctions = function() {
@@ -27,6 +31,8 @@ var FormUtil = {
 
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
+    // Utility function to wrap a function in
+    // a promise
     var wrapInPromise = function(func) {
       return new Promise(function(resolve) {
         func(resolve, context);
@@ -35,16 +41,16 @@ var FormUtil = {
 
     // Is there a 'before' block with an function or an array of functions?
     if(typeof rule.before === "function") {
+      // A single before function
       beforeFunctions = [ wrapInPromise(rule.before) ];
-    } else if(typeof rule.before === "object") {
+    } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
+      // Assume an array of functions
       beforeFunctions = rule.before.map(function (func) {
         return wrapInPromise(func);
       });
     }
 
-    if(typeof beforeFunctions !== "undefined") {
-      Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunctions));
-    }
+    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunctions));
 
     // call either the default - instantaneously resolving Promise (default) or
     // the arrray of before functions defined in the rule.
@@ -61,6 +67,7 @@ var FormUtil = {
         beforeData = beforeData[0];
       }
 
+      // Now send all field definitions to the content script
       rule.fields.forEach(function (field) {
         message = {
           "action": "fillField",
