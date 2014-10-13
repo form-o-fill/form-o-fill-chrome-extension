@@ -26,6 +26,9 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.3.5.2
+- Quickfix for rules without before functions not working correctly
+
 ★ Version 1.3.5.1
 - Quickfix for CSP changes in chrome 39. Bit me just now.
 
