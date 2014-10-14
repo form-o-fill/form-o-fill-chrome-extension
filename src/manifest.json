@@ -64,6 +64,8 @@
   "background": {
     "scriptsBuild": [
       "vendor/jquery/jquery-2.1.1.min.js", 
+      "vendor/chance.js/chance.js" ,
+      "vendor/moment.js/moment-with-langs.js",
       "js/global.js",
       "js/background.js"
     ],

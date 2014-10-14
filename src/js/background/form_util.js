@@ -23,11 +23,11 @@ var FormUtil = {
     };
 
     // Default instantaneous resolving promise:
-    var beforeFunctions = function() {
+    var beforeFunctions = [function() {
       return new Promise(function(resolve) {
         resolve(null);
       });
-    };
+    }];
 
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
@@ -57,9 +57,11 @@ var FormUtil = {
     Promise.all(beforeFunctions).then(function(data) {
       beforeData = data;
       // beforeData is null when there is no before action defined in the rule definition
+      // REMOVE START
       if(beforeData !== null) {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
       }
+      // REMOVE END
 
       // If there was only one rule
       // reduce data array to one element
