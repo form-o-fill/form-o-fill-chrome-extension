@@ -14,8 +14,8 @@ var refreshMatchCounter = function (tab, count) {
   var txt = chrome.i18n.getMessage("no_match_available");
   if (count && count > 0) {
     txt = count.toString();
-    setBadge(txt, tab.id);
   }
+  setBadge(txt, tab.id);
 };
 
 // When the user changes a tab, search for matching rules for that url
