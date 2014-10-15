@@ -14,10 +14,14 @@ var Libs = {
 };
 
 // Add vendored chance.js
-Libs.add("chance", new window.Chance());
-window.chance = null;
+if(typeof window.Chance === "function") {
+  Libs.add("chance", new window.Chance());
+  window.chance = null;
+}
 
 // Add vendored moment.js and set locale
-Libs.add("moment", window.moment);
-Libs.moment.lang(I18n.userLocale());
-window.moment = null;
+if(typeof window.moment === "object") {
+  Libs.add("moment", window.moment);
+  Libs.moment.lang(I18n.userLocale());
+  window.moment = null;
+}
