@@ -17,4 +17,9 @@ describe("test setup", function() {
       expect(foundEls.length).to.eq(1);
     });
   });
+
+  it("should start a simple webserver on port 8888", function(){
+    browser.get("http://localhost:8888/");
+    expect(browser.getTitle()).to.eventually.eq("Form-O-Fill Testpage");
+  });
 });

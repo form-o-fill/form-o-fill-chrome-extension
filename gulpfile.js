@@ -17,7 +17,16 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 
-// End TO End
+// this can be used to debug gulp runs
+// .pipe(debug({verbose: true}))
+/*eslint-disable no-unused-vars */
+var debug = require('gulp-debug');
+/*eslint-enable no-unused-vars */
+
+// Small webserver for testing with protractor
+var connect = require('gulp-connect');
+
+// End to End testing
 var protractor = require("gulp-protractor").protractor;
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 
@@ -235,15 +244,30 @@ gulp.task('watch', function () {
   gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
 
+
+// Integration testing(end-to-end)
+// Uses protractor as an abstraction layer over chromedriver
+// Chromedriver can be used without a running selenium server
+// Starts a simple webserver on port 8888
 gulp.task('integration', function () {
-  gulp.src(["./test/integration/*_scene.js"])
+  // Start a small webserver
+  connect.server({
+    port: 8888,
+    root: "testcases/docroot-for-testing"
+  });
+
+  return gulp.src(["./test/integration/*_scene.js"])
   .pipe(protractor({
-      configFile: "test/support/protractor.config.js",
-      args: ['--baseUrl', 'http://127.0.0.1:4444']
+      configFile: "test/support/integration_test_setup.js",
+      args: ['--baseUrl', 'http://127.0.0.1:8888']
   }))
   .on('error', function(e) {
     throw e
+  })
+  .on('end', function() {
+    connect.serverClose();
   });
+
 });
 
 // Updates the selenium stuff in node_modules
