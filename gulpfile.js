@@ -256,9 +256,12 @@ gulp.task('integration', function () {
     root: "testcases/docroot-for-testing"
   });
 
-  return gulp.src(["./test/integration/*_scene.js"])
+  return gulp.src([
+    "./test/support/integration_helper.js",
+    "./test/integration/*_scene.js"
+  ])
   .pipe(protractor({
-      configFile: "test/support/integration_test_setup.js",
+      configFile: "test/support/protractor.config.js",
       args: ['--baseUrl', 'http://127.0.0.1:8888']
   }))
   .on('error', function(e) {

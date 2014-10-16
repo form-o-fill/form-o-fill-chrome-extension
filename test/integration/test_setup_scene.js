@@ -1,7 +1,3 @@
-beforeEach(function() {
-  browser.ignoreSynchronization = true;
-});
-
 describe("test setup", function() {
   it("should install the extension from the src/ dir", function(){
     // The correct (bit chrome intern) url for the installed extensions is

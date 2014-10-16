@@ -1,19 +1,4 @@
 // This file contains the protractor setup and helper code for all integration tests
-var fs = require('fs');
-
-global.chai = require("chai");
-global.chai.use(require("sinon-chai"));
-global.chai.use(require("chai-as-promised"));
-global.expect = require("chai").expect;
-global.manifest = require('../../src/manifest');
-
-// abstract writing screen shot to a file
-global.writeScreenShot = function(data, filename) {
-  var stream = fs.createWriteStream(filename);
-  stream.write(new Buffer(data, 'base64'));
-  stream.end();
-};
-
 // At the end export the protractor config
 exports.config = {
   capabilities: {
@@ -30,7 +15,7 @@ exports.config = {
   maxSessions: 1,
   mochaOpts: {
     reporter: "spec",
-    slow: 5000,
+    slow: 6000,
     timeout: 10000
   },
   onPrepare: function() {
