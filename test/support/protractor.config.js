@@ -1,10 +1,37 @@
+// Configure protractor to use mocha and chrome only
+var fs = require('fs');
+
+global.chai = require("chai");
+global.chai.use(require("sinon-chai"));
+global.chai.use(require("chai-as-promised"));
+global.expect = require("chai").expect;
+global.manifest = require('../../src/manifest');
+
+// abstract writing screen shot to a file
+global.writeScreenShot = function(data, filename) {
+  var stream = fs.createWriteStream(filename);
+  stream.write(new Buffer(data, 'base64'));
+  stream.end();
+};
+
 exports.config = {
-  seleniumAddress: 'http://localhost:4444/wd/hub',
-  seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.43.1.jar',
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': 'chrome',
+    'chromeOptions': {
+      'args': [
+        'load-extension=src',
+        'enable-embedded-extension-options'
+      ]
+    }
   },
   chromeOnly: true,
   framework: 'mocha',
-  specs: ['test_scene.js']
+  maxSessions: 1,
+  mochaOpts: {
+    reporter: "spec",
+    slow: 3000,
+    timeout: 5000
+  },
+  onPrepare: function() {
+  }
 };

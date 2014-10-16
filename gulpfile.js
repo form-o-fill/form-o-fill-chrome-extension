@@ -17,6 +17,10 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 
+// End TO End
+var protractor = require("gulp-protractor").protractor;
+var webdriverUpdate = require('gulp-protractor').webdriver_update;
+
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
 
@@ -230,6 +234,20 @@ gulp.task('test', function () {
 gulp.task('watch', function () {
   gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
+
+gulp.task('integration', function () {
+  gulp.src(["./test/integration/*_scene.js"])
+  .pipe(protractor({
+      configFile: "test/support/protractor.config.js",
+      args: ['--baseUrl', 'http://127.0.0.1:4444']
+  }))
+  .on('error', function(e) {
+    throw e
+  });
+});
+
+// Updates the selenium stuff in node_modules
+gulp.task('webdriver_update', webdriverUpdate);
 
 // running "gulp" will execute this
 gulp.task('default', function () {
