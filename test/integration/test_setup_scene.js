@@ -2,8 +2,8 @@ beforeEach(function() {
   browser.ignoreSynchronization = true;
 });
 
-describe("form-o-fill installation", function() {
-  it("should be installed", function(){
+describe("test setup", function() {
+  it("should install the extension from the src/ dir", function(){
     // The correct (bit chrome intern) url for the installed extensions is
     // not chrome://extensions but this:
     browser.get("chrome://extensions-frame/");
