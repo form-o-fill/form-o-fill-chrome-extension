@@ -36,6 +36,12 @@ var manifest = require('./src/manifest');
 // The final .zip filename that gets uploaded to https://chrome.google.com/webstore/developer/dashboard
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
 
+// Configuration for the testserver
+var serverConfig = {
+  port: 8888,
+  root: "testcases/docroot-for-testing"
+};
+
 //
 // Replacements config for gulp-replace
 //
@@ -251,10 +257,7 @@ gulp.task('watch', function () {
 // Starts a simple webserver on port 8888
 gulp.task('integration', function () {
   // Start a small webserver
-  connect.server({
-    port: 8888,
-    root: "testcases/docroot-for-testing"
-  });
+  connect.server(serverConfig);
 
   return gulp.src([
     "./test/support/integration_helper.js",
@@ -262,7 +265,7 @@ gulp.task('integration', function () {
   ])
   .pipe(protractor({
       configFile: "test/support/protractor.config.js",
-      args: ['--baseUrl', 'http://127.0.0.1:8888']
+      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfig.port]
   }))
   .on('error', function(e) {
     throw e
@@ -270,7 +273,11 @@ gulp.task('integration', function () {
   .on('end', function() {
     connect.serverClose();
   });
+});
 
+// Start server for testing purposes
+gulp.task('server', function() {
+  connect.server(serverConfig);
 });
 
 // Updates the selenium stuff in node_modules
