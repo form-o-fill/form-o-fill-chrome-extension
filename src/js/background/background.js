@@ -3,6 +3,10 @@
 var lastMatchingRules = [];
 var lastActiveTab = null;
 
+/*eslint-disable no-unused-vars*/
+var testingMode = false;
+/*eslint-enable no-unused-vars*/
+
 // set the browser action badge
 var setBadge = function(txt, tabId) {
   chrome.browserAction.setBadgeText({"text": txt, "tabId": tabId});

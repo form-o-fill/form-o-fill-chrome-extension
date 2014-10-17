@@ -53,7 +53,8 @@
         "js/content/form_extractor.js", 
         "js/content/extract_instrumentation.js",
         "js/content/context_menu.js",
-        "js/content/content.js" 
+        "js/content/content.js",
+        "js/content/testing.js" 
       ],
       "css": [
         "css/content.css"
@@ -84,7 +85,8 @@
       "js/background/form_util.js",
       "js/background/notification.js",
       "js/background/background.js",
-      "js/background/context_menu.js"
+      "js/background/context_menu.js",
+      "js/background/testing.js"
     ],
     "persistent": false
   }
