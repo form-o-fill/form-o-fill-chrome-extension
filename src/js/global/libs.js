@@ -20,7 +20,7 @@ if(typeof window.Chance === "function") {
 }
 
 // Add vendored moment.js and set locale
-if(typeof window.moment === "object") {
+if(typeof window.moment === "function") {
   Libs.add("moment", window.moment);
   Libs.moment.lang(I18n.userLocale());
   window.moment = null;
