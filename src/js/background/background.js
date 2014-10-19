@@ -23,6 +23,27 @@ var refreshMatchCounter = function (tab, count) {
   setBadge(txt, tab.id);
 };
 
+// This method takes the otherwise inaccessable popup.html
+// and puts it into an iframe in the BG page
+// This process renders the popup (including all JS).
+// The popup then sends its rendered HTML to content.js
+// This is the only method to "click" and thereby view the popup HTML without
+// actually clicking on it.
+// Enables end to end testing because the browserAction cannot be clicked in tests.
+var createCurrentPopupInIframe = function(tabId) {
+  chrome.browserAction.getPopup({"tabId": tabId}, function (popupUrl) {
+    var iframePopup = document.querySelector("#form-o-fill-popup-iframe");
+    if (iframePopup) {
+      iframePopup.src = popupUrl;
+    } else {
+      iframePopup = document.createElement("iframe");
+      iframePopup.id = "form-o-fill-popup-iframe";
+      iframePopup.src = popupUrl;
+      document.querySelector("body").appendChild(iframePopup);
+    }
+  });
+};
+
 // When the user changes a tab, search for matching rules for that url
 var onTabReady = function(tabId) {
   // Clear popup HTML
@@ -82,6 +103,9 @@ var onTabReady = function(tabId) {
             // A single match should just fill the form (see below)
             if (lastMatchingRules.length !== 1) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+              if (!Utils.isLiveExtension()) {
+                createCurrentPopupInIframe(tab.id);
+              }
             } else if (lastMatchingRules[0].autorun === true) {
               // If the rule is marked as "autorun", execute the rule if only
               // one was found
