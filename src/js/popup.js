@@ -42,6 +42,12 @@ var Popup = {
     this.updateHeadline(matchingRules);
     this.updateMatchingRules(matchingRules);
     this.updateOptionsLink();
+    if(!Utils.isLiveExtension()) {
+      this.sendPopupHtmlForTesting();
+    }
+  },
+  sendPopupHtmlForTesting: function() {
+    chrome.extension.getBackgroundPage().Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
   },
   updateHeadline: function(matchingRules) {
     var matchesCount = matchingRules.length;

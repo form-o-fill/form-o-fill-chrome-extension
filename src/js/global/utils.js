@@ -4,6 +4,7 @@ var Utils = {
   // Will be set to false in BUILD:
   debug: true,
   version: "##VERSION##",
+  liveExtensionId: "iebbppibdpjldhohknhgjoapijellonp",
   keys: {
     extractedRule: "form-o-fill-extracted",
     rules: "form-o-fill-rules",
@@ -11,6 +12,9 @@ var Utils = {
     tabs: "form-o-fill-tabs",
     logs: "form-o-fill-logs",
     lastMatchingRules: "form-o-fill-lastmatchingrules"
+  },
+  isLiveExtension: function() {
+    return window.location.host === Utils.liveExtensionId;
   },
   showExtractOverlay: function(whenFinishedCallback) {
     // Send message to content script

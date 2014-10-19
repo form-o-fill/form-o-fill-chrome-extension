@@ -1,4 +1,4 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule*/
+/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing*/
 /* eslint complexity:0, max-nested-callbacks: [1,4] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
@@ -11,6 +11,7 @@ var testingMode = false;
 var setBadge = function(txt, tabId) {
   chrome.browserAction.setBadgeText({"text": txt, "tabId": tabId});
   chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tabId});
+  Testing.setVar("browser-action-badge-text", txt, "Browser action badge text");
 };
 
 // Shows number of matches in the extension's icon
@@ -65,6 +66,17 @@ var onTabReady = function(tabId) {
 
             // Show matches in badge
             refreshMatchCounter(tab, lastMatchingRules.length);
+
+            // TESTING
+            if(!Utils.isLiveExtension()) {
+              /*eslint-disable max-nested-callbacks*/
+              var mRule = lastMatchingRules.map(function (rule) {
+                return rule.prettyPrint();
+              }).join(",");
+              /*eslint-enable max-nested-callbacks*/
+              Testing.setVar("matching-rules-count", lastMatchingRules.length, "Matching rule #");
+              Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
+            }
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)

@@ -1,4 +1,6 @@
-/*global Logger */
+/*eslint no-unused-vars:0 */
+/*global Logger Utils lastActiveTab */
+
 // Listener for messages from content.js -> testing.js
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
@@ -11,6 +13,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var info = {
       testingMode: message.value,
       extensionId: sender.id,
+      extensionVersion: Utils.version,
       tabId: sender.tab.id
     };
     Logger.info("[b/testing.js] Set testingMode to " + message.value);
@@ -18,3 +21,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     sendResponse(info);
   }
 });
+
+var Testing = {
+  setVar: function(key, value, textToDisplay) {
+    var message = {
+      action: "setTestingVar",
+      key: key,
+      value: value,
+      text: textToDisplay || null
+    };
+    Logger.info("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
+    chrome.tabs.sendMessage(lastActiveTab.id, message, function (response) {
+    });
+  }
+};
