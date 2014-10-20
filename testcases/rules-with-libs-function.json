@@ -1,0 +1,22 @@
+{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "Rulesycc"
+    },
+    {
+      "id": "2",
+      "name": "Libs"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"Rule using a Lib function\",\n  fields: [{\n    selector: \"input\",\n    value: function() {\n      return Libs.sayHello();\n    }\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Testcase matching by URL 2\",\n  fields: [{\n    selector: \"input\",\n    value: \"1\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Testcase matching by URL 2\",\n  fields: [{\n    selector: \"input\",\n    value: \"1\"\n  }]\n}\n];",
+      "tabId": 1
+    },
+    {
+      "code": "var rules = [\n  {\n    exports: \"sayHello\",\n    lib: function() {\n      return \"Hello from an library function!\";\n    }\n  }\n];\n\n// Lib.libName()",
+      "tabId": 2
+    }
+  ]
+}
