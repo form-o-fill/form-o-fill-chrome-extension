@@ -30,3 +30,10 @@ td:nth-child(2) {
   background-color: #bbb;
   color: #fff;
 }
+
+input {
+  margin: 20px 0;
+  width: 80%;
+  padding: 5px;
+  font-size: 18px;
+}
