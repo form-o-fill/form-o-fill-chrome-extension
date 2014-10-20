@@ -1,15 +1,25 @@
-/*global Logger, I18n*/
+/*global Logger, I18n, Rules*/
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
-  add: function(libraryName, librayTopLevelFunction) {
+  add: function(libraryName, librayTopLevelFunction, forceAdd) {
     // Check if the method is already defined
-    if(this._libs[libraryName] || this.hasOwnProperty(libraryName)) {
+    forceAdd = forceAdd || false;
+    if((this._libs[libraryName] || this.hasOwnProperty(libraryName)) && !forceAdd) {
       Logger.info("[libs.js] Can not add library named '" + libraryName + "' because it already exists as a function().");
       return;
     }
     this[libraryName] = librayTopLevelFunction;
     Logger.info("[libs.js] Added library as Libs." + libraryName);
+  },
+  import: function() {
+    Rules.all().then(function (rules) {
+      rules.forEach(function (rule) {
+        if (typeof rule.exports !== "undefined" && typeof rule.lib === "function") {
+          Libs.add(rule.exports, rule.lib, true);
+        }
+      });
+    });
   }
 };
 
@@ -25,3 +35,6 @@ if(typeof window.moment === "function") {
   Libs.moment.lang(I18n.userLocale());
   window.moment = null;
 }
+
+// Import all saved libs
+Libs.import();
