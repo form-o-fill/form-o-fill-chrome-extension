@@ -25,7 +25,6 @@ Rule.create = function(options, tabId, ruleIndex) {
   delete options.urlClean;
   delete options._escapeForRegexp;
   delete options.prettyPrint;
-
   var rule = new Rule();
 
   Object.keys(options).forEach(function(key) {
@@ -47,7 +46,9 @@ Rule.create = function(options, tabId, ruleIndex) {
     rule.urlClean = "n/a";
   }
 
-  rule.nameClean = rule.name.replace("<", "&lt;");
+  if(typeof rule.name !== "undefined") {
+    rule.nameClean = rule.name.replace("<", "&lt;");
+  }
 
   if(typeof rule.id === "undefined") {
     rule.id = tabId + "-" + ruleIndex;
@@ -58,7 +59,15 @@ Rule.create = function(options, tabId, ruleIndex) {
   }
 
   rule.tabId = tabId;
-  Logger.info("[rule.js] created rule", rule);
+
+  // REMOVE START
+  if(rule.exports && rule.lib) {
+    Logger.info("[rule.js] created rule (with lib named '" + rule.exports + "' )", rule);
+  } else {
+    Logger.info("[rule.js] created rule", rule);
+  }
+  // REMOVE END
+
   return rule;
 };
 /*eslint-enable complexity*/
