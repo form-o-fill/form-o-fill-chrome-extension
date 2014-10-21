@@ -15,7 +15,7 @@
       "tabId": 1
     },
     {
-      "code": "var rules = [\n  {\n    exports: \"sayHello\",\n    lib: function() {\n      return \"Hello from an library function!\";\n    }\n  }\n];\n\n// Lib.libName()",
+      "code": "var rules = [\n  {\n    export: \"sayHello\",\n    lib: function() {\n      return \"Hello from an library function!\";\n    }\n  }\n];\n\n// Lib.libName()",
       "tabId": 2
     }
   ]

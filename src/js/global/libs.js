@@ -15,8 +15,8 @@ var Libs = {
   import: function() {
     Rules.all().then(function (rules) {
       rules.forEach(function (rule) {
-        if (typeof rule.exports !== "undefined" && typeof rule.lib === "function") {
-          Libs.add(rule.exports, rule.lib, true);
+        if (typeof rule.export !== "undefined" && typeof rule.lib === "function") {
+          Libs.add(rule.export, rule.lib, true);
         }
       });
     });

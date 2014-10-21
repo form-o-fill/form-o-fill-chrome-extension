@@ -61,8 +61,8 @@ Rule.create = function(options, tabId, ruleIndex) {
   rule.tabId = tabId;
 
   // REMOVE START
-  if(rule.exports && rule.lib) {
-    Logger.info("[rule.js] created rule (with lib named '" + rule.exports + "' )", rule);
+  if(rule.export && rule.lib) {
+    Logger.info("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
   } else {
     Logger.info("[rule.js] created rule", rule);
   }
