@@ -1,0 +1,69 @@
+<a name="help-ownlibraries"></a>
+<h3>Creating your own library of functions</h3>
+<p>
+  Besides using <code>moment.js</code> and <code>chance.js</code> to create testdata you call always roll your own functions.<br />
+  Have a before function duplicated in multiple rules? Abstract that away into library functions.
+</p>
+<p>
+  This is how to create your own functions:
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Create a new tab and open up an array of objects:
+  </div>
+  <div class="code">
+    var libs = [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    The name of the function. Later you can access this function via
+    <code>Libs.fName()</code>
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;export: "fName",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    The functions code:
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;lib: function () {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Your code goes here...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return "Hello from the library function 'fName';
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }];
+  </div>
+</div>
+<p>
+  All functions declared in this way (even those declared inside normal rules) are globally accessible.<br />
+  Use them in you before- or value functions using <code>Libs.yourFunctionName()</code>.
+</p>
+<p>
+  If you define a function with the same name multiple times the last defined one will be the executing one.<br />
+  Since this all runs asynchronously its not really predictable which one will get executed. So choose you name uniquely.
+</p>
+<p>
+  Please notice that it is a current limitation of the implementation that you must reload the page you want to apply a rule that uses your library functions when you save the function in the rule editor.
+</p>
