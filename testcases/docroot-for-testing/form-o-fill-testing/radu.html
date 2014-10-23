@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage for Radu</title>
+    <style>
+    table { border: 0; }
+    td { border: 1px solid #000; } 
+    input { padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <table id="form-o-fill-prompt-fill">
+      <tr>
+        <td><input name="val[0][0]" value="1/1" /></td>
+        <td><input name="val[1][0]" value="2/1" /></td>
+        <td><input name="val[2][0]" value="3/1" /></td>
+      </tr>
+      <tr>
+        <td><input name="val[0][1]" value="1/2" /></td>
+        <td><input name="val[1][1]" value="2/2" /></td>
+        <td><input name="val[2][1]" value="3/2" /></td>
+      </tr>
+    </table>
+    <textarea>
+a1	a2	a3
+b1	b2	b3
+    </textarea>
+    <pre>
+var rules = [{
+  url: /.*radu.*/,
+  name: "Rule using a Lib function",
+  fields: [{
+    selector: "#form-o-fill-prompt-fill input",
+    value: function(e, data) {
+      var input = prompt("Paste data here:");
+      input.trim().split(/\n/g).forEach(function(row, rowIndex) {
+        row.trim().split(/\s/).forEach(function(cell, cellIndex) {
+          var $fieldToFill = $("input[name='val[" + rowIndex+ "][" + cellIndex + "]']");
+          $fieldToFill.val(cell);
+        });
+      });
+      
+      return null;
+    }
+  }]
+}];
+    </pre>
+  </body>
+</html>
