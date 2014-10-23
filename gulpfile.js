@@ -154,8 +154,17 @@ gulp.task('css', ['clean'], function () {
 });
 
 // Build global.js
+// Sadly until I use require.js here the order is important :(
 gulp.task('globalJs', ['clean'], function () {
-  return gulp.src("src/js/global/*.js")
+  return gulp.src([
+    "src/js/global/utils.js",
+    "src/js/global/jsonf.js",
+    "src/js/global/storage.js",
+    "src/js/global/rule.js",
+    "src/js/global/rules.js",
+    "src/js/global/i18n.js",
+    "src/js/global/libs.js"
+  ])
   .pipe(replace(replaceOpts))
   .pipe(concat('global.js'))
   .pipe(stripdebug())
