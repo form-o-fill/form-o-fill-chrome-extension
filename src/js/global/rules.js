@@ -62,7 +62,7 @@ var Rules = {
     if(!rulesCodeMatches || !rulesCodeMatches[1]) {
       return false;
     }
-    var ruleCode = "return " + rulesCodeMatches[1].replace(/\\n/g,"");
+    var ruleCode = "return " + rulesCodeMatches[1];
     return new Function(ruleCode)();
   },
   all: function() {
