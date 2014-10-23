@@ -26,6 +26,9 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.4.0
+- You can now create reusable functions to simplify your complex rules. 
+
 ★ Version 1.3.6
 - I broke nearly everything in the last build. Sorry. Hopefully fixed now.
 
