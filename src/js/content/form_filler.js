@@ -10,6 +10,7 @@ var FormFiller = {
     if (domNodes.length === 0) {
       return new FormError(selector, value, "Could not find field");
     }
+    Logger.info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
 
     var parsedValue = JSONF.parse(value);
 
@@ -21,6 +22,8 @@ var FormFiller = {
     //
     // eg. _fillDatetimeLocal(value)
     var i;
+    var returnValue = null;
+
     for (i = 0; i < domNodes.length; ++i) {
       domNode = domNodes[i];
       fillMethod = this._fillMethod(domNode);
@@ -40,10 +43,11 @@ var FormFiller = {
       // Fill field only if value is not null or not defined
       if(parsedValue !== null && typeof parsedValue !== "undefined") {
         // Fill field using the specialized method or default
-        return fillMethod(domNode, parsedValue, selector) || null;
+        returnValue = fillMethod(domNode, parsedValue, selector) || null;
       }
     }
 
+    return returnValue;
   },
   _fillDefault: function(domNode, value) {
     domNode.value = value;
