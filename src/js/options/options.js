@@ -138,12 +138,10 @@ var saveRules = function(tabId) {
     errors.forEach(function (errorClass) {
       $("#ruleeditor .notice." + errorClass).show();
     });
-    Utils.infoMsg("Rules invalid, not saved");
     noticesVisible = true;
   }
 
-  if(editor.cleanUp() && !noticesVisible) {
-    $("#ruleeditor .notice").hide();
+  if(editor.cleanUp()) {
     Rules.save(editor.getValue(), tabId).then(function () {
       Utils.infoMsg("Rules saved");
       updateTabStats();
