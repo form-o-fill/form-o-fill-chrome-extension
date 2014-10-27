@@ -42,6 +42,7 @@ var appendRule = function(prettyRule, responseCallback) {
     }
     lines = lines.concat(prettyRule.split("\n"));
     editor.document().insertLines(editor.document().getLength() - 1, lines);
+
     // Prettify code a little
     editor.session().setValue(Rules.format(editor.session().getValue()), -1);
     editor.scrollToRow(editor.document().getLength());

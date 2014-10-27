@@ -6,6 +6,7 @@ var FormUtil = {
     this.lastRule = rule;
     var message = null;
     var beforeData;
+    var errors = [];
 
     // Open long standing connection to the tab containing the form to be worked on
     if(typeof lastActiveTab === "undefined") {
@@ -35,7 +36,22 @@ var FormUtil = {
     // a promise
     var wrapInPromise = function(func) {
       return new Promise(function(resolve) {
-        func(resolve, context);
+        try {
+          func(resolve, context);
+        } catch (e) {
+          Logger.info("[form_util.js] Got an exception executing before function: " + func);
+          Logger.info("[form_util.js] Original exception: " + e);
+          Logger.info("[form_util.js] Original stack: " + e.stack);
+
+          var error = {
+            error: {
+              beforeFunction: func.toString().split("\n").join("<br />"),
+              stack: e.stack,
+              message: e.message
+            }
+          };
+          resolve(error);
+        }
       });
     };
 
@@ -56,12 +72,30 @@ var FormUtil = {
     // the arrray of before functions defined in the rule.
     Promise.all(beforeFunctions).then(function(data) {
       beforeData = data;
-      // beforeData is null when there is no before action defined in the rule definition
-      // REMOVE START
+
+      // beforeData is null when there is no before function defined in the rule definition
       if(beforeData !== null) {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+
+        // Lets see if we got any errors thrown inside the executed before function
+        var errors = beforeData.filter(function (beforeFunctionData) {
+          return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
+        });
+
+        if (errors.length > 0) {
+          errors = errors.map(function (errorObj) {
+            return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
+          });
+
+          Notification.create("An error occured while executing a before function. Click here to view it.", function() {
+            // Save the errors to local storage
+            Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function () {
+              Utils.openOptions();
+            });
+          });
+        }
+
       }
-      // REMOVE END
 
       // If there was only one rule
       // reduce data array to one element
@@ -86,23 +120,25 @@ var FormUtil = {
       port.postMessage({"action": "getErrors"});
     });
 
+    var reportErrors = function(errors) {
+      Logger.info("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
+      if(errors.length > 0) {
+        Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
+          // Save the errors to local storage
+          Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function () {
+            // Open options and forward the messages to options.js
+            Utils.openOptions();
+          });
+        });
+      }
+      port.postMessage({"action": "hideWorkingOverlay"});
+    };
+
     port.onMessage.addListener(function (message) {
       // Make errors from content scripts available here
       if(message.action === "getErrors") {
         var errors = JSONF.parse(message.errors);
-        Logger.info("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
-        if(errors.length > 0) {
-          Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
-            // Save the errors to local storage
-            Storage.save({
-                "errors": errors,
-                "rule": rule}, Utils.keys.errors).then(function () {
-              // Open options and forward the messages to options.js
-              Utils.openOptions();
-            });
-          });
-        }
-        port.postMessage({"action": "hideWorkingOverlay"});
+        reportErrors(errors);
       }
     });
   }
