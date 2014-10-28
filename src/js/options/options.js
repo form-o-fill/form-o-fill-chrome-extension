@@ -98,8 +98,9 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
 var updateTabStats = function() {
   Rules.all().then(function (rules) {
     var rulesStats = { tabCount: {}, rules: []};
+
     rules.forEach(function (rule) {
-      // Sort all rules and count them
+      // Count rules
       if (typeof rulesStats.tabCount[rule.tabId] === "undefined") {
         rulesStats.tabCount[rule.tabId] = 0;
       }
@@ -117,15 +118,14 @@ var updateTabStats = function() {
 
     // Fill <select> rules overview
     var options = ["<option value=''>- quickjump to rule -</option>"];
-    rulesStats.rules.sort(function (a, b) {
-      if (a.name > b.name) {
-        return 1;
-      }
-      if (a.name < b.name) {
-        return -1;
-      }
-      return 0;
-    }).forEach(function (rule) {
+
+    // Remove rules without names (eg. libs)
+    var onlyRealRules = rulesStats.rules.filter(function (rule) {
+       return typeof rule.name != "undefined";
+    });
+
+    // Create <option> tags for sorted list of rules and insert into DOM
+    Utils.sortRules(onlyRealRules).forEach(function (rule) {
       options.push("<option value='" + rule.id + "'>" + rule.name + "</option>");
     });
     $("#rules-overview").html(options.join(""));
