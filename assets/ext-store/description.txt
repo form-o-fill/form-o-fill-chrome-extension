@@ -26,6 +26,10 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.4.1
+- Implemented error reporting for before functions
+- Popup shows rules sorted by name
+
 ★ Version 1.4.0
 - You can now create reusable functions to simplify your complex rules. 
 
