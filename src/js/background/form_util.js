@@ -2,6 +2,9 @@
 /* eslint no-unused-vars: 0 */
 var FormUtil = {
   lastRule: null,
+  functionToHtml: function(func) {
+    return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
+  },
   applyRule: function(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;
@@ -45,7 +48,7 @@ var FormUtil = {
 
           var error = {
             error: {
-              beforeFunction: func.toString().split("\n").join("<br />"),
+              beforeFunction: FormUtil.functionToHtml(func),
               stack: e.stack,
               message: e.message
             }
@@ -83,6 +86,7 @@ var FormUtil = {
         });
 
         if (errors.length > 0) {
+          // Produce error objects compatible to those used for form filling errors
           errors = errors.map(function (errorObj) {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
