@@ -62,6 +62,7 @@ var Popup = {
     Logger.info("[popup.js] updating popup to display " + matchingRules.length + " rules");
     var ul = document.querySelectorAll("ul")[0];
     var fragment = document.createDocumentFragment();
+    //matchingRules.forEach(function(rule, index) {
     Utils.sortRules(matchingRules).forEach(function(rule, index) {
       var li = document.createElement("li");
       li.textContent = rule.name;

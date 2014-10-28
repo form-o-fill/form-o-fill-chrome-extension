@@ -145,8 +145,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // From popup.js:
   // This receives the index of the rule to apply when there is more than one match
   if (message.action === "fillWithRule") {
-    Logger.info("[bg.js] called by popup.js with rule index " + message.index + ", sender = " + sender);
-    FormUtil.applyRule(lastMatchingRules[message.index], lastActiveTab);
+    Logger.info("[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id);
+    // Find the rule by id
+    var rules = lastMatchingRules.filter(function (rule) {
+      return rule.id === message.id;
+    });
+    FormUtil.applyRule(rules[0], lastActiveTab);
     sendResponse(true);
   }
 
