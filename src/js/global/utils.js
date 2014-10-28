@@ -67,6 +67,17 @@ var Utils = {
       query: parser.search,
       hash: parser.hash
     };
+  },
+  sortRules: function(unsortedRules) {
+    return unsortedRules.sort(function (a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    });
   }
 };
 
