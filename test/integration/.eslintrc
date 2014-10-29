@@ -6,3 +6,5 @@ globals:
   element: true
   by: true
   manifest: true
+  $: true
+  Tests: true

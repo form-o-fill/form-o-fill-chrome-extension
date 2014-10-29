@@ -1,5 +1,5 @@
 describe("test setup", function() {
-  it("should install the extension from the src/ dir", function(){
+  it("installs the extension from the src/ dir", function(){
     // The correct (bit chrome intern) url for the installed extensions is
     // not chrome://extensions but this:
     browser.get("chrome://extensions-frame/");
@@ -14,8 +14,23 @@ describe("test setup", function() {
     });
   });
 
-  it("should start a simple webserver on port 8888", function(){
-    browser.get("http://localhost:8888/");
+  it("starts a simple webserver on port 8889", function(){
+    browser.get("http://localhost:8888/form-o-fill-testing/simple.html");
     expect(browser.getTitle()).to.eventually.eq("Form-O-Fill Testpage");
   });
+
+  // After implementing Tests.importRules() -> get -> chrome:// -> clear + save
+  // uncomment:
+  it("shows data send by the extension", function(){
+    Tests.visit("simple");
+    expect($(".extension-id").getText()).to.eventually.match(/[a-z0-9]{32}/);
+    expect($(".tab-id").getText()).to.eventually.match(/[0-9]+/);
+    //expect($(".extension-version").getText()).to.eventually.match(/[0-9]+/);
+    expect($(".testing-mode").getText()).to.become("true");
+    //expect($(".browser-action-badge-text").getText()).to.become("7");
+    //expect($(".matching-rules-count").getText()).to.become("7");
+    //expect($(".popup-html").getInnerHtml()).to.eventually.match(/<h3>Found 7 matching rules<\/h3>/);
+  });
+
+
 });

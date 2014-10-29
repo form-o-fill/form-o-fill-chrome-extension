@@ -38,7 +38,7 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 
 // Configuration for the testserver
 var serverConfig = {
-  port: 8888,
+  port: 8889,
   root: "testcases/docroot-for-testing"
 };
 
