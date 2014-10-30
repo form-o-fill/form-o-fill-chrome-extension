@@ -1,5 +1,4 @@
-// This file contains the protractor setup and helper code for all integration tests
-// At the end export the protractor config
+// This file contains the protractor setup for all integration tests
 exports.config = {
   capabilities: {
     'browserName': 'chrome',
@@ -16,7 +15,7 @@ exports.config = {
   mochaOpts: {
     reporter: "spec",
     slow: 6000,
-    timeout: 10000
+    timeout: 20000
   },
   onPrepare: function() {
     // This is run after protractor and mocha/chai is ready.

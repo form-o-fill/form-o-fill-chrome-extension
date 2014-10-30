@@ -2,6 +2,7 @@
 // This file is run before all other specs
 // mocha is already global here
 var fs = require('fs');
+var Promise = require('promise');
 
 global.chai = require("chai");
 global.chai.use(require("sinon-chai"));
@@ -26,16 +27,33 @@ global.Tests.writeScreenShot = function(data, filename) {
   stream.end();
 };
 
-// Logs the current page source to the console
-global.Tests.showPageSource = function() {
-  browser.driver.getPageSource().then(function (source) {
-    console.log(source);
-  });
+var Tests = {
+  // Logs the current page source to the console
+  showPageSource: function() {
+    browser.driver.getPageSource().then(function (source) {
+      console.log(source);
+    });
+  },
+  // Go to a testing URL and give the extension ome time to inject its HTML
+  visit: function(htmlPage) {
+    browser.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
+    browser.driver.sleep(500);
+  },
+  // import rules
+  importRules: function(fileName) {
+    return new Promise(function (resolve) {
+      var rulesCode = fs.readFileSync(fileName).toString().replace("'","\'").replace(/\n/g, " ");
+      // May use browser.driver.sendKeys() but that is SO SLOW! Workaround:
+      browser.driver.executeScript("document.querySelector('#form-o-fill-testing-import').value = '" + rulesCode + "'").then(function () {
+        $("#form-o-fill-testing-import-submit").click().then(function () {
+          browser.driver.sleep(500);
+          browser.refresh();
+          browser.driver.sleep(5000);
+          resolve();
+        });
+      });
+    });
+  }
 };
 
-// Go to a testing URL and give the extension ome time to inject its HTML
-global.Tests.visit = function(htmlPage) {
-  browser.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
-  browser.driver.sleep(500);
-};
-
+global.Tests = Tests;

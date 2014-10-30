@@ -25,12 +25,18 @@ describe("test setup", function() {
     Tests.visit("simple");
     expect($(".extension-id").getText()).to.eventually.match(/[a-z0-9]{32}/);
     expect($(".tab-id").getText()).to.eventually.match(/[0-9]+/);
-    //expect($(".extension-version").getText()).to.eventually.match(/[0-9]+/);
+    expect($(".extension-version").getText()).to.become("##VERSION##");
     expect($(".testing-mode").getText()).to.become("true");
-    //expect($(".browser-action-badge-text").getText()).to.become("7");
-    //expect($(".matching-rules-count").getText()).to.become("7");
-    //expect($(".popup-html").getInnerHtml()).to.eventually.match(/<h3>Found 7 matching rules<\/h3>/);
+    expect($(".browser-action-badge-text").getText()).to.become("N/A");
+    expect($(".matching-rules-count").getText()).to.become("0");
+    expect($(".popup-html").getInnerHtml()).to.eventually.match(/<h3>Found no matching rules. <a href="#" class="cmd-show-extract-overlay">Create one \?<\/a><\/h3>/);
   });
 
+  it("imports rules via the <teaxtarea>", function(){
+    Tests.visit("simple");
+    Tests.importRules("testcases/testcases-rules.json").then(function () {
+      expect($(".matching-rules-count").getText()).to.become("7");
+    });
+  });
 
 });
