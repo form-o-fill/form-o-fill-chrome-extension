@@ -38,6 +38,11 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 
 // Configuration for the testserver
 var serverConfig = {
+  port: 8888,
+  root: "testcases/docroot-for-testing"
+};
+
+var serverConfigIntegration = {
   port: 8889,
   root: "testcases/docroot-for-testing"
 };
@@ -265,8 +270,16 @@ gulp.task('watch', function () {
 // Chromedriver can be used without a running selenium server
 // Starts a simple webserver on port 8888
 gulp.task('integration', function () {
+
+  gulpUtil.log(
+    "If this fails with",
+    chalk.red("[launcher] Error: Could not find chromedriver"),
+    "run",
+    chalk.cyan("node_modules/protractor/bin/webdriver-manager update")
+  );
+
   // Start a small webserver
-  connect.server(serverConfig);
+  connect.server(serverConfigIntegration);
 
   return gulp.src([
     "./test/support/integration_helper.js",
@@ -274,7 +287,7 @@ gulp.task('integration', function () {
   ])
   .pipe(protractor({
       configFile: "test/support/protractor.config.js",
-      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfig.port]
+      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port]
   }))
   .on('error', function(e) {
     throw e
