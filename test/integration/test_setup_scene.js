@@ -15,7 +15,7 @@ describe("test setup", function() {
   });
 
   it("starts a simple webserver on port 8889", function(){
-    browser.get("http://localhost:8888/form-o-fill-testing/simple.html");
+    Tests.visit("simple");
     expect(browser.getTitle()).to.eventually.eq("Form-O-Fill Testpage");
   });
 
