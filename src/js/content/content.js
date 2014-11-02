@@ -7,13 +7,23 @@ chrome.runtime.onConnect.addListener(function (port) {
   var currentError = null;
   var workingOverlayId = "form-o-fill-working-overlay";
   var workingOverlayHtml = "<div id='" + workingOverlayId + "' style='display: none;'>Form-O-Fill is working, please wait!</div>";
+
   var workingTimeout = null;
+  var takingLongTimeout = null;
+  var wontFinishTimeout = null;
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
   if(port.name != "FormOFill") {
     return;
   }
+
+  var hideOverlay = function() {
+    jQuery("#" + workingOverlayId).hide();
+    clearTimeout(workingTimeout);
+    clearTimeout(takingLongTimeout);
+    clearTimeout(wontFinishTimeout);
+  };
 
   port.onMessage.addListener(function (message) {
     // Request to fill one field with a value
@@ -47,15 +57,24 @@ chrome.runtime.onConnect.addListener(function (port) {
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
         jQuery("body").append(workingOverlayHtml);
       }
+
+      // Show working overlay after some time
       workingTimeout = setTimeout(function() {
         jQuery("#" + workingOverlayId).show();
       }, 350);
+
+      // Show another overlay when things take REALLY long to finishs
+      takingLongTimeout = setTimeout(function () {
+        jQuery("#" + workingOverlayId).html("This is really taking too long.");
+      }, 3000);
+
+      // Finally if everything fails, clear overlay after 10 seconds
+      wontFinishTimeout = setTimeout(hideOverlay, 10000);
     }
 
     if (message.action === "hideWorkingOverlay") {
       Logger.info("[content.js] Hiding working overlay");
-      jQuery("#" + workingOverlayId).hide();
-      clearTimeout(workingTimeout);
+      hideOverlay();
     }
   });
 });
