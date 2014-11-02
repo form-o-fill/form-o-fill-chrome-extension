@@ -40,17 +40,13 @@ var Tests = {
     browser.driver.sleep(500);
   },
   // import rules
-  importRules: function(fileName) {
+  importRules: function() {
     return new Promise(function (resolve) {
-      var rulesCode = fs.readFileSync(fileName).toString().replace("'","\'").replace(/\n/g, " ");
-      // May use browser.driver.sendKeys() but that is SO SLOW! Workaround:
-      browser.driver.executeScript("document.querySelector('#form-o-fill-testing-import').value = '" + rulesCode + "'").then(function () {
-        $("#form-o-fill-testing-import-submit").click().then(function () {
-          browser.driver.sleep(500);
-          browser.refresh();
-          browser.driver.sleep(5000);
-          resolve();
-        });
+      $("#form-o-fill-testing-import-submit").click().then(function () {
+        browser.driver.sleep(500);
+        browser.refresh();
+        browser.driver.sleep(500);
+        resolve();
       });
     });
   }
