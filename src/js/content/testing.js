@@ -42,7 +42,7 @@ var installTestingCode = function() {
 
   // Attach an listener to the <button> so that the rules that should be imported can be send
   // to the background/testing.js page
-  jQuery("#form-o-fill-testing-import-submit").on("click", function () {
+  jQuery(document).on("click", "#form-o-fill-testing-import-submit", function () {
     var rulesCode = jQuery("#form-o-fill-testing-import").val();
     chrome.runtime.sendMessage({action: "importRules", value: rulesCode}, function () {
       window.location.reload();
