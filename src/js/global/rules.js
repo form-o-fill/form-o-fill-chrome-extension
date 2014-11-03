@@ -136,13 +136,6 @@ var Rules = {
       errors.push("annotations-present");
     }
 
-    // Check structure of rules code
-    // BROKEN!
-    //if(!/^var\s+?([a-z_])+\s+=\s+\[/i.test(editor.session().getLine(0)) ||
-       //!/^\s*\];\s*$/.test(editor.session().getLine(editor.session().getLength() - 1))) {
-      //errors.push("var-needed");
-    //}
-
     // Check for before function structure
     if (errors.length == 0) {
       var ruleCodeCheck = this.text2function(editor.getValue());

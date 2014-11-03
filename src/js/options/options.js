@@ -215,11 +215,6 @@ $(".editor .menu").on("click", "button.save", function () {
 }).on("click", "button.export", exportRules)
 .on("click", "button.import", importRules);
 
-// Try to fix the erronous structure of the rules
-$(document).on("click", "a.cmd-fix-var-needed", function() {
-  editor.fixRules();
-});
-
 // Export all rules (for modal import dialog)
 $(document).on("click", "a.cmd-export-all-rules", function() {
   exportRules();
