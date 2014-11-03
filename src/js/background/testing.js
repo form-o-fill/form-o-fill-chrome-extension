@@ -69,3 +69,24 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   return true;
 });
 
+// This method takes the otherwise inaccessable popup.html
+// and puts it into an iframe in the BG page
+// This process renders the popup (including all JS).
+// The popup then sends its rendered HTML to content.js
+// This is the only method to "click" and thereby view the popup HTML without
+// actually clicking on it.
+// Enables end to end testing because the browserAction cannot be clicked in tests.
+var createCurrentPopupInIframe = function(tabId) {
+  chrome.browserAction.getPopup({"tabId": tabId}, function (popupUrl) {
+    var iframePopup = document.querySelector("#form-o-fill-popup-iframe");
+    if (iframePopup) {
+      iframePopup.src = popupUrl;
+    } else {
+      iframePopup = document.createElement("iframe");
+      iframePopup.id = "form-o-fill-popup-iframe";
+      iframePopup.src = popupUrl;
+      document.querySelector("body").appendChild(iframePopup);
+    }
+  });
+};
+
