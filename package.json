@@ -35,7 +35,8 @@
     "protractor": "^1.3.1",
     "sinon": "^1.10.3",
     "sinon-chai": "^2.5.0",
-    "through2": "^0.6.2"
+    "through2": "^0.6.2",
+    "yargs": "^1.3.2"
   },
   "scripts": {
     "test": "mocha --recursive test/**/*_spec.js"

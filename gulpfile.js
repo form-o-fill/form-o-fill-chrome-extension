@@ -16,6 +16,7 @@ var rm = require('gulp-rm');
 var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
+var argv = require('yargs').argv;
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -269,11 +270,14 @@ gulp.task('watch', function () {
 // Uses protractor as an abstraction layer over chromedriver
 // Chromedriver can be used without a running selenium server
 // Starts a simple webserver on port 8888
+//
+// You can specify a single spec to run via:
+// gulp integration --spec test/integration/some_spec_scene.js
 gulp.task('integration', function () {
 
   gulpUtil.log(
     "If this fails with",
-    chalk.red("[launcher] Error: Could not find chromedriver"),
+    chalk.cyan("[launcher] Error: Could not find chromedriver"),
     "run",
     chalk.cyan("node_modules/protractor/bin/webdriver-manager update")
   );
@@ -281,10 +285,9 @@ gulp.task('integration', function () {
   // Start a small webserver
   connect.server(serverConfigIntegration);
 
-  return gulp.src([
-    "./test/support/integration_helper.js",
-    "./test/integration/*_scene.js"
-  ])
+  var specs = [argv.spec || argv.s || "./test/integration/*_scene.js"];
+
+  return gulp.src(["./test/support/integration_helper.js"].concat(specs))
   .pipe(protractor({
       configFile: "test/support/protractor.config.js",
       args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port]
