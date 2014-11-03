@@ -44,7 +44,7 @@ var Tests = {
     return new Promise(function (resolve) {
       $("#form-o-fill-testing-import-submit").click().then(function () {
         resolve();
-        browser.driver.sleep(600);
+        browser.driver.sleep(800);
       });
     });
   }
