@@ -10,10 +10,10 @@ var Logger = {
     });
 
     if (obj) {
-      console[level]("%s %O", msg, obj);
+      console[level]("[*FOF*]%s %O", msg, obj);
       return;
     }
-    console[level]("%O", msg);
+    console[level]("%c[*FOF*]%c%s", "color: #2207A3;", "color: #000;", msg);
   },
   info: function(msg, obj) {
     this.out("info", msg, obj);
