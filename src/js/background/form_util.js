@@ -42,9 +42,9 @@ var FormUtil = {
         try {
           func(resolve, context);
         } catch (e) {
-          Logger.info("[form_util.js] Got an exception executing before function: " + func);
-          Logger.info("[form_util.js] Original exception: " + e);
-          Logger.info("[form_util.js] Original stack: " + e.stack);
+          Logger.warn("[form_util.js] Got an exception executing before function: " + func);
+          Logger.warn("[form_util.js] Original exception: " + e);
+          Logger.warn("[form_util.js] Original stack: " + e.stack);
 
           var error = {
             error: {
@@ -81,13 +81,13 @@ var FormUtil = {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
         // Lets see if we got any errors thrown inside the executed before function
-        var errors = beforeData.filter(function (beforeFunctionData) {
+        var filteredErrors = beforeData.filter(function (beforeFunctionData) {
           return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
         });
 
-        if (errors.length > 0) {
+        if (filteredErrors.length > 0) {
           // Produce error objects compatible to those used for form filling errors
-          errors = errors.map(function (errorObj) {
+          errors = filteredErrors.map(function (errorObj) {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
 
@@ -125,7 +125,7 @@ var FormUtil = {
     });
 
     var reportErrors = function(errors) {
-      Logger.info("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
+      Logger.warn("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
       if(errors.length > 0) {
         Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
           // Save the errors to local storage
@@ -141,8 +141,8 @@ var FormUtil = {
     port.onMessage.addListener(function (message) {
       // Make errors from content scripts available here
       if(message.action === "getErrors") {
-        var errors = JSONF.parse(message.errors);
-        reportErrors(errors);
+        var sentErrors = JSONF.parse(message.errors);
+        reportErrors(sentErrors);
       }
     });
   }

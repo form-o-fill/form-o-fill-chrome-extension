@@ -1,4 +1,4 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing*/
+/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing, createCurrentPopupInIframe */
 /* eslint complexity:0, max-nested-callbacks: [1,4] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
