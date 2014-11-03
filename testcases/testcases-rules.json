@@ -27,7 +27,7 @@
       "tabId": 3
     },
     {
-      "code": "var rules = [{\n  content: /TESTING SERVER RUNNING/,\n  name: \"Matching by content\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by content\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Matching by URL\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by URL\"\n  }]\n}\n];",
+      "code": "var rules = [{\n  content: /TESTING SERVER RUNNING/,\n  name: \"Matching by content\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by content\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Matching by URL\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by URL\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Requesting external JSON\",\n  before: function(resolve) {\n    jQuery.getJSON(\"http://localhost:8888/form-o-fill-testing/json.json\").done(resolve);\n  },\n  fields: [{\n    selector: \"input\",\n    value: function($e, data) {\n      return data.data;\n    }\n  }]\n}\n];",
       "tabId": 5
     },
     {
