@@ -62,9 +62,9 @@ Rule.create = function(options, tabId, ruleIndex) {
 
   // REMOVE START
   if(rule.export && rule.lib) {
-    Logger.info("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
+    Logger.debug("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
   } else {
-    Logger.info("[rule.js] created rule", rule);
+    Logger.debug("[rule.js] created rule", rule);
   }
   // REMOVE END
 

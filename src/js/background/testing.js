@@ -9,7 +9,7 @@ var Testing = {
       value: value,
       text: textToDisplay || null
     };
-    Logger.info("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
+    Logger.debug("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
     chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
   }
 };
@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         ruleCount: ruleCount,
         libCount: rules.length - ruleCount
       };
-      Logger.info("[b/testing.js] Set testingMode to " + message.value);
+      Logger.debug("[b/testing.js] Set testingMode to " + message.value);
 
       sendResponse(info);
     });

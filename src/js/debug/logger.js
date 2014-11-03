@@ -1,7 +1,7 @@
 /*global Utils */
 /* eslint no-unused-vars: 0 */
 var Logger = {
-  info: function (msg, obj) {
+  out: function (level, msg, obj) {
     // Port to background.js
     var port = chrome.runtime.connect();
     port.postMessage({
@@ -10,10 +10,19 @@ var Logger = {
     });
 
     if (obj) {
-      console.log("%s %O", msg, obj);
+      console[level]("%s %O", msg, obj);
       return;
     }
-    console.log("%O", msg);
+    console[level]("%O", msg);
+  },
+  info: function(msg, obj) {
+    this.out("info", msg, obj);
+  },
+  debug: function(msg, obj) {
+    this.out("debug", msg, obj);
+  },
+  warn: function(msg, obj) {
+    this.out("warn", msg, obj);
   },
   delete: function() {
     chrome.storage.local.remove(Utils.keys.logs);
