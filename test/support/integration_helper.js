@@ -43,10 +43,8 @@ var Tests = {
   importRules: function() {
     return new Promise(function (resolve) {
       $("#form-o-fill-testing-import-submit").click().then(function () {
-        browser.driver.sleep(500);
-        browser.refresh();
-        browser.driver.sleep(500);
         resolve();
+        browser.driver.sleep(600);
       });
     });
   }
