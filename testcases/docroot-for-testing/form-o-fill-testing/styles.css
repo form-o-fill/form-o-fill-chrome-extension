@@ -16,6 +16,7 @@ td {
 tr td:last-child {
   border-right: 0;
   width: 80%;
+  font-size: 11px;
 }
 
 tr:last-child td {

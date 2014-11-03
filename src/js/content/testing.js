@@ -40,12 +40,26 @@ var installTestingCode = function() {
     }
   });
 
-  // Attach an listener to the <button> so that the rules that should be imported can be send
-  // to the background/testing.js page
   jQuery(document).on("click", "#form-o-fill-testing-import-submit", function () {
+    // Attach an listener to the <button> so that the rules that should be imported can be send
+    // to the background/testing.js page
     var rulesCode = jQuery("#form-o-fill-testing-import").val();
     chrome.runtime.sendMessage({action: "importRules", value: rulesCode}, function () {
       window.location.reload();
+    });
+  }).on("click", ".popup-html li.select-rule", function() {
+    // Clicks on the simulated popup should trigger filling
+    var domNode = this;
+    var data = jQuery(this).data();
+    var message = {
+      "action": "fillWithRule",
+      "index": data.ruleIndex,
+      "id": data.ruleId
+    };
+    chrome.extension.sendMessage(message, function() {
+      Testing.setTestingVar("rule-filled-id", message.id, "Filled form with rule #id");
+      Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with rule #name");
+      domNode = null;
     });
   });
 };
