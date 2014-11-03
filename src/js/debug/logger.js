@@ -24,6 +24,9 @@ var Logger = {
   warn: function(msg, obj) {
     this.out("warn", msg, obj);
   },
+  error: function(msg, obj) {
+    this.out("error", msg, obj);
+  },
   delete: function() {
     chrome.storage.local.remove(Utils.keys.logs);
   },
