@@ -131,7 +131,7 @@ var Rules = {
     var errors = [];
 
     // Check if there are some ACE Annotations (aka. errors) present
-    var annotationCount =  editor.session().getAnnotations().length;
+    var annotationCount = editor.session().getAnnotations().length;
     if(annotationCount > 0) {
       errors.push("annotations-present");
     }
