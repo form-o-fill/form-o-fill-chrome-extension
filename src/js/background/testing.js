@@ -1,4 +1,4 @@
-/*eslint no-unused-vars:0 */
+/*eslint no-unused-vars: [2, "Testing"] */
 /*global Logger Utils lastActiveTab JSONF Rules Storage */
 
 var Testing = {
@@ -10,8 +10,7 @@ var Testing = {
       text: textToDisplay || null
     };
     Logger.info("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
-    chrome.tabs.sendMessage(lastActiveTab.id, message, function (response) {
-    });
+    chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
   }
 };
 
