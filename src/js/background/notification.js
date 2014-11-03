@@ -13,6 +13,7 @@ var Notification = {
       if(!Utils.isLiveExtension()) {
         Testing.setVar("notification-html", message, "Last Notification HTML");
         Testing.setVar("notification-status", "visible", "Last Notification status");
+        Testing.setVar("notification-callback", onClickCallback.toString(), "Last Notification click callback");
       }
       formNotificationId = notificationId;
     });
