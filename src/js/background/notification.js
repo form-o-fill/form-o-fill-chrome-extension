@@ -1,4 +1,5 @@
-/* eslint no-unused-vars: 0 */
+/*global Testing, Utils */
+/*eslint no-unused-vars: [2, "Notification"] */
 var Notification = {
   create: function(message, onClickCallback) {
     var formNotificationId = null;
@@ -9,11 +10,18 @@ var Notification = {
       "message": message,
       "isClickable": true
     }, function(notificationId) {
+      if(!Utils.isLiveExtension()) {
+        Testing.setVar("notification-html", message, "Last Notification HTML");
+        Testing.setVar("notification-status", "visible", "Last Notification status");
+      }
       formNotificationId = notificationId;
     });
 
     chrome.notifications.onClicked.addListener(function (notificationId) {
       if(notificationId === formNotificationId) {
+        if(!Utils.isLiveExtension()) {
+          Testing.setVar("notification-status", "clicked", "Last Notification status");
+        }
         onClickCallback();
       }
     });
