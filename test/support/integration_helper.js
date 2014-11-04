@@ -34,7 +34,7 @@ var Tests = {
       console.log(source);
     });
   },
-  // Go to a testing URL and give the extension ome time to inject its HTML
+  // Go to a testing URL and give the extension some time to inject its HTML
   visit: function(htmlPage) {
     browser.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
     browser.driver.sleep(500);
@@ -43,8 +43,8 @@ var Tests = {
   importRules: function() {
     return new Promise(function (resolve) {
       $("#form-o-fill-testing-import-submit").click().then(function () {
+        browser.driver.sleep(1200);
         resolve();
-        browser.driver.sleep(800);
       });
     });
   }
