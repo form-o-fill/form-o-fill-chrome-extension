@@ -55,9 +55,4 @@ describe("the form filling", function() {
       });
     });
   });
-
-  /*
-   All recognized <form> field types
-   */
-
 });
