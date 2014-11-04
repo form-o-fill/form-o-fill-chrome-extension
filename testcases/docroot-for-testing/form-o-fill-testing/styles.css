@@ -38,3 +38,9 @@ input {
   padding: 5px;
   font-size: 18px;
 }
+
+body.types input {
+  font-size: 11px;
+  padding: 0;
+  width: auto;
+}

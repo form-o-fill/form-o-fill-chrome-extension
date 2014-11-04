@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body class="types">
+    <h1>TESTING SERVER RUNNING</h1>
+    <input type="text" name="text" value="text" />
+    <input type="radio" name="radio" value="radio" /> Radio
+    <input type="checkbox" name="checkbox[]" value="checkbox" /> Checkbox
+    <input type="button" name="button" value="button" />
+    <input type="date" name="date" value="date" />
+    <input type="image" name="image" value="image" />
+    <input type="password" name="password" value="password" />
+
+    <!-- HTML 5 -->
+    <input type="search" name="search" value="search" />
+    <input type="email" name="email" value="email" />
+    <input type="url" name="url" value="url" />
+    <input type="tel" name="tel" value="tel" />
+    <input type="number" name="number" value="number" />
+    <input type="range" name="range" value="0" min="0" max="125" />
+    <input type="date" name="date" value="date" />
+    <input type="month" name="month" value="month" />
+    <input type="week" name="week" value="week" />
+    <input type="time" name="time" value="time" />
+    <input type="datetime" name="datetime" value="datetime" />
+    <input type="datetime-local" name="datetime-local" value="datetime-local" />
+    <input type="color" name="color" value="color" />
+
+    <select name="select" class="single">
+      <option name="option1" value="option1">option1</option>
+      <option name="option2" value="option2" selected>option2</option>
+    </select>
+    <select name="selectmultiple" multiple="multiple">
+      <option name="multiple1" value="multiple1">multiple1</option>
+      <option name="multiple2" value="multiple2">multiple2</option>
+    </select>
+
+    <textarea name="textarea" class="textarea"></textarea>
+
+
+    <table id="form-o-fill-testing-info"></table>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "All known types"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: /.*all-.*/,\n  name: \"All recognized <form> field types\",\n  fields: [{\n    selector: \"input[type=text]\",\n    value: \"input[type=text]\"\n  }, {\n    selector: \"input[type=button]\",\n    value: \"input[type=button]\"\n  }, {\n    selector: \"input[type=checkbox]\",\n    value: \"checkbox\"\n  }, {\n    selector: \"input[type=image]\",\n    value: \"input[type=image]\"\n  }, {\n    selector: \"input[type=password]\",\n    value: \"input[type=password]\"\n  }, {\n    selector: \"input[type=radio]\",\n    value: \"radio\"\n  }, {\n    selector: \"textarea.textarea\",\n    value: \"textarea\"\n  }, {\n    selector: \"select.single\",\n    value: \"option1\"\n  }, {\n    selector: \"select[multiple]\",\n    value: [\"multiple1\", \"multiple2\"]\n  }, {\n    selector: \"input[type=search]\",\n    value: \"input[type=search]\"\n  }, {\n    selector: \"input[type=email]\",\n    value: \"someone@example.com\"\n  }, {\n    selector: \"input[type=url]\",\n    value: \"http://form-o-fill.github.io\"\n  }, {\n    selector: \"input[type=tel]\",\n    value: \"491234567890\"\n  }, {\n    selector: \"input[type=number]\",\n    value: \"12345\"\n  }, {\n    selector: \"input[type=range]\",\n    value: \"100\"\n  }, {\n    selector: \"input[type=date]\",\n    value: \"2014-11-04\"\n  }, {\n    selector: \"input[type=month]\",\n    value: \"2014-06\"\n  }, {\n    selector: \"input[type=week]\",\n    value: \"2014-W42\"\n  }, {\n    selector: \"input[type=time]\",\n    value: \"12:01:02.123\"\n  }, {\n    selector: \"input[type=datetime]\",\n    value: \"1996-12-19T16:39:57-08:00\"\n  }, {\n    selector: \"input[type=datetime-local]\",\n    value: \"1996-12-19T16:39:57.123\"\n  }, {\n    selector: \"input[type=color]\",\n    value: \"#FF0000\"\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+  </body>
+</html>
