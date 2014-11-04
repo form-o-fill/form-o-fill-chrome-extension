@@ -24,6 +24,7 @@ var installTestingCode = function() {
     // the options page
     Logger.info("[c/testing.j] background.js has set testing mode to " + bgInfo.testingMode);
     Testing.setTestingVar("extension-id", bgInfo.extensionId, "Extension Id");
+    Testing.setTestingVar("extension-options-url", "<a href='chrome-extension://" + bgInfo.extensionId + "/html/options.html'>chrome-extension://" + bgInfo.extensionId + "/html/options.html</a>", "Options URL");
     Testing.setTestingVar("tab-id", bgInfo.tabId, "TabId of this page");
     Testing.setTestingVar("extension-version", bgInfo.extensionVersion, "Form-O-Fill Version");
     Testing.setTestingVar("testing-mode", bgInfo.testingMode, "Testing mode");
