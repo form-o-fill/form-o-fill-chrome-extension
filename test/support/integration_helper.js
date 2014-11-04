@@ -36,8 +36,11 @@ var Tests = {
   },
   // Go to a testing URL and give the extension some time to inject its HTML
   visit: function(htmlPage) {
-    browser.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
-    browser.driver.sleep(500);
+    return new Promise(function(resolve) {
+      browser.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
+      browser.driver.sleep(500);
+      resolve();
+    });
   },
   // import rules
   importRules: function() {
