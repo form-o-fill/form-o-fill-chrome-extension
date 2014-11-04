@@ -21,16 +21,18 @@ describe("test setup", function() {
   });
 
   it("imports rules and shows some meta infos", function(){
-    Tests.visit("simple").then(function () {
-      Tests.importRules().then(function () {
-        expect($(".extension-id").getText()).to.eventually.match(/[a-z0-9]{32}/);
-        expect($(".tab-id").getText()).to.eventually.match(/[0-9]+/);
-        expect($(".extension-version").getText()).to.become("##VERSION##");
-        expect($(".testing-mode").getText()).to.become("true");
-        expect($(".browser-action-badge-text").getText()).to.become("8");
-        expect($(".matching-rules-count").getText()).to.become("8");
-        expect($(".popup-html").getInnerHtml()).to.eventually.match(/<h3>Found 8 matching rules<\/h3>/);
-      });
+    Tests.visit("simple")
+    .then(function () {
+      Tests.importRules();
+    })
+    .then(function () {
+      expect($(".extension-id").getText()).to.eventually.match(/[a-z0-9]{32}/);
+      expect($(".tab-id").getText()).to.eventually.match(/[0-9]+/);
+      expect($(".extension-version").getText()).to.become("##VERSION##");
+      expect($(".testing-mode").getText()).to.become("true");
+      expect($(".browser-action-badge-text").getText()).to.become("8");
+      expect($(".matching-rules-count").getText()).to.become("8");
+      expect($(".popup-html").getInnerHtml()).to.eventually.match(/<h3>Found 8 matching rules<\/h3>/);
     });
   });
 });
