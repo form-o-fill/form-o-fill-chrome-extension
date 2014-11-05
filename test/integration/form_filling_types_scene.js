@@ -9,6 +9,8 @@ describe("filling different types of fields", function() {
         expect($("input[type=button]").getAttribute("value")).to.become("input[type=button]");
         // Change rule to "value: 'animage.png'"
         // Add :_fillImage() and set attr[src] to animage.png
+        // Allow checkboxes = true to always fill field (formfiller)
+        // Allow checkboxes = false to always deselect field
         expect($("input[type=image]").getAttribute("src")).to.become("animage.png");
         expect($("input[type=password]").getAttribute("value")).to.become("input[type=password]");
       });
