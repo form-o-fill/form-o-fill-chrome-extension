@@ -52,8 +52,18 @@ var FormFiller = {
   _fillDefault: function(domNode, value) {
     domNode.value = value;
   },
+  _fillImage: function(domNode, value) {
+    domNode.attributes.getNamedItem("src").value = value;
+  },
   _fillCheckbox: function(domNode, value) {
-    domNode.checked = (domNode.value == value);
+    var setValue;
+    if (value === true || domNode.value === value) {
+      setValue = true;
+    }
+    if (value === false) {
+      setValue = false;
+    }
+    domNode.checked = setValue;
   },
   _fillRadio: function(domNode, value) {
     domNode.checked = (domNode.value === value);
