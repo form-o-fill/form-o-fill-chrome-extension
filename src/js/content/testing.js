@@ -62,6 +62,9 @@ var installTestingCode = function() {
       Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with rule #name");
       domNode = null;
     });
+  }).on("click", ".extension-options-url", function () {
+    // Simulate a click on the testing options link
+    Utils.openOptions();
   });
 };
 
