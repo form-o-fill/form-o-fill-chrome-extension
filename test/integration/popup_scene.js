@@ -5,7 +5,7 @@ describe("the popup HTML", function() {
       Tests.visit("simple").then(function () {
         Tests.importRules().then(function () {
           element.all(by.css('.popup-html li.select-rule')).then(function (elems) {
-            expect(elems.length).to.eql(7);
+            expect(elems.length).to.eql(8);
           });
         });
       });
