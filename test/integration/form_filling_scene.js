@@ -33,6 +33,18 @@ describe("the form filling", function() {
     });
   });
 
+  describe("filling all matched fields", function() {
+    it("fills all matched fields with the same value", function(){
+      Tests.visit("filling-all-matched-fields").then(function () {
+        Tests.importRules();
+      }).then(function () {
+        expect($("#i1").getAttribute("value")).to.become("filled");
+        expect($("#i2").getAttribute("value")).to.become("filled");
+        expect($("#i3").getAttribute("value")).to.become("filled");
+      });
+    });
+  });
+
   describe("when errors occur while executing the rule", function() {
     it("reports before function errors as notifications", function(){
       Tests.visit("simple").then(function () {
