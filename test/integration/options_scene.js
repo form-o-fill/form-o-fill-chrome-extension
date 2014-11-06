@@ -2,13 +2,10 @@ describe("the options panel", function() {
 
   var visitOptions = function() {
     return Tests.visit("options")
+    .then(Tests.importRules)
+    .then($(".extension-options-url a").click)
     .then(function () {
-      return Tests.importRules();
-    })
-    .then(function () {
-      return $(".extension-options-url a").click();
-    }).then(function () {
-      return browser.driver.sleep(500);
+      return browser.driver.sleep(1000);
     });
   };
 
@@ -46,6 +43,5 @@ describe("the options panel", function() {
       expect($$(".navigation .menu li").getText()).to.become(["Rule Editor", "Help", "About", "Changelog", "Logs"]);
     });
   });
-
 
 });
