@@ -7,6 +7,8 @@
   </head>
   <body>
     <h1>TESTING SERVER RUNNING</h1>
+    Input field DATE: <input value="" class="target" type="date" /><br>
+    Input field: <input value="" class="target" /><br>
     <table id="form-o-fill-testing-info"></table>
     Rules Import: <textarea id="form-o-fill-testing-import">{
   "tabSettings": [
@@ -17,11 +19,10 @@
   ],
   "rules": [
     {
-      "code": "var rules = [{\n  url: /.*options.*/,\n  name: \"Dummy\",\n  fields: [{\n    selector: \"input\",\n    value: \"filled\"\n  }]\n}\n];",
+      "code": "var rules = [{\n  url: /.*options.*/,\n  name: \"error while filling a date field\",\n  fields: [{\n    selector: \"input[type=date]\",\n    value: \"not a date\"\n  }]\n}\n];",
       "tabId": 1
     }
   ]
-}
-    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
   </body>
 </html>
