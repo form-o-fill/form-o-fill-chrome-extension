@@ -9,7 +9,8 @@ exports.config = {
       ]
     }
   },
-  chromeOnly: true,
+  chromeDriver: "../../node_modules/protractor/selenium/chromedriver",
+  directConnect: true,
   framework: 'mocha',
   maxSessions: 1,
   mochaOpts: {
