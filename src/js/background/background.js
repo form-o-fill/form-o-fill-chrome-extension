@@ -76,6 +76,11 @@ var onTabReady = function(tabId) {
               /*eslint-enable max-nested-callbacks*/
               Testing.setVar("matching-rules-count", lastMatchingRules.length, "Matching rule #");
               Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
+
+              // If there is only one match we need something in the testpage to click on
+              if(lastMatchingRules.length === 1) {
+                Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + lastMatchingRules[0].name.replace(/[^a-zA-Z-]/g,"-").toLowerCase() + "'>" + lastMatchingRules[0].name + "</li>", "Popup HTML (one match)");
+              }
             }
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
