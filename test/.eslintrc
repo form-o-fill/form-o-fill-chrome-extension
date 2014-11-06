@@ -19,8 +19,6 @@ globals:
   jsdom: true
   sources: true
   testRoot: true
-  $: true
-  $$: true
 rules:
   no-unused-expressions: 0
   max-nested-callbacks: 0

@@ -7,4 +7,6 @@ globals:
   by: true
   manifest: true
   $: true
+  $$: true
+  protractor: true
   Tests: true
