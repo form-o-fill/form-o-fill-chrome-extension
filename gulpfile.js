@@ -290,7 +290,7 @@ gulp.task('integration', function () {
   return gulp.src(["./test/support/integration_helper.js"].concat(specs))
   .pipe(protractor({
       configFile: "test/support/protractor.config.js",
-      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port]
+      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace']
   }))
   .on('error', function(e) {
     throw e
