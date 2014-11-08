@@ -18,7 +18,9 @@ global.jQuery = require("./support/jquery.js")(jsdom.jsdom().parentWindow);
 
 // Stub out the normal logger from ogger.js
 global.Logger = {
-  info: function() {}
+  info: function() {},
+  debug: function() {},
+  error: function() {}
 };
 
 // Replacement for chromes promise API
