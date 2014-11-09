@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 // This method takes the otherwise inaccessable popup.html
-// and puts it into an iframe in the BG page
+// and puts it into an <div> in the BG page
 // This process renders the popup (including all JS).
 // The popup then sends its rendered HTML to content.js
 // This is the only method to "click" and thereby view the popup HTML without
