@@ -90,3 +90,11 @@ var createCurrentPopupInIframe = function(tabId) {
   });
 };
 
+// REMOVE START
+// Listen for commands (Cmd+Shift+5) and reload the extension
+chrome.commands.onCommand.addListener(function (command) {
+  if(command === "reload-form-o-fill-extension") {
+    chrome.runtime.reload();
+  }
+});
+// REMOVE END
