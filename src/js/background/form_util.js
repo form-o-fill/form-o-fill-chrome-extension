@@ -1,9 +1,52 @@
-/* global Utils, Logger, JSONF, Notification, Storage */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules */
 /* eslint no-unused-vars: 0 */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function(func) {
     return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
+  },
+  _findImport: function (ruleName) {
+    return new Promise(function (resolve) {
+      Rules.all().then(function (rules) {
+        var ruleToImport = rules.filter(function (aRule) {
+          return aRule.name === ruleName;
+        })[0];
+        resolve(ruleToImport || null);
+      });
+    });
+  },
+  resolveImports: function(rule) {
+    return new Promise(function (resolve) {
+      // Find field definitions containing the "import" property and
+      // lookup the matching rule.
+      // Returns an array of promises
+      var importableRulesPromises = rule.fields.filter(function (fieldDef) {
+        return typeof fieldDef.import !== "undefined";
+      }).map(function (fieldDef) {
+        return FormUtil._findImport(fieldDef.import);
+      });
+
+      // resolve found shared rules
+      Promise.all(importableRulesPromises).then(function(arrayOfRules) {
+        var lookup = {};
+
+        // Create a lookup hash
+        arrayOfRules.forEach(function (ruleToImport) {
+          lookup[ruleToImport.name] = ruleToImport;
+        });
+
+        rule.fields.forEach(function (field, fieldIndex) {
+          // replace a field with "import" with the corresponding rule
+          if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
+            rule.fields[fieldIndex] = lookup[field.import];
+          }
+        });
+        arrayOfRules = null;
+
+        // Resolve that final rule
+        resolve(rule);
+      });
+    });
   },
   applyRule: function(rule, lastActiveTab) {
     this.lastRule = rule;
@@ -106,6 +149,9 @@ var FormUtil = {
       if(beforeData.length === 1) {
         beforeData = beforeData[0];
       }
+
+      // Check for rules to import (shared rules)
+      //rule = FormUtil.resolveImports(rule);
 
       // Now send all field definitions to the content script
       rule.fields.forEach(function (field) {
