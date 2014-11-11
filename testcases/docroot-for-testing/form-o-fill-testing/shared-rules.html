@@ -19,12 +19,11 @@
   ],
   "rules": [
     {
-      "code": "var rules = [{\n  url: \"shared-rule-only\",\n  name: \"shared rules (sharing)\",\n  fields: [{\n    selector: \"#i1\",\n    value: \"shared rule 1\"\n  },{\n    selector: \"#i2\",\n    value: \"shared rule 2\"\n  },{\n    selector: \"#i3\",\n    value: \"shared rule 3\"\n  }]\n}, {\n  url: /.*filling-all-matched-fields.*/,\n  name: \"using shared rules\",\n  fields: [{\n    selector: \"#i1\",\n    value: \"filled by original\"\n  },{\n    \"import\": \"shared rules (sharing)\"\n  }]\n}\n];",
+      "code": "var rules = [{\n  url: \"shared-rule-only\",\n  name: \"supplying shared rules\",\n  fields: [{\n    selector: \"#i1\",\n    value: \"shared rule 1\"\n  }, {\n    selector: \"#i2\",\n    value: \"shared rule 2\"\n  }, {\n    selector: \"#i3\",\n    value: \"shared rule 3\"\n  }]\n}, {\n  url: /.*shared-rules.*/,\n  name: \"using shared rules\",\n  autorun: true,\n  fields: [{\n    \"import\": \"supplying shared rules\"\n  }, {\n    selector: \"#i1\",\n    value: \"filled by original\"\n  }]\n}\n];",
       "tabId": 1
     }
   ]
-}
-    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
     <table id="form-o-fill-testing-info"></table>
   </body>
 </html>

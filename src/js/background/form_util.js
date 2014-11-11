@@ -27,21 +27,33 @@ var FormUtil = {
         return FormUtil._findImport(fieldDef.import);
       });
 
+
       // resolve found shared rules
       Promise.all(importableRulesPromises).then(function(arrayOfRules) {
         var lookup = {};
+        Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
 
         // Create a lookup hash
-        arrayOfRules.forEach(function (ruleToImport) {
+        arrayOfRules.filter(function (rule) {
+          return rule !== null;
+        }).forEach(function (ruleToImport) {
           lookup[ruleToImport.name] = ruleToImport.fields;
         });
 
-        rule.fields.forEach(function (field, fieldIndex) {
-          // replace a field with "import" with the corresponding rule
-          if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
-            rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
-          }
-        });
+        // If there are no lookup entries
+        // we can return here
+        if(Object.keys(lookup).length > 0) {
+          // Walk through all fields and replace imports with the field definitions
+          // from the shared rule
+          rule.fields.forEach(function (field, fieldIndex) {
+            // replace a field with "import" with the corresponding rule
+            if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
+              rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
+            }
+          });
+        }
+
+        // Kill reference for GC
         arrayOfRules = null;
 
         // Resolve that final rule
@@ -152,26 +164,27 @@ var FormUtil = {
       }
 
       // Check for rules to import (shared rules)
-      //rule = FormUtil.resolveImports(rule);
+      FormUtil.resolveImports(rule).then(function resolveImports(rule) {
+        // Now send all field definitions to the content script
+        rule.fields.forEach(function ruleFieldsForEach(field) {
+          message = {
+            "action": "fillField",
+            "selector": field.selector,
+            "value": JSONF.stringify(field.value),
+            "beforeData": beforeData
+          };
+          port.postMessage(message);
+          Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+        });
 
-      // Now send all field definitions to the content script
-      rule.fields.forEach(function (field) {
-        message = {
-          "action": "fillField",
-          "selector": field.selector,
-          "value": JSONF.stringify(field.value),
-          "beforeData": beforeData
-        };
-        port.postMessage(message);
-        Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+        // Get errors. Receiver is in content.js
+        Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
+        port.postMessage({"action": "getErrors"});
       });
 
-      // Get errors. Receiver is in content.js
-      Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
-      port.postMessage({"action": "getErrors"});
     });
 
-    var reportErrors = function(errors) {
+    var reportErrors = function reportErrors(errors) {
       Logger.warn("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
       if(errors.length > 0) {
         Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
