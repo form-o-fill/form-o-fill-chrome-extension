@@ -1,0 +1,27 @@
+<a name="help-sharedrules"></a>
+<h3>Sharing field definitions</h3>
+<p>
+  It is possible to share field definitions between rules.<br />
+  This enables you to write a set of field definitions once and insert those somewhere in another rule's workflow.
+</p>
+<p>
+  Imaging a rule that fills a long registration form with data.<br />
+  Also imaging that you need to test that form three times with the only difference being a single <code>input</code> field. 
+</p>
+<p>
+  You could create a single rule <em>without</em> that <code>input</code> field and three rules each importing the shared field definitions and the <code>input</code> field with the unique value.
+</p>
+<div class="block-of-code">
+  <div class="explaining">
+    Define a shared rule
+  </div>
+  <div class="code">
+    var rules = [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    };
+  </div>
+</div>
