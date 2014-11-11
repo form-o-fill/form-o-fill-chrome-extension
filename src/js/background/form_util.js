@@ -20,6 +20,7 @@ var FormUtil = {
       // Find field definitions containing the "import" property and
       // lookup the matching rule.
       // Returns an array of promises
+      // FormUtil.resolveImports({"fields": [{"import": "shared rules (sharing)"},{"selector": "input"}]}).then(function(rule) { console.dir(rule); });
       var importableRulesPromises = rule.fields.filter(function (fieldDef) {
         return typeof fieldDef.import !== "undefined";
       }).map(function (fieldDef) {
@@ -32,13 +33,13 @@ var FormUtil = {
 
         // Create a lookup hash
         arrayOfRules.forEach(function (ruleToImport) {
-          lookup[ruleToImport.name] = ruleToImport;
+          lookup[ruleToImport.name] = ruleToImport.fields;
         });
 
         rule.fields.forEach(function (field, fieldIndex) {
           // replace a field with "import" with the corresponding rule
           if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
-            rule.fields[fieldIndex] = lookup[field.import];
+            rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
           }
         });
         arrayOfRules = null;
