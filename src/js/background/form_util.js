@@ -2,41 +2,40 @@
 /* eslint no-unused-vars: 0 */
 var FormUtil = {
   lastRule: null,
-  functionToHtml: function(func) {
+  functionToHtml: function functionToHtml(func) {
     return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
   },
-  _findImport: function (ruleName) {
-    return new Promise(function (resolve) {
-      Rules.all().then(function (rules) {
-        var ruleToImport = rules.filter(function (aRule) {
+  _findImport: function _findImport(ruleName) {
+    return new Promise(function findImportPromise(resolve) {
+      Rules.all().then(function findImportThen(rules) {
+        var ruleToImport = rules.filter(function findImportFilter(aRule) {
           return aRule.name === ruleName;
         })[0];
         resolve(ruleToImport || null);
       });
     });
   },
-  resolveImports: function(rule) {
+  resolveImports: function resolveImports(rule) {
     return new Promise(function (resolve) {
       // Find field definitions containing the "import" property and
       // lookup the matching rule.
       // Returns an array of promises
-      // FormUtil.resolveImports({"fields": [{"import": "shared rules (sharing)"},{"selector": "input"}]}).then(function(rule) { console.dir(rule); });
-      var importableRulesPromises = rule.fields.filter(function (fieldDef) {
+      var importableRulesPromises = rule.fields.filter(function importableRulesFilter(fieldDef) {
         return typeof fieldDef.import !== "undefined";
-      }).map(function (fieldDef) {
+      }).map(function importableRulesMap(fieldDef) {
         return FormUtil._findImport(fieldDef.import);
       });
 
 
       // resolve found shared rules
-      Promise.all(importableRulesPromises).then(function(arrayOfRules) {
+      Promise.all(importableRulesPromises).then(function importableRulesPromises(arrayOfRules) {
         var lookup = {};
         Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
 
         // Create a lookup hash
-        arrayOfRules.filter(function (rule) {
+        arrayOfRules.filter(function arrayOfRulesFilter(rule) {
           return rule !== null;
-        }).forEach(function (ruleToImport) {
+        }).forEach(function arrayOfRulesLoop(ruleToImport) {
           lookup[ruleToImport.name] = ruleToImport.fields;
         });
 
@@ -45,7 +44,7 @@ var FormUtil = {
         if(Object.keys(lookup).length > 0) {
           // Walk through all fields and replace imports with the field definitions
           // from the shared rule
-          rule.fields.forEach(function (field, fieldIndex) {
+          rule.fields.forEach(function resolveImportsFields(field, fieldIndex) {
             // replace a field with "import" with the corresponding rule
             if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
               rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
@@ -61,7 +60,7 @@ var FormUtil = {
       });
     });
   },
-  applyRule: function(rule, lastActiveTab) {
+  applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;
     var beforeData;
@@ -83,8 +82,8 @@ var FormUtil = {
     };
 
     // Default instantaneous resolving promise:
-    var beforeFunctions = [function() {
-      return new Promise(function(resolve) {
+    var beforeFunctions = [function beforeFuncPromise() {
+      return new Promise(function promise(resolve) {
         resolve(null);
       });
     }];
@@ -93,8 +92,8 @@ var FormUtil = {
 
     // Utility function to wrap a function in
     // a promise
-    var wrapInPromise = function(func) {
-      return new Promise(function(resolve) {
+    var wrapInPromise = function wrapInPromise(func) {
+      return new Promise(function promise(resolve) {
         try {
           func(resolve, context);
         } catch (e) {
@@ -147,9 +146,9 @@ var FormUtil = {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
 
-          Notification.create("An error occured while executing a before function. Click here to view it.", function() {
+          Notification.create("An error occured while executing a before function. Click here to view it.", function notificationCreate() {
             // Save the errors to local storage
-            Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function () {
+            Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
               Utils.openOptions();
             });
           });
@@ -187,9 +186,9 @@ var FormUtil = {
     var reportErrors = function reportErrors(errors) {
       Logger.warn("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
       if(errors.length > 0) {
-        Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function() {
+        Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function NotificationCreate() {
           // Save the errors to local storage
-          Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function () {
+          Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
             // Open options and forward the messages to options.js
             Utils.openOptions();
           });
@@ -198,7 +197,7 @@ var FormUtil = {
       port.postMessage({"action": "hideWorkingOverlay"});
     };
 
-    port.onMessage.addListener(function (message) {
+    port.onMessage.addListener(function portOnMessageListener(message) {
       // Make errors from content scripts available here
       if(message.action === "getErrors") {
         var sentErrors = JSONF.parse(message.errors);
