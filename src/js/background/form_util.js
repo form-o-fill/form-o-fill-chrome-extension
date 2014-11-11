@@ -120,7 +120,7 @@ var FormUtil = {
       beforeFunctions = [ wrapInPromise(rule.before) ];
     } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
       // Assume an array of functions
-      beforeFunctions = rule.before.map(function (func) {
+      beforeFunctions = rule.before.map(function beforeFuncMap(func) {
         return wrapInPromise(func);
       });
     }
@@ -129,7 +129,7 @@ var FormUtil = {
 
     // call either the default - instantaneously resolving Promise (default) or
     // the arrray of before functions defined in the rule.
-    Promise.all(beforeFunctions).then(function(data) {
+    Promise.all(beforeFunctions).then(function beforeFunctionsPromise(data) {
       beforeData = data;
 
       // beforeData is null when there is no before function defined in the rule definition
@@ -137,13 +137,13 @@ var FormUtil = {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
         // Lets see if we got any errors thrown inside the executed before function
-        var filteredErrors = beforeData.filter(function (beforeFunctionData) {
+        var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
           return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
         });
 
         if (filteredErrors.length > 0) {
           // Produce error objects compatible to those used for form filling errors
-          errors = filteredErrors.map(function (errorObj) {
+          errors = filteredErrors.map(function filteredErrorsMap(errorObj) {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
 
