@@ -40,6 +40,7 @@ describe("the options panel", function() {
       });
 
       // Navigation links
+      // This test will fail for the "build" version. Thats OK!
       expect($$(".navigation .menu li").getText()).to.become(["Rule Editor", "Help", "About", "Changelog", "Logs"]);
     });
   });

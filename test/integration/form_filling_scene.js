@@ -12,6 +12,10 @@ describe("the form filling", function() {
   };
 
   describe("simple rule matching", function() {
+    it("works when requesting JSON from via jQuery", function(){
+      importAndExecute("Requesting external JSON", "value by json.json via jQuery.getJSON");
+    });
+
     it("works for a rule that is matched by content", function(){
       importAndExecute("Matching by content", "found by content");
     });
@@ -28,9 +32,6 @@ describe("the form filling", function() {
       importAndExecute("Using the ENV in a before function", 'Hello ENV: {"url":{"url":"http://localhost:8889/form-o-fill-testing/simple.html","protocol":"http:","host":"localhost","port":"8889","path":"/form-o-fill-testing/simple.html","query":"","hash":""}}');
     });
 
-    it("works when requesting JSON from via jQuery", function(){
-      importAndExecute("Requesting external JSON", "value by json.json via jQuery.getJSON");
-    });
   });
 
   describe("filling all matched fields", function() {
