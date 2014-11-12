@@ -26,6 +26,10 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.5.0
+- New feature: Shared field definitions (like rspec shared_examples).
+  Import common field definitions into a rule in any place you want.
+
 ★ Version 1.4.1
 - Implemented error reporting for before functions
 - Popup shows rules sorted by name
