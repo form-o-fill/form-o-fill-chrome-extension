@@ -17,9 +17,13 @@ var ChromeBootstrap = {
 
     jQuery('.mainview > *:not(.selected)').css('display', 'none');
 
-    // Activate navigationitem via hashtag
-    jQuery(window).on("load", function () {
+    var relocate = function(target) {
       var hash = window.location.hash;
+
+      if (typeof target !== "undefined") {
+        hash = target;
+      }
+
       if (hash) {
         var main = hash.replace(/-.*$/, "");
         var sub = hash.replace(/^.*?-/, "");
@@ -34,7 +38,13 @@ var ChromeBootstrap = {
           window.location.hash = hash;
         }
       }
-    });
+    };
 
+    // Activate navigationitem via hashtag
+    jQuery(window).on("load", relocate);
+
+    jQuery(document).on("click", "a[href*=#help-]", function() {
+      relocate(this.href.replace(/^.*#/,"#"));
+    });
   }
 };
