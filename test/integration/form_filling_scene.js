@@ -2,18 +2,22 @@ describe("the form filling", function() {
 
   // Import rules and test a single rule execution
   var importAndExecute = function(ruleText, expectedTextInInput) {
-    Tests.visit("simple").then(function () {
-      Tests.importRules();
-    }).then(function () {
-      element(by.cssContainingText("li.select-rule", ruleText)).click();
-    }).then(function () {
+    Tests.visit("simple")
+    .then(Tests.importRules)
+    .then(element(by.cssContainingText("li.select-rule", ruleText)).click)
+    .then(function () {
       expect($("#target").getAttribute("value")).to.become(expectedTextInInput);
     });
   };
 
   describe("simple rule matching", function() {
-    it("works when requesting JSON from via jQuery", function(){
-      importAndExecute("Requesting external JSON", "value by json.json via jQuery.getJSON");
+    it("works when requesting JSON via jQuery", function(){
+      Tests.visit("simple")
+      .then(Tests.importRules)
+      .then(element(by.cssContainingText("li.select-rule", "Requesting external JSON")).click)
+      .then(function () {
+        expect($("#target").getAttribute("value")).to.become("value by json.json via jQuery.getJSON");
+      });
     });
 
     it("works for a rule that is matched by content", function(){

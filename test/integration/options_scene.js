@@ -9,12 +9,6 @@ describe("the options panel", function() {
     });
   };
 
-  it("is available", function(){
-    visitOptions().then(function () {
-      expect(browser.driver.getTitle()).to.become("Form-O-Fill Options");
-    });
-  });
-
   it("is contains all essential parts", function(){
     visitOptions().then(function () {
       // Current tab
