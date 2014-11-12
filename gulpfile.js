@@ -295,10 +295,11 @@ gulp.task('integration', function () {
   connect.server(serverConfigIntegration);
 
   var specs = [argv.spec || argv.s || "./test/integration/*_scene.js"];
+  var extPath = argv.ext || argv.e || "src";
 
   return gulp.src(["./test/support/integration_helper.js"].concat(specs))
   .pipe(protractor({
-      configFile: "test/support/protractor.config.js",
+      configFile: "test/support/protractor." + extPath + ".config.js",
       args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace']
   }))
   .on('error', function(e) {
