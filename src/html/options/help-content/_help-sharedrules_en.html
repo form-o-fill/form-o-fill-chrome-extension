@@ -4,19 +4,57 @@
   It is possible to share field definitions between rules.<br />
   This enables you to write a set of field definitions once and insert those somewhere in another rule's workflow.
 </p>
-<p>
-  Imaging a rule that fills a long registration form with data.<br />
-  Also imaging that you need to test that form three times with the only difference being a single <code>input</code> field. 
-</p>
-<p>
-  You could create a single rule <em>without</em> that <code>input</code> field and three rules each importing the shared field definitions and the <code>input</code> field with the unique value.
-</p>
 <div class="block-of-code">
-  <div class="explaining">
-    Define a shared rule
-  </div>
+  <div class="explaining"></div>
   <div class="code">
     var rules = [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    This is the name the shared rule will be referenced by
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;name: "these field definitions are shared",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Since every shared rule can be used independently,<br />
+    it's good to use a "url" or "content" matcher
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;url: "http://www.like-every-other-rule.com",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Normal field definitions follow.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    All field definitions are imported when the rule is referenced.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;value: "like always"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
   </div>
 </div>
 <div class="block-of-code">
@@ -25,3 +63,97 @@
     };
   </div>
 </div>
+<br />
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    var rules = [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    This is a rule that uses the shared rule from above.<br />
+    It can be defined in whatever tab you want<br />
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;name: "using the shared rule from above",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;url: "http://www.like-every-other-rule.com",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Normal field definition:
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;value: "the value"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Importing the shared rule:
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;import: "these field definitions are shared"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Another field definition ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;selector: "#some-id",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;value: "a value"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    }];
+  </div>
+</div>
+<p>
+  In the above example the <code>input[type=text]</code> would be filled with <code>like always</code> since the imported field definition comes last.
+</p>
