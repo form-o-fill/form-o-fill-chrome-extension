@@ -1,4 +1,4 @@
-/*global beforeEach browser*/
+/*global beforeEach browser $*/
 // This file is run before all other specs
 // mocha is already global here
 var fs = require('fs');
