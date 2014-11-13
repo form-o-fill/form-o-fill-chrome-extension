@@ -17,6 +17,7 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var argv = require('yargs').argv;
+var glob = require("glob");
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -294,13 +295,29 @@ gulp.task('integration', function () {
   // Start a small webserver
   connect.server(serverConfigIntegration);
 
-  var specs = [argv.spec || argv.s || "./test/integration/*_scene.js"];
+  // Sadly the order seems to be important
+  var specs = [
+    "./test/support/integration_helper.js",
+    "./test/integration/test_setup_scene.js"
+  ].concat(glob.sync("./test/integration/*_scene.js"));
+
+  // Unique please
+  specs = specs.filter(function(elem, pos) {
+    return specs.indexOf(elem) == pos;
+  });
+
+  // Allow --spec parameter
+  if (argv.spec) {
+    specs = [argv.spec];
+  }
+
+  // Allow --ext src | build
   var extPath = argv.ext || argv.e || "src";
 
-  return gulp.src(["./test/support/integration_helper.js"].concat(specs))
+  return gulp.src(specs)
   .pipe(protractor({
-      configFile: "test/support/protractor." + extPath + ".config.js",
-      args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace']
+    configFile: "test/support/protractor." + extPath + ".config.js",
+    args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace']
   }))
   .on('error', function(e) {
     throw e
