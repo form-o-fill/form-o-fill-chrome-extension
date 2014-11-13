@@ -30,7 +30,6 @@ var connect = require('gulp-connect');
 
 // End to End testing
 var protractor = require("gulp-protractor").protractor;
-var webdriverUpdate = require('gulp-protractor').webdriver_update;
 
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
@@ -331,9 +330,6 @@ gulp.task('integration', function () {
 gulp.task('server', function() {
   connect.server(serverConfig);
 });
-
-// Updates the selenium stuff in node_modules
-gulp.task('webdriver_update', webdriverUpdate);
 
 // running "gulp" will execute this
 gulp.task('default', function () {
