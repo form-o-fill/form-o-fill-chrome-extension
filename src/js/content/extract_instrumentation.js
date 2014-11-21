@@ -1,9 +1,9 @@
 /*global jQuery, FormExtractor, Storage, Logger, Utils, JSONF*/
 
 // Create HTML overlays for form masking
-var getOverlays = function() {
+var getOverlays = function getOverlays() {
   var overlays = ["<div class='form-o-fill-overlay-cover'></div>"];
-  jQuery("form").each(function(index) {
+  jQuery("form").each(function formEach(index) {
     var $form = jQuery(this);
 
     // Add an index so we can find the form later
@@ -21,16 +21,16 @@ var getOverlays = function() {
   return overlays.join();
 };
 
-var cleanupOverlays = function() {
+var cleanupOverlays = function cleanupOverlays() {
   // cleanup
-  jQuery("form").each(function () {
+  jQuery("form").each(function formEach() {
     jQuery(this).removeAttr("form-o-fill-id");
   });
   jQuery(".form-o-fill-overlay-form, .form-o-fill-overlay-cover").remove();
   jQuery(document).off("click", ".form-o-fill-overlay-form").off("click", "body");
 };
 
-var extractRules = function(targetForm) {
+var extractRules = function extractRules(targetForm) {
   // looks good, start extraction
   var ruleCode = FormExtractor.extract(targetForm);
   Logger.info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
@@ -42,9 +42,10 @@ var extractRules = function(targetForm) {
   chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
 };
 
-var showExtractOverlay = function () {
+// Show the extract overlay and bind handlers
+var showExtractOverlay = function showExtractOverlay() {
   // Add event listener to DOM
-  jQuery(document).on("click", ".form-o-fill-overlay-form", function (e) {
+  jQuery(document).on("click", ".form-o-fill-overlay-form", function clickFofOverlay(e) {
     e.preventDefault();
     e.stopPropagation();
 
@@ -57,9 +58,8 @@ var showExtractOverlay = function () {
     if(targetForm) {
       extractRules(targetForm);
     }
-  }).on("click", "body", function () {
-    cleanupOverlays();
-  }).on("keyup", function(e) {
+  }).on("click", "body", cleanupOverlays)
+  .on("keyup", function keyUp(e) {
     if(e.which === 27) {
       cleanupOverlays();
     }
@@ -70,7 +70,7 @@ var showExtractOverlay = function () {
 };
 
 // This is a one-off message listener
-chrome.runtime.onMessage.addListener(function (message, sender, responseCallback) {
+chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, sender, responseCallback) {
   // Request to start extracting a form to rules
   if (message && message.action === "showExtractOverlay") {
     showExtractOverlay();
@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
     var content = document.querySelector("body").outerHTML;
     var matches = [];
     var rules = JSONF.parse(message.rules);
-    rules.forEach(function (rule) {
+    rules.forEach(function forEach(rule) {
       if(typeof rule.content.test === "function" && rule.content.test(content)) {
         matches.push(rule);
       }
