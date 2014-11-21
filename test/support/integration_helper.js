@@ -20,14 +20,14 @@ beforeEach(function() {
 // HELPER function to make live easier:
 //
 
-// abstract writing screen shot to a file
-global.Tests.writeScreenShot = function(data, filename) {
-  var stream = fs.createWriteStream(filename);
-  stream.write(new Buffer(data, 'base64'));
-  stream.end();
-};
-
 var Tests = {
+  takeScreenshot: function (filename) {
+    browser.driver.takeScreenshot().then(function (data) {
+      var stream = fs.createWriteStream(filename);
+      stream.write(new Buffer(data, 'base64'));
+      stream.end();
+    });
+  },
   // Logs the current page source to the console
   showPageSource: function() {
     browser.driver.getPageSource().then(function (source) {
