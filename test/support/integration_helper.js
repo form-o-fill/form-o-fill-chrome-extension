@@ -39,7 +39,7 @@ var Tests = {
     return new Promise(function(resolve) {
       browser.driver.get("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html")
       .then(function () {
-        browser.driver.sleep(500).then(resolve);
+        browser.driver.sleep(1000).then(resolve);
       });
     });
   },
