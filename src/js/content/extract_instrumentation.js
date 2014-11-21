@@ -42,34 +42,38 @@ var extractRules = function(targetForm) {
   chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
 };
 
+var showExtractOverlay = function () {
+  // Add event listener to DOM
+  jQuery(document).on("click", ".form-o-fill-overlay-form", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // This is the form we must extract
+    var targetForm = document.querySelector("form[data-form-o-fill-id='" + this.dataset.formOFillId + "']");
+
+    // remove overlays etc
+    cleanupOverlays();
+
+    if(targetForm) {
+      extractRules(targetForm);
+    }
+  }).on("click", "body", function () {
+    cleanupOverlays();
+  }).on("keyup", function(e) {
+    if(e.which === 27) {
+      cleanupOverlays();
+    }
+  });
+
+  // Attach overlays to DOM
+  jQuery("body").append(getOverlays());
+};
+
 // This is a one-off message listener
 chrome.runtime.onMessage.addListener(function (message, sender, responseCallback) {
   // Request to start extracting a form to rules
   if (message && message.action === "showExtractOverlay") {
-    // Add event listener to DOM
-    jQuery(document).on("click", ".form-o-fill-overlay-form", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // This is the form we must extract
-      var targetForm = document.querySelector("form[data-form-o-fill-id='" + this.dataset.formOFillId + "']");
-
-      // remove overlays etc
-      cleanupOverlays();
-
-      if(targetForm) {
-        extractRules(targetForm);
-      }
-    }).on("click", "body", function () {
-      cleanupOverlays();
-    }).on("keyup", function(e) {
-      if(e.which === 27) {
-        cleanupOverlays();
-      }
-    });
-
-    // Attach overlays to DOM
-    jQuery("body").append(getOverlays());
+    showExtractOverlay();
   }
 
   // Request to match rules against content

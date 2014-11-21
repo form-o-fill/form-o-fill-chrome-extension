@@ -1,4 +1,4 @@
-/*global Logger jQuery Utils */
+/*global Logger jQuery Utils showExtractOverlay */
 // This file is for end to end testing only
 // It is delivered with the production code but disabled
 var installTestingCode = function() {
@@ -65,7 +65,12 @@ var installTestingCode = function() {
   }).on("click", ".extension-options-url", function () {
     // Simulate a click on the testing options link
     Utils.openOptions();
+  }).on("click", "a.cmd-show-extract-overlay", function () {
+    // Execute extract form function
+    showExtractOverlay();
   });
+
+
 };
 
 // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
