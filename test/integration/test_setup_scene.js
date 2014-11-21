@@ -1,5 +1,5 @@
 describe("test setup", function() {
-  it("installs the extension from the src/ dir", function(){
+  it("installs the extension", function(){
     // The correct (bit chrome intern) url for the installed extensions is
     // not chrome://extensions but this:
     browser.get("chrome://extensions-frame/");

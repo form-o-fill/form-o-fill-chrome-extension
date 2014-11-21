@@ -17,7 +17,6 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var argv = require('yargs').argv;
-var glob = require("glob");
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -295,15 +294,17 @@ gulp.task('integration', function () {
   connect.server(serverConfigIntegration);
 
   // Sadly the order seems to be important
+  // Integration Helper must come first,
+  // options must come last
   var specs = [
     "./test/support/integration_helper.js",
-    "./test/integration/test_setup_scene.js"
-  ].concat(glob.sync("./test/integration/*_scene.js"));
-
-  // Unique please
-  specs = specs.filter(function(elem, pos) {
-    return specs.indexOf(elem) == pos;
-  });
+    "./test/integration/test_setup_scene.js",
+    "./test/integration/form_filling_scene.js",
+    "./test/integration/form_filling_all_types_scene.js",
+    "./test/integration/form_filling_shared_rules_scene.js",
+    "./test/integration/popup_scene.js",
+    "./test/integration/options_scene.js"
+  ];
 
   // Allow --spec parameter
   if (argv.spec) {
