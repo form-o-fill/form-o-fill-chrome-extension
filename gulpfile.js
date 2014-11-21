@@ -299,6 +299,7 @@ gulp.task('integration', function () {
   var specs = [
     "./test/support/integration_helper.js",
     "./test/integration/test_setup_scene.js",
+    "./test/integration/form_extraction_scene.js",
     "./test/integration/form_filling_scene.js",
     "./test/integration/form_filling_all_types_scene.js",
     "./test/integration/form_filling_shared_rules_scene.js",
@@ -308,7 +309,7 @@ gulp.task('integration', function () {
 
   // Allow --spec parameter
   if (argv.spec) {
-    specs = [argv.spec];
+    specs = ["./test/support/integration_helper.js", argv.spec];
   }
 
   // Allow --ext src | build
