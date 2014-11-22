@@ -50,7 +50,16 @@ var Tests = {
         browser.driver.sleep(1200).then(resolve);
       });
     });
+  },
+  sleep: function(msec) {
+    return new Promise(function (resolve) {
+      if(typeof msec === "undefined") {
+        msec = 1000;
+      }
+      browser.driver.sleep(msec).then(resolve);
+    });
   }
 };
 
 global.Tests = Tests;
+global.sleep = Tests.sleep;
