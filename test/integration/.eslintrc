@@ -10,3 +10,4 @@ globals:
   $$: true
   protractor: true
   Tests: true
+  sleep: true
