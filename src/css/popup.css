@@ -25,6 +25,7 @@
 
 html {
   width: 330px;
+  min-height: 200px;
   margin: 0;
   padding: 0;
 }
@@ -35,6 +36,7 @@ body {
   color: #2c2c2c;
   margin: 0;
   padding: 10px;
+  min-height: 200px;
 }
 
 h3 {
