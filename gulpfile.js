@@ -315,10 +315,19 @@ gulp.task('integration', function () {
   // Allow --ext src | build
   var extPath = argv.ext || argv.e || "src";
 
+  // Debug
+  var debugOn = argv.debug || argv.d;
+
+  var config = ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace'];
+
+  if(typeof debugOn !== "undefined") {
+    config.push("debug");
+  }
+
   return gulp.src(specs)
   .pipe(protractor({
     configFile: "test/support/protractor." + extPath + ".config.js",
-    args: ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace']
+    args: config
   }))
   .on('error', function(e) {
     throw e
