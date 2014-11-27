@@ -74,11 +74,22 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
     var errors = errorsStorage.errors;
     var $notice = $("#ruleeditor .notice.form-fill-errors");
     var tableTrs = [];
+    var fullMsg = false;
     errors.forEach(function (error) {
       Logger.info("[options.js] Got error " + JSONF.stringify(error) + " for rule " + JSONF.stringify(rule));
-      tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+      if(typeof error.fullMessage !== "undefined") {
+        // One line output
+        tableTrs.push("<tr><td>" + error.fullMessage + "</td></tr>");
+        fullMsg = true;
+      } else {
+        // Typically an error in a rule
+        tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+      }
     });
     $notice.find("table").append(tableTrs.join("\n"));
+    if(fullMsg) {
+      $notice.find("#form-filling-errors-thead").remove();
+    }
     $notice.find(".rule-name").html(rule.nameClean);
     $notice.find(".rule-url").html(rule.urlClean);
     $notice.show();

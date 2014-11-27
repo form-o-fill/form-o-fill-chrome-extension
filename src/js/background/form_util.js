@@ -17,6 +17,7 @@ var FormUtil = {
   },
   resolveImports: function resolveImports(rule) {
     return new Promise(function (resolve) {
+
       // Find field definitions containing the "import" property and
       // lookup the matching rule.
       // Returns an array of promises
@@ -26,11 +27,22 @@ var FormUtil = {
         return FormUtil._findImport(fieldDef.import);
       });
 
-
       // resolve found shared rules
       Promise.all(importableRulesPromises).then(function importableRulesPromises(arrayOfRules) {
         var lookup = {};
         Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+
+        // Check for imports that could not be found
+        var missingImports = arrayOfRules.filter(function importWithoutRules(element) {
+          return element === null;
+        });
+
+        if(missingImports.length > 0) {
+          Notification.create(chrome.i18n.getMessage("notification_import_without_rule"), function importWithoutRule() {
+            var errors = [{ fullMessage: "Missing import in rule with name '" + rule.name + "'" }];
+            FormUtil.saveErrors(errors, rule);
+          });
+        }
 
         // Create a lookup hash
         arrayOfRules.filter(function arrayOfRulesFilter(rule) {
@@ -47,6 +59,7 @@ var FormUtil = {
           rule.fields.forEach(function resolveImportsFields(field, fieldIndex) {
             // replace a field with "import" with the corresponding rule
             if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
+              // Insert the rules at the "import" spot
               rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
             }
           });
@@ -58,6 +71,12 @@ var FormUtil = {
         // Resolve that final rule
         resolve(rule);
       });
+    });
+  },
+  saveErrors: function saveErrors(errors, rule) {
+    // Save the errors to local storage
+    Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
+      Utils.openOptions();
     });
   },
   applyRule: function applyRule(rule, lastActiveTab) {
@@ -147,10 +166,7 @@ var FormUtil = {
           });
 
           Notification.create("An error occured while executing a before function. Click here to view it.", function notificationCreate() {
-            // Save the errors to local storage
-            Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
-              Utils.openOptions();
-            });
+            FormUtil.saveErrors(errors, rule);
           });
         }
 
@@ -187,11 +203,7 @@ var FormUtil = {
       Logger.warn("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
       if(errors.length > 0) {
         Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function NotificationCreate() {
-          // Save the errors to local storage
-          Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
-            // Open options and forward the messages to options.js
-            Utils.openOptions();
-          });
+          FormUtil.saveErrors(errors, rule);
         });
       }
       port.postMessage({"action": "hideWorkingOverlay"});

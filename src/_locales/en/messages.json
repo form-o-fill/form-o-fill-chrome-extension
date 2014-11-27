@@ -32,5 +32,8 @@
   },
   "first_install_notification": {
     "message": "Thanks for installing Form-O-Fill!\nClick here get some help on how to start."
+  },
+  "notification_import_without_rule": {
+    "message": "Found an 'import' statement without matching rule. Click here to see more info."
   }
 }
