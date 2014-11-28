@@ -17,7 +17,7 @@ beforeEach(function() {
 });
 
 //
-// HELPER function to make live easier:
+// HELPER function to make life easier:
 //
 
 var Tests = {
