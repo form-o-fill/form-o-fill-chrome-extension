@@ -79,7 +79,7 @@ var onTabReady = function(tabId) {
 
               // If there is only one match we need something in the testpage to click on
               if(lastMatchingRules.length === 1) {
-                Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + lastMatchingRules[0].name.replace(/[^a-zA-Z-]/g,"-").toLowerCase() + "'>" + lastMatchingRules[0].name + "</li>", "Popup HTML (one match)");
+                Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + lastMatchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + lastMatchingRules[0].name + "</li>", "Popup HTML (one match)");
               }
             }
 

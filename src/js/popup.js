@@ -70,7 +70,7 @@ var Popup = {
       li.dataset.ruleUrl = rule.url;
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;
-      li.dataset.ruleName = rule.name.replace(/[^a-zA-Z-]/g,"-").toLowerCase();
+      li.dataset.ruleName = rule.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);

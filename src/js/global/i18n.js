@@ -20,7 +20,7 @@ var I18n = {
     return this._lang;
   },
   userLocale: function() {
-    return chrome.i18n.getUILanguage().replace(/_.*$/,"").toLowerCase();
+    return chrome.i18n.getUILanguage().replace(/_.*$/, "").toLowerCase();
   },
   loadPages: function(pages, prefix) {
     var i18n = this;

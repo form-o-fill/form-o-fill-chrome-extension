@@ -44,7 +44,7 @@ var ChromeBootstrap = {
     jQuery(window).on("load", relocate);
 
     jQuery(document).on("click", "a[href*=#help-]", function() {
-      relocate(this.href.replace(/^.*#/,"#"));
+      relocate(this.href.replace(/^.*#/, "#"));
     });
   }
 };

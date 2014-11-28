@@ -128,7 +128,7 @@
     space-in-brackets: 0 #require or disallow spaces between brackets
     space-infix-ops: 2 #require spaces around operators
     space-return-throw-case: 2 #require a space after return, throw, and case
-    space-unary-word-ops: 2 #require a space around word operators such as typeof
+    space-unary-ops: [1, { "words": true, "nonwords": false }] #require a space around word operators such as typeof
     one-var: 0 # dont require just one var statement per function
     wrap-regex: 0 # dont require regex literals to be wrapped in parentheses
 

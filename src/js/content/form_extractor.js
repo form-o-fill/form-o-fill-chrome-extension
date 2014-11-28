@@ -134,7 +134,7 @@ var FormExtractor = {
   },
   _typeMethod: function(prefix, type) {
     return ("_" + prefix + "-" + type).replace(/(\-[a-z])/g, function($1) {
-      return $1.toUpperCase().replace('-','');
+      return $1.toUpperCase().replace('-', '');
     });
   }
 };

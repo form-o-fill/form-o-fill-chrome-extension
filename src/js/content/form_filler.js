@@ -143,7 +143,7 @@ var FormFiller = {
   },
   _typeMethod: function(type) {
     return ("_fill-" + type).replace(/(\-[a-z])/g, function($1) {
-      return $1.toUpperCase().replace('-','');
+      return $1.toUpperCase().replace('-', '');
     });
   },
   _fillMethod: function(domNode) {

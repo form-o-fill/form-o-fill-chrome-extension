@@ -51,7 +51,7 @@ Editor.prototype.cleanUp = function() {
   for(i = lastLineIndex; i > 0; i--) {
     line = this._document.getLine(i).trim();
     if(line === "") {
-      this._document.removeLines(i,i);
+      this._document.removeLines(i, i);
     } else {
       break;
     }
@@ -72,7 +72,7 @@ Editor.prototype.fixRules = function() {
     // Assume "var rules = [" is missing
     this._document.insertLines(0, [ "var rules = [" ]);
   } else {
-    this._document.replace(new AceRange(0,0,0,999), "var rules = [");
+    this._document.replace(new AceRange(0, 0, 0, 999), "var rules = [");
   }
 
   // }]; at end?
