@@ -5,13 +5,16 @@ var FormUtil = {
   functionToHtml: function functionToHtml(func) {
     return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
   },
-  _findImport: function _findImport(ruleName) {
+  _findImport: function _findImport(ruleName, ruleNameWithImport) {
     return new Promise(function findImportPromise(resolve) {
       Rules.all().then(function findImportThen(rules) {
         var ruleToImport = rules.filter(function findImportFilter(aRule) {
           return aRule.name === ruleName;
         })[0];
-        resolve(ruleToImport || null);
+        resolve({
+          ruleToImport: (ruleToImport || null),
+          ruleThatImports: ruleName
+        });
       });
     });
   },
@@ -24,7 +27,7 @@ var FormUtil = {
       var importableRulesPromises = rule.fields.filter(function importableRulesFilter(fieldDef) {
         return typeof fieldDef.import !== "undefined";
       }).map(function importableRulesMap(fieldDef) {
-        return FormUtil._findImport(fieldDef.import);
+        return FormUtil._findImport(fieldDef.import, rule.name);
       });
 
       // resolve found shared rules
@@ -34,12 +37,14 @@ var FormUtil = {
 
         // Check for imports that could not be found
         var missingImports = arrayOfRules.filter(function importWithoutRules(element) {
-          return element === null;
+          return element.ruleToImport === null;
         });
 
         if(missingImports.length > 0) {
           Notification.create(chrome.i18n.getMessage("notification_import_without_rule"), function importWithoutRule() {
-            var errors = [{ fullMessage: "Missing import in rule with name '" + rule.name + "'" }];
+            var errors = missingImports.map(function (element) {
+              return { fullMessage: "Missing rule is named '" + element.ruleThatImports + "'" };
+            });
             FormUtil.saveErrors(errors, rule);
           });
         }
