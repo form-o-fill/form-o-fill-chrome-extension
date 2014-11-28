@@ -26,6 +26,10 @@ Permissions requested:
 
 Changelog:
 
+★ Version 1.5.1
+- Fix a potential chrome bug with flickering or too small popup.
+- Report missing rules when using shared field definitions.
+
 ★ Version 1.5.0
 - New feature: Shared field definitions (like rspec shared_examples).
   Import common field definitions into a rule in any place you want.
