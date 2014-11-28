@@ -13,8 +13,9 @@ Features:
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
 ✓ One click apply of a matching rule.
 ✓ Two click apply when there are multiple matching rules.
+✓ Auto apply configurable for each rule
+✓ Reuse rules inside other rules
 ✓ Browser notifications to show you what happened.
-✓ Modern design (is that even a feature?).
 
 Requires:
 Chrome 33+
