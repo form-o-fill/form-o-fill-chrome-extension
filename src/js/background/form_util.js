@@ -49,6 +49,11 @@ var FormUtil = {
           });
         }
 
+        // revert changes made by importable rules
+        arrayOfRules = arrayOfRules.map(function(importRuleConstruct) {
+          return importRuleConstruct.ruleToImport;
+        });
+
         // Create a lookup hash
         arrayOfRules.filter(function arrayOfRulesFilter(rule) {
           return rule !== null;
