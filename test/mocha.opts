@@ -1,3 +1,4 @@
 --require test/spec_helper
 --reporter dot
 --recursive
+--timeout 99999

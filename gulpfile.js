@@ -27,9 +27,6 @@ var debug = require('gulp-debug');
 // Small webserver for testing with protractor
 var connect = require('gulp-connect');
 
-// End to End testing
-var protractor = require("gulp-protractor").protractor;
-
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
 
@@ -325,10 +322,6 @@ gulp.task('integration', function () {
   }
 
   return gulp.src(specs)
-  .pipe(protractor({
-    configFile: "test/support/protractor." + extPath + ".config.js",
-    args: config
-  }))
   .on('error', function(e) {
     throw e
   })
@@ -340,6 +333,10 @@ gulp.task('integration', function () {
 // Start server for testing purposes
 gulp.task('server', function() {
   connect.server(serverConfig);
+});
+
+gulp.task('server-integration', function() {
+  connect.server(serverConfigIntegration);
 });
 
 // running "gulp" will execute this
