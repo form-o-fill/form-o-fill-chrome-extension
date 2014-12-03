@@ -1,63 +1,46 @@
 /* global editor */
+require("../support/integration_helper");
+
 describe("the form extraction", function() {
+  this.timeout(99999);
 
-
-  it("shows the extraction overlay", function(){
+  it("shows the extraction overlay", function(done) {
     Tests.visit("form-extraction")
-    .then(element(by.cssContainingText(".popup-html a.cmd-show-extract-overlay", "Extract")).click)
-    .then(function () {
-      expect($("div.form-o-fill-overlay-form").isDisplayed()).to.eventually.be.true;
-    });
+    .click(".popup-html a.cmd-show-extract-overlay")
+    .isVisible("div.form-o-fill-overlay-form", function (err, isVisible) {
+      expect(isVisible).to.be_true;
+    }).call(done);
   });
 
-  it("shows a notification when the user clicks the overlay", function(){
-    // I can't explain why this and ONLY this form (mixed then(func) and then(return func))
-    // gives a usable result. Bugs me.
+  it("shows a notification when the user clicks the overlay", function(done) {
     Tests.visit("form-extraction")
-    .then(element(by.cssContainingText(".popup-html a.cmd-show-extract-overlay", "Extract")).click)
-    .then($(".form-o-fill-overlay-form").click)
-    .then(function() {
-      return browser.driver.sleep(2000);
-    }).then(function () {
-      expect($(".notification-html").getText()).to.become("Extracted your form. Click here to check the options panel for more info.");
-    });
+    .click(".popup-html a.cmd-show-extract-overlay")
+    .click("div.form-o-fill-overlay-form")
+    .pause(1000)
+    .getText(".notification-html", function (err, text) {
+      expect(text).to.eql("Extracted your form. Click here to check the options panel for more info.");
+    })
+    .call(done);
   });
 
-  // This is a sad test setup.
-  // I can't get expect() to work in the final then().
-  // So I kill the complete process leaving the chrome browser open :(
-  it("inserts extracted rules into the editor", function() {
+  it("inserts extracted rules into the editor", function(done) {
     Tests.visit("form-extraction")
-    .then(element(by.cssContainingText(".popup-html a.cmd-show-extract-overlay", "Extract")).click)
-    .then($(".form-o-fill-overlay-form").click)
-    .then(function() {
-      return browser.driver.sleep(1000);
-    })
-    .then($(".extension-options-url a").click)
-    .then(function() {
-      return browser.driver.sleep(1500);
-    })
-    .then($("a.cmd-append-extracted").click)
-    .then(function() {
-      return browser.driver.sleep(2000);
-    })
-    .then(function() {
-      // return content of editor
-      return browser.driver.executeScript(function() {
+    .click(".popup-html a.cmd-show-extract-overlay")
+    .pause(1000)
+    .click("div.form-o-fill-overlay-form")
+    .pause(1000)
+    .click(".extension-options-url a")
+    .pause(1000)
+    .click("a.cmd-append-extracted")
+    .execute(function () {
         return editor.getValue();
-      });
-    })
-    .then(function(ruleString) {
-      var rule = JSON.parse(ruleString);
+    }, function (err, ret) {
       var fail = function(expected, actual) {
-        if(JSON.stringify(expected) !== JSON.stringify(actual)) {
-          console.error("Expected \n" + JSON.stringify(expected) + "\n to equal actual \n" + JSON.stringify(actual));
-          browser.driver.close();
-          /*eslint-disable no-process-exit*/
-          process.exit(1);
-          /*eslint-enable no-process-exit*/
-        }
+        expect(JSON.stringify(expected)).to.eql(JSON.stringify(actual));
       };
+
+      var rule = JSON.parse(ret.value);
+
       fail("A rule for http://localhost:8889/form-o-fill-testing/form-extraction.html#", rule.name);
       fail("http://localhost:8889/form-o-fill-testing/form-extraction.html#", rule.url);
       fail({ selector: 'input[name=\'text\']', value: 'text' }, rule.fields[0]);
@@ -82,8 +65,8 @@ describe("the form extraction", function() {
       fail({ selector: 'select[name=\'select\']', value: 'option2' }, rule.fields[19]);
       fail({ selector: 'select[name=\'selectmultiple\']', "value": ["multiple1", "multiple2"]}, rule.fields[20]);
       fail(false, rule.autorun);
-    });
+    })
+    .call(done);
   });
 });
-
 

@@ -17,6 +17,7 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var argv = require('yargs').argv;
+var selenium = require('selenium-standalone');
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -270,63 +271,52 @@ gulp.task('watch', function () {
   gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
 
-
-// Integration testing(end-to-end)
-// Uses protractor as an abstraction layer over chromedriver
-// Chromedriver can be used without a running selenium server
-// Starts a simple webserver on port 8888
+// Integration testing (end-to-end)
+// Uses webdriverio as an abstraction layer over chromedriver
 //
 // You can specify a single spec to run via:
 // gulp integration --spec test/integration/some_spec_scene.js
+//
+// Specify a single spec with
+// gulp integration --grep "a\sregex"
 gulp.task('integration', function () {
-
-  gulpUtil.log(
-    "If this fails with",
-    chalk.cyan("[launcher] Error: Could not find chromedriver"),
-    "run",
-    chalk.cyan("node_modules/protractor/bin/webdriver-manager update")
-  );
 
   // Start a small webserver
   connect.server(serverConfigIntegration);
+
+  var server = selenium({stdio: 'pipe'}, {});
 
   // Sadly the order seems to be important
   // Integration Helper must come first,
   // options must come last
   var specs = [
-    "./test/support/integration_helper.js",
     "./test/integration/test_setup_scene.js",
-    "./test/integration/form_filling_scene.js",
-    "./test/integration/form_filling_all_types_scene.js",
-    "./test/integration/form_filling_shared_rules_scene.js",
-    "./test/integration/popup_scene.js",
-    "./test/integration/form_extraction_scene.js",
-    "./test/integration/options_scene.js"
+    "./test/integration/form_extraction_scene.js"
   ];
 
   // Allow --spec parameter
   if (argv.spec) {
-    specs = ["./test/support/integration_helper.js", argv.spec];
+    specs = [argv.spec];
   }
 
-  // Allow --ext src | build
-  var extPath = argv.ext || argv.e || "src";
+  var mochaOpts = {
+    R: 'spec',
+    c: true,
+    debug: true,
+    inlineDiffs: true
+  };
 
-  // Debug
-  var debugOn = argv.debug || argv.d;
-
-  var config = ['--baseUrl', 'http://127.0.0.1:' + serverConfigIntegration.port, '--stackTrace'];
-
-  if(typeof debugOn !== "undefined") {
-    config.push("debug");
+  // Allow --grep as mocha opt
+  if (argv.grep) {
+    mochaOpts.grep = argv.grep;
   }
 
-  return gulp.src(specs)
-  .on('error', function(e) {
-    throw e
-  })
+  return gulp.src(specs, {read: false})
+  .pipe(mocha(mochaOpts))
+  .on('error', console.warn.bind(console))
   .on('end', function() {
     connect.serverClose();
+    server.kill();
   });
 });
 

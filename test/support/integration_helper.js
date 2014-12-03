@@ -3,7 +3,6 @@
 // mocha is already global here
 global.chai = require("chai");
 global.chai.use(require("sinon-chai"));
-global.chai.use(require("chai-as-promised"));
 global.expect = require("chai").expect;
 global.manifest = require('../../src/manifest');
 
@@ -30,16 +29,23 @@ global.browser = webdriverio.remote(options).init();
 var Tests = {
   // Go to a testing URL and give the extension some time to inject its HTML
   visit: function(htmlPage) {
-    return browser
-    .url("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html")
-    .click("#form-o-fill-testing-import-submit")
-    .pause(1000);
+    var page = browser
+    .url("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
+    // Import rules if present
+    page.isExisting("#form-o-fill-testing-import-submit", function (err, isExisting) {
+      if (isExisting) {
+        page = page.click("#form-o-fill-testing-import-submit");
+      }
+    });
+    return page.pause(1000);
   }
 };
 
 global.Tests = Tests;
 
+//
+// Global hooks for mocha
+//
 after(function (done) {
   browser.end(done);
 });
-
