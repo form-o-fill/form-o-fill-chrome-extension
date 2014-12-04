@@ -1,6 +1,7 @@
 // Expectation Framework
 global.chai = require("chai");
 global.chai.use(require("sinon-chai"));
+global.chai.use(require("chai-as-promised"));
 global.expect = require("chai").expect;
 
 // Sinon for stubbing/mocking
