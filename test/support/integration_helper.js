@@ -47,6 +47,8 @@ global.Tests = Tests;
 //
 // Global hooks for mocha
 //
-after(function (done) {
-  browser.end(done);
-});
+//afterEach(function () {
+  //browser.endAll();
+  //browser.init();
+//});
+
