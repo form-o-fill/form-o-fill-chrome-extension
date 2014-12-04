@@ -13,13 +13,15 @@ describe("form filling with shared rules", function () {
     })
     .getValue("#i3", function (err, value) {
        expect(value).to.eq("shared rule 3");
-    }).call(done);
+    })
+    .call(done);
   });
 
   it("reports an error if a 'import' definition is not found", function (done) {
     Tests.visit("shared-rules-broken")
     .getText(".notification-html", function (err, text) {
       expect(text).to.eq("Found an 'import' statement without matching rule. Click here to see more info.");
-    }).call(done);
+    })
+    .call(done);
   });
 });

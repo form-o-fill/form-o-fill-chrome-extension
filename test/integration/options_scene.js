@@ -6,7 +6,7 @@ describe("the options panel", function () {
   it("is contains all essential parts", function (done){
     Tests.visit("options")
     .click(".extension-options-url a")
-    .pause(1000)
+    .pause(global.pause)
     .getValue("li.tab.current input", function (err, text) {
       expect(text).to.eq("dummy");
     })
@@ -43,6 +43,7 @@ describe("the options panel", function () {
       // Navigation links
       expect(text).to.eql(["Rule Editor", "Help", "About", "Changelog", "Logs"]);
     })
+    .close()
     .call(done);
   });
 

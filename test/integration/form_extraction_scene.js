@@ -16,7 +16,7 @@ describe("the form extraction", function() {
     Tests.visit("form-extraction")
     .click(".popup-html a.cmd-show-extract-overlay")
     .click("div.form-o-fill-overlay-form")
-    .pause(1000)
+    .pause(global.pause)
     .getText(".notification-html", function (err, text) {
       expect(text).to.eql("Extracted your form. Click here to check the options panel for more info.");
     })
@@ -26,11 +26,11 @@ describe("the form extraction", function() {
   it("inserts extracted rules into the editor", function(done) {
     Tests.visit("form-extraction")
     .click(".popup-html a.cmd-show-extract-overlay")
-    .pause(1000)
+    .pause(global.pause)
     .click("div.form-o-fill-overlay-form")
-    .pause(1000)
+    .pause(global.pause)
     .click(".extension-options-url a")
-    .pause(1000)
+    .pause(global.pause)
     .click("a.cmd-append-extracted")
     .execute(function () {
         return editor.getValue();
@@ -66,6 +66,7 @@ describe("the form extraction", function() {
       fail({ selector: 'select[name=\'selectmultiple\']', "value": ["multiple1", "multiple2"]}, rule.fields[20]);
       fail(false, rule.autorun);
     })
+    .close()
     .call(done);
   });
 });

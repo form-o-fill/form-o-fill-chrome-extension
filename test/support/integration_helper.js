@@ -21,6 +21,7 @@ var options = {
 };
 
 global.browser = webdriverio.remote(options).init();
+global.pause = 1000;
 
 //
 // HELPER function to make life easier:
@@ -37,7 +38,7 @@ var Tests = {
         page = page.click("#form-o-fill-testing-import-submit");
       }
     });
-    return page.pause(1000);
+    return page.pause(global.pause);
   }
 };
 
