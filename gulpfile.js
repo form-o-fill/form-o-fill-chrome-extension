@@ -286,12 +286,14 @@ gulp.task('integration', function () {
 
   var server = selenium({stdio: 'pipe'}, {});
 
-  // Sadly the order seems to be important
-  // Integration Helper must come first,
-  // options must come last
   var specs = [
     "./test/integration/test_setup_scene.js",
-    "./test/integration/form_extraction_scene.js"
+    "./test/integration/form_filling_all_types_scene.js",
+    "./test/integration/form_filling_scene.js",
+    "./test/integration/form_filling_shared_rules_scene.js",
+    "./test/integration/popup_scene.js",
+    "./test/integration/form_extraction_scene.js",
+    "./test/integration/options_scene.js"
   ];
 
   // Allow --spec parameter
