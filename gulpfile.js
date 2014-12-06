@@ -10,7 +10,7 @@ var eslint = require('gulp-eslint');
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
 var minifyCSS = require('gulp-minify-css');
-var mocha = require('gulp-spawn-mocha');
+var mocha = require('gulp-mocha');
 var replace = require('gulp-replace-task');
 var rm = require('gulp-rm');
 var stripdebug = require('gulp-strip-debug');
@@ -288,9 +288,9 @@ gulp.task('integration', function () {
 
   var specs = [
     "./test/integration/test_setup_scene.js",
-    "./test/integration/form_filling_all_types_scene.js",
+    "./test/integration/all_types_scene.js",
     "./test/integration/form_filling_scene.js",
-    "./test/integration/form_filling_shared_rules_scene.js",
+    "./test/integration/shared_rules_scene.js",
     "./test/integration/popup_scene.js",
     "./test/integration/form_extraction_scene.js",
     "./test/integration/options_scene.js"
@@ -302,10 +302,9 @@ gulp.task('integration', function () {
   }
 
   var mochaOpts = {
-    R: 'spec',
-    c: true,
-    debug: true,
-    inlineDiffs: true
+    reporter: 'spec',
+    timeout: 5000,
+    bail: true
   };
 
   // Allow --grep as mocha opt
@@ -315,8 +314,13 @@ gulp.task('integration', function () {
 
   return gulp.src(specs, {read: false})
   .pipe(mocha(mochaOpts))
-  .on('error', console.warn.bind(console))
+  .on('error', function (err) {
+    console.error(err);
+    connect.serverClose();
+    server.kill();
+  })
   .on('end', function() {
+    browser.endAll();
     connect.serverClose();
     server.kill();
   });
