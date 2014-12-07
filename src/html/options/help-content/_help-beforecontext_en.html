@@ -1,0 +1,50 @@
+<a name="help-before"></a>
+<h3>The context object in before functions</h3>
+<p>
+  The context object passed as the before functions second parameter has a certain structure.
+  Assuming the tab to be filled has an url like
+</p>
+<p>
+  <code>https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash</code>
+</p>
+<p>
+  the <code>url</code> part in the context object will look like
+</p>
+<a name="help-beforecontext-findhtml" />
+<pre>
+  url: {
+    url: "https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash",
+    protocol: "https:",
+    host: "github.com",
+    port: "",
+    path: "/form-o-fill/form-o-fill-chrome-extension/search",
+    query: "?q=context",
+    hash: "#somehash"
+  }
+</pre>
+
+<h3>Using the HTML finder in a before function</h3>
+<p>
+  The context object also includes a function that allows you to modify your rules based on the HTML of the page the rule is executed in.
+</p>
+<p>
+  You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> and a callback function to the finder. The callback is then called with the found HTML.
+</p>
+<p>
+  Use it in a before function to construct your data return value like so:
+</p>
+<pre>
+  before: function (resolve, context) {
+    var data = {
+      someThing: "Some Text",
+    };
+    context.findHtml("a.a-link", function(outerHtml) {
+      data.linkHtml = outerHtml;
+      resolve(data);
+    });
+  }
+</pre>
+<p>
+  Please notice that the call to <code>linkHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml callback.
+</p>
+

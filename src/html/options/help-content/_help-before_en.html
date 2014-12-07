@@ -24,7 +24,7 @@
 <div class="block-of-code">
   <div class="explaining">
     Add a before function. The first parameter will be the <code>resolve</code> function which you will need to call with the data you generated.<br />
-    The second parameter is a context object containing the parsed url parts of the tab to be filled.
+    The second parameter is a <a href="#beforecontext">context object</a> containing the parsed url parts of the tab to be filled (and other goodies).
   </div>
   <div class="code">
     before: function(resolve, context) {
@@ -106,30 +106,6 @@
 <p>
   Hint: If the fetched json data needs no transformation, <code>resolve</code> can also be passed as a function reference to <code>done</code>: <code>jQuery.getJSON('...').done(resolve);</code>.
 </p>
-<h3>The context object in before functions</h3>
-<p>
-  The context object passed as the before functions second parameter has a certain structure.
-  Assuming the tab to be filled has an url like
-</p>
-<p>
-  <code>https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash</code>
-</p>
-<p>
-  the context object will look like
-</p>
-<pre>
-  {
-    url: {
-      url: "https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash",
-      protocol: "https:",
-      host: "github.com",
-      port: "",
-      path: "/form-o-fill/form-o-fill-chrome-extension/search",
-      query: "?q=context",
-      hash: "#somehash"
-    }
-  }
-</pre>
 
 <h3>Providing multiple before functions in an array</h3>
 
