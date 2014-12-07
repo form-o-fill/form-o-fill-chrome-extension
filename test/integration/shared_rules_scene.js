@@ -22,6 +22,8 @@ describe("form filling with shared rules", function () {
     .getText(".notification-html", function (err, text) {
       expect(text).to.eq("Found an 'import' statement without matching rule. Click here to see more info.");
     })
+    .click(".extension-options-url a")
+    .pause(global.pause)
     .call(done);
   });
 });
