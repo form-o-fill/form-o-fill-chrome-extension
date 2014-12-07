@@ -181,10 +181,10 @@ var Rules = {
         ruleFuncErrors.needResolveArg = true;
       } else {
         // Look for usage of the first argument (presumly "resolve") in the code
-        var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S]*\\}.*$";
+        var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S)]*\\}.*$";
         resolveMatches = ruleFunc.toString().match(regex);
         // No call to resolve?
-        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*\\(|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
+        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
           ruleFuncErrors.needResolveCall = true;
         }
       }
