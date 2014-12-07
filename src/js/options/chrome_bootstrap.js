@@ -20,7 +20,7 @@ var ChromeBootstrap = {
     var relocate = function(target) {
       var hash = window.location.hash;
 
-      if (typeof target !== "undefined") {
+      if (typeof target === "string") {
         hash = target;
       }
 
