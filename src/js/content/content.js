@@ -76,6 +76,12 @@ chrome.runtime.onConnect.addListener(function (port) {
       Logger.info("[content.js] Hiding working overlay");
       hideOverlay();
     }
+
+    if (message.action === "grabContentBySelector") {
+      Logger.info("[content.js] Grabber asked for '" + message.message + "'");
+      port.postMessage({ action: "grabbedContentBySelector", message: jQuery(message.message).eq(0).html() });
+    }
+
   });
 });
 

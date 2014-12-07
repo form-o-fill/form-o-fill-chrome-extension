@@ -104,10 +104,25 @@ var FormUtil = {
 
     port.postMessage({"action": "showWorkingOverlay"});
 
+    // the grabber is passed as part of the context
+    // it can fetch content from the open webpage
+    // usage: context.findHtml("a.getme", function(content) {});
+    var grabber = function(selector, cbWhenFetched) {
+      port.onMessage.addListener(function grabberOnMessageListener(message) {
+        if(message.action === "grabbedContentBySelector") {
+          Logger.info("[form_util.js] Received content from 'grabber'");
+          cbWhenFetched(message.message);
+        }
+      });
+      port.postMessage({"action": "grabContentBySelector", "message": selector.toString()});
+    };
+
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
+    // It also contains the grabber which can find content inside the current webpage
     var context = {
-      url: Utils.parseUrl(lastActiveTab.url)
+      url: Utils.parseUrl(lastActiveTab.url),
+      findHtml: grabber
     };
 
     // Default instantaneous resolving promise:
