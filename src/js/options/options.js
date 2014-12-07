@@ -161,6 +161,7 @@ var saveRules = function(tabId) {
   }
 };
 
+// Load the rules
 var loadRules = function(tabId) {
   Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleData) {
     var ruleJson = ruleData.code;
