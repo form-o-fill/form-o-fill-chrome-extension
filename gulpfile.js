@@ -1,7 +1,8 @@
+/* global browser */
 /*eslint-env node */
 "use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-mocha sinon sinon-chai jsdom
+// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-spawn-mocha sinon sinon-chai jsdom
 
 var chalk = require('chalk');
 var cleanhtml = require('gulp-cleanhtml');
@@ -10,7 +11,7 @@ var eslint = require('gulp-eslint');
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
 var minifyCSS = require('gulp-minify-css');
-var mocha = require('gulp-mocha');
+var mocha = require('gulp-spawn-mocha');
 var replace = require('gulp-replace-task');
 var rm = require('gulp-rm');
 var stripdebug = require('gulp-strip-debug');
@@ -302,9 +303,10 @@ gulp.task('integration', function () {
   }
 
   var mochaOpts = {
-    reporter: 'spec',
-    timeout: 5000,
-    bail: true
+    R: 'dot',
+    c: true,
+    debug: true,
+    inlineDiffs: true
   };
 
   // Allow --grep as mocha opt
