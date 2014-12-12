@@ -66,22 +66,25 @@ chrome.runtime.onConnect.addListener(function (port) {
       // Show another overlay when things take REALLY long to finishs
       takingLongTimeout = setTimeout(function () {
         jQuery("#" + workingOverlayId).html("This is really taking too long.");
-      }, 3000);
+      }, 4000);
 
       // Finally if everything fails, clear overlay after 10 seconds
-      wontFinishTimeout = setTimeout(hideOverlay, 10000);
+      wontFinishTimeout = setTimeout(hideOverlay, 12000);
     }
 
     if (message.action === "hideWorkingOverlay") {
       Logger.info("[content.js] Hiding working overlay");
       hideOverlay();
     }
+  });
 
+  // Simple one-shot callbacks
+  chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
     if (message.action === "grabContentBySelector") {
       Logger.info("[content.js] Grabber asked for '" + message.message + "'");
-      port.postMessage({ action: "grabbedContentBySelector", message: jQuery(message.message).eq(0).html() });
+      responseCb(jQuery(message.message).eq(0).html());
     }
-
   });
+
 });
 

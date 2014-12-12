@@ -106,15 +106,15 @@ var FormUtil = {
 
     // the grabber is passed as part of the context
     // it can fetch content from the open webpage
-    // usage: context.findHtml("a.getme", function(content) {});
-    var grabber = function(selector, cbWhenFetched) {
-      port.onMessage.addListener(function grabberOnMessageListener(message) {
-        if(message.action === "grabbedContentBySelector") {
-          Logger.info("[form_util.js] Received content from 'grabber'");
-          cbWhenFetched(message.message);
-        }
+    // usage: context.findHtml("a.getme").then(function(content) {});
+    var grabber = function(selector) {
+      return new Promise(function (resolve) {
+        var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
+        chrome.tabs.sendMessage(lastActiveTab.id, grabberMessage, function returnFromContentGrabber(content) {
+          Logger.info("[form_util.js] Received content from 'grabber': '" + content + "'");
+          resolve(content);
+        });
       });
-      port.postMessage({"action": "grabContentBySelector", "message": selector.toString()});
     };
 
     // The context is passed as the second argument to the before function.
@@ -168,7 +168,7 @@ var FormUtil = {
       });
     }
 
-    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(beforeFunctions));
+    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(rule.before));
 
     // call either the default - instantaneously resolving Promise (default) or
     // the arrray of before functions defined in the rule.

@@ -186,3 +186,7 @@ span.version {
   display: block;
 }
 
+#help .topic > a[name].anchor {
+  margin: 0;
+  height: 0;
+}

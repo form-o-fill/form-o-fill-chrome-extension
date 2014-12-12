@@ -8,9 +8,9 @@
   <code>https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash</code>
 </p>
 <p>
-  the <code>url</code> part in the context object will look like
+  the <code>url</code> part in the context object will look like:
 </p>
-<a name="help-beforecontext-findhtml" />
+<a name="help-beforecontext-findhtml" class="anchor" />
 <pre>
   url: {
     url: "https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash",
@@ -28,7 +28,8 @@
   The context object also includes a function that allows you to modify your rules based on the HTML of the page the rule is executed in.
 </p>
 <p>
-  You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> and a callback function to the finder. The callback is then called with the found HTML.
+  You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> to the finder. It will return a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Promise">Promise</a> on which you can call <code>.then(function(html) {});</code> on.<br />
+  The first and only parameter to that function will be the found HTML of the tag (aka. innerHTML) or <code>null</code> if the selector was not found.
 </p>
 <p>
   Use it in a before function to construct your data return value like so:
@@ -38,13 +39,13 @@
     var data = {
       someThing: "Some Text",
     };
-    context.findHtml("a.a-link", function(outerHtml) {
-      data.linkHtml = outerHtml;
+    context.findHtml("a.a-link").then(function(html) {
+      data.linkHtml = html;
       resolve(data);
     });
   }
 </pre>
 <p>
-  Please notice that the call to <code>linkHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml callback.
+  Please notice that the call to <code>linkHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml <code>then</code> function.
 </p>
 
