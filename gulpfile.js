@@ -285,7 +285,7 @@ gulp.task('integration', function () {
   // Start a small webserver
   connect.server(serverConfigIntegration);
 
-  var server = selenium({stdio: 'pipe'}, {});
+  var server = selenium({stdio: 'inherit'}, {});
 
   var specs = [
     "./test/integration/test_setup_scene.js",
@@ -303,9 +303,9 @@ gulp.task('integration', function () {
   }
 
   var mochaOpts = {
-    R: 'dot',
+    R: 'spec',
     c: true,
-    debug: true,
+    debug: false,
     inlineDiffs: true
   };
 
