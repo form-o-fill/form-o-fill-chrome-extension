@@ -82,7 +82,16 @@ chrome.runtime.onConnect.addListener(function (port) {
   chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
     if (message.action === "grabContentBySelector") {
       Logger.info("[content.js] Grabber asked for '" + message.message + "'");
-      responseCb(jQuery(message.message).eq(0).html());
+      var domElements = jQuery(message.message).map(function (index, $el) {
+        return $el;
+      });
+      if(domElements.length === 1) {
+        responseCb(domElements[0].outerHTML);
+      } else {
+        responseCb(domElements.map(function(el) {
+          return el.outerHTML;
+        }));
+      }
     }
   });
 
