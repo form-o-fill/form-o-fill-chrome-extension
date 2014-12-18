@@ -11,10 +11,10 @@ Features:
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
 ✓ Use before functions to fetch or generate data that can then be used in value functions.
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
-✓ One click apply of a matching rule.
+✓ One click apply of a matching rule or even autoapply the rule
 ✓ Two click apply when there are multiple matching rules.
 ✓ Auto apply configurable for each rule
-✓ Reuse rules inside other rules
+✓ Reuse rules inside other rules (shared rules)
 ✓ Browser notifications to show you what happened.
 
 Requires:
@@ -26,6 +26,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 
 Changelog:
+
+★ Version 1.6.1
+- Change .findHtml() to return a promise. Please see changelog for migration.
 
 ★ Version 1.6.0
 - Added .findHtml() function to the context object

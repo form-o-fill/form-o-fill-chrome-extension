@@ -6,7 +6,7 @@ describe("using before functions", function() {
   it("can use HTML found in the content page", function (done) {
     Tests.visit("before-context")
     .getValue("#target", function (err, value) {
-      expect(value).to.eq("SOME CONTENT");
+      expect(value).to.eq("<div id=\"form-o-fill-some-content\">SOME CONTENT</div>");
     })
     .call(done);
   });

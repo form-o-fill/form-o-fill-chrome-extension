@@ -2,6 +2,14 @@
   <h1>Changelog Form-O-Fill</h1>
 </header>
 <div class="content">
+  <p>★ Version 1.6.1</p>
+  <ul>
+    <li>
+      Moved from callback to <a href="https://www.promisejs.org/" target="_blank">promise</a> for <a href="#help-beforecontext-findhtml">context.findHtml()</a><br />
+      To convert from callback to promise change<br/><code>context.findHtml("selector", function(html) { ... your code ... });</code> to <br />
+      <code>context.findHtml("selector").then(function(html) { ... your code ... });</code>
+     </li>
+  </ul>
   <p>★ Version 1.6.0</p>
   <ul>
     <li>Added <a href="#help-beforecontext-findhtml">.findHtml() function</a> to the context object</li>
