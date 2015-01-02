@@ -55,8 +55,8 @@ var FormUtil = {
         });
 
         // Create a lookup hash
-        arrayOfRules.filter(function arrayOfRulesFilter(rule) {
-          return rule !== null;
+        arrayOfRules.filter(function arrayOfRulesFilter(aRule) {
+          return aRule !== null;
         }).forEach(function arrayOfRulesLoop(ruleToImport) {
           lookup[ruleToImport.name] = ruleToImport.fields;
         });
@@ -204,9 +204,9 @@ var FormUtil = {
       }
 
       // Check for rules to import (shared rules)
-      FormUtil.resolveImports(rule).then(function resolveImports(rule) {
+      FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
         // Now send all field definitions to the content script
-        rule.fields.forEach(function ruleFieldsForEach(field) {
+        aRule.fields.forEach(function ruleFieldsForEach(field) {
           message = {
             "action": "fillField",
             "selector": field.selector,
@@ -224,20 +224,20 @@ var FormUtil = {
 
     });
 
-    var reportErrors = function reportErrors(errors) {
-      Logger.warn("[form_util.js] Received 'getErrors' with " + errors.length + " errors");
-      if(errors.length > 0) {
-        Notification.create("There were " + errors.length + " errors while filling this form. Click here to view them.", function NotificationCreate() {
-          FormUtil.saveErrors(errors, rule);
+    var reportErrors = function reportErrors(theErrors) {
+      Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
+      if(theErrors.length > 0) {
+        Notification.create("There were " + theErrors.length + " theErrors while filling this form. Click here to view them.", function NotificationCreate() {
+          FormUtil.savetheErrors(theErrors, rule);
         });
       }
       port.postMessage({"action": "hideWorkingOverlay"});
     };
 
-    port.onMessage.addListener(function portOnMessageListener(message) {
+    port.onMessage.addListener(function portOnMessageListener(msg) {
       // Make errors from content scripts available here
-      if(message.action === "getErrors") {
-        var sentErrors = JSONF.parse(message.errors);
+      if(msg.action === "getErrors") {
+        var sentErrors = JSONF.parse(msg.errors);
         reportErrors(sentErrors);
       }
     });

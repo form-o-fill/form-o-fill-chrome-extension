@@ -21,8 +21,8 @@ var Rules = {
   match: function(url) {
     var rules = this;
     return new Promise(function (resolve) {
-      rules.all().then(function(rules) {
-        var matchingRules = rules.filter(function (rule) {
+      rules.all().then(function(rulez) {
+        var matchingRules = rulez.filter(function (rule) {
           return typeof rule.url !== "undefined" && url.match(rule.url);
         });
         resolve(matchingRules);
