@@ -26,6 +26,9 @@
           <a href="#ruleeditor">Rule Editor</a>
         </li>
         <li>
+          <a href="#workflows">Workflows</a>
+        </li>
+        <li>
           <a href="#help">Help</a>
         </li>
         <li>
@@ -98,6 +101,56 @@
               <span class='info'></span>
             </div>
             <div id="ruleeditor-ace"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="workflows">
+        <header>
+          <h1>Workflows</h1>
+        </header>
+        <div class="content">
+          <div class="workflows">
+
+            <div class="tabcontainer">
+              <ul class="tabs">
+                <li class="tab current"><input type="text" value="Workflows" disabled></li>
+              </ul>
+            </div>
+
+            <div class="wf-all">
+              <h3>Choose workflow to edit:</h3>
+              <select>
+                <option class="wf-no-created">no workflow defined</option>
+                <option>A Workflow</option>
+              </select>
+              <button class='wf-add-wf'>create new workflow</button>
+            </div>
+
+            <div id="workfloweditor">
+              <h3>Name:</h3>
+              <input class="wf-name" type="text" value="My Workflow with a nice long name" />
+              <h3>Steps:</h3>
+              <h4>Choose the rule to append and press 'add to workflow':</h4>
+              <select class="rulelist">
+                <option>Rule 1</option>
+                <option>Rule 1</option>
+                <option>Rule 1</option>
+                <option>Rule 1</option>
+              </select>
+              <button class='wf-add-step'>add to workflow</button>
+              <h4>Use drag/drop to reorder the steps.</h4>
+              <ol>
+                <li>adsasds<button class="wf-delete-step">remove step</button></li>
+                <li>adsasds<button class="wf-delete-step">remove step</button></li>
+                <li>adsasds<button class="wf-delete-step">remove step</button></li>
+                <li>adsasds<button class="wf-delete-step">remove step</button></li>
+              </ol>
+              <div class="actions">
+                <button class='wf-button-save'>Save workflow</button>
+                <button class='wf-button-delete'>Delete workflow</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
