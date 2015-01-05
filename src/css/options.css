@@ -263,3 +263,7 @@ span.version {
 #workfloweditor .actions button.wf-button-delete:before {
   content: "\e609";
 }
+
+.wf-all select {
+  min-width: 30%;
+}

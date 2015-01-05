@@ -11,7 +11,8 @@ var Utils = {
     errors: "form-o-fill-errors",
     tabs: "form-o-fill-tabs",
     logs: "form-o-fill-logs",
-    lastMatchingRules: "form-o-fill-lastmatchingrules"
+    lastMatchingRules: "form-o-fill-lastmatchingrules",
+    workflows: "form-o-fill-workflows"
   },
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;

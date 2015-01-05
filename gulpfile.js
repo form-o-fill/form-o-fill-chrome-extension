@@ -176,7 +176,8 @@ gulp.task('globalJs', ['clean'], function () {
     "src/js/global/rule.js",
     "src/js/global/rules.js",
     "src/js/global/i18n.js",
-    "src/js/global/libs.js"
+    "src/js/global/libs.js",
+    "src/js/global/workflow.js"
   ])
   .pipe(replace(replaceOpts))
   .pipe(concat('global.js'))
