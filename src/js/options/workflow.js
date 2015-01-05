@@ -1,5 +1,7 @@
 /* global Workflows jQuery*/
 jQuery(function () {
+
+  /* Load all present workflows and fill select field */
   Workflows.load().then(function loadWf(rawWorkflows) {
     var $wfSelect = jQuery(".wf-all select");
     var optionHtml = [];
