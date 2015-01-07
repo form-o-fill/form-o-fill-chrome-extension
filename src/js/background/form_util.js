@@ -227,8 +227,8 @@ var FormUtil = {
     var reportErrors = function reportErrors(theErrors) {
       Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
       if(theErrors.length > 0) {
-        Notification.create("There were " + theErrors.length + " theErrors while filling this form. Click here to view them.", function NotificationCreate() {
-          FormUtil.savetheErrors(theErrors, rule);
+        Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", function NotificationCreate() {
+          FormUtil.saveErrors(theErrors, rule);
         });
       }
       port.postMessage({"action": "hideWorkingOverlay"});
