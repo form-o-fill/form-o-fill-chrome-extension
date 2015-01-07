@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    <form action="workflow-2.html" method="GET">
+      1. Input field: <input value="Value from pageload" id="target1" /><br>
+      2. Input field: <input value="Value from pageload" id="target2" /><br>
+    </form>
+    Rules Import: 
+    <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "Workflow steps"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  name: \"step 1 -> 2\",\n  url: /workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 1\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 2 -> 1\",\n  url: /workflow-2/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 2\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}
+    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>
