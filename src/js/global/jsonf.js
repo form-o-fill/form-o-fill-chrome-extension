@@ -14,7 +14,7 @@ var JSONF = {
     }
 
     // Is a FUNCTION or REGEXP ?
-    if (typeof value === "function" || typeof value.test === "function") {
+    if (value !== null && (typeof value === "function" || typeof value.test === "function")) {
       return value.toString();
     }
     return value;

@@ -37,7 +37,7 @@ var Utils = {
   infoMsg: function(msg) {
     // A function to display a nice message in the rule editor
     var fadeAfterMSec = 1000;
-    var $menuInfo = jQuery(".editor .menu .info");
+    var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
     $menuInfo.html(msg).css({"opacity": "1"});
     setTimeout(function() {
       $menuInfo.animate({"opacity": 0}, 1000, function() {

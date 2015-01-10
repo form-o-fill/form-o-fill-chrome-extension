@@ -84,7 +84,7 @@ button.import:before {
   content: "\e604";
 }
 
-.editor .menu .info {
+.editor .menu .info, #workflows span.info {
   color: #999;
   line-height: 32px;
   vertical-align: middle;
