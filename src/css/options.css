@@ -92,11 +92,11 @@ button.import:before {
   font-size: 11px;
 }
 
-#ruleditor .notice:last-child {
+.notice:last-child {
   margin-bottom: 0;
 }
 
-#ruleeditor .notice {
+.notice {
   display: none;
   border: 1px solid #909090;
   padding: 10px 25px 10px 36px;
@@ -109,7 +109,7 @@ button.import:before {
   cursor: pointer;
 }
 
-#ruleeditor .notice:before {
+.notice:before {
   font-family: "formofill";
   font-size: 24px;
   vertical-align: middle;
@@ -120,7 +120,7 @@ button.import:before {
   left: 7px;
 }
 
-#ruleeditor .notice:after {
+.notice:after {
   font-family: "formofill";
   font-size: 18px;
   content: "\e607";
@@ -131,13 +131,13 @@ button.import:before {
   color: #999;
 }
 
-#ruleeditor .notice .code {
+.notice .code {
   font-family: "droid sans mono", monospace, "courier new", courier, sans-serif;
   background-color: #bbb;
   padding: 2px 4px;
 }
 
-#ruleeditor .notice.form-fill-errors span {
+.notice.form-fill-errors span {
   text-decoration: underline;
 }
 
@@ -266,4 +266,24 @@ span.version {
 
 .wf-all select {
   min-width: 30%;
+}
+
+h3 span.unsaved-changes {
+  float: right;
+  font-size: 11px;
+  color: Red;
+  display: none;
+}
+
+#workflows #notices {
+  margin-top: 15px;
+}
+
+#workfloweditor li.has-error {
+  color: Red;
+  font-weight: bold;
+}
+
+#workfloweditor li.has-error span.has-error {
+  margin-left: 15px;
 }

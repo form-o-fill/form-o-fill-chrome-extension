@@ -118,6 +118,13 @@
               </ul>
             </div>
 
+            <div id="notices">
+              <div class="notice wf-missing-rules">
+                There are workflows with broken rule assignments. Click to view workflow.
+                <ul class="wf-missing-rules-wfs"></ul>
+              </div>
+            </div>
+            
             <div class="wf-all">
               <h3>Choose workflow to edit:</h3>
               <select>
@@ -128,7 +135,7 @@
             </div>
 
             <div id="workfloweditor" style="display: none" data-workflow-id="0">
-              <h3>Name:</h3>
+              <h3>Name:<span class="unsaved-changes">Unsaved!</span></h3>
               <input class="wf-name" type="text" value="" />
               <h3>Steps:</h3>
               <h4>Choose the rule to append and press 'add to workflow':</h4>

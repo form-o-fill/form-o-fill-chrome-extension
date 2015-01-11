@@ -1,5 +1,6 @@
 /* global Workflows jQuery Rules Logger Utils*/
 var workflows = [];
+var wfErrors = [];
 
 // an empty workflow
 var emptyWorkflow = {
@@ -9,13 +10,23 @@ var emptyWorkflow = {
 };
 
 // generate a step html
-var stepHtml = function(text) {
-  return '<li data-step-name="' + text + '">' + text + '<button class="wf-delete-step">remove step</button></li>';
+var stepHtml = function(text, hasError) {
+  return '<li class="' + (hasError ? "has-error" : "") + '" data-step-name="' + text + '">' + text + '<button class="wf-delete-step">remove step</button>' + (hasError ? "<span class='has-error'>Missing rule with this name!</span>" : "") + '</li>';
 };
 
 // generate a rule
 var ruleHtml = function(rule) {
   return '<option data-rule-name="' + rule.name + '" data-rule-id="' + rule.id + '">' + rule.nameClean + '</option>';
+};
+
+// Show that there are unsaved changes
+var unsavedChanges = function(visible) {
+  var $e = jQuery("h3 span.unsaved-changes");
+  if(visible) {
+    $e.show();
+  } else {
+    $e.hide();
+  }
 };
 
 // Create a new workflow
@@ -25,15 +36,27 @@ var createWorkflow = function () {
   jQuery("#workfloweditor").show().data("workflowId", 0);
   jQuery(".wf-name").trigger("focus").select();
   jQuery(".wf-all select").append("<option data-workflow-id='0' selected>new workflow (unsaved)</option>");
+  unsavedChanges(true);
+};
+
+// Find a single error
+var findError = function(wfId, stepName) {
+  var err = wfErrors.filter(function (error) {
+    return error.wfId == wfId && stepName == error.missingStepName;
+  });
+  return err[0];
 };
 
 // fill the form with workflow data
 var fillWorkflow = function(data) {
+  if(!data) {
+    return;
+  }
   var stepsHtml = [];
   jQuery("#workfloweditor").show().data("workflowId", data.id);
   jQuery(".wf-name").val(data.name);
   jQuery.makeArray(data.steps).forEach(function dataStep(step) {
-    stepsHtml.push(stepHtml(step));
+    stepsHtml.push(stepHtml(step, !!findError(data.id, step)));
   });
   jQuery("#workfloweditor ol li").remove();
   jQuery("#workfloweditor ol").html(stepsHtml.join(""));
@@ -49,6 +72,7 @@ var addStepToWorkflow = function() {
   var ruleName = jQuery(".rulelist option:selected").data("ruleName");
   if(typeof ruleName !== "undefined") {
     jQuery("#workfloweditor ol").append(stepHtml(ruleName));
+    unsavedChanges(true);
   }
 };
 
@@ -67,6 +91,7 @@ var currentWfSteps = function() {
 
 // Find a single workflow by id
 var findWorkflowById = function(wfId) {
+  wfId = parseInt(wfId, 10);
   var aWf = workflows.filter(function wfFilter(wf) {
     return wf.id === wfId;
   });
@@ -103,9 +128,10 @@ var loadWorkflows = function(selectedWfId) {
     workflows = rawWorkflows;
 
     // if no selectedWfId is set select first
-    if(!selectedWfId) {
+    if(!selectedWfId && workflows.length > 0) {
       selectedWfId = workflows[0].id;
     }
+    selectedWfId = parseInt(selectedWfId, 10);
 
     // Fill the <select> with present workflows
     var $wfSelect = jQuery(".wf-all select");
@@ -123,7 +149,7 @@ var loadWorkflows = function(selectedWfId) {
     }
     $wfSelect.html(optionHtml.join());
 
-    if(selectedWfId !== 0) {
+    if(selectedWfId && selectedWfId !== 0) {
       // Load a preset workflow
       fillWorkflow(loadWorkflowById(selectedWfId));
     }
@@ -162,24 +188,80 @@ var saveWorkflow = function() {
   loadWorkflows(currentWfId);
 
   Utils.infoMsg("Workflow #" + workflow.id + " saved");
+  unsavedChanges(false);
+};
+
+// Check for workflow errors
+var checkForErrors = function() {
+
+  Promise.all([Workflows.load(), Rules.all()]).then(function (wfsAndAllRules) {
+    // When no workflows are defined, exit early
+    if(typeof wfsAndAllRules[0] === "undefined") {
+      return;
+    }
+
+    // We only need the rule names (unique)
+    var ruleSteps = [];
+    wfsAndAllRules[1].forEach(function (rule) {
+      if(ruleSteps.indexOf(rule.name) === -1) {
+        ruleSteps.push(rule.name);
+      }
+    });
+
+    // Iterate over all workflows searching for missing rules
+    wfsAndAllRules[0].forEach(function (workflow) {
+      jQuery.makeArray(workflow.steps).forEach(function (step) {
+        // Try to find the workflow step in the global step list
+        if(ruleSteps.indexOf(step) === -1) {
+          wfErrors.push({
+            wfId: workflow.id,
+            wfName: workflow.name,
+            missingStepName: step
+          });
+        }
+      });
+    });
+
+    // report errors
+    if(wfErrors.length > 0) {
+
+      // Add unique workflows
+      var missingHtml = [];
+      var html = "";
+      wfErrors.forEach(function wfErrMap(error) {
+        html = ("<li><a href='#' data-workflow-id='" + error.wfId + "'>" + error.wfName + " (#" + error.wfId + ")</a></li>");
+        if(missingHtml.indexOf(html) === -1) {
+          missingHtml.push(html);
+        }
+      });
+
+      // Make error visible
+      jQuery("ul.wf-missing-rules-wfs").html(missingHtml.join(""));
+      jQuery(".notice.wf-missing-rules").show();
+    }
+  });
 };
 
 // delete a workflow
 var deleteWorkflow = function() {
   var currentWfId = parseInt(jQuery("#workfloweditor").data("workflowId"), 10);
+  var changeWfTo = null;
 
   // remove selected workflow from array
   workflows = workflows.filter(function delWfFilter(wf) {
     return currentWfId != wf.id;
   });
 
-  // reorder
-  workflows = workflows.map(function delWfMap(wf, index) {
-    wf.id = index + 1;
-    return wf;
-  });
+  if(workflows.length > 0) {
+    // reorder
+    workflows = workflows.map(function delWfMap(wf, index) {
+      wf.id = index + 1;
+      return wf;
+    });
+    changeWfTo = 1;
+  }
 
-  Workflows.save(workflows).then(loadWorkflows);
+  Workflows.save(workflows).then(loadWorkflows(changeWfTo));
 
   Utils.infoMsg("Workflow #" + currentWfId + " deleted");
 };
@@ -188,6 +270,9 @@ var deleteWorkflow = function() {
 jQuery(function () {
   // Load all workflows
   loadWorkflows();
+
+  // check for errors
+  checkForErrors();
 
   // 'create workflow' button
   jQuery(".wf-add-wf").on("click", createWorkflow);
@@ -210,5 +295,10 @@ jQuery(function () {
   // select a workflow from the list
   jQuery(".wf-all select").on("change", function() {
     loadWorkflowById(jQuery(".wf-all option:checked").data("workflowId"));
+  });
+
+  // Click on a link that points to an errors in a workflow
+  jQuery("ul.wf-missing-rules-wfs").on("click", "a", function () {
+    loadWorkflows(this.dataset.workflowId);
   });
 });
