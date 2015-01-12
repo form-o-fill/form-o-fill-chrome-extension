@@ -219,13 +219,26 @@ span.version {
 }
 
 #workfloweditor ol {
-  padding-left: 20px;
 }
 
 #workfloweditor li {
-  list-style-type: decimal;
   padding: 0 0 5px 0;
   cursor: pointer;
+}
+
+#workfloweditor li {
+  padding: 5px 5px 5px 0;
+  cursor: move;
+  background-color: #FAFAF7;
+  margin-bottom: 5px;
+}
+
+#workfloweditor li:before {
+  font-family: "formofill";
+  font-size: 24px;
+  vertical-align: middle;
+  margin-right: 4px;
+  content: "\e60b";
 }
 
 #workfloweditor li button {

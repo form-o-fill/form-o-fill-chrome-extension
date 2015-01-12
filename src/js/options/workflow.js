@@ -47,6 +47,15 @@ var findError = function(wfId, stepName) {
   return err[0];
 };
 
+// Make list of steps sortable
+var bindSortable = function() {
+  jQuery('#workfloweditor ol')
+  .sortable("destroy")
+  .sortable()
+  .bind('sortupdate', function(e, ui) {
+  });
+};
+
 // fill the form with workflow data
 var fillWorkflow = function(data) {
   if(!data) {
@@ -60,6 +69,7 @@ var fillWorkflow = function(data) {
   });
   jQuery("#workfloweditor ol li").remove();
   jQuery("#workfloweditor ol").html(stepsHtml.join(""));
+  bindSortable();
 };
 
 // fill the ruleslist HTML
@@ -73,6 +83,7 @@ var addStepToWorkflow = function() {
   if(typeof ruleName !== "undefined") {
     jQuery("#workfloweditor ol").append(stepHtml(ruleName));
     unsavedChanges(true);
+    bindSortable();
   }
 };
 
