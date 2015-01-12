@@ -88,10 +88,13 @@ var addStepToWorkflow = function() {
 };
 
 // load available rules and fill select field
-Rules.all().then(function availableRules(rules) {
-  jQuery(".rulelist option").remove();
-  fillRuleSelect(rules);
-});
+var fillAvailableRules = function() {
+  Rules.all().then(function availableRules(rules) {
+    jQuery(".rulelist option").remove();
+    fillRuleSelect(rules);
+  });
+};
+
 
 // Read steps from HTML
 var currentWfSteps = function() {
@@ -279,6 +282,9 @@ var deleteWorkflow = function() {
 
 // on init
 jQuery(function () {
+  // Fill available rules
+  fillAvailableRules();
+
   // Load all workflows
   loadWorkflows();
 
@@ -312,4 +318,7 @@ jQuery(function () {
   jQuery("ul.wf-missing-rules-wfs").on("click", "a", function () {
     loadWorkflows(this.dataset.workflowId);
   });
+
+  // Attach to click on the workflow button
+  jQuery("a[href='#workflows']").on("click", fillAvailableRules);
 });
