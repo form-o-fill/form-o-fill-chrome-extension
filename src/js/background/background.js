@@ -1,5 +1,5 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing, createCurrentPopupInIframe */
-/* eslint complexity:0, max-nested-callbacks: [1,4] */
+/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing, createCurrentPopupInIframe, Workflows */
+/* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
 
@@ -59,13 +59,20 @@ var onTabReady = function(tabId) {
           // Now match those rules that have a "url" matcher
           Rules.match(tab.url).then(function (matchingRules) {
             Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
+
+            // Concatenate matched rules by CONTENT and URL
             lastMatchingRules = lastMatchingRules.concat(matchingRules);
+
+            // ... now find and save the matching workflows for those rules
+            Workflows.matchesForRules(lastMatchingRules).then(function (matchingWfs) {
+              Workflows.saveMatches(matchingWfs);
+
+              // Show matches in badge
+              refreshMatchCounter(tab, lastMatchingRules.length + matchingWfs.length);
+            });
 
             // Save to localStorage for popup to load
             Rules.lastMatchingRules(lastMatchingRules);
-
-            // Show matches in badge
-            refreshMatchCounter(tab, lastMatchingRules.length);
 
             // TESTING
             if(!Utils.isLiveExtension()) {

@@ -1,12 +1,12 @@
-/*global Utils, Logger, Rules, jQuery*/
+/*global Utils, Logger, Rules, jQuery, Workflows */
 var Popup = {
   currentUrl: null,
   init: function() {
     var popup = this;
 
     // Load last matching Rules
-    Rules.lastMatchingRules().then(function (matchingRules) {
-      popup.updateHtml(matchingRules);
+    Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches()]).then(function popupInitMatches(lastMatches) {
+      popup.updateHtml(lastMatches[0], lastMatches[1]);
     });
 
     popup.attachEventHandlers();
@@ -38,9 +38,10 @@ var Popup = {
       });
     });
   },
-  updateHtml: function(matchingRules) {
-    this.updateHeadline(matchingRules);
+  updateHtml: function(matchingRules, matchingWorkflows) {
+    this.updateHeadline(matchingRules, matchingWorkflows);
     this.updateMatchingRules(matchingRules);
+    this.updateMatchingWorkflows(matchingWorkflows);
     this.updateOptionsLink();
     if(!Utils.isLiveExtension()) {
       this.sendPopupHtmlForTesting();
@@ -49,12 +50,12 @@ var Popup = {
   sendPopupHtmlForTesting: function() {
     chrome.extension.getBackgroundPage().Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
   },
-  updateHeadline: function(matchingRules) {
-    var matchesCount = matchingRules.length;
+  updateHeadline: function(matchingRules, matchingWorkflows) {
+    var ruleMatchesCount = matchingRules.length;
     var createRuleUrl = chrome.extension.getURL("html/options.html#createRule!" + encodeURI(this.currentUrl));
     var message = chrome.i18n.getMessage("found_no_matches", [ createRuleUrl ]);
-    if (matchesCount > 0) {
-      message = chrome.i18n.getMessage("found_n_matches", [ matchesCount ]);
+    if (ruleMatchesCount > 0) {
+      message = chrome.i18n.getMessage("found_n_matches", [ ruleMatchesCount + matchingWorkflows.length ]);
     }
     document.querySelectorAll("h3")[0].innerHTML = message;
   },
@@ -71,6 +72,25 @@ var Popup = {
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;
       li.dataset.ruleName = rule.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();
+      fragment.appendChild(li);
+    });
+    ul.appendChild(fragment);
+  },
+  updateMatchingWorkflows: function(matches) {
+    if(typeof matches === "undefined") {
+      return;
+    }
+    Logger.info("[popup.js] updating popup to display " + matches.length + " workflows");
+    var ul = document.querySelectorAll("ul")[0];
+    var fragment = document.createDocumentFragment();
+    matches.forEach(function(workflow, index) {
+      var li = document.createElement("li");
+      li.textContent = workflow.name;
+      li.classList.add("select-workflow");
+      li.classList.add("icon-cascade");
+      li.dataset.workflowId = workflow.id;
+      li.dataset.workflowIndex = index;
+      li.dataset.workflowName = workflow.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);

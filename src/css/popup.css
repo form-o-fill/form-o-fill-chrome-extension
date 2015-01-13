@@ -19,8 +19,13 @@
 .icon-bucket:before {
 	content: "\e600";
 }
+
 .icon-archive:before {
 	content: "\e601";
+}
+
+.icon-cascade:before {
+	content: "\e608";
 }
 
 html {
@@ -67,6 +72,10 @@ li:hover {
 li:before {
   margin-right: 10px;
   vertical-align: middle;
+}
+
+li.select-workflow {
+  color: #192E98;
 }
 
 a, a:visited, a:hover, a:active {

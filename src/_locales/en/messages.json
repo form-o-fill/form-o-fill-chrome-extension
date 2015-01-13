@@ -6,7 +6,7 @@
     "message": "N/A"
   },
   "found_n_matches": {
-    "message": "Found $MATCHES_COUNT$ matching rules",
+    "message": "Found $MATCHES_COUNT$ matches",
     "placeholders": {
       "matches_count": {
         "content": "$1"
