@@ -2,6 +2,7 @@
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
+var totalMatchesCount = 0;
 
 /*eslint-disable no-unused-vars*/
 var testingMode = false;
@@ -21,6 +22,22 @@ var refreshMatchCounter = function (tab, count) {
     txt = count.toString();
   }
   setBadge(txt, tab.id);
+};
+
+var reportMatchingRules = function(matchingRules, lastMatchingWorkflows) {
+  /*eslint-disable max-nested-callbacks*/
+  var mRule = matchingRules.map(function (rule) {
+    return rule.prettyPrint();
+  }).join(",");
+  /*eslint-enable max-nested-callbacks*/
+  Testing.setVar("matching-rules-count", matchingRules.length, "Matching rule #");
+  Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
+
+  // If there is only one match we need something in the testpage to click on
+  if((matchingRules.length + lastMatchingWorkflows.length) === 1) {
+    // TODO: Make workflows work here
+    Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + matchingRules[0].name + "</li>", "Popup HTML (one match)");
+  }
 };
 
 // When the user changes a tab, search for matching rules for that url
@@ -63,46 +80,37 @@ var onTabReady = function(tabId) {
             // Concatenate matched rules by CONTENT and URL
             lastMatchingRules = lastMatchingRules.concat(matchingRules);
 
-            // ... now find and save the matching workflows for those rules
-            Workflows.matchesForRules(lastMatchingRules).then(function (matchingWfs) {
+            // Save rules to localStorage for popup to load
+            Rules.lastMatchingRules(lastMatchingRules);
+
+            // Now find and save the matching workflows for those rules
+            Workflows.matchesForRules(lastMatchingRules).then(function prMatchingWfs(matchingWfs) {
               Workflows.saveMatches(matchingWfs);
 
               // Show matches in badge
-              refreshMatchCounter(tab, lastMatchingRules.length + matchingWfs.length);
+              totalMatchesCount = lastMatchingRules.length + matchingWfs.length;
+              refreshMatchCounter(tab, totalMatchesCount);
+
+              // TESTING
+              if(!Utils.isLiveExtension()) {
+                reportMatchingRules(lastMatchingRules, matchingWfs);
+              }
+
+              // No matches? Multiple Matches? Show popup when the user clicks on the icon
+              // A single match should just fill the form (see below)
+              if (totalMatchesCount !== 1) {
+                chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+                if (!Utils.isLiveExtension()) {
+                  createCurrentPopupInIframe(tab.id);
+                }
+              } else if (lastMatchingRules[0].autorun === true) {
+                // If the rule is marked as "autorun", execute the rule if only
+                // one was found
+                Logger.info("[bj.js] Rule is set to autorun");
+                FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
+              }
             });
 
-            // Save to localStorage for popup to load
-            Rules.lastMatchingRules(lastMatchingRules);
-
-            // TESTING
-            if(!Utils.isLiveExtension()) {
-              /*eslint-disable max-nested-callbacks*/
-              var mRule = lastMatchingRules.map(function (rule) {
-                return rule.prettyPrint();
-              }).join(",");
-              /*eslint-enable max-nested-callbacks*/
-              Testing.setVar("matching-rules-count", lastMatchingRules.length, "Matching rule #");
-              Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
-
-              // If there is only one match we need something in the testpage to click on
-              if(lastMatchingRules.length === 1) {
-                Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + lastMatchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + lastMatchingRules[0].name + "</li>", "Popup HTML (one match)");
-              }
-            }
-
-            // No matches? Multiple Matches? Show popup when the user clicks on the icon
-            // A single match should just fill the form (see below)
-            if (lastMatchingRules.length !== 1) {
-              chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
-              if (!Utils.isLiveExtension()) {
-                createCurrentPopupInIframe(tab.id);
-              }
-            } else if (lastMatchingRules[0].autorun === true) {
-              // If the rule is marked as "autorun", execute the rule if only
-              // one was found
-              Logger.info("[bj.js] Rule is set to autorun");
-              FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
-            }
           });
         });
       });
