@@ -14,7 +14,7 @@ var Popup = {
   },
   attachEventHandlers: function() {
     // User selects on of many rules in the popup
-    jQuery("ul").on("click", "li", function () {
+    jQuery("ul").on("click", "li.select-rule", function () {
       var data = jQuery(this).data();
       Logger.info("[popup.js] fill with rule " + data.ruleIndex + " clicked");
       var message = {
@@ -29,6 +29,10 @@ var Popup = {
           window.close();
         }
       });
+    });
+
+    // User select a workflow
+    jQuery("ul").on("click", "li.select-workflow", function () {
     });
 
     // Show Extract Overlay when user clicks "create one" link
