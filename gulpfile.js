@@ -227,7 +227,7 @@ gulp.task('popupJs', ['clean'], function () {
 
 // Copies files that can be copied without changes
 gulp.task('copyUnchanged', ['clean'],  function() {
-  ["fonts", "images", "vendor", "_locales"].forEach(function (dir) {
+  ["fonts", "images", "vendor", "_locales", "!src/vendor/jquery/jquery-2.1.3.js"].forEach(function (dir) {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
   });

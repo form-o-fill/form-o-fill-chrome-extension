@@ -1,10 +1,10 @@
-/*global Utils, Logger, Rules, jQuery, Workflows */
+/*global Utils, Logger, Rules, jQuery, Workflows, Storage */
 var Popup = {
   currentUrl: null,
   init: function() {
     var popup = this;
 
-    // Load last matching Rules
+    // Load last matching Rules and workflows
     Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches()]).then(function popupInitMatches(lastMatches) {
       popup.updateHtml(lastMatches[0], lastMatches[1]);
     });
@@ -12,7 +12,15 @@ var Popup = {
     popup.attachEventHandlers();
     Logger.info("[popup.js] popup init done");
   },
+  sendMessageAndClose: function(message) {
+    Logger.info("[popup.js] sending message #" + JSON.stringify(message) + " to background.js");
+    chrome.extension.sendMessage(message, function() {
+      window.close();
+    });
+  },
   attachEventHandlers: function() {
+    var popup = this;
+
     // User selects on of many rules in the popup
     jQuery("ul").on("click", "li.select-rule", function () {
       var data = jQuery(this).data();
@@ -22,24 +30,29 @@ var Popup = {
         "index": data.ruleIndex,
         "id": data.ruleId
       };
-      Logger.info("[popup.js] sending message " + JSON.stringify(message) + " to background.js");
-      chrome.extension.sendMessage(message, function(ok) {
-        if(ok) {
-          // Close the popup
-          window.close();
-        }
-      });
+      popup.sendMessageAndClose(message);
     });
 
     // User select a workflow
     jQuery("ul").on("click", "li.select-workflow", function () {
+      var data = jQuery(this).data();
+      Logger.info("[popup.js] fill with workflow #" + data.workflowIndex + " clicked");
+      var message = {
+        "action": "fillWithWorkflow",
+        "index": data.workflowIndex,
+        "id": data.workflowId
+      };
+      popup.sendMessageAndClose(message);
     });
 
-    // Show Extract Overlay when user clicks "create one" link
     jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
+      // Show Extract Overlay when user clicks "create one" link
       Utils.showExtractOverlay(function() {
         window.close();
       });
+    }).on("click", "a.cmd-cancel-workflows", function () {
+      // Cancel blocking workflow
+      Storage.delete(Utils.keys.runningWorkflow).then(window.close);
     });
   },
   updateHtml: function(matchingRules, matchingWorkflows) {
@@ -89,7 +102,7 @@ var Popup = {
     var fragment = document.createDocumentFragment();
     matches.forEach(function(workflow, index) {
       var li = document.createElement("li");
-      li.textContent = workflow.name;
+      li.textContent = workflow.name + " (" + workflow.steps.length + " steps)";
       li.classList.add("select-workflow");
       li.classList.add("icon-cascade");
       li.dataset.workflowId = workflow.id;

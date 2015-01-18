@@ -24,7 +24,7 @@ var refreshMatchCounter = function (tab, count) {
   setBadge(txt, tab.id);
 };
 
-var reportMatchingRules = function(matchingRules, lastMatchingWorkflows) {
+var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
   /*eslint-disable max-nested-callbacks*/
   var mRule = matchingRules.map(function (rule) {
     return rule.prettyPrint();
@@ -35,16 +35,15 @@ var reportMatchingRules = function(matchingRules, lastMatchingWorkflows) {
 
   // If there is only one match we need something in the testpage to click on
   if((matchingRules.length + lastMatchingWorkflows.length) === 1) {
-    // TODO: Make workflows work here
     Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + matchingRules[0].name + "</li>", "Popup HTML (one match)");
   }
 };
 
 // When the user changes a tab, search for matching rules for that url
-var onTabReady = function(tabId) {
+var onTabReadyRules = function(tabId) {
   // Clear popup HTML
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
-  Logger.info("[bg.js] onTabReady on Tab " + tabId);
+  Logger.info("[bg.js] onTabReadyRules on Tab " + tabId);
 
   chrome.tabs.get(tabId, function (tab) {
     lastMatchingRules = [];
@@ -93,7 +92,7 @@ var onTabReady = function(tabId) {
 
               // TESTING
               if(!Utils.isLiveExtension()) {
-                reportMatchingRules(lastMatchingRules, matchingWfs);
+                reportMatchingRulesForTesting(lastMatchingRules, matchingWfs);
               }
 
               // No matches? Multiple Matches? Show popup when the user clicks on the icon
@@ -118,15 +117,77 @@ var onTabReady = function(tabId) {
   });
 };
 
+// Load running workflow storage
+// and run the next step
+var onTabReadyWorkflow = function() {
+  return new Promise(function (resolve) {
+    Storage.load(Utils.keys.runningWorkflow).then(function prOnTabReadyWf(runningWorkflow) {
+      // No running workflow?
+      if(typeof runningWorkflow === "undefined") {
+        resolve({status: "not_running", runRule: true});
+        return;
+      }
+
+      // End of workflow reached
+      if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
+        // TODO: Show throbber wth message
+        Storage.delete(Utils.keys.runningWorkflow);
+        resolve({status: "finished", runRule: false});
+        return;
+      }
+
+      // load rule for workflow step
+      var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
+      Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
+      setBadge("#" + (runningWorkflow.currentStep + 1), lastActiveTab.id);
+
+      Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
+        if(typeof rule === "undefined") {
+          // TODO: what to do if rule is no found?
+          // TODO: report not found rule, cancel workflow
+          Storage.delete(Utils.keys.runningWorkflow);
+          resolve({status: "rule_not_found", runRule: false});
+        } else {
+          // TODO: Show WF in badge
+          // Fill with this rule
+          FormUtil.applyRule(rule, lastActiveTab);
+
+          // Save workflow state
+          Storage.save({
+            currentStep: (runningWorkflow.currentStep + 1),
+            steps: runningWorkflow.steps
+          }, Utils.keys.runningWorkflow).then(function () {
+            resolve({status: "running_workflow", runRule: false});
+          });
+        }
+      });
+
+      // Running workflow! Don't run normal rules.
+      resolve({status: "running_workflow", runRule: false});
+    });
+  });
+};
+
+// Searches for workflows or rules to run
+var runWorkflowOrRule = function (tabId) {
+  // First check (and run) workflows
+  return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
+    // If a workflow step has been run, don't run rules
+    if(workflowStatus.runRule) {
+      onTabReadyRules(tabId);
+    }
+  });
+};
+
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  onTabReady(activeInfo.tabId);
+  runWorkflowOrRule(activeInfo.tabId);
 });
 
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
-  if (changeInfo.status && changeInfo.status === "complete") {
-    onTabReady(tabId);
+  if(changeInfo.status && changeInfo.status === "complete") {
+    runWorkflowOrRule(tabId);
   }
 });
 
@@ -150,6 +211,20 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
       return rule.id === message.id;
     });
     FormUtil.applyRule(rules[0], lastActiveTab);
+    sendResponse(true);
+  }
+
+  // From popup.js:
+  // Apply a workflow starting at the first step / rule
+  if (message.action === "fillWithWorkflow") {
+    // Load previously saved matching workflows
+    Workflows.findById(message.id).then(function prLoadMatches(matchingWf) {
+      // Now save the steps of that workflow to the storage and
+      // mark the current running workflow
+      Storage.save({ currentStep: 0, steps: matchingWf.steps }, Utils.keys.runningWorkflow).then(function () {
+        onTabReadyWorkflow();
+      });
+    });
     sendResponse(true);
   }
 

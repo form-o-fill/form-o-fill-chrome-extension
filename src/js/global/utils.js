@@ -13,7 +13,8 @@ var Utils = {
     logs: "form-o-fill-logs",
     lastMatchingRules: "form-o-fill-lastmatchingrules",
     workflows: "form-o-fill-workflows",
-    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows"
+    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
+    runningWorkflow: "form-o-fill-runningworkflow"
   },
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
@@ -47,6 +48,7 @@ var Utils = {
     }, fadeAfterMSec);
   },
   download: function(data, filename, mimeType) {
+    // Creates and triggers a download from a string
     var blob = new Blob([data], { type: mimeType});
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement("a");

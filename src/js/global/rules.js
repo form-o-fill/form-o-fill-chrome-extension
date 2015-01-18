@@ -18,14 +18,25 @@ if(typeof exports === "object") {
 
 /* Multiple Rules */
 var Rules = {
-  match: function(url) {
+  match: function(target) {
     var rules = this;
     return new Promise(function (resolve) {
       rules.all().then(function(rulez) {
         var matchingRules = rulez.filter(function (rule) {
-          return typeof rule.url !== "undefined" && url.match(rule.url);
+          return typeof rule.url !== "undefined" && target.match(rule.url);
         });
         resolve(matchingRules);
+      });
+    });
+  },
+  findByName: function(target) {
+    var rules = this;
+    return new Promise(function (resolve) {
+      rules.all().then(function(rulez) {
+        var matchingRules = rulez.filter(function (rule) {
+          return typeof rule.name !== "undefined" && target == rule.name;
+        });
+        resolve(matchingRules[0]);
       });
     });
   },

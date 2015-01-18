@@ -6,7 +6,6 @@ chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
   var currentError = null;
   var workingOverlayId = "form-o-fill-working-overlay";
-  var workingOverlayHtml = "<div id='" + workingOverlayId + "' style='display: none;'>Form-O-Fill is working, please wait!</div>";
 
   var workingTimeout = null;
   var takingLongTimeout = null;
@@ -17,6 +16,13 @@ chrome.runtime.onConnect.addListener(function (port) {
   if(port.name != "FormOFill") {
     return;
   }
+
+  var workingOverlayHtml = function(text) {
+    if(typeof text === "undefined") {
+      text = "Form-O-Fill is working, please wait!";
+    }
+    return "<div id='" + workingOverlayId + "' style='display: none;'>" + text + "</div>";
+  };
 
   var hideOverlay = function() {
     jQuery("#" + workingOverlayId).hide();
@@ -55,7 +61,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     if (message.action === "showWorkingOverlay") {
       Logger.info("[content.js] Showing working overlay");
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
-        jQuery("body").append(workingOverlayHtml);
+        jQuery("body").append(workingOverlayHtml());
       }
 
       // Show working overlay after some time

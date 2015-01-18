@@ -33,7 +33,9 @@ var FormUtil = {
       // resolve found shared rules
       Promise.all(importableRulesPromises).then(function importableRulesPromises(arrayOfRules) {
         var lookup = {};
-        Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+        if(arrayOfRules.length > 0) {
+          Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+        }
 
         // Check for imports that could not be found
         var missingImports = arrayOfRules.filter(function importWithoutRules(element) {

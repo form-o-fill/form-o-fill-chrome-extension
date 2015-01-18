@@ -2,8 +2,24 @@
 /*eslint no-unused-vars:0 */
 var Workflows = {
   load: function() {
-    Logger.info("[g/workflow.js] Loading workflows");
-    return Storage.load(Utils.keys.workflows);
+    return new Promise(function (resolve) {
+      Storage.load(Utils.keys.workflows).then(function prWfLoad(workflows) {
+        if(typeof workflows === "undefined") {
+          resolve([]);
+        } else {
+          resolve(workflows);
+        }
+      });
+    });
+  },
+  findById: function(id) {
+    return new Promise(function (resolve) {
+      Workflows.load().then(function prFindById(wfs) {
+        resolve(wfs.filter(function (wf) {
+          return wf.id == id;
+        })[0]);
+      });
+    });
   },
   save: function(workflowData) {
     Logger.info("[g/workflow.js] Saving " + workflowData.length + " workflows");
