@@ -187,7 +187,8 @@ var exportRules = function() {
         "rules": rulesFromAllTabs
       };
       Logger.info("[options.js] Exporting " + JSONF.stringify(exportJson));
-      Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export.json", "application/json");
+      var now = new Date();
+      Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export-" + now.toISOString() + ".json", "application/json");
     });
   });
 };
