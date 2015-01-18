@@ -280,6 +280,11 @@ var deleteWorkflow = function() {
   Utils.infoMsg("Workflow #" + currentWfId + " deleted");
 };
 
+// export a workflow to disc
+var exportWorkflow = function() {
+  // TODO: implement
+};
+
 // on init
 jQuery(function () {
   // Fill available rules
@@ -308,6 +313,9 @@ jQuery(function () {
 
   // Delete workflow
   jQuery(".wf-button-delete").on("click", deleteWorkflow);
+
+  // Export workflow
+  jQuery(".wf-button-export").on("click", exportWorkflow);
 
   // select a workflow from the list
   jQuery(".wf-all select").on("change", function() {

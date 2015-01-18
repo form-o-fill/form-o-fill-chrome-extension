@@ -277,6 +277,10 @@ span.version {
   content: "\e609";
 }
 
+#workfloweditor .actions button.wf-button-export:before {
+  content: "\e605";
+}
+
 .wf-all select {
   min-width: 30%;
 }
