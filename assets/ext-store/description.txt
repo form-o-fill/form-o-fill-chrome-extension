@@ -55,6 +55,7 @@ Find the source at
 https://github.com/form-o-fill/form-o-fill-chrome-extension
 
 Pull requests always welcome!
+Contact us at formofillextension@gmail.com
 
 Form-O-Fill icon taken from the Entypo Pictogram suite
 (http://www.entypo.com/)
