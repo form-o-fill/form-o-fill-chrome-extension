@@ -281,6 +281,10 @@ span.version {
   content: "\e605";
 }
 
+#workfloweditor .actions button.wf-button-cancel:before {
+  content: "\e602";
+}
+
 .wf-all select {
   min-width: 30%;
 }
@@ -303,4 +307,8 @@ h3 span.unsaved-changes {
 
 #workfloweditor li.has-error span.has-error {
   margin-left: 15px;
+}
+
+.wf-cancel-hint {
+  font-size: 10px;
 }

@@ -1,4 +1,4 @@
-/* global Workflows jQuery Rules Logger Utils*/
+/* global Workflows jQuery Rules Logger Utils Storage*/
 var workflows = [];
 var wfErrors = [];
 
@@ -51,9 +51,7 @@ var findError = function(wfId, stepName) {
 var bindSortable = function() {
   jQuery('#workfloweditor ol')
   .sortable("destroy")
-  .sortable()
-  .bind('sortupdate', function(e, ui) {
-  });
+  .sortable();
 };
 
 // fill the form with workflow data
@@ -280,6 +278,12 @@ var deleteWorkflow = function() {
   Utils.infoMsg("Workflow #" + currentWfId + " deleted");
 };
 
+// Sometimes workflows get stuck
+var cancelWorkflow = function() {
+  Utils.infoMsg("Killed running Workflows");
+  Storage.delete(Utils.keys.runningWorkflow);
+};
+
 // export a workflow to disc
 var exportWorkflow = function() {
   // TODO: implement
@@ -316,6 +320,9 @@ jQuery(function () {
 
   // Export workflow
   jQuery(".wf-button-export").on("click", exportWorkflow);
+
+  // Cancel a stuck workflow
+  jQuery(".wf-button-cancel").on("click", cancelWorkflow);
 
   // select a workflow from the list
   jQuery(".wf-all select").on("change", function() {

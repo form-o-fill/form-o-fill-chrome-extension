@@ -10,6 +10,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   var workingTimeout = null;
   var takingLongTimeout = null;
   var wontFinishTimeout = null;
+  var displayTimeout = null;
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
@@ -17,11 +18,15 @@ chrome.runtime.onConnect.addListener(function (port) {
     return;
   }
 
-  var workingOverlayHtml = function(text) {
+  var workingOverlayHtml = function(text, isVisible) {
     if(typeof text === "undefined") {
       text = "Form-O-Fill is working, please wait!";
     }
-    return "<div id='" + workingOverlayId + "' style='display: none;'>" + text + "</div>";
+
+    if(typeof isVisible === "undefined") {
+      isVisible = false;
+    }
+    return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
   };
 
   var hideOverlay = function() {
@@ -29,6 +34,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     clearTimeout(workingTimeout);
     clearTimeout(takingLongTimeout);
     clearTimeout(wontFinishTimeout);
+    clearTimeout(displayTimeout);
   };
 
   port.onMessage.addListener(function (message) {
@@ -81,6 +87,15 @@ chrome.runtime.onConnect.addListener(function (port) {
     if (message.action === "hideWorkingOverlay") {
       Logger.info("[content.js] Hiding working overlay");
       hideOverlay();
+    }
+
+    // Show a custom message
+    if(message.action === "showMessage") {
+      jQuery("body").find("#" + workingOverlayId).remove().end().append(workingOverlayHtml(message.message, true));
+
+      displayTimeout = setTimeout(function () {
+        hideOverlay();
+      }, 1500);
     }
   });
 

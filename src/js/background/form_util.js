@@ -91,6 +91,10 @@ var FormUtil = {
       Utils.openOptions();
     });
   },
+  displayMessage: function displayMsg(msg, lastActiveTab) {
+    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+    port.postMessage({action: "showMessage", message: msg});
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;

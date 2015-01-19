@@ -84,7 +84,7 @@ var Popup = {
       var li = document.createElement("li");
       li.textContent = rule.name;
       li.classList.add("select-rule");
-      li.classList.add("icon-archive");
+      li.classList.add("icon-bucket");
       li.dataset.ruleUrl = rule.url;
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;

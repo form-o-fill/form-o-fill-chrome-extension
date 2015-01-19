@@ -3,6 +3,7 @@
 var lastMatchingRules = [];
 var lastActiveTab = null;
 var totalMatchesCount = 0;
+var runWorkflowOrRule;
 
 /*eslint-disable no-unused-vars*/
 var testingMode = false;
@@ -24,6 +25,7 @@ var refreshMatchCounter = function (tab, count) {
   setBadge(txt, tab.id);
 };
 
+// Testcode: Fill testing HTML with macthing rules
 var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
   /*eslint-disable max-nested-callbacks*/
   var mRule = matchingRules.map(function (rule) {
@@ -123,15 +125,16 @@ var onTabReadyWorkflow = function() {
   return new Promise(function (resolve) {
     Storage.load(Utils.keys.runningWorkflow).then(function prOnTabReadyWf(runningWorkflow) {
       // No running workflow?
-      if(typeof runningWorkflow === "undefined") {
+      if(typeof runningWorkflow === "undefined" || !lastActiveTab) {
         resolve({status: "not_running", runRule: true});
         return;
       }
 
       // End of workflow reached
       if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
-        // TODO: Show throbber wth message
+        FormUtil.displayMessage("Workflow finished!", lastActiveTab);
         Storage.delete(Utils.keys.runningWorkflow);
+        runWorkflowOrRule(lastActiveTab.id);
         resolve({status: "finished", runRule: false});
         return;
       }
@@ -143,13 +146,15 @@ var onTabReadyWorkflow = function() {
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if(typeof rule === "undefined") {
-          // TODO: what to do if rule is no found?
-          // TODO: report not found rule, cancel workflow
+          // TODO: what to do if rule is not found?
+          // report not found rule in options, cancel workflow
+          FormUtil.displayMessage("Workflow error: rule not found!", lastActiveTab);
           Storage.delete(Utils.keys.runningWorkflow);
+          runWorkflowOrRule(lastActiveTab.id);
           resolve({status: "rule_not_found", runRule: false});
         } else {
-          // TODO: Show WF in badge
           // Fill with this rule
+          FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length, lastActiveTab);
           FormUtil.applyRule(rule, lastActiveTab);
 
           // Save workflow state
@@ -169,7 +174,7 @@ var onTabReadyWorkflow = function() {
 };
 
 // Searches for workflows or rules to run
-var runWorkflowOrRule = function (tabId) {
+runWorkflowOrRule = function (tabId) {
   // First check (and run) workflows
   return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
     // If a workflow step has been run, don't run rules
