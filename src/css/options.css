@@ -242,7 +242,7 @@ span.version {
   margin-left: 10px;
 }
 
-#workfloweditor button:before, .wf-all button:before {
+#workfloweditor button:before, .wf-all button:before, .wf-button-cancel:before {
   font-family: "formofill";
   font-size: 16px;
   vertical-align: middle;
@@ -282,7 +282,7 @@ span.version {
   content: "\e605";
 }
 
-#workfloweditor .actions button.wf-button-cancel:before {
+.wf-button-cancel:before {
   content: "\e602";
 }
 
