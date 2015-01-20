@@ -1,4 +1,4 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Rule, Testing, createCurrentPopupInIframe, Workflows */
+/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Testing, createCurrentPopupInIframe, Workflows */
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
@@ -42,6 +42,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
 };
 
 // When the user changes a tab, search for matching rules for that url
+// or matching rules for that content
 var onTabReadyRules = function(tabId) {
   // Clear popup HTML
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
@@ -49,74 +50,83 @@ var onTabReadyRules = function(tabId) {
 
   chrome.tabs.get(tabId, function (tab) {
     lastMatchingRules = [];
-    if (tab.active) {
-      lastActiveTab = tab;
 
-      // This is a little bit complicated.
-      // I wish the chromium API would implement Promises for all that.
+    // return if the tab isn't active anymore
+    if (!tab.active) {
+      return;
+    }
+
+    lastActiveTab = tab;
+
+    // This is a little bit complicated.
+    // I wish the chromium API would implement Promises for all that.
+    Rules.all().then(function (rules) {
       // First filter all rules that have content matchers
-      Rules.all().then(function (rules) {
-        var relevantRules = rules.filter(function (rule) {
-          return typeof rule.content !== "undefined";
-        });
-        // Send these rules to the content script so it can return the matching
-        // rules based on the regex and the pages content
-        var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
-        chrome.tabs.sendMessage(tabId, message, function (matchingContentRulesIds) {
-          var matchingContentRules;
-          if(typeof matchingContentRulesIds !== "undefined") {
-            // Filter rules
-            matchingContentRules = rules.filter(function (rule) {
-              return matchingContentRulesIds.indexOf(rule.id) > -1;
-            });
-            lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
-          } else {
-            matchingContentRules = [];
-          }
-          Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
+      var relevantRules = rules.filter(function (rule) {
+        return typeof rule.content !== "undefined";
+      });
 
-          // Now match those rules that have a "url" matcher
-          Rules.match(tab.url).then(function (matchingRules) {
-            Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
+      // Send these rules to the content script so it can return the matching
+      // rules based on the regex and the pages content
+      var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
+      chrome.tabs.sendMessage(tabId, message, function (matchingContentRulesIds) {
+        var matchingContentRules;
 
-            // Concatenate matched rules by CONTENT and URL
-            lastMatchingRules = lastMatchingRules.concat(matchingRules);
-
-            // Save rules to localStorage for popup to load
-            Rules.lastMatchingRules(lastMatchingRules);
-
-            // Now find and save the matching workflows for those rules
-            Workflows.matchesForRules(lastMatchingRules).then(function prMatchingWfs(matchingWfs) {
-              Workflows.saveMatches(matchingWfs);
-
-              // Show matches in badge
-              totalMatchesCount = lastMatchingRules.length + matchingWfs.length;
-              refreshMatchCounter(tab, totalMatchesCount);
-
-              // TESTING
-              if(!Utils.isLiveExtension()) {
-                reportMatchingRulesForTesting(lastMatchingRules, matchingWfs);
-              }
-
-              // No matches? Multiple Matches? Show popup when the user clicks on the icon
-              // A single match should just fill the form (see below)
-              if (totalMatchesCount !== 1) {
-                chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
-                if (!Utils.isLiveExtension()) {
-                  createCurrentPopupInIframe(tab.id);
-                }
-              } else if (lastMatchingRules[0].autorun === true) {
-                // If the rule is marked as "autorun", execute the rule if only
-                // one was found
-                Logger.info("[bj.js] Rule is set to autorun");
-                FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
-              }
-            });
+        // If we found rules that match by content ...
+        if(typeof matchingContentRulesIds !== "undefined") {
+          // ... select rules that match those ids
+          matchingContentRules = rules.filter(function (rule) {
+            return matchingContentRulesIds.indexOf(rule.id) > -1;
           });
 
+          // Add the rules to the rule that matches by url
+          lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
+        } else {
+          matchingContentRules = [];
+        }
+        Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
+
+        // Now match those rules that have a "url" matcher
+        Rules.match(tab.url).then(function (matchingRules) {
+          Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
+
+          // Concatenate matched rules by CONTENT and URL
+          lastMatchingRules = lastMatchingRules.concat(matchingRules);
+
+          // Save rules to localStorage for popup to load
+          Rules.lastMatchingRules(lastMatchingRules);
+
+          // Now find and save the matching workflows for those rules
+          Workflows.matchesForRules(lastMatchingRules).then(function prMatchingWfs(matchingWfs) {
+            Workflows.saveMatches(matchingWfs);
+
+            // Show matches in badge
+            totalMatchesCount = lastMatchingRules.length + matchingWfs.length;
+            refreshMatchCounter(tab, totalMatchesCount);
+
+            // TESTING
+            if(!Utils.isLiveExtension()) {
+              reportMatchingRulesForTesting(lastMatchingRules, matchingWfs);
+            }
+
+            // No matches? Multiple Matches? Show popup when the user clicks on the icon
+            // A single match should just fill the form (see below)
+            if (totalMatchesCount !== 1) {
+              chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+              if (!Utils.isLiveExtension()) {
+                createCurrentPopupInIframe(tab.id);
+              }
+            } else if (lastMatchingRules[0].autorun === true) {
+              // If the rule is marked as "autorun", execute the rule if only
+              // one was found
+              Logger.info("[bj.js] Rule is set to autorun");
+              FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
+            }
+          });
         });
+
       });
-    }
+    });
   });
 };
 
@@ -135,7 +145,11 @@ var onTabReadyWorkflow = function() {
       if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
         FormUtil.displayMessage("Workflow finished!", lastActiveTab);
         Storage.delete(Utils.keys.runningWorkflow);
+
+        // Search for matching rules and workflows
+        // to fill the icon again
         runWorkflowOrRule(lastActiveTab.id);
+
         resolve({status: "finished", runRule: false});
         return;
       }
@@ -147,18 +161,20 @@ var onTabReadyWorkflow = function() {
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if(typeof rule === "undefined") {
-          // TODO: what to do if rule is not found?
           // report not found rule in options, cancel workflow
           FormUtil.displayMessage("Workflow error: rule not found!", lastActiveTab);
           Storage.delete(Utils.keys.runningWorkflow);
+
+          // Search for matching rules and workflows
           runWorkflowOrRule(lastActiveTab.id);
+
           resolve({status: "rule_not_found", runRule: false});
         } else {
           // Fill with this rule
           FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length, lastActiveTab);
           FormUtil.applyRule(rule, lastActiveTab);
 
-          // Save workflow state
+          // Save workflow state so we can continue even after a page reload
           Storage.save({
             currentStep: (runningWorkflow.currentStep + 1),
             steps: runningWorkflow.steps
@@ -175,6 +191,7 @@ var onTabReadyWorkflow = function() {
 };
 
 // Searches for workflows or rules to run
+// Workflows steps are then run and subsequent matching rules are ignored
 runWorkflowOrRule = function (tabId) {
   // First check (and run) workflows
   return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
