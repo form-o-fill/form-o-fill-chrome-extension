@@ -1,12 +1,14 @@
-/*global Testing, Utils */
-/*eslint no-unused-vars: [2, "Notification"] */
+/*global Testing, Utils, Changelog */
 var Notification = {
-  create: function(message, onClickCallback) {
+  create: function(message, title, onClickCallback) {
     var formNotificationId = null;
+    if(title === null) {
+      title = "Form-O-Fill";
+    }
     chrome.notifications.create(Math.random().toString(), {
       "iconUrl": chrome.runtime.getURL("images/icon_48.png"),
       "type": "basic",
-      "title": "Form-O-Fill",
+      "title": title,
       "message": message,
       "isClickable": true
     }, function(notificationId) {
@@ -26,5 +28,13 @@ var Notification = {
         onClickCallback();
       }
     });
+  },
+  forVersion: function(version) {
+    var notificationContent = Changelog.findForVersion(version);
+    if(notificationContent) {
+      Notification.create(notificationContent.message, notificationContent.title, function() {
+        Utils.openOptions(notificationContent.target);
+      });
+    }
   }
 };

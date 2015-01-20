@@ -43,7 +43,7 @@ var FormUtil = {
         });
 
         if(missingImports.length > 0) {
-          Notification.create(chrome.i18n.getMessage("notification_import_without_rule"), function importWithoutRule() {
+          Notification.create(chrome.i18n.getMessage("notification_import_without_rule"), null, function importWithoutRule() {
             var errors = missingImports.map(function (element) {
               return { fullMessage: "Missing rule is named '" + element.ruleThatImports + "'" };
             });
@@ -196,7 +196,7 @@ var FormUtil = {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
 
-          Notification.create("An error occured while executing a before function. Click here to view it.", function notificationCreate() {
+          Notification.create("An error occured while executing a before function. Click here to view it.", null, function notificationCreate() {
             FormUtil.saveErrors(errors, rule);
           });
         }
@@ -233,7 +233,7 @@ var FormUtil = {
     var reportErrors = function reportErrors(theErrors) {
       Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
       if(theErrors.length > 0) {
-        Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", function NotificationCreate() {
+        Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function NotificationCreate() {
           FormUtil.saveErrors(theErrors, rule);
         });
       }

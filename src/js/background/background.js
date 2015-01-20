@@ -261,7 +261,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // Display a notification to the user that the extract has finished
   if(message.action === "extractFinishedNotification") {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
-    Notification.create("Extracted your form. Click here to check the options panel for more info.", Utils.openOptions);
+    Notification.create("Extracted your form. Click here to check the options panel for more info.", null, Utils.openOptions);
   }
 
   // Return the last active tab id
@@ -294,7 +294,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
   // Called on very first install
   if (details.reason === "install") {
-    Notification.create(chrome.i18n.getMessage("first_install_notification"), function () {
+    Notification.create(chrome.i18n.getMessage("first_install_notification"), null, function () {
       Utils.openOptions("#help");
     });
   }
@@ -313,5 +313,10 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
   // remove log entries
   Logger.delete();
+
+  // Check if there are notifications to display
+  if(Utils.version !== "##VERSION##") {
+    Notification.forVersion(Utils.version);
+  }
 });
 

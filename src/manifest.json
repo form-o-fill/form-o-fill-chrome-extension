@@ -95,6 +95,7 @@
       "js/global/libs.js", 
       "js/global/workflow.js", 
       "js/background/form_util.js",
+      "js/background/changelog.js",
       "js/background/notification.js",
       "js/background/background.js",
       "js/background/context_menu.js",
