@@ -7,7 +7,7 @@
   While a single rule can fill forms on a single page, workflows continue to execute even after a page reload.
 </p>
 <p>
-  Use the "<a href="#workflows">Workflows</a>" menu on the left side to create workflows and add existing rules in an arbitary order.<br />
+  Use the "<a class="activate-menu" href="#workflows">Workflows</a>" menu on the left side to create workflows and add existing rules in an arbitary order.<br />
   You can drag and drop those workflow steps to reorder them.
 </p>
 <p>
@@ -33,7 +33,15 @@
   }
 </pre>
 <p>
-  Workflows are in beta right now. If you run a workflow and strange thing happen (like you can't execute rules after that), try the
-  <button class="wf-button-cancel">Cancel stuck workflow</button> button in the <a href="#workflows">Workflows</a> panel.
-  
+  Workflows are in beta right now. If you run a workflow and strange things happen (like you can't execute rules after that), try the
+  <button class="wf-button-cancel">Cancel stuck workflow</button> button in the <a class="activate-menu" href="#workflows">Workflows</a> panel.
+</p>
+<h3>Executing workflows</h3>
+<p>
+  Once you have defined a workflow it will be shown in the rules popup <i>if the condition of the first rule in the workflow matches</i>.<br />
+  Click on the workflow will execute it <br/>
+  This is what the popup will look like:
+</p>
+<p>
+  <img src="../../images/help/workflow-in-popup.png" />
 </p>
