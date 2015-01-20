@@ -200,7 +200,6 @@ var FormUtil = {
             FormUtil.saveErrors(errors, rule);
           });
         }
-
       }
 
       // If there was only one rule
@@ -227,7 +226,8 @@ var FormUtil = {
         Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
         port.postMessage({"action": "getErrors"});
       });
-
+    }).then(null, function error(msg) {
+      console.error(msg);
     });
 
     var reportErrors = function reportErrors(theErrors) {

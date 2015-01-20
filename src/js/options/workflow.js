@@ -1,4 +1,4 @@
-/* global Workflows jQuery Rules Logger Utils Storage*/
+/* global Workflows jQuery Rules Logger Utils Storage JSONF */
 var workflows = [];
 var wfErrors = [];
 
@@ -115,7 +115,7 @@ var findWorkflowById = function(wfId) {
   return aWf[0];
 };
 
-// Load a single worflow into the form
+// Load a single workflow into the form
 var loadWorkflowById = function(wfId) {
   var aWf = findWorkflowById(wfId);
 
@@ -285,12 +285,50 @@ var cancelWorkflow = function() {
 };
 
 // export a workflow to disc
-var exportWorkflow = function() {
-  // TODO: implement
+var exportWorkflows = function() {
+  Storage.load(Utils.keys.workflows).then(function(workflowData) {
+    workflowData = workflowData.map(function cbWfDataMap(workflow) {
+      workflow.steps = jQuery.makeArray(workflow.steps);
+      return workflow;
+    });
+    var exportJson = JSONF.stringify(workflowData);
+    var now = new Date();
+    var fileName = "form-o-fill-workflows-export-" + now.toISOString() + ".json";
+
+    Utils.infoMsg("Workflows exported as '" + fileName + "'");
+    Utils.download(exportJson, fileName, "application/json");
+  });
+};
+
+// Import workflows from disc
+var importWorkflows = function() {
+  jQuery("#modalimportworkflows").show();
+};
+
+// import Workflows from file
+var executeImportWorkflows = function() {
+  var $warning = jQuery("#modalimportworkflows .only-json");
+  $warning.hide();
+  var fileToImport = document.getElementById("importfile").files[0];
+  if (typeof fileToImport === "undefined" || fileToImport.type != "application/json") {
+    $warning.show();
+  } else {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var parsed = JSONF.parse(e.target.result);
+      Storage.save(parsed, Utils.keys.workflows).then(function () {
+        jQuery("#modalimportrules").hide();
+        window.location.reload();
+      });
+    };
+
+    // Read file. This calls "onload" above
+    reader.readAsText(fileToImport);
+  }
 };
 
 // on init
-jQuery(function () {
+jQuery(function() {
   // Fill available rules
   fillAvailableRules();
 
@@ -319,7 +357,11 @@ jQuery(function () {
   jQuery(".wf-button-delete").on("click", deleteWorkflow);
 
   // Export workflow
-  jQuery(".wf-button-export").on("click", exportWorkflow);
+  jQuery(document).on("click", ".wf-button-export", exportWorkflows);
+
+  // Import workflow via overlay
+  jQuery(".wf-button-import").on("click", importWorkflows);
+  jQuery(document).on("click", "#modalimportworkflows .cmd-import-all-workflows", executeImportWorkflows);
 
   // Cancel a stuck workflow
   jQuery(".wf-button-cancel").on("click", cancelWorkflow);
@@ -336,4 +378,6 @@ jQuery(function () {
 
   // Attach to click on the workflow button
   jQuery("a[href='#workflows']").on("click", fillAvailableRules);
+
+
 });

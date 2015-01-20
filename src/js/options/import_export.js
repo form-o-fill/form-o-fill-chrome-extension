@@ -20,11 +20,11 @@ var exportRules = function() {
 };
 
 // Handler if user clicks "Import"
-$(document).on("click", "#modalimport .cmd-import-all-rules", function () {
-  var $warning = $("#modalimport .only-json");
+$(document).on("click", "#modalimportrules .cmd-import-all-rules", function () {
+  var $warning = $("#modalimportrules .only-json");
   $warning.hide();
   var fileToImport = document.getElementById("rulesimport").files[0];
-  if (fileToImport.type != "application/json") {
+  if (typeof fileToImport === "undefined" || fileToImport.type != "application/json") {
     $warning.show();
   } else {
     var reader = new FileReader();
@@ -40,7 +40,7 @@ $(document).on("click", "#modalimport .cmd-import-all-rules", function () {
       promises.push(Storage.save(parsed.tabSettings, Utils.keys.tabs));
 
       Promise.all(promises).then(function () {
-        $("#modalimport").hide();
+        $("#modalimportrules").hide();
         loadTabsSettings();
         loadRules(1);
       });
@@ -49,6 +49,6 @@ $(document).on("click", "#modalimport .cmd-import-all-rules", function () {
     // Read file. This calls "onload" above
     reader.readAsText(fileToImport);
   }
-}).on("click", "#modalimport .close-button, #modalimport .cmd-cancel", function () {
-  $("#modalimport").hide();
+}).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function () {
+  $(".modalimport").hide();
 });

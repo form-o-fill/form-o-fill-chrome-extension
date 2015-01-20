@@ -6,7 +6,7 @@ var editor = new Editor("#ruleeditor-ace");
 
 var noticesVisible = false;
 
-I18n.loadPages(["help", "about", "changelog", "modalimport"]);
+I18n.loadPages(["help", "about", "changelog", "modalimportrules", "modalimportworkflows"]);
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);
@@ -195,7 +195,7 @@ var exportRules = function() {
 
 // import rules from disc
 var importRules = function() {
-  $("#modalimport").show();
+  $("#modalimportrules").show();
 };
 
 var quickJumpToRule = function() {

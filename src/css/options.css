@@ -164,11 +164,11 @@ button.import:before {
   cursor: pointer;
 }
 
-#modalimport {
+.modalimport {
   display: none;
 }
 
-#modalimport .only-json {
+.only-json {
   display: none;
 }
 
@@ -218,9 +218,6 @@ span.version {
   margin-right: 10px;
 }
 
-#workfloweditor ol {
-}
-
 #workfloweditor li {
   padding: 0 0 5px 0;
   cursor: pointer;
@@ -264,6 +261,10 @@ span.version {
   content: "\e608";
 }
 
+#workfloweditor .actions {
+  overflow: hidden;
+}
+
 #workfloweditor .actions button {
   float: left;
   margin-right: 5px;
@@ -283,6 +284,10 @@ span.version {
 
 #workfloweditor .actions button.wf-button-cancel:before {
   content: "\e602";
+}
+
+#workfloweditor .actions button.wf-button-import:before {
+  content: "\e604";
 }
 
 .wf-all select {

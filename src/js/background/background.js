@@ -62,11 +62,12 @@ var onTabReadyRules = function(tabId) {
         // Send these rules to the content script so it can return the matching
         // rules based on the regex and the pages content
         var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
-        chrome.tabs.sendMessage(tabId, message, function (matchingContentRules) {
-          if(typeof matchingContentRules !== "undefined") {
-            // Convert the objects to Rules
-            matchingContentRules = JSONF.parse(matchingContentRules).map(function (ruleLike) {
-              return Rule.create(ruleLike);
+        chrome.tabs.sendMessage(tabId, message, function (matchingContentRulesIds) {
+          var matchingContentRules;
+          if(typeof matchingContentRulesIds !== "undefined") {
+            // Filter rules
+            matchingContentRules = rules.filter(function (rule) {
+              return matchingContentRulesIds.indexOf(rule.id) > -1;
             });
             lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
           } else {
@@ -111,8 +112,8 @@ var onTabReadyRules = function(tabId) {
                 FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
               }
             });
-
           });
+
         });
       });
     }

@@ -106,7 +106,9 @@ chrome.runtime.onConnect.addListener(function (port) {
       var domElements = jQuery(message.message).map(function (index, $el) {
         return $el;
       });
-      if(domElements.length === 1) {
+      if(domElements.length === 0) {
+        responseCb([]);
+      } else if(domElements.length === 1) {
         responseCb(domElements[0].outerHTML);
       } else {
         responseCb(domElements.map(function(el) {
