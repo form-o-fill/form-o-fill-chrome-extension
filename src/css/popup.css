@@ -19,8 +19,13 @@
 .icon-bucket:before {
 	content: "\e600";
 }
+
 .icon-archive:before {
 	content: "\e601";
+}
+
+.icon-cascade:before {
+	content: "\e608";
 }
 
 html {
@@ -47,7 +52,7 @@ h3 {
 }
 
 ul {
-  margin: 0;
+  margin: 0 0 15px 0;
   padding: 0;
 }
 
@@ -69,6 +74,10 @@ li:before {
   vertical-align: middle;
 }
 
+li.select-workflow {
+  color: #192E98;
+}
+
 a, a:visited, a:hover, a:active {
   outline: none;
   color: #2c2c2c;
@@ -80,13 +89,6 @@ a, a:visited, a:hover, a:active {
   display: none;
 }
 
-a.to-options, a.cmd-show-extract-overlay {
-  color: #333;
-  font-size: 9px;
-  float: right;
-  margin-bottom: 10px;
-}
-
 a.cmd-show-extract-overlay {
   margin-left: 10px;
 }
@@ -95,4 +97,32 @@ h3 .cmd-show-extract-overlay {
   font-size: inherit;
   float: none;
   margin-left: 0;
+}
+
+.actions {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+
+.actions a {
+  color: #333;
+  font-size: 9px;
+  float: right;
+  margin: 0 10px 10px 0;
+}
+
+.actions .cmd-cancel-workflows {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 10px;
+  float: left;
+}
+
+.actions .to-options {
+  /* margin-right: 11px; */
 }

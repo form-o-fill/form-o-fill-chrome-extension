@@ -33,7 +33,9 @@ var FormUtil = {
       // resolve found shared rules
       Promise.all(importableRulesPromises).then(function importableRulesPromises(arrayOfRules) {
         var lookup = {};
-        Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+        if(arrayOfRules.length > 0) {
+          Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+        }
 
         // Check for imports that could not be found
         var missingImports = arrayOfRules.filter(function importWithoutRules(element) {
@@ -88,6 +90,10 @@ var FormUtil = {
     Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
       Utils.openOptions();
     });
+  },
+  displayMessage: function displayMsg(msg, lastActiveTab) {
+    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+    port.postMessage({action: "showMessage", message: msg});
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
@@ -194,7 +200,6 @@ var FormUtil = {
             FormUtil.saveErrors(errors, rule);
           });
         }
-
       }
 
       // If there was only one rule
@@ -221,7 +226,8 @@ var FormUtil = {
         Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
         port.postMessage({"action": "getErrors"});
       });
-
+    }).then(null, function error(msg) {
+      console.error(msg);
     });
 
     var reportErrors = function reportErrors(theErrors) {

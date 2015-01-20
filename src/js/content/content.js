@@ -6,11 +6,11 @@ chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
   var currentError = null;
   var workingOverlayId = "form-o-fill-working-overlay";
-  var workingOverlayHtml = "<div id='" + workingOverlayId + "' style='display: none;'>Form-O-Fill is working, please wait!</div>";
 
   var workingTimeout = null;
   var takingLongTimeout = null;
   var wontFinishTimeout = null;
+  var displayTimeout = null;
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
@@ -18,11 +18,23 @@ chrome.runtime.onConnect.addListener(function (port) {
     return;
   }
 
+  var workingOverlayHtml = function(text, isVisible) {
+    if(typeof text === "undefined") {
+      text = "Form-O-Fill is working, please wait!";
+    }
+
+    if(typeof isVisible === "undefined") {
+      isVisible = false;
+    }
+    return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
+  };
+
   var hideOverlay = function() {
     jQuery("#" + workingOverlayId).hide();
     clearTimeout(workingTimeout);
     clearTimeout(takingLongTimeout);
     clearTimeout(wontFinishTimeout);
+    clearTimeout(displayTimeout);
   };
 
   port.onMessage.addListener(function (message) {
@@ -55,7 +67,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     if (message.action === "showWorkingOverlay") {
       Logger.info("[content.js] Showing working overlay");
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
-        jQuery("body").append(workingOverlayHtml);
+        jQuery("body").append(workingOverlayHtml());
       }
 
       // Show working overlay after some time
@@ -76,6 +88,15 @@ chrome.runtime.onConnect.addListener(function (port) {
       Logger.info("[content.js] Hiding working overlay");
       hideOverlay();
     }
+
+    // Show a custom message
+    if(message.action === "showMessage") {
+      jQuery("body").find("#" + workingOverlayId).remove().end().append(workingOverlayHtml(message.message, true));
+
+      displayTimeout = setTimeout(function () {
+        hideOverlay();
+      }, 1500);
+    }
   });
 
   // Simple one-shot callbacks
@@ -85,7 +106,9 @@ chrome.runtime.onConnect.addListener(function (port) {
       var domElements = jQuery(message.message).map(function (index, $el) {
         return $el;
       });
-      if(domElements.length === 1) {
+      if(domElements.length === 0) {
+        responseCb([]);
+      } else if(domElements.length === 1) {
         responseCb(domElements[0].outerHTML);
       } else {
         responseCb(domElements.map(function(el) {

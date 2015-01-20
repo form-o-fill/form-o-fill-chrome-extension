@@ -33,7 +33,7 @@ var saveTabsSetting = function() {
 var loadTabsSettings = function() {
   Logger.info("[tabs.js] Loading tab setting");
 
-  var activeTabId = jQuery(".tab.current").data("tab-id");
+  var activeTabId = jQuery("#ruleeditor .tab.current").data("tab-id");
   if(typeof activeTabId === "undefined") {
     activeTabId = 1;
   }
@@ -54,7 +54,7 @@ var loadTabsSettings = function() {
     tabs = tabs.add(jQuery('<li class="tab more"><input type="text" value="" disabled /><a href="#" class="cmd-tabs-open"></a></li>'));
 
     // Add tabs in one swoop
-    jQuery(".tabs").html(tabs);
+    jQuery("#ruleeditor .tabs").html(tabs);
   });
 };
 

@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, send
     var rules = JSONF.parse(message.rules);
     rules.forEach(function forEach(rule) {
       if(typeof rule.content.test === "function" && rule.content.test(content)) {
-        matches.push(rule);
+        matches.push(rule.id);
       }
     });
     Logger.info("[extract_instr.js] Matched content against " + rules.length + " rules with " + matches.length + " content matches");

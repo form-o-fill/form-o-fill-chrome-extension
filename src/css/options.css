@@ -84,7 +84,7 @@ button.import:before {
   content: "\e604";
 }
 
-.editor .menu .info {
+.editor .menu .info, #workflows span.info {
   color: #999;
   line-height: 32px;
   vertical-align: middle;
@@ -92,11 +92,11 @@ button.import:before {
   font-size: 11px;
 }
 
-#ruleditor .notice:last-child {
+.notice:last-child {
   margin-bottom: 0;
 }
 
-#ruleeditor .notice {
+.notice {
   display: none;
   border: 1px solid #909090;
   padding: 10px 25px 10px 36px;
@@ -109,7 +109,7 @@ button.import:before {
   cursor: pointer;
 }
 
-#ruleeditor .notice:before {
+.notice:before {
   font-family: "formofill";
   font-size: 24px;
   vertical-align: middle;
@@ -120,7 +120,7 @@ button.import:before {
   left: 7px;
 }
 
-#ruleeditor .notice:after {
+.notice:after {
   font-family: "formofill";
   font-size: 18px;
   content: "\e607";
@@ -131,13 +131,13 @@ button.import:before {
   color: #999;
 }
 
-#ruleeditor .notice .code {
+.notice .code {
   font-family: "droid sans mono", monospace, "courier new", courier, sans-serif;
   background-color: #bbb;
   padding: 2px 4px;
 }
 
-#ruleeditor .notice.form-fill-errors span {
+.notice.form-fill-errors span {
   text-decoration: underline;
 }
 
@@ -164,11 +164,11 @@ button.import:before {
   cursor: pointer;
 }
 
-#modalimport {
+.modalimport {
   display: none;
 }
 
-#modalimport .only-json {
+.only-json {
   display: none;
 }
 
@@ -189,4 +189,137 @@ span.version {
 #help .topic > a[name].anchor {
   margin: 0;
   height: 0;
+}
+
+/* Workflows */
+#workflows .tab input {
+  width: auto;
+}
+
+#workflows .menu {
+  margin-top: 7px;
+}
+
+#workfloweditor {
+  min-height: 100%;
+  width: 800px;
+  margin-top: 10px;
+  border: 1px solid #909090;
+  overflow: hidden;
+  padding: 5px;
+}
+
+#workfloweditor .wf-name {
+  width: 100%;
+}
+
+#workfloweditor select.rulelist {
+  width: 80%;
+  margin-right: 10px;
+}
+
+#workfloweditor li {
+  padding: 0 0 5px 0;
+  cursor: pointer;
+}
+
+#workfloweditor li {
+  padding: 5px 5px 5px 0;
+  cursor: move;
+  background-color: #FAFAF7;
+  margin-bottom: 5px;
+}
+
+#workfloweditor li:before {
+  font-family: "formofill";
+  font-size: 24px;
+  vertical-align: middle;
+  margin-right: 4px;
+  content: "\e60b";
+}
+
+#workfloweditor li button {
+  margin-left: 10px;
+}
+
+#workfloweditor button:before, .wf-all button:before, .wf-button-cancel:before {
+  font-family: "formofill";
+  font-size: 16px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+#workfloweditor .wf-delete-step:before {
+  content: "\e609";
+}
+
+#workfloweditor .wf-add-step:before {
+  content: "\e606";
+}
+
+.wf-add-wf:before {
+  content: "\e608";
+}
+
+#workfloweditor .actions {
+  overflow: hidden;
+}
+
+#workfloweditor .actions button {
+  float: left;
+  margin-right: 5px;
+}
+
+#workfloweditor .actions button.wf-button-save:before {
+  content: "\e603";
+}
+
+#workfloweditor .actions button.wf-button-delete:before {
+  content: "\e609";
+}
+
+#workfloweditor .actions button.wf-button-export:before {
+  content: "\e605";
+}
+
+.wf-button-cancel:before {
+  content: "\e602";
+}
+
+#workfloweditor .actions button.wf-button-import:before {
+  content: "\e604";
+}
+
+.wf-all select {
+  min-width: 30%;
+}
+
+h3 span.unsaved-changes {
+  float: right;
+  font-size: 11px;
+  color: Red;
+  display: none;
+}
+
+#workflows #notices {
+  margin-top: 15px;
+}
+
+#workfloweditor li.has-error {
+  color: Red;
+  font-weight: bold;
+}
+
+#workfloweditor li.has-error span.has-error {
+  margin-left: 15px;
+}
+
+.wf-cancel-hint {
+  font-size: 10px;
+}
+
+.beta {
+  color: #f00000;
+  transform: rotate(45deg);
+  position: absolute;
 }

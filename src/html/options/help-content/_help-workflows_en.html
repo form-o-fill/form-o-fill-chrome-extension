@@ -1,0 +1,47 @@
+<a name="help-workflows"></a>
+<h3>Workflows<span class="beta">beta</span></h3>
+<p>
+  Workflows allow you to chain rules together to form sequences of actions.
+</p>
+<p>
+  While a single rule can fill forms on a single page, workflows continue to execute even after a page reload.
+</p>
+<p>
+  Use the "<a class="activate-menu" href="#workflows">Workflows</a>" menu on the left side to create workflows and add existing rules in an arbitary order.<br />
+  You can drag and drop those workflow steps to reorder them.
+</p>
+<p>
+  Notice that a workflow by itself doesn't submit any forms or changes or reloads the page url.<br />
+  This is something you must do at the end of every rule.
+</p>
+<p>
+  Usually you can archieve this by using a <a href="#help-functions">value function</a> that clicks on a link or button.
+</p>
+<p>
+  Example rule that clicks on a submit button:
+</p>
+<pre>
+  {
+    name: "a clicking rule",
+    url: /some-url/,
+    fields: [{
+      selector: "form input[type=submit]",
+      value: function($domElement) {
+        $domElement.click();
+      }
+    }]
+  }
+</pre>
+<p>
+  Workflows are in beta right now. If you run a workflow and strange things happen (like you can't execute rules after that), try the
+  <button class="wf-button-cancel">Cancel stuck workflow</button> button in the <a class="activate-menu" href="#workflows">Workflows</a> panel.
+</p>
+<h3>Executing workflows</h3>
+<p>
+  Once you have defined a workflow it will be shown in the rules popup <i>if the condition of the first rule in the workflow matches</i>.<br />
+  Click on the workflow will execute it <br/>
+  This is what the popup will look like:
+</p>
+<p>
+  <img src="../../images/help/workflow-in-popup.png" />
+</p>

@@ -58,6 +58,10 @@ Rule.create = function(options, tabId, ruleIndex) {
     rule.autorun = false;
   }
 
+  if(typeof rule.type === "undefined") {
+    rule.type = "rule";
+  }
+
   rule.tabId = tabId;
 
   // REMOVE START

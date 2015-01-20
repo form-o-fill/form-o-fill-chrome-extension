@@ -46,5 +46,7 @@ var ChromeBootstrap = {
     jQuery(document).on("click", "a[href*=#help-]", function() {
       relocate(this.href.replace(/^.*#/, "#"));
     });
+
+    jQuery(document).on("click", "a.activate-menu", relocate);
   }
 };

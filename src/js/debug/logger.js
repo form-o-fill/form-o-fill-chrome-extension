@@ -13,7 +13,7 @@ var Logger = {
       console[level]("[*FOF*]%s %O", msg, obj);
       return;
     }
-    console[level]("%c[*FOF*]%c%s", "color: #2207A3;", "color: #000;", msg);
+    console[level]("[*FOF*]%s", msg);
   },
   info: function(msg, obj) {
     this.out("info", msg, obj);

@@ -3,11 +3,10 @@
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 var editor = new Editor("#ruleeditor-ace");
-editor.resize();
 
 var noticesVisible = false;
 
-I18n.loadPages(["help", "about", "changelog", "modalimport"]);
+I18n.loadPages(["help", "about", "changelog", "modalimportrules", "modalimportworkflows"]);
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);
@@ -25,7 +24,7 @@ editor.on("change", function() {
 
 // Current active tab id
 var currentTabId = function() {
-  var currentTab = $(".tab.current");
+  var currentTab = $("#ruleeditor .tab.current");
   if(currentTab.length === 1) {
     return currentTab.data("tab-id");
   }
@@ -188,14 +187,15 @@ var exportRules = function() {
         "rules": rulesFromAllTabs
       };
       Logger.info("[options.js] Exporting " + JSONF.stringify(exportJson));
-      Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export.json", "application/json");
+      var now = new Date();
+      Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export-" + now.toISOString() + ".json", "application/json");
     });
   });
 };
 
 // import rules from disc
 var importRules = function() {
-  $("#modalimport").show();
+  $("#modalimportrules").show();
 };
 
 var quickJumpToRule = function() {
@@ -204,8 +204,8 @@ var quickJumpToRule = function() {
   var name = selected.text();
 
   // If the target tab is not the active one, click to trigger
-  if($(".tab.current").data("tab-id").toString() !== tabId) {
-    $(".tab[data-tab-id=" + tabId + "]").trigger("click");
+  if(currentTabId().toString() !== tabId) {
+    $("#ruleeditor .tab[data-tab-id=" + tabId + "]").trigger("click");
   }
 
   var found = editor.editor().find(name, { backwards: false, skipCurrent: false }, false);
@@ -215,6 +215,7 @@ var quickJumpToRule = function() {
 // Load data from tab and prefill editor
 loadRules(currentTabId());
 updateTabStats();
+editor.resize();
 
 // Button handling for "save" and "load"
 $(".editor .menu").on("click", "button.save", function () {

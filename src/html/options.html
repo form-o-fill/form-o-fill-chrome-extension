@@ -26,6 +26,9 @@
           <a href="#ruleeditor">Rule Editor</a>
         </li>
         <li>
+          <a href="#workflows">Workflows<span class="beta">beta</span></a>
+        </li>
+        <li>
           <a href="#help">Help</a>
         </li>
         <li>
@@ -102,6 +105,57 @@
         </div>
       </div>
 
+      <div id="workflows">
+        <header>
+          <h1>Workflows<span class="beta">beta</span></h1>
+        </header>
+        <div class="content">
+          <div class="workflows">
+
+            <div class="tabcontainer">
+              <ul class="tabs">
+                <li class="tab current"><input type="text" value="Workflows" disabled></li>
+              </ul>
+            </div>
+
+            <div id="notices">
+              <div class="notice wf-missing-rules">
+                There are workflows with broken rule assignments. Click to view workflow.
+                <ul class="wf-missing-rules-wfs"></ul>
+              </div>
+            </div>
+            
+            <div class="wf-all">
+              <h3>Choose workflow to edit:</h3>
+              <select>
+                <option class="wf-no-created">no workflow defined</option>
+              </select>
+              <button class='wf-add-wf'>create new workflow</button>
+              <span class='info'></span>
+            </div>
+
+            <div id="workfloweditor" style="display: none" data-workflow-id="0">
+              <h3>Name:<span class="unsaved-changes">Unsaved!</span></h3>
+              <input class="wf-name" type="text" value="" />
+              <h3>Steps:</h3>
+              <h4>Choose the rule to append and press 'add to workflow':</h4>
+              <select class="rulelist"></select>
+              <button class='wf-add-step'>add to workflow</button>
+              <h4>Use drag/drop to reorder the steps.</h4>
+              <ol></ol>
+              <div class="actions">
+                <button class='wf-button-save'>Save workflow</button>
+                <button class='wf-button-delete'>Delete workflow</button>
+                <button class='wf-button-export'>Export workflows</button>
+                <button class='wf-button-import'>Import workflows</button>
+                <button class='wf-button-cancel'>Cancel stuck workflow</button>
+              </div>
+              <div class="wf-cancel-hint">(when rule matching doesn't work, try to cancel stuck workflows)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- loaded per language -->
       <div id="help"></div>
       <div id="about"></div>
@@ -111,15 +165,17 @@
       <!-- REMOVE END -->
     </div>
 
-    <div class="overlay" id="modalimport" style="display: none;"></div>
+    <div class="overlay modalimport" id="modalimportrules" style="display: none;"></div>
+    <div class="overlay modalimport" id="modalimportworkflows" style="display: none;"></div>
 
   </div>
-  <script src="../vendor/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+  <script src="../vendor/jquery/jquery-2.1.3.min.js" type="text/javascript"></script>
   <script src="../vendor/js-beautifier/beautify.js" type="text/javascript"></script>
   <script src="../vendor/chance.js/chance.js" type="text/javascript"></script>
   <script src="../vendor/moment.js/moment-with-langs.js" type="text/javascript"></script>
   <script src="../vendor/ace/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="../vendor/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../vendor/html5sortable/html.sortable.min.js" type="text/javascript" charset="utf-8"></script>
   <!-- REMOVE START -->
   <script src="../js/debug/logger.js"></script>
   <script src="../js/global/jsonf.js"></script>
@@ -129,6 +185,7 @@
   <script src="../js/global/rules.js"></script>
   <script src="../js/global/i18n.js"></script>
   <script src="../js/global/libs.js"></script>
+  <script src="../js/global/workflow.js"></script>
   <!-- REMOVE END -->
   <!-- BUILD START
   <script src="../js/global.js"></script>
@@ -141,6 +198,7 @@
   <script src="../js/options/import_export.js" type="text/javascript"></script>
   <script src="../js/options/logs.js" type="text/javascript"></script>
   <script src="../js/options/help.js" type="text/javascript"></script>
+  <script src="../js/options/workflow.js" type="text/javascript"></script>
   <!-- REMOVE END -->
   <!-- BUILD START
   <script src="../js/options.js"></script>

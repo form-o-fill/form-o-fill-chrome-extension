@@ -11,7 +11,10 @@ var Utils = {
     errors: "form-o-fill-errors",
     tabs: "form-o-fill-tabs",
     logs: "form-o-fill-logs",
-    lastMatchingRules: "form-o-fill-lastmatchingrules"
+    lastMatchingRules: "form-o-fill-lastmatchingrules",
+    workflows: "form-o-fill-workflows",
+    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
+    runningWorkflow: "form-o-fill-runningworkflow"
   },
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
@@ -36,7 +39,7 @@ var Utils = {
   infoMsg: function(msg) {
     // A function to display a nice message in the rule editor
     var fadeAfterMSec = 1000;
-    var $menuInfo = jQuery(".editor .menu .info");
+    var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
     $menuInfo.html(msg).css({"opacity": "1"});
     setTimeout(function() {
       $menuInfo.animate({"opacity": 0}, 1000, function() {
@@ -45,6 +48,7 @@ var Utils = {
     }, fadeAfterMSec);
   },
   download: function(data, filename, mimeType) {
+    // Creates and triggers a download from a string
     var blob = new Blob([data], { type: mimeType});
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement("a");
