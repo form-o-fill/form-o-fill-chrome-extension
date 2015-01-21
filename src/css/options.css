@@ -76,11 +76,11 @@ button.empty:before {
   content: "\e600";
 }
 
-button.export:before {
+button.export:before, .rl-button-export:before, .all-button-export:before {
   content: "\e605";
 }
 
-button.import:before {
+button.import:before, .rl-button-import:before, .all-button-import:before {
   content: "\e604";
 }
 
@@ -242,7 +242,7 @@ span.version {
   margin-left: 10px;
 }
 
-#workfloweditor button:before, .wf-all button:before, .wf-button-cancel:before {
+#workfloweditor button:before, .wf-all button:before, .wf-button-cancel:before, .icon:before {
   font-family: "formofill";
   font-size: 16px;
   vertical-align: middle;
@@ -270,15 +270,15 @@ span.version {
   margin-right: 5px;
 }
 
-#workfloweditor .actions button.wf-button-save:before {
+button.wf-button-save:before {
   content: "\e603";
 }
 
-#workfloweditor .actions button.wf-button-delete:before {
+button.wf-button-delete:before {
   content: "\e609";
 }
 
-#workfloweditor .actions button.wf-button-export:before {
+button.wf-button-export:before {
   content: "\e605";
 }
 
@@ -286,7 +286,7 @@ span.version {
   content: "\e602";
 }
 
-#workfloweditor .actions button.wf-button-import:before {
+button.wf-button-import:before {
   content: "\e604";
 }
 
@@ -322,4 +322,9 @@ h3 span.unsaved-changes {
   color: #f00000;
   transform: rotate(45deg);
   position: absolute;
+}
+
+#help-importexport button {
+  width: 200px;
+  text-align: left;
 }

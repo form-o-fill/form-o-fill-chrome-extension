@@ -6,7 +6,7 @@ var editor = new Editor("#ruleeditor-ace");
 
 var noticesVisible = false;
 
-I18n.loadPages(["help", "about", "changelog", "modalimportrules", "modalimportworkflows"]);
+I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportrules", "modalimportworkflows"]);
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);
@@ -225,11 +225,10 @@ $(".editor .menu").on("click", "button.save", function () {
 }).on("click", "button.format", function () {
   editor.format(Rules);
   Utils.infoMsg("Rules formatted but not saved");
-}).on("click", "button.export", exportRules)
-.on("click", "button.import", importRules);
+}).on("click", "button.import, button.rl-button-import", importRules);
 
 // Export all rules (for modal import dialog)
-$(document).on("click", "a.cmd-export-all-rules", function() {
+$(document).on("click", "button.export, a.cmd-export-all-rules, button.rl-button-export", function() {
   exportRules();
 });
 
