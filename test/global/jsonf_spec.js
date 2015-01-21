@@ -2,7 +2,7 @@ var JSONF = require("../../src/js/global/jsonf.js");
 
 describe("JSONF", function(){
   it('serializes simple JS objects', function(){
-    expect(JSONF.stringify({"a" : "simple", "b": [ "JS", "Object", "Literal" ]})).to.eq("{\n  \"a\": \"simple\",\n  \"b\": [\n    \"JS\",\n    \"Object\",\n    \"Literal\"\n  ]\n}");
+    expect(JSONF.stringify({"a": "simple", "b": [ "JS", "Object", "Literal" ]})).to.eq("{\n  \"a\": \"simple\",\n  \"b\": [\n    \"JS\",\n    \"Object\",\n    \"Literal\"\n  ]\n}");
   });
 
   it("serializes and deserializes 'undefined'", function(){
@@ -45,14 +45,23 @@ describe("JSONF", function(){
     expect(JSONF.parse(serialized)()).to.eq(42);
   });
 
+  it("works with functions that have names", function(){
+    var func = function anonymous() {
+      return 42;
+    };
+    var serialized = JSONF.stringify(func);
+    expect(serialized).to.eq("\"function anonymous() {\\n      return 42;\\n    }\"");
+    expect(JSONF.parse(serialized)()).to.eq(42);
+  });
+
   it("works with {} curly brackets (#16)", function(){
     /*eslint-disable no-undef, no-unused-vars, block-scoped-var*/
     var func = function (a) {
-      return {a:42};
+      return {a: 42};
     };
     /*eslint-enable no-undef, no-unused-vars, block-scoped-var*/
     var serialized = JSONF.stringify(func);
-    expect(JSONF.parse(serialized)()).to.eql({a:42});
+    expect(JSONF.parse(serialized)()).to.eql({a: 42});
   });
 
 });
