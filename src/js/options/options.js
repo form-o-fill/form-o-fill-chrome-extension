@@ -6,7 +6,7 @@ var editor = new Editor("#ruleeditor-ace");
 
 var noticesVisible = false;
 
-I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportrules", "modalimportworkflows"]);
+I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportrules", "modalimportworkflows", "modalimportall"]);
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);
@@ -173,26 +173,6 @@ var loadRules = function(tabId) {
   });
 };
 
-// export rules to disk
-var exportRules = function() {
-  var promises = [];
-  Storage.load(Utils.keys.tabs).then(function(tabSettings) {
-    tabSettings.forEach(function (setting) {
-      promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
-    });
-
-    Promise.all(promises).then(function(rulesFromAllTabs) {
-      var exportJson = {
-        "tabSettings": tabSettings,
-        "rules": rulesFromAllTabs
-      };
-      Logger.info("[options.js] Exporting " + JSONF.stringify(exportJson));
-      var now = new Date();
-      Utils.download(JSONF.stringify(exportJson), "form-o-fill-rules-export-" + now.toISOString() + ".json", "application/json");
-    });
-  });
-};
-
 // import rules from disc
 var importRules = function() {
   $("#modalimportrules").show();
@@ -225,12 +205,13 @@ $(".editor .menu").on("click", "button.save", function () {
 }).on("click", "button.format", function () {
   editor.format(Rules);
   Utils.infoMsg("Rules formatted but not saved");
-}).on("click", "button.import, button.rl-button-import", importRules);
+});
+
+// Show modal import window
+$(document).on("click", "button.import, .rl-button-import", importRules);
 
 // Export all rules (for modal import dialog)
-$(document).on("click", "button.export, a.cmd-export-all-rules, button.rl-button-export", function() {
-  exportRules();
-});
+$(document).on("click", "button.export, a.cmd-export-all-rules, button.rl-button-export", exportRules);
 
 // Support for the quickjump <select>
 $("#rules-overview").on("change", quickJumpToRule);
