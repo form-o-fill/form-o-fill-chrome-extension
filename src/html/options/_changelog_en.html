@@ -2,6 +2,16 @@
   <h1>Changelog Form-O-Fill</h1>
 </header>
 <div class="content">
+  <p>★ Version 2.0.0</p>
+  <ul>
+    <li>
+      Added <a href="#help-workflows">workflows</a>. 
+      You can now automate multiple steps sequentially after one another. 
+      This works even after a page load/reload.
+      With this automating complete form workflows is easy.
+    </li>
+    <li>Introduce the <code>Libs.h</code> namespace for <a href="#help-libraries">value function helper</a>. First helper is <code>Libs.h.click</code> which clicks the matched dom element</li>
+  </ul>
   <p>★ Version 1.6.1</p>
   <ul>
     <li>
@@ -9,7 +19,7 @@
       To convert from callback to promise change<br/><code>context.findHtml("selector", function(html) { ... your code ... });</code> to <br />
       <code>context.findHtml("selector").then(function(html) { ... your code ... });</code>
      </li>
-  </ul>
+   </ul>
   <p>★ Version 1.6.0</p>
   <ul>
     <li>Added <a href="#help-beforecontext-findhtml">.findHtml() function</a> to the context object</li>
