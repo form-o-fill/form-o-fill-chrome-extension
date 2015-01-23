@@ -1,5 +1,6 @@
 /*global FormFiller, JSONF, jQuery, Logger*/
 /*eslint complexity:0 */
+
 // This listens for messages coming from the background page
 // This is a long running communication channel
 chrome.runtime.onConnect.addListener(function (port) {
@@ -18,7 +19,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     return;
   }
 
-  var workingOverlayHtml = function(text, isVisible) {
+  var overlayHtml = function(text, isVisible) {
     if(typeof text === "undefined") {
       text = "Form-O-Fill is working, please wait!";
     }
@@ -29,6 +30,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
   };
 
+  // Hide overlay and cancel all timers
   var hideOverlay = function() {
     jQuery("#" + workingOverlayId).hide();
     clearTimeout(workingTimeout);
@@ -64,10 +66,10 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 
     // Show Working overlay
-    if (message.action === "showWorkingOverlay") {
+    if (message.action === "showOverlay") {
       Logger.info("[content.js] Showing working overlay");
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
-        jQuery("body").append(workingOverlayHtml());
+        jQuery("body").append(overlayHtml());
       }
 
       // Show working overlay after some time
@@ -78,12 +80,13 @@ chrome.runtime.onConnect.addListener(function (port) {
       // Show another overlay when things take REALLY long to finishs
       takingLongTimeout = setTimeout(function () {
         jQuery("#" + workingOverlayId).html("This is really taking too long.");
-      }, 4000);
+      }, 5000);
 
       // Finally if everything fails, clear overlay after 10 seconds
       wontFinishTimeout = setTimeout(hideOverlay, 12000);
     }
 
+    // Hide the overlay
     if (message.action === "hideWorkingOverlay") {
       Logger.info("[content.js] Hiding working overlay");
       hideOverlay();
@@ -91,15 +94,13 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     // Show a custom message
     if(message.action === "showMessage") {
-      jQuery("body").find("#" + workingOverlayId).remove().end().append(workingOverlayHtml(message.message, true));
-
-      displayTimeout = setTimeout(function () {
-        hideOverlay();
-      }, 1500);
+      jQuery("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message.message, true));
+      displayTimeout = setTimeout(hideOverlay, 1500);
     }
   });
 
   // Simple one-shot callbacks
+  // This is the content grabber available as context.findHtml() in before functions
   chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
     if (message.action === "grabContentBySelector") {
       Logger.info("[content.js] Grabber asked for '" + message.message + "'");

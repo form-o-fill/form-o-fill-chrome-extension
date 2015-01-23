@@ -108,12 +108,12 @@ var FormUtil = {
     }
     var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
 
-    port.postMessage({"action": "showWorkingOverlay"});
+    port.postMessage({"action": "showOverlay"});
 
     // the grabber is passed as part of the context
     // it can fetch content from the open webpage
     // usage: context.findHtml("a.getme").then(function(content) {});
-    var grabber = function(selector) {
+    var _grabber = function(selector) {
       return new Promise(function (resolve) {
         var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
         chrome.tabs.sendMessage(lastActiveTab.id, grabberMessage, function returnFromContentGrabber(content) {
@@ -128,7 +128,7 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     var context = {
       url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: grabber
+      findHtml: _grabber
     };
 
     // Default instantaneous resolving promise:
