@@ -23,6 +23,13 @@ var Libs = {
   }
 };
 
+var valueFunctionHelper = {
+  click: function($domNode) {
+    $domNode.click();
+  }
+};
+Libs.add("h", valueFunctionHelper);
+
 // Add vendored chance.js
 if(typeof window.Chance === "function") {
   Libs.add("chance", new window.Chance());
