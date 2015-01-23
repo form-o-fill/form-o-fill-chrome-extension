@@ -6,10 +6,13 @@
   To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a>.<br />
 </p>
 <p>
-  Both libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
+  Both test data related libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
 </p>
 <p>
-  This is how to use them:
+  There is also a library accessible as <code>Libs.h</code> which contains functions to use in your <a href="#help-functions">value function</a>.
+</p>
+<p>
+  This is how to use moment.js and chance.js them:
 </p>
 <div class="block-of-code">
   <div class="explaining">
@@ -88,7 +91,24 @@
     &nbsp;
   </div>
   <div class="code">
-    &nbsp;&nbsp;}
+    }, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Find something clickable
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "a[href]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use <code>Libs.h.click</code> to click that element<br />
+    Notice that there are no brackets after <code>Libs.h.click</code>!
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: Libs.h.click
   </div>
 </div>
 <div class="block-of-code">
