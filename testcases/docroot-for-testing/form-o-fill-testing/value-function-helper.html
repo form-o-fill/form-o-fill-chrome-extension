@@ -10,7 +10,20 @@
     <h1>TESTING SERVER RUNNING</h1>
     Input field: <input value="Value from pageload" id="target" /><br>
     Button: <button id="button">click me</button><br>
-    Rules Import: <textarea id="form-o-fill-testing-import"></textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "helper functions"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  name: \"value function: click()\",\n  url: /value-function-helper/,\n  fields: [{\n    selector: \"#button\",\n    value: Libs.h.click\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
     <table id="form-o-fill-testing-info"></table>
     <script>
       $(function() {
