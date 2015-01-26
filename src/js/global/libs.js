@@ -23,6 +23,7 @@ var Libs = {
   }
 };
 
+// helper for use in value functions
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
