@@ -55,7 +55,7 @@ describe("test setup", function() {
     });
 
     page.getHTML(".popup-html", function (err, text) {
-      expect(text).to.match(/<h3>Found 8 matching rules<\/h3>/);
+      expect(text).to.match(/<h3>Found 8 matches<\/h3>/);
     });
 
     page.call(done);
