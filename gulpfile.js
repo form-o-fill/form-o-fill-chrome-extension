@@ -66,7 +66,6 @@ var serverConfigIntegration = {
 // 9.  Rename the "scriptsBuild" part in the manifest to be the "scripts" part
 //     These contain the optimized files for the final build
 // 10. Replace ##VERSION## with the correct version string from the manifest
-// 11. While developing FoF adds an "reload" button to the toolbar
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
@@ -117,10 +116,6 @@ var replaceOpts = {
     {
       match: /"management",\n/g,
       replacement: ""
-    },
-    {
-      match: /^.*"commands"[\s\S]*"web_/gm,
-      replacement: '"web_'
     }
   ]
 };

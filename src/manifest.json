@@ -18,19 +18,9 @@
     "storage",
     "contextMenus",
     "notifications",
-    "management",
     "http://*/",
     "https://*/"
   ],
-  "commands": {
-    "reload-form-o-fill-extension": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+5",
-        "mac": "Command+Shift+5"
-      },
-      "description": "reload the form-o-fill extension"
-    }
-  },
   "web_accessible_resources": [ "html/options.html" ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
