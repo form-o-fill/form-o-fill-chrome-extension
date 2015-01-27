@@ -140,6 +140,19 @@ var Rules = {
   syntaxCheck: function(editor) {
     var that = this;
     var errors = [];
+    var lineCount = editor._document.getLength();
+    var lineStart = editor._document.getLine(0);
+    var lineEnd = editor._document.getLine(lineCount - 1);
+
+    // Detect if the first line does not correctly containing "var rules = ["
+    if(lineStart.match(/var\s+\w+\s*=\s*\[/) === null) {
+      errors.push("need-var-rules");
+    }
+
+    // Do the rules end with ] ?
+    if(lineEnd.match(/][;]?\s*$/) === null) {
+      errors.push("need-var-rules");
+    }
 
     // Check if there are some ACE Annotations (aka. errors) present
     var annotationCount = editor.session().getAnnotations().length;

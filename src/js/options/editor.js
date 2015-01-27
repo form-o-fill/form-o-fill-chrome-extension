@@ -59,34 +59,6 @@ Editor.prototype.cleanUp = function() {
   return true;
 };
 
-// Fix broken rules in editor
-// ATTENTION! This is broken at the moment
-Editor.prototype.fixRules = function() {
-  // Fix the first line not correctly containing "var rules = ["
-  var lineStart = this._document.getLine(0);
-  var lineCount = this._document.getLength();
-  var lineEnd = this._document.getLine(lineCount - 1);
-  var AceRange = ace.require('ace/range').Range;
-
-  if(lineStart.indexOf("{") > -1) {
-    // Assume "var rules = [" is missing
-    this._document.insertLines(0, [ "var rules = [" ]);
-  } else {
-    this._document.replace(new AceRange(0, 0, 0, 999), "var rules = [");
-  }
-
-  // }]; at end?
-  if(/^\s*\}\s*\];\s*$/.test(lineEnd)) {
-    this._document.removeLines(lineCount - 1, lineCount - 1);
-    this._document.insertLines(lineCount, [ "}" ]);
-  }
-
-  // Fix the last line not containing "];"
-  if(!/^\s*\];\s*$/.test(lineEnd)) {
-    this._document.insertLines(lineCount, [ "];" ]);
-  }
-};
-
 // Format the rules
 Editor.prototype.format = function(Rules) {
   this._editor.setValue(Rules.format(this._editor.getValue()), -1);

@@ -75,6 +75,9 @@
               <div class="notice error before-function-needs-resolve-call">
                 Please call your 'resolve' function somewhere in the 'before' function:<br /><span class="code">before: function(resolve) { ... resolve(myData); }</span>
               </div>
+              <div class="notice error need-var-rules">
+                Please surround your rules with <span class="code">var rules = [ { ... rule 1 ... }, { ... rule 2 ... } ];</code>
+              </div>
               <div class="notice form-fill-errors">
                 There have been errors while filling the form. The rule used was '<span class="rule-name"></span>' (url: '<span class="rule-url"></span>')
                 <table>
