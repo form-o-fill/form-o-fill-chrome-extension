@@ -1,0 +1,14 @@
+{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "FoF - BEFORE"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: /google/,\n  name: \"Using before functions is cool!\",\n  before: function(resolve, context) {\n    jQuery.getJSON(\"http://api.icndb.com/jokes/random\").done(resolve);\n  },\n  fields: [{\n    selector: \"input[name='q']\",\n    value: function($e, chuckNorris) {\n      return chuckNorris.value.joke;\n    }\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}
