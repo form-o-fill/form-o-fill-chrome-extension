@@ -32,6 +32,7 @@ var currentTabId = function() {
 };
 
 // Append text to the end of the rule definitions
+// TODO: use a promise here
 var appendRule = function(prettyRule, responseCallback) {
   // Use
   Rules.load().then(function(rulesFunction) {
