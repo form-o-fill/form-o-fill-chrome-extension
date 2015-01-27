@@ -1,5 +1,5 @@
+/*global Logger Utils lastActiveTab JSONF Rules Storage Workflows */
 /*eslint no-unused-vars: [2, "Testing"] */
-/*global Logger Utils lastActiveTab JSONF Rules Storage */
 
 var Testing = {
   setVar: function(key, value, textToDisplay) {
@@ -50,13 +50,29 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   if(message.action === "importRules") {
     var parsed = JSONF.parse(message.value);
     var promises = [];
+    var rulesToImport = null;
+    var tabSettingsToImport = null;
+
+    // Import can be rules only or rules+workflows
+    if(typeof parsed.rules !== "undefined") {
+      rulesToImport = parsed.rules.rules;
+      tabSettingsToImport = parsed.rules.tabSettings;
+    } else {
+      rulesToImport = parsed.rules;
+      tabSettingsToImport = parsed.tabSettings;
+    }
 
     // Save all tabs separatly
-    parsed.rules.forEach(function (editorTabAndRules) {
+    rulesToImport.forEach(function (editorTabAndRules) {
       promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
     });
     // save tabsetting
-    promises.push(Storage.save(parsed.tabSettings, Utils.keys.tabs));
+    promises.push(Storage.save(tabSettingsToImport, Utils.keys.tabs));
+
+    // Save workflows?
+    if(typeof parsed.workflows !== "undefined") {
+      Workflows.save(parsed.workflows);
+    }
 
     Promise.all(promises).then(function () {
       sendResponse(true);

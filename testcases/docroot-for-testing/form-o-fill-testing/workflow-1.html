@@ -13,18 +13,31 @@
     </form>
     Rules Import: 
     <textarea id="form-o-fill-testing-import">{
-  "tabSettings": [
+  "workflows": [
     {
-      "id": "1",
-      "name": "Workflow steps"
+      "id": 1,
+      "name": "Form-O-Fill Workflow Test",
+      "steps": [
+        "step 1 -> 2",
+        "step 2 -> 3",
+        "step 3 -> 1"
+      ]
     }
   ],
-  "rules": [
-    {
-      "code": "var rules = [{\n  name: \"step 1 -> 2\",\n  url: /workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 1\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 2 -> 1\",\n  url: /workflow-2/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 2\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}\n];",
-      "tabId": 1
-    }
-  ]
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Workflow steps"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"step 1 -> 2\",\n  url: /workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 1\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 2 -> 3\",\n  url: /workflow-2/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 2\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 3 -> 1\",\n  url: /workflow-3/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 3\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
 }
     </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
     <table id="form-o-fill-testing-info"></table>
