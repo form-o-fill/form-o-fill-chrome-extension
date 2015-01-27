@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF, exportRules */
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -44,7 +44,8 @@ var appendRule = function(prettyRule, responseCallback) {
 
     // Prettify code a little
     editor.session().setValue(Rules.format(editor.session().getValue()), -1);
-    editor.scrollToRow(editor.document().getLength());
+    editor.editor().scrollToRow(editor.document().getLength());
+    editor.resize();
     responseCallback();
     Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
   });
@@ -163,12 +164,13 @@ var saveRules = function(tabId) {
 // Load the rules
 var loadRules = function(tabId) {
   Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleData) {
-    var ruleJson = ruleData.code;
-    if(typeof ruleJson === "undefined") {
+    var ruleJson = null;
+    if(typeof ruleData === "undefined" || typeof ruleData.code === "undefined") {
       ruleJson = "";
+    } else {
+      ruleJson = ruleData.code;
     }
     editor.setValue(ruleJson, -1);
-    //BROKEN! editor.fixRules();
     Utils.infoMsg("Rules loaded from disc");
   });
 };
