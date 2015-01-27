@@ -6,7 +6,7 @@ FORM-O-FILL is there to ease that pain.
 
 Features:
 ✓ Extract already entered forms to auto-create the rule definition with the click of a button (or two).
-✓ Use javascript to program the rules.
+✓ Use JAVASCRIPT to program the rules.
 ✓ Use static values or dynamically generated values for every field (value functions are just javascript).
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
 ✓ Use before functions to fetch or generate data that can then be used in value functions.
@@ -16,6 +16,8 @@ Features:
 ✓ Auto apply configurable for each rule
 ✓ Reuse rules inside other rules (shared rules)
 ✓ Browser notifications to show you what happened.
+✓ Use WORKFLOWS to create multi page rules
+
 
 Requires:
 Chrome 33+
@@ -27,28 +29,15 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.0.0
+- Workflow allow chaining of rules to form complex sequences of actions. See help!
+- Libs.h.click can be used as a value function.
+- Refactored a lot of code. Potentially broken. Report issues on github please.
+
 ★ Version 1.6.1
 - Change .findHtml() to return a promise. Please see changelog for migration.
 
-★ Version 1.6.0
-- Added .findHtml() function to the context object
-
-★ Version 1.5.1
-- Fix a potential chrome bug with flickering or too small popup.
-- Report missing rules when using shared field definitions.
-
-★ Version 1.5.0
-- New feature: Shared field definitions (like rspec shared_examples).
-  Import common field definitions into a rule in any place you want.
-
-★ Version 1.4.1
-- Implemented error reporting for before functions
-- Popup shows rules sorted by name
-
-★ Version 1.4.0
-- You can now create reusable functions to simplify your complex rules. 
-
-★ Version 1.1.1 - 1.3.6
+★ Version 1.1.1 - 1.6.0
 - See "Changelog" in extension options
 
 Find the source at
