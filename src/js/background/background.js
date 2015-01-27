@@ -315,7 +315,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   Logger.delete();
 
   // Check if there are notifications to display
-  if(Utils.version !== "##VERSION##") {
+  if(Utils.version.indexOf(".") > -1) {
     Notification.forVersion(Utils.version);
   }
 });
