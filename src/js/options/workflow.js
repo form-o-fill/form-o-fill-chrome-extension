@@ -1,4 +1,4 @@
-/* global Workflows jQuery Rules Logger Utils Storage exportWorkflows importWorkflows executeImportWorkflows */
+/* global Workflows jQuery Rules Logger Utils Storage exportWorkflows executeImportWorkflows */
 var workflows = [];
 var wfErrors = [];
 
