@@ -9,6 +9,8 @@ var Rule = function() {
     delete clone.urlClean;
     delete clone.id;
     delete clone.tabId;
+    delete clone.type;
+    delete clone.autorun;
     delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
   };
@@ -56,10 +58,6 @@ Rule.create = function(options, tabId, ruleIndex) {
 
   if(typeof rule.autorun === "undefined") {
     rule.autorun = false;
-  }
-
-  if(typeof rule.type === "undefined") {
-    rule.type = "rule";
   }
 
   rule.tabId = tabId;
