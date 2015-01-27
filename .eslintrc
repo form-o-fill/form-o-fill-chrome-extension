@@ -94,7 +94,7 @@
     no-redeclare: 2 # disallow declaring the same variable more then once
     no-return-assign: 2 # disallow use of assignment in return statement
     no-self-compare: 2 # disallow comparisons where both sides are exactly the same
-    no-warning-comments: 2 # disallow usage of configurable warning terms in comments: 2 #e.g. TODO or FIXME
+    no-warning-comments: 0 # allow usage of configurable warning terms in comments: 0 #e.g. TODO or FIXME
     no-with: 2 # disallow use of the with statement
     yoda: "never" # disallow Yoda conditions
     radix: 2 #require use of the second argument for parseInt()
