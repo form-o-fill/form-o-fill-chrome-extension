@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     var tabSettingsToImport = null;
 
     // Import can be rules only or rules+workflows
-    if(typeof parsed.rules !== "undefined") {
+    if(typeof parsed.rules !== "undefined" && typeof parsed.rules.rules !== "undefined") {
       rulesToImport = parsed.rules.rules;
       tabSettingsToImport = parsed.rules.tabSettings;
     } else {
