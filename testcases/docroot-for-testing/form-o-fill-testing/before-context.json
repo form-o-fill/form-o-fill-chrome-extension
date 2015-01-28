@@ -1,0 +1,27 @@
+{
+  "workflows": [
+    {
+      "id": 1,
+      "name": "Amazon Demo 1",
+      "steps": [
+        "Amazon Demo - Workflow step 1 (Homepage)",
+        "Amazon Demo - Workflow step 2 (Results)",
+        "Amazon Demo - Workflow step 3 (Details)"
+      ]
+    }
+  ],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Before context"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"Test context.findHtml\",\n  before: function(resolve, context) {\n    context.findHtml(\"#form-o-fill-some-content\").then(resolve);\n  },\n  autorun: true,\n  fields: [{\n    selector: \"input\",\n    value: function($e, data) {\n      return data;\n    }\n  }]\n}];",
+        "tabId": 1
+      }
+    ]
+  }
+}

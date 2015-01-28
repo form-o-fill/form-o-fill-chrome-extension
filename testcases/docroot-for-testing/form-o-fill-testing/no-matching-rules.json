@@ -1,0 +1,27 @@
+{
+  "workflows": [
+    {
+      "id": 1,
+      "name": "Amazon Demo 1",
+      "steps": [
+        "Amazon Demo - Workflow step 1 (Homepage)",
+        "Amazon Demo - Workflow step 2 (Results)",
+        "Amazon Demo - Workflow step 3 (Details)"
+      ]
+    }
+  ],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Nothing here"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [];",
+        "tabId": 1
+      }
+    ]
+  }
+}

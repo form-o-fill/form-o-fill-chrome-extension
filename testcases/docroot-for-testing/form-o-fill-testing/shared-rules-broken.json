@@ -1,0 +1,27 @@
+{
+  "workflows": [
+    {
+      "id": 1,
+      "name": "Amazon Demo 1",
+      "steps": [
+        "Amazon Demo - Workflow step 1 (Homepage)",
+        "Amazon Demo - Workflow step 2 (Results)",
+        "Amazon Demo - Workflow step 3 (Details)"
+      ]
+    }
+  ],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "shared rule"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  url: \"shared-rule-only\",\n  name: \"supplying shared rules\",\n  fields: [{\n    selector: \"#i1\",\n    value: \"shared rule 1\"\n  }, {\n    selector: \"#i2\",\n    value: \"shared rule 2\"\n  }, {\n    selector: \"#i3\",\n    value: \"shared rule 3\"\n  }]\n}, {\n  url: /.*shared-rules.*/,\n  name: \"using shared rules\",\n  autorun: true,\n  fields: [{\n    \"import\": \"non existing shared rule\"\n  }, {\n    selector: \"#i1\",\n    value: \"filled by original\"\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}
