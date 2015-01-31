@@ -47,8 +47,8 @@ var appendRule = function(prettyRule, responseCallback) {
     editor.session().setValue(Rules.format(editor.session().getValue()), -1);
     editor.editor().scrollToRow(editor.document().getLength());
     editor.resize();
-    responseCallback();
     Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
+    responseCallback();
   });
 };
 
