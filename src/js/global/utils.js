@@ -16,6 +16,7 @@ var Utils = {
     lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
     runningWorkflow: "form-o-fill-runningworkflow"
   },
+  reservedLibNamespaces: ["h", "halt"],
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },

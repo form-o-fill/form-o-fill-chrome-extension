@@ -149,7 +149,14 @@ var saveRules = function(tabId) {
   var errors = Rules.syntaxCheck(editor);
   if(errors.length > 0) {
     errors.forEach(function (errorClass) {
-      $("#ruleeditor .notice." + errorClass).show();
+        if(typeof errorClass === "object") {
+          var extraLis = errorClass.extra.map(function (extra) {
+            return "<li>" + extra + "</li>";
+          });
+          $("#ruleeditor .notice." + errorClass.id + " ul").html(extraLis);
+          errorClass = errorClass.id;
+        }
+        $("#ruleeditor .notice." + errorClass).show();
     });
     noticesVisible = true;
   }

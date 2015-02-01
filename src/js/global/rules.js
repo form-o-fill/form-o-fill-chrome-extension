@@ -160,8 +160,24 @@ var Rules = {
       errors.push("annotations-present");
     }
 
+    // Check used library function definitions, must not contain reserved
+    // library namespaces
+    var libMatches = editor.getValue().match(/export["']?\s*:\s*['"].*?['"]/g);
+    if(libMatches !== null) {
+      // There are library definitions
+      var foundReservedNs = libMatches.map(function (matchStr) {
+        return matchStr.match(/:\s*['"](.*?)['"]/)[1];
+      }).filter(function (matchStr) {
+        return Utils.reservedLibNamespaces.indexOf(matchStr) != -1;
+      });
+
+      if(foundReservedNs.length > 0) {
+        errors.push({id: "libs-using-reserved-namespaces", extra: foundReservedNs});
+      }
+    }
+
     // Check for before function structure
-    if (errors.length == 0) {
+    if (errors.length === 0) {
       var ruleCodeCheck = this.text2function(editor.getValue());
       ruleCodeCheck.forEach(function (ruleFunction) {
         if(ruleFunction.hasOwnProperty("before")) {
