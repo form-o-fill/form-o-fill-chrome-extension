@@ -20,7 +20,6 @@ var FormUtil = {
   },
   resolveImports: function resolveImports(rule) {
     return new Promise(function (resolve) {
-
       // Find field definitions containing the "import" property and
       // lookup the matching rule.
       // Returns an array of promises
@@ -180,6 +179,10 @@ var FormUtil = {
     // the arrray of before functions defined in the rule.
     Promise.all(beforeFunctions).then(function beforeFunctionsPromise(data) {
       beforeData = data;
+
+      // TODO; Check if beforeData is Libs.halt
+      // If so -> call func and take the returning string to display a throbber in content.
+      // cancel all running workflows or rules.
 
       // beforeData is null when there is no before function defined in the rule definition
       if(beforeData !== null) {
