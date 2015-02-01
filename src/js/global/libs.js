@@ -16,6 +16,7 @@ var Libs = {
     Rules.all().then(function (rules) {
       rules.forEach(function (rule) {
         if (typeof rule.export !== "undefined" && typeof rule.lib === "function") {
+          // Add the rule into the scope of all library functions
           Libs.add(rule.export, rule.lib, true);
         }
       });
