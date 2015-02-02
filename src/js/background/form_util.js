@@ -180,9 +180,19 @@ var FormUtil = {
     Promise.all(beforeFunctions).then(function beforeFunctionsPromise(data) {
       beforeData = data;
 
-      // TODO; Check if beforeData is Libs.halt
-      // If so -> call func and take the returning string to display a throbber in content.
-      // cancel all running workflows or rules.
+      // If the first beforeData is a function and executes to null then
+      // the rules and workflows that are running should be canceled
+      if(typeof beforeData[0] === "function" && beforeData[0]() === null) {
+        // Cancel workflows
+        Storage.delete(Utils.keys.runningWorkflow);
+
+        // Cancel overlay that is potentially showing at the moment
+        port.postMessage({"action": "hideWorkingOverlay"});
+
+        // Show halting message
+        port.postMessage({"action": "showMessage", message: "Canceled by Libs.halt()"});
+        return null;
+      }
 
       // beforeData is null when there is no before function defined in the rule definition
       if(beforeData !== null) {

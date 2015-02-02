@@ -32,6 +32,18 @@ var valueFunctionHelper = {
 };
 Libs.add("h", valueFunctionHelper);
 
+// Process control functions
+var processFunctionsHalt = function(msg) {
+  return function() {
+    if(typeof msg === "undefined") {
+      msg = "Canceled by Libs.halt";
+    }
+    // TODO: call "showMessage"
+    return null;
+  };
+};
+Libs.add("halt", processFunctionsHalt);
+
 // Add vendored chance.js
 if(typeof window.Chance === "function") {
   Libs.add("chance", new window.Chance());
