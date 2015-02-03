@@ -100,6 +100,12 @@ var FormUtil = {
     var beforeData;
     var errors = [];
 
+    // Whatever the reason. Sometimes the rule is undefined when this is called
+    if(typeof rule === "undefined") {
+      Logger.info("[form_util.js] this.lastRule is undefined. Canceling application of rule.");
+      return;
+    }
+
     // Open long standing connection to the tab containing the form to be worked on
     if(typeof lastActiveTab === "undefined") {
       Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
