@@ -35,7 +35,7 @@
     Now request some data. You can use the globally accessible <code>jQuery</code> for that like so:
   </div>
   <div class="code">
-    &nbsp;&nbsp;jQuery.getJSON("http://www.openthesaurus.de/synonyme/search?q=" + context.url.query + "&format=application/json").done(function(data) {
+    &nbsp;&nbsp;jQuery.getJSON("http://api.someservice.com/search?q=" + context.url.query).done(function(data) {
   </div>
 </div>
 <div class="block-of-code">
@@ -125,5 +125,33 @@
     &nbsp;&nbsp;&nbsp;&nbsp;// dataArray === ["a", "b"]<br />
     &nbsp;&nbsp;}<br />
     }]
+  </div>
+</div>
+
+<h3>Canceling the rule processing using Libs.halt()</h3>
+<div class="block-of-code">
+  <div class="explaining">
+    If you need to cancel the processing of a rule based on a condition in your before function you can do so.<br />
+    Just <code>resolve</code> with a call to <code>Libs.halt()</code>.
+    The rule or the workflow will be immediatly canceled and a message will be displayed.
+  </div>
+  <div class="code">
+    before: function(resolve. context) { <br />
+    &nbsp;&nbsp;... do some stuff ...<br />
+    &nbsp;&nbsp;resolve(Libs.halt());<br />
+    }
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    You can customize the message that is displayed when the rules/workflow is canceled:<br />
+    <br />
+    <br />
+  </div>
+  <div class="code">
+    before: function(resolve. context) { <br />
+    &nbsp;&nbsp;... do some stuff ...<br />
+    &nbsp;&nbsp;resolve(Libs.halt("Custom message to be displayed"));<br />
+    }
   </div>
 </div>

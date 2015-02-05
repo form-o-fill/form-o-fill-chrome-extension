@@ -2,6 +2,11 @@
   <h1>Changelog Form-O-Fill</h1>
 </header>
 <div class="content">
+  <p>★ Version 2.0.1</p>
+  <ul>
+    <li>Use the new <code>Libs.halt()</code> function to <a href="#help-before">cancel a workflow/rule</a> from inside before functions.</li>
+  </ul>
+
   <p>★ Version 2.0.0</p>
   <ul>
     <li>
@@ -12,42 +17,50 @@
     </li>
     <li>Introduce the <code>Libs.h</code> namespace for <a href="#help-libraries">value function helper</a>. First helper is <code>Libs.h.click</code> which clicks the matched dom element</li>
   </ul>
+
   <p>★ Version 1.6.1</p>
   <ul>
     <li>
       Moved from callback to <a href="https://www.promisejs.org/" target="_blank">promise</a> for <a href="#help-beforecontext-findhtml">context.findHtml()</a><br />
       To convert from callback to promise change<br/><code>context.findHtml("selector", function(html) { ... your code ... });</code> to <br />
       <code>context.findHtml("selector").then(function(html) { ... your code ... });</code>
-     </li>
-   </ul>
+    </li>
+  </ul>
+
   <p>★ Version 1.6.0</p>
   <ul>
     <li>Added <a href="#help-beforecontext-findhtml">.findHtml() function</a> to the context object</li>
   </ul>
+
   <p>★ Version 1.5.1</p>
   <ul>
     <li>Fix a potential chrome bug with flickering or too small popup.</li>
     <li>Report missing rules when using <a href="#help-sharedrules">shared field definitions</a>.</li>
   </ul>
+
   <p>★ Version 1.5.0</p>
   <ul>
     <li>New feature: <a href="#help-sharedrules">Shared field definitions</a> (like rspec shared_examples).
       Import common field definitions into a rule in any place you want.
     </li>
   </ul>
+
   <p>★ Version 1.4.1</p>
   <ul>
     <li>Implemented error reporting for before functions</li>
     <li>Popup shows rules sorted by name</li>
   </ul>
+
   <p>★ Version 1.4.0</p>
   <ul>
     <li>You can now create <a href="#help-ownlibraries">reusable functions</a> to simplify your complex rules.</li>
   </ul>
+
   <p>★ Version 1.3.6</p>
   <ul>
     <li>I broke nearly everything in the last build. Sorry. Hopefully fixed now.</li>
   </ul>
+
   <p>★ Version 1.3.5</p>
   <ul>
     <li>New "autorun" property to automatically execute a rule when only one matches</li>

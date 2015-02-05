@@ -29,10 +29,13 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.0.1
+- Ability to cancel workflow/rule from inside before function with Libs.halt()
+ 
 ★ Version 2.0.0
 - Workflow allow chaining of rules to form complex sequences of actions. See help!
 - Libs.h.click can be used as a value function.
-- Refactored a lot of code. Report issues on github please.
+- Refactored a lot of code. Report issues on github or via email please.
 - Moved import/export to extra menu
 
 ★ Version 1.6.1
