@@ -32,11 +32,18 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   // Hide overlay and cancel all timers
   var hideOverlay = function() {
-    jQuery("#" + workingOverlayId).hide();
+    jQuery("#" + workingOverlayId).remove();
     clearTimeout(workingTimeout);
     clearTimeout(takingLongTimeout);
     clearTimeout(wontFinishTimeout);
     clearTimeout(displayTimeout);
+  };
+
+  // Shows and hides a customized overlay throbber
+  var showOverlay = function(message) {
+    hideOverlay();
+    jQuery("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message, true));
+    displayTimeout = setTimeout(hideOverlay, 1500);
   };
 
   port.onMessage.addListener(function (message) {
@@ -66,7 +73,10 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 
     // Show Working overlay
-    if (message.action === "showOverlay") {
+    // This should only be triggered for the default "WORKING"
+    // overlay.
+    // For the customized Lib.halt() message see down below
+    if (message.action === "showOverlay" && typeof message.message === "undefined") {
       Logger.info("[content.js] Showing working overlay");
       if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
         jQuery("body").append(overlayHtml());
@@ -94,8 +104,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     // Show a custom message
     if(message.action === "showMessage") {
-      jQuery("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message.message, true));
-      displayTimeout = setTimeout(hideOverlay, 1500);
+      showOverlay(message.message);
     }
   });
 
@@ -117,6 +126,18 @@ chrome.runtime.onConnect.addListener(function (port) {
         }));
       }
     }
+
+    // Show a custom message
+    // This appears twice in c/content.js because it uses a port and a one-shot
+    // listener
+    if(message.action === "showOverlay" && typeof message.message !== "undefined") {
+      showOverlay(message.message);
+      responseCb();
+    }
+
+    // Must return true to signal chrome that we do some work
+    // asynchronously (see https://developer.chrome.com/extensions/runtime#event-onMessage)
+    return true;
   });
 
 });

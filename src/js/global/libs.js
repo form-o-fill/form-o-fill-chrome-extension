@@ -1,4 +1,4 @@
-/*global Logger, I18n, Rules*/
+/*global Logger I18n Rules lastActiveTab */
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -35,10 +35,18 @@ Libs.add("h", valueFunctionHelper);
 // Process control functions
 var processFunctionsHalt = function(msg) {
   return function() {
-    if(typeof msg === "undefined") {
-      msg = "Canceled by Libs.halt";
+    if(typeof lastActiveTab === "undefined") {
+      return null;
     }
-    // TODO: call "showMessage"
+
+    if(typeof msg === "undefined") {
+      msg = "Canceled by call to Libs.halt()";
+    }
+
+    // Since this is called from the b/form_utils.js
+    // we need to send a message to the content.js
+    chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: msg});
+
     return null;
   };
 };
