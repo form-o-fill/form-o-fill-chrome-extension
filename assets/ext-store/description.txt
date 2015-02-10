@@ -29,7 +29,7 @@ Permissions requested:
 
 Changelog:
 
-★ Version 2.0.1
+★ Version 2.1.0
 - Ability to cancel workflow/rule from inside before function with Libs.halt()
  
 ★ Version 2.0.0
