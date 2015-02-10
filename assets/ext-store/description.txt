@@ -11,7 +11,7 @@ Features:
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
 ✓ Use before functions to fetch or generate data that can then be used in value functions.
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
-✓ One click apply of a matching rule or even autoapply the rule
+✓ One click apply of a matching rule or even auto apply the rule
 ✓ Two click apply when there are multiple matching rules.
 ✓ Auto apply configurable for each rule
 ✓ Reuse rules inside other rules (shared rules)
