@@ -113,6 +113,9 @@ var FormUtil = {
     }
     var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
 
+    // Now we can display the WORKING throbber!
+    port.postMessage({"action": "showOverlay"});
+
     // the grabber is passed as part of the context
     // it can fetch content from the open webpage
     // usage: context.findHtml("a.getme").then(function(content) {});
@@ -190,14 +193,12 @@ var FormUtil = {
         // Cancel workflows
         Storage.delete(Utils.keys.runningWorkflow);
 
+        // Hide the working overlay
+        port.postMessage({"action": "hideWorkingOverlay"});
+
         // The halting message is shown via Libs.halt("the message");
         return null;
       }
-
-      // Now we can display the WORKING throbber!
-      // Needs to be after the resolving of the before functions since
-      // Libs.halt() there can cancel everything
-      port.postMessage({"action": "showOverlay"});
 
       // beforeData is null when there is no before function defined in the rule definition
       if(beforeData !== null) {
