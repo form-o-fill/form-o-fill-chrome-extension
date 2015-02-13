@@ -9,7 +9,7 @@ class App < Hobbit::Base
   # List all URLs
   get "/" do
     html = static_files.map { |f| "<li><a href='/form-o-fill-testing/#{f}'>#{f}</a></li>" }.join
-    html += "<li><a href='/sleep/5'>Sleep 5 seconds and return seconds</a></li>"
+    html += "<li><a href='/sleep/5'>Sleep 5 seconds and return JSON</a></li>"
     html
   end
 
