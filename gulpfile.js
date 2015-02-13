@@ -18,7 +18,6 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var argv = require('yargs').argv;
-var selenium = require('selenium-standalone');
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -26,25 +25,11 @@ var selenium = require('selenium-standalone');
 var debug = require('gulp-debug');
 /*eslint-enable no-unused-vars */
 
-// Small webserver for testing with protractor
-var connect = require('gulp-connect');
-
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
 
 // The final .zip filename that gets uploaded to https://chrome.google.com/webstore/developer/dashboard
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
-
-// Configuration for the testserver
-var serverConfig = {
-  port: 8888,
-  root: "testcases/docroot-for-testing"
-};
-
-var serverConfigIntegration = {
-  port: 8889,
-  root: "testcases/docroot-for-testing"
-};
 
 //
 // Replacements config for gulp-replace
@@ -278,11 +263,6 @@ gulp.task('watch', function () {
 // gulp integration --grep "a\sregex"
 gulp.task('integration', function () {
 
-  // Start a small webserver
-  connect.server(serverConfigIntegration);
-
-  var server = selenium({stdio: 'inherit'}, {});
-
   var specs = [
     "./test/integration/test_setup_scene.js",
     "./test/integration/all_types_scene.js",
@@ -314,23 +294,10 @@ gulp.task('integration', function () {
   .pipe(mocha(mochaOpts))
   .on('error', function (err) {
     console.error(err);
-    connect.serverClose();
-    server.kill();
   })
   .on('end', function() {
     browser.endAll();
-    connect.serverClose();
-    server.kill();
   });
-});
-
-// Start server for testing purposes
-gulp.task('server', function() {
-  connect.server(serverConfig);
-});
-
-gulp.task('server-integration', function() {
-  connect.server(serverConfigIntegration);
 });
 
 // running "gulp" will execute this
