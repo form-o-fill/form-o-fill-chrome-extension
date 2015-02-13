@@ -15,9 +15,9 @@ describe("test setup", function() {
     .call(done);
   });
 
-  it("starts a simple webserver on port 8889", function(done) {
+  it("starts a simple webserver on port 9292", function(done) {
     browser
-    .url("localhost:8889/form-o-fill-testing/simple.html")
+    .url("localhost:9292/form-o-fill-testing/simple.html")
     .getTitle(function (err, title) {
       expect(title).to.eql("Form-O-Fill Testpage");
     }).call(done);

@@ -74,7 +74,7 @@ var installTestingCode = function() {
 };
 
 // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
-if(!Utils.isLiveExtension() && /http:\/\/localhost:888[89]\/form-o-fill-testing\//.test(window.location.href)) {
+if(!Utils.isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
   installTestingCode();
   Logger.info("[c/testing.js] Installed testing code in content page");
 }

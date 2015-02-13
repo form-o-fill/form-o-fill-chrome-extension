@@ -41,8 +41,8 @@ describe("the form extraction", function() {
 
       var rule = JSON.parse(ret.value);
 
-      fail("A rule for http://localhost:8889/form-o-fill-testing/form-extraction.html#", rule.name);
-      fail("http://localhost:8889/form-o-fill-testing/form-extraction.html#", rule.url);
+      fail("A rule for http://localhost:9292/form-o-fill-testing/form-extraction.html#", rule.name);
+      fail("http://localhost:9292/form-o-fill-testing/form-extraction.html#", rule.url);
       fail({ selector: 'input[name=\'text\']', value: 'text' }, rule.fields[0]);
       fail({ selector: 'input[name=\'checkbox-value\']', value: true }, rule.fields[1]);
       fail({ selector: 'input[name=\'image\']', value: '' }, rule.fields[2]);

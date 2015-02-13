@@ -31,7 +31,7 @@ var Tests = {
   // Go to a testing URL and give the extension some time to inject its HTML
   visit: function(htmlPage) {
     var page = browser
-    .url("http://localhost:8889/form-o-fill-testing/" + htmlPage + ".html");
+    .url("http://localhost:9292/form-o-fill-testing/" + htmlPage + ".html");
     // Import rules if present
     page.isExisting("#form-o-fill-testing-import-submit", function (err, isExisting) {
       if (isExisting) {

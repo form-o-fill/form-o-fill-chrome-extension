@@ -12,7 +12,7 @@ describe("filling different types of fields", function() {
     .isSelected("input[name='checkbox-true']", function (err, value) { expect(value).to.eql(true); })
     .isSelected("input[name='checkbox-false']", function (err, value) { expect(value).to.eql(false); })
     .getValue("input[type=button]", function (err, value) { expect(value).to.eql("input[type=button]"); })
-    .getAttribute("input[type=image]", "src", function (err, src) { expect(src).to.eql("http://localhost:8889/form-o-fill-testing/animage.png"); })
+    .getAttribute("input[type=image]", "src", function (err, src) { expect(src).to.eql("http://localhost:9292/form-o-fill-testing/animage.png"); })
     .getValue("input[type=password]", function (err, value) { expect(value).to.eql("input[type=password]"); })
     .getValue("input[type=search]", function (err, value) { expect(value).to.eql("input[type=search]"); })
     .getValue("input[type=email]", function (err, value) { expect(value).to.eql("someone@example.com"); })
