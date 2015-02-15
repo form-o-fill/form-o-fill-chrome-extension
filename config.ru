@@ -2,9 +2,8 @@ require "hobbit"
 require "json"
 
 class App < Hobbit::Base
-  static_files = Dir.glob("form-o-fill-testing/*.html").map { |f| f.gsub(/^.*\//,"") }
-
-  use Rack::Static, urls: ['/form-o-fill-testing']
+  static_files = Dir.glob("testcases/docroot-for-testing/form-o-fill-testing/*.html").map { |f| f.gsub(/^.*\//,"") }
+  use Rack::Static, root: "testcases/docroot-for-testing", urls: ['/form-o-fill-testing']
 
   # List all URLs
   get "/" do
