@@ -193,10 +193,9 @@ var FormUtil = {
         // Cancel workflows
         Storage.delete(Utils.keys.runningWorkflow);
 
-        // Hide the working overlay
-        port.postMessage({"action": "hideWorkingOverlay"});
-
         // The halting message is shown via Libs.halt("the message");
+
+        // return null to stop precessing
         return null;
       }
 
