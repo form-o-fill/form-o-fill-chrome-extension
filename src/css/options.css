@@ -173,9 +173,8 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
 }
 
 #rules-overview {
-  position: absolute;
-  right: 1em;
-  top: 1em;
+  float: right;
+  margin-top: 7px;
 }
 
 span.version {
