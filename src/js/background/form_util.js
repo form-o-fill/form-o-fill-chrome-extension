@@ -1,5 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules */
-/* eslint no-unused-vars: 0 */
+/* eslint no-unused-vars: 0, complexity: 0 */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -93,6 +93,17 @@ var FormUtil = {
   displayMessage: function displayMsg(msg, lastActiveTab) {
     var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
     port.postMessage({action: "showMessage", message: msg});
+  },
+  // returns an array of found libraries
+  detectLibraries: function(value) {
+    var detectedLibs = [];
+    Object.keys(Utils.vendoredLibs).forEach(function dtctLib(vLibKey) {
+      if(value.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
+        // Found!
+        detectedLibs.push(vLibKey);
+      }
+    });
+    return detectedLibs;
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
@@ -226,6 +237,14 @@ var FormUtil = {
         beforeData = beforeData[0];
       }
 
+      // Detect vendored libraries
+      var usedLibs = FormUtil.detectLibraries(JSONF.stringify(rule.fields));
+
+      // Send a message to content.js to inject those tags
+      if(usedLibs.length > 0) {
+        port.postMessage({"action": "injectScripts", "message": usedLibs});
+      }
+
       // Check for rules to import (shared rules)
       FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
         // Now send all field definitions to the content script
@@ -245,7 +264,7 @@ var FormUtil = {
         port.postMessage({"action": "getErrors"});
       });
     }).then(null, function error(msg) {
-      console.error(msg);
+      //console.error(msg);
     });
 
     var reportErrors = function reportErrors(theErrors) {

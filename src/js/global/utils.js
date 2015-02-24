@@ -17,6 +17,10 @@ var Utils = {
     runningWorkflow: "form-o-fill-runningworkflow"
   },
   reservedLibNamespaces: ["h", "halt"],
+  vendoredLibs: {
+    "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
+    "vendor/moment.js/moment-with-langs.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
+  },
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },

@@ -1,7 +1,8 @@
-/*global FormError, jQuery, JSONF, Logger*/
+/*global FormError, jQuery, JSONF, Logger, Utils*/
 /*eslint complexity:0, no-unused-vars: 0*/
 var FormFiller = {
   error: null,
+  // This fills the field with a value
   fill: function(selector, value, beforeData) {
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;

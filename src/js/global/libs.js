@@ -1,4 +1,4 @@
-/*global Logger I18n Rules lastActiveTab */
+/*global Logger Rules lastActiveTab */
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -51,19 +51,6 @@ var processFunctionsHalt = function(msg) {
   };
 };
 Libs.add("halt", processFunctionsHalt);
-
-// Add vendored chance.js
-if(typeof window.Chance === "function") {
-  Libs.add("chance", new window.Chance());
-  window.chance = null;
-}
-
-// Add vendored moment.js and set locale
-if(typeof window.moment === "function") {
-  Libs.add("moment", window.moment);
-  Libs.moment.lang(I18n.userLocale());
-  window.moment = null;
-}
 
 // Import all saved libs
 Libs.import();
