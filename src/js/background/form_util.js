@@ -155,6 +155,42 @@ var FormUtil = {
 
     return prUsedLibs;
   },
+  _grabber: function(lastActiveTabId) {
+    // the grabber is passed as part of the context
+    // it can fetch content from the open webpage
+    // usage: context.findHtml("a.getme").then(function(content) {});
+    return function theRealGrabber(selector) {
+      return new Promise(function (resolve) {
+        var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
+        chrome.tabs.sendMessage(lastActiveTabId, grabberMessage, function returnFromContentGrabber(content) {
+          Logger.info("[form_util.js] Received content from 'grabber': '" + content + "'");
+          resolve(content);
+        });
+      });
+    };
+  },
+  wrapInPromise: function wrapInPromise(func, context) {
+    // Utility function to wrap a function in
+    // a promise
+    return new Promise(function promise(resolve) {
+      try {
+        func(resolve, context);
+      } catch (e) {
+        Logger.warn("[form_util.js] Got an exception executing before function: " + func);
+        Logger.warn("[form_util.js] Original exception: " + e);
+        Logger.warn("[form_util.js] Original stack: " + e.stack);
+
+        var error = {
+          error: {
+            beforeFunction: FormUtil.functionToHtml(func),
+            stack: e.stack,
+            message: e.message
+          }
+        };
+        resolve(error);
+      }
+    });
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;
@@ -177,25 +213,12 @@ var FormUtil = {
     // Now we can display the WORKING throbber!
     port.postMessage({"action": "showOverlay"});
 
-    // the grabber is passed as part of the context
-    // it can fetch content from the open webpage
-    // usage: context.findHtml("a.getme").then(function(content) {});
-    var _grabber = function(selector) {
-      return new Promise(function (resolve) {
-        var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
-        chrome.tabs.sendMessage(lastActiveTab.id, grabberMessage, function returnFromContentGrabber(content) {
-          Logger.info("[form_util.js] Received content from 'grabber': '" + content + "'");
-          resolve(content);
-        });
-      });
-    };
-
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
     // It also contains the grabber which can find content inside the current webpage
     var context = {
       url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: _grabber
+      findHtml: FormUtil._grabber(lastActiveTab.id)
     };
 
     // Default instantaneous resolving promise:
@@ -207,37 +230,14 @@ var FormUtil = {
 
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
-    // Utility function to wrap a function in
-    // a promise
-    var wrapInPromise = function wrapInPromise(func) {
-      return new Promise(function promise(resolve) {
-        try {
-          func(resolve, context);
-        } catch (e) {
-          Logger.warn("[form_util.js] Got an exception executing before function: " + func);
-          Logger.warn("[form_util.js] Original exception: " + e);
-          Logger.warn("[form_util.js] Original stack: " + e.stack);
-
-          var error = {
-            error: {
-              beforeFunction: FormUtil.functionToHtml(func),
-              stack: e.stack,
-              message: e.message
-            }
-          };
-          resolve(error);
-        }
-      });
-    };
-
     // Is there a 'before' block with an function or an array of functions?
     if(typeof rule.before === "function") {
       // A single before function
-      beforeFunctions = [ wrapInPromise(rule.before) ];
+      beforeFunctions = [ FormUtil.wrapInPromise(rule.before, context) ];
     } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
       // Assume an array of functions
       beforeFunctions = rule.before.map(function beforeFuncMap(func) {
-        return wrapInPromise(func);
+        return FormUtil.wrapInPromise(func, context);
       });
     }
 
