@@ -1,11 +1,10 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules */
-/* eslint no-unused-vars: 0, complexity: 0 */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
     return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
   },
-  _findImport: function _findImport(ruleName, ruleNameWithImport) {
+  _findImport: function _findImport(ruleName) {
     return new Promise(function findImportPromise(resolve) {
       Rules.all().then(function findImportThen(rules) {
         var ruleToImport = rules.filter(function findImportFilter(aRule) {
@@ -26,7 +25,7 @@ var FormUtil = {
       var importableRulesPromises = rule.fields.filter(function importableRulesFilter(fieldDef) {
         return typeof fieldDef.import !== "undefined";
       }).map(function importableRulesMap(fieldDef) {
-        return FormUtil._findImport(fieldDef.import, rule.name);
+        return FormUtil._findImport(fieldDef.import);
       });
 
       // resolve found shared rules
@@ -155,7 +154,7 @@ var FormUtil = {
 
     return prUsedLibs;
   },
-  _grabber: function(lastActiveTabId) {
+  createGrabber: function(lastActiveTabId) {
     // the grabber is passed as part of the context
     // it can fetch content from the open webpage
     // usage: context.findHtml("a.getme").then(function(content) {});
@@ -193,7 +192,6 @@ var FormUtil = {
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
-    var message = null;
     var beforeData;
     var errors = [];
 
@@ -218,7 +216,7 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     var context = {
       url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil._grabber(lastActiveTab.id)
+      findHtml: FormUtil.createGrabber(lastActiveTab.id)
     };
 
     // Default instantaneous resolving promise:
@@ -302,7 +300,7 @@ var FormUtil = {
         });
       });
 
-    }).then(null, function error(msg) {
+    }).then(null, function error() {
       //console.error(msg);
     });
 
