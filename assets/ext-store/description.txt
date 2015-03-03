@@ -29,6 +29,9 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.1.2
+- Memory optimization pass
+
 ★ Version 2.1.1
 - Fix bug with throbber overlay not showing
 
