@@ -105,6 +105,56 @@ var FormUtil = {
     });
     return detectedLibs;
   },
+  sendFieldsToContent: function(aRule, beforeData, port) {
+    // Now send all field definitions to the content script
+    var message;
+    aRule.fields.forEach(function ruleFieldsForEach(field) {
+      message = {
+        "action": "fillField",
+        "selector": field.selector,
+        "value": JSONF.stringify(field.value),
+        "beforeData": beforeData
+      };
+      port.postMessage(message);
+      Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+    });
+  },
+  reportErrors: function(theErrors, rule, port) {
+    Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
+    if(theErrors.length > 0) {
+      Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function NotificationCreate() {
+        FormUtil.saveErrors(theErrors, rule);
+      });
+    }
+    port.postMessage({"action": "hideWorkingOverlay"});
+  },
+  injectAndAttachToLibs: function(pathToScript, nameOnLib, nameOnWindow) {
+    return new Promise(function (resolve) {
+      chrome.tabs.executeScript(null, {file: pathToScript}, function () {
+        chrome.tabs.executeScript({code: "Libs.add('" + nameOnLib + "', window." + nameOnWindow + "); console.log(Libs." + nameOnLib + ");"}, function () {
+          resolve(pathToScript);
+        });
+      });
+    });
+  },
+  generateLibsPromises: function(libs) {
+    // Inject the libs into the page
+    // Build an array starting with an instant resolving promise
+    var prUsedLibs = [ new Promise(function (resolve) {
+      resolve();
+    }) ];
+
+    // There are libraries present
+    // so add them to the stack
+    if(libs.length > 0) {
+      // Generate a promise for every used lib
+      libs.forEach(function (libPath) {
+        prUsedLibs.push(FormUtil.injectAndAttachToLibs(libPath, Utils.vendoredLibs[libPath].name, Utils.vendoredLibs[libPath].onWindowName));
+      });
+    }
+
+    return prUsedLibs;
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var message = null;
@@ -205,7 +255,7 @@ var FormUtil = {
         Storage.delete(Utils.keys.runningWorkflow);
 
         // The halting message is shown via Libs.halt("the message");
-
+        // So nothing to do here
         // return null to stop precessing
         return null;
       }
@@ -240,48 +290,27 @@ var FormUtil = {
       // Detect vendored libraries
       var usedLibs = FormUtil.detectLibraries(JSONF.stringify(rule.fields));
 
-      // Send a message to content.js to inject those tags
-      if(usedLibs.length > 0) {
-        port.postMessage({"action": "injectScripts", "message": usedLibs});
-      }
+      // Resolve all promises
+      Promise.all(FormUtil.generateLibsPromises(usedLibs)).then(function prUsedLibsAll() {
+        // Check for rules to import (shared rules)
+        FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
+          FormUtil.sendFieldsToContent(aRule, beforeData, port);
 
-      // Check for rules to import (shared rules)
-      FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
-        // Now send all field definitions to the content script
-        aRule.fields.forEach(function ruleFieldsForEach(field) {
-          message = {
-            "action": "fillField",
-            "selector": field.selector,
-            "value": JSONF.stringify(field.value),
-            "beforeData": beforeData
-          };
-          port.postMessage(message);
-          Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+          // Get errors. Receiver is in content.js
+          Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
+          port.postMessage({"action": "getErrors"});
         });
-
-        // Get errors. Receiver is in content.js
-        Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
-        port.postMessage({"action": "getErrors"});
       });
+
     }).then(null, function error(msg) {
       //console.error(msg);
     });
-
-    var reportErrors = function reportErrors(theErrors) {
-      Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
-      if(theErrors.length > 0) {
-        Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function NotificationCreate() {
-          FormUtil.saveErrors(theErrors, rule);
-        });
-      }
-      port.postMessage({"action": "hideWorkingOverlay"});
-    };
 
     port.onMessage.addListener(function portOnMessageListener(msg) {
       // Make errors from content scripts available here
       if(msg.action === "getErrors") {
         var sentErrors = JSONF.parse(msg.errors);
-        reportErrors(sentErrors);
+        FormUtil.reportErrors(sentErrors, rule, port);
       }
     });
   }

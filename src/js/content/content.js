@@ -1,65 +1,5 @@
-/*global FormFiller, JSONF, jQuery, Logger, Utils, Libs */
+/*global FormFiller, JSONF, jQuery, Logger */
 /*eslint complexity:0 */
-
-// A list of already injected scripts
-var injectedScripts = [];
-
-// Script for injecting other scripts into the
-// content page.
-//
-// When using resources from the extension,
-// those resources must be included in "web_accessible_resources"
-// in the manifest.json
-// See http://stackoverflow.com/a/9517879
-var injectIntervals = {};
-
-var injectCheck = function(resolve, pathToScript, onWindow) {
-  return function innerInjectCheck() {
-    // Check if the object on window exists
-    if(typeof window[onWindow] !== "undefined") {
-      Logger.info("[content.js] Did find window." + onWindow);
-      // clear own interval
-      clearInterval(injectIntervals[pathToScript]);
-      resolve(pathToScript);
-    } else {
-      Logger.info("[content.js] Did not find window." + onWindow);
-    }
-  };
-};
-
-var checker = function() {
-  if(typeof window.chance !== "undefined") {
-    console.log("window.chance found!");
-    clearInterval(injectIntervals.chance);
-  } else {
-    console.log("window.chance not found!");
-  }
-};
-
-var injectScriptTag = function(pathToScript, onWindow) {
-  Logger.info("[content.js] Injecting '" + pathToScript + "' into content page (success if window." + onWindow + " exists");
-  return new Promise(function (resolve) {
-    // Already loaded? return
-    if(injectedScripts.indexOf(pathToScript) !== -1) {
-      resolve(pathToScript);
-    }
-
-    var s = document.createElement("script");
-    s.onload = function injectScriptOnLoadCb() {
-      Logger.info("[content.js] Injected '" + pathToScript + "' into content page");
-      injectedScripts.push(pathToScript);
-      this.parentNode.removeChild(this);
-      resolve(pathToScript);
-
-      // Check if the object that the library exports is present
-      // the injectCheck function clears its own interval
-      //injectIntervals[pathToScript] = setInterval(injectCheck(resolve, pathToScript, onWindow), 500);
-      //injectIntervals[pathToScript] = setInterval(checker, 1000);
-    };
-    s.src = chrome.extension.getURL(pathToScript);
-    document.head.appendChild(s);
-  });
-};
 
 // This listens for messages coming from the background page
 // This is a long running communication channel
@@ -165,20 +105,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     // Show a custom message
     if(message.action === "showMessage") {
       showOverlay(message.message);
-    }
-
-    // Inject a script into the page
-    if(message.action === "injectScripts" && typeof message.message !== "undefined" && typeof message.message.length === "number") {
-      message.message.forEach(function forEachCb(libUrl) {
-        injectScriptTag(libUrl, Utils.vendoredLibs[libUrl].onWindowName).then(function prInjScriptTag(path) {
-          //injectIntervals[path] = setInterval(checker, 1000);
-          setTimeout(function() {
-            var lib = Utils.vendoredLibs[path];
-            Libs.add(lib.name, window[lib.onWindowName]);
-            console.log(lib);
-          }, 2000);
-        });
-      });
     }
   });
 

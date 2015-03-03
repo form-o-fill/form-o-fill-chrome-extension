@@ -22,9 +22,7 @@
     "https://*/"
   ],
   "web_accessible_resources": [ 
-    "html/options.html" ,
-    "vendor/chance.js/chance.js" ,
-    "vendor/moment.js/moment-with-langs.js"
+    "html/options.html"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
