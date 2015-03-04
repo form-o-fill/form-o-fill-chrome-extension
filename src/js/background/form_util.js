@@ -190,6 +190,26 @@ var FormUtil = {
       }
     });
   },
+  storage: {
+    // Why use localStorage here instead of chrome.storage?
+    // localStorage is synchronous and this is way easier to use than
+    // callbacks or promises
+    base: window.sessionStorage.getItem(Utils.keys.sessionStorage) || {},
+    get: function(key) {
+      if(typeof this.base[key] === "undefined") {
+        return this.base[key];
+      }
+      return JSONF.parse(this.base[key]);
+    },
+    set: function(key, value) {
+      this.base[key] = JSONF.stringify(value);
+      window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
+      return window.sessionStorage;
+    },
+    delete: function() {
+      window.sessionStorage.setItem(Utils.keys.sessionStorage, "{}");
+    }
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var beforeData;
@@ -216,7 +236,8 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     var context = {
       url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(lastActiveTab.id)
+      findHtml: FormUtil.createGrabber(lastActiveTab.id),
+      storage: FormUtil.storage
     };
 
     // Default instantaneous resolving promise:

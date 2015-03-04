@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING 1</h1>
+    <form action="workflow-storage-2.html" method="GET">
+      Input field: <input value="Value from pageload for 1." id="target1" /><br>
+      <input type="submit"/>
+    </form>
+    Rules Import: 
+    <textarea id="form-o-fill-testing-import">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Storage functions"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  url: /.*workflow-storage-1.*/,\n  name: \"Workflow Storage Step 1\",\n  before: function(resolve, context) {\n    context.storage.set(\"field-1\", \"Set by workflow step 1\");\n    resolve();\n  },\n  fields: [{\n    selector: \"input[type=submit]\",\n    value: Libs.h.click\n  }]\n}, {\n  url: /.*workflow-storage-2.*/,\n  name: \"Workflow Storage Step 2\",\n  before: function(resolve, context) {\n    var field1 = context.storage.get(\"field-1\");\n    resolve(field1);\n  },\n  fields: [{\n    selector: \"#target1\",\n    value: function($e, data) {\n      $e.val(data);\n    }\n  }]\n}];",
+        "tabId": 1
+      }
+    ]
+  }
+}
+    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>

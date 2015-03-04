@@ -14,7 +14,8 @@ var Utils = {
     lastMatchingRules: "form-o-fill-lastmatchingrules",
     workflows: "form-o-fill-workflows",
     lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
-    runningWorkflow: "form-o-fill-runningworkflow"
+    runningWorkflow: "form-o-fill-runningworkflow",
+    sessionStorage: "form-o-fill-sessionStorage"
   },
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
