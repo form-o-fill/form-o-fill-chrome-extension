@@ -1,9 +1,12 @@
 <a name="help-before"></a>
-<h3>The context object into before functions</h3>
+<h3>The context object in before functions</h3>
 <p>
-  The context object passed as the before functions second parameter has a certain structure.
-  Assuming the tab to be filled has an url like
+  The context object passed as the before functions second parameter has a certain structure.<br />
+  It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>) and a method to store and retrieve data between rule executions (<code>.storage</code>).
 </p>
+
+<h3>The .url part of the context</h3>
+  Assuming the tab to be filled has an url like
 <p>
   <code>https://github.com/form-o-fill/form-o-fill-chrome-extension/search?q=context#somehash</code>
 </p>
@@ -28,7 +31,7 @@
   The context object also includes a function that allows you to modify your rules based on the HTML of the page the rule is executed in.
 </p>
 <p>
-  You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> to the finder. It will return a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Promise">Promise</a> on which you can call <code>.then(function(html) {});</code> on.<br />
+  You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> to the finder (<code>.findHtml()</code>). It will return a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Promise">Promise</a> on which you can call <code>.then(function(html) {});</code> on.<br />
   The first and only parameter to that function will be the found HTML of the tag (aka. innerHTML) or <code>null</code> if the selector was not found.
 </p>
 <p>
@@ -50,7 +53,7 @@
 </p>
 
 <a name="help-before-context"></a>
-<h3>Saving and loading values in before functions</h3>
+<h3>Saving and loading values in before functions with .storage</h3>
 <p>
   before functions are usually used to prepare data to be filled into form fields.<br />
   Using the <code>context.storage</code> functions you can store arbitary data and restore it on demand.<br />
