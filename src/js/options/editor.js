@@ -78,7 +78,7 @@ Editor.prototype._resizeThrottler = function(editor) {
       editor._resizeTimeout = setTimeout(function() {
         editor._resizeTimeout = null;
         editor.resize();
-       }, 200);
+      }, 200);
     }
   };
 };

@@ -1,4 +1,5 @@
 /*global Testing, Utils, Changelog */
+/*eslint no-undef:0 */
 var Notification = {
   create: function(message, title, onClickCallback) {
     var formNotificationId = null;
