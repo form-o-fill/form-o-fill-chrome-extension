@@ -1,14 +1,4 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Form-O-Fill Testpage</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <h1>TESTING SERVER RUNNING</h1>
-    Input field: <input value="Value from pageload" id="target" /><br>
-    Rules Import: <textarea id="form-o-fill-testing-import">{
+{
   "workflows": [],
   "rules": {
     "tabSettings": [
@@ -25,7 +15,3 @@
     ]
   }
 }
-    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
-    <table id="form-o-fill-testing-info"></table>
-  </body>
-</html>
