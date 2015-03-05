@@ -6,18 +6,17 @@ FORM-O-FILL is there to ease that pain.
 
 Features:
 ✓ Extract already entered forms to auto-create the rule definition with the click of a button (or two).
-✓ Use JAVASCRIPT to program the rules.
+✓ Use Javascript to program the rules.
 ✓ Use static values or dynamically generated values for every field (value functions are just javascript).
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
-✓ Use before functions to fetch or generate data that can then be used in value functions.
+✓ Use before functions to fetch, generate and store data that can then be used in value functions.
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
 ✓ One click apply of a matching rule or even auto apply the rule
 ✓ Two click apply when there are multiple matching rules.
 ✓ Auto apply configurable for each rule
 ✓ Reuse rules inside other rules (shared rules)
 ✓ Browser notifications to show you what happened.
-✓ NEW IN 2.0: Use WORKFLOWS to create multi page rules
-
+✓ Use workflows to create multi page rules
 
 Requires:
 Chrome 33+
@@ -29,8 +28,9 @@ Permissions requested:
 
 Changelog:
 
-★ Version 2.1.2
+★ Version 2.2.0
 - Memory optimization pass
+- Storage methods for before and value functions
 
 ★ Version 2.1.1
 - Fix bug with throbber overlay not showing
@@ -45,7 +45,7 @@ Changelog:
 - Moved import/export to extra menu
 
 ★ Version 1.6.1
-- Change .findHtml() to return a promise. Please see changelog for migration.
+- Changed .findHtml() to return a promise. Please see changelog for migration.
 
 ★ Version 1.1.1 - 1.6.0
 - See "Changelog" in extension options
