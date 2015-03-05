@@ -109,6 +109,7 @@
     no-unused-vars: 2 # disallow declaration of variables that are not used in the code
 
     # Style
+    indent: [2, 2] # Indention check
     brace-style: ["2", "1tbs"] # enforce one true brace style
     camelcase: 2 #require camel case names
     consistent-this: 0 # dont enforces consistent naming when capturing the current execution context (off by default)
