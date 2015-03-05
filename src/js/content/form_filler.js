@@ -30,6 +30,7 @@ var FormFiller = {
       fillMethod = this._fillMethod(domNode);
 
       // if the value is a function, call it with the jQuery wrapped domNode
+      // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
       if(typeof parsedValue === "function") {
         try {
           parsedValue = parsedValue(jQuery(domNode), beforeData);

@@ -47,6 +47,7 @@
         "js/global/storage.js", 
         "js/global/i18n.js",
         "js/global/libs.js",
+        "js/content/context.js", 
         "js/content/form_errors.js", 
         "js/content/form_filler.js", 
         "js/content/form_extractor.js", 

@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -203,6 +203,9 @@ var FormUtil = {
     },
     set: function(key, value) {
       this.base[key] = JSONF.stringify(value);
+      // Also set the variable in content.js
+      chrome.tabs.sendMessage(lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
+      // Save in background.js
       window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
       return window.sessionStorage;
     },

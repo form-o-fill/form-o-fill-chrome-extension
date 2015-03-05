@@ -135,6 +135,13 @@ chrome.runtime.onConnect.addListener(function (port) {
       responseCb();
     }
 
+    // Save a variable set in backgound via storage.set in the context of the content script
+    // This makes the storage usable in value functions
+    if(message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
+      Logger.info("[content.js] Saving " + message.key + " = " + message.value);
+      window.sessionStorage.setItem(message.key, JSONF.parse(message.value));
+    }
+
     // Must return true to signal chrome that we do some work
     // asynchronously (see https://developer.chrome.com/extensions/runtime#event-onMessage)
     return true;

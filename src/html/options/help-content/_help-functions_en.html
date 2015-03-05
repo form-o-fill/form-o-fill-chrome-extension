@@ -49,3 +49,61 @@
     &nbsp;&nbsp;}]
   </div>
 </div>
+
+
+<a name="help-functions-context"></a>
+<h3>Using the context object in value functions</h3>
+<p>
+  You can access a <code>context</code> object in your value functions. Notice that this is not the same context object as is available in <a href="#help-before-context">before functions</a>.<br />
+  You have the following functions available in the <code>context</code>:<br />
+</p>
+<div class="block-of-code">
+  <div class="explaining">set a variable in a before function</div>
+  <div class="code">
+    before: function(resolve, context) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;context.storage.set("saved-in-before", "yes!");<br />
+    &nbsp;&nbsp;resolve();
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    }
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;...
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use <code>context.storage.get</code> to access data saved by before functions.<br />
+    This is not the same as the data passed in (second parameter) which only exists until the rule has been fully processed.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;return context.storage.get("saved-in-before");<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;// This will return "yes!"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>
