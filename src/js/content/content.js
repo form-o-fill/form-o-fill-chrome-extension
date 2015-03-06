@@ -139,7 +139,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     // This makes the storage usable in value functions
     if(message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
       Logger.info("[content.js] Saving " + message.key + " = " + message.value);
-      window.sessionStorage.setItem(message.key, JSONF.parse(message.value));
+      window.sessionStorage.setItem(message.key, message.value);
     }
 
     // Must return true to signal chrome that we do some work
