@@ -28,7 +28,7 @@ Permissions requested:
 
 Changelog:
 
-★ Version 2.2.0
+★ Version 2.2.1
 - Memory optimization pass
 - Storage methods for before and value functions
 
