@@ -38,7 +38,6 @@ var extractRules = function extractRules(targetForm) {
   // Save Rule and goto options.html
   Storage.save(ruleCode, Utils.keys.extractedRule);
 
-  // This is just to try out notification :)
   chrome.runtime.sendMessage({ "action": "extractFinishedNotification"});
 };
 
