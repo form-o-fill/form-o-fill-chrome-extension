@@ -21,18 +21,6 @@ var exportRulesData = function() {
   });
 };
 
-// export rules to disk
-var exportRules = function() {
-  exportRulesData().then(function (rulesData) {
-    var exportJson = JSONF.stringify(rulesData);
-    var now = new Date();
-    var fileName = "fof-rules-export-" + now.toISOString() + ".json";
-
-    Logger.info("[options.js] Exporting " + JSONF.stringify(exportJson));
-    Utils.download(exportJson, fileName, "application/json");
-  });
-};
-
 // The data to export
 var exportWorkflowsData = function() {
   return new Promise(function (resolve) {
@@ -43,18 +31,6 @@ var exportWorkflowsData = function() {
       });
       resolve(workflowData);
     });
-  });
-};
-
-// export a workflow to disc
-var exportWorkflows = function() {
-  exportWorkflowsData().then(function (workflowData) {
-    var exportJson = JSONF.stringify(workflowData);
-    var now = new Date();
-    var fileName = "fof-workflows-export-" + now.toISOString() + ".json";
-
-    Utils.infoMsg("Workflows exported as '" + fileName + "'");
-    Utils.download(exportJson, fileName, "application/json");
   });
 };
 

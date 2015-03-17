@@ -1,4 +1,4 @@
-/* global Workflows jQuery Rules Logger Utils Storage exportWorkflows executeImportWorkflows */
+/* global Workflows jQuery Rules Logger Utils Storage executeImportWorkflows */
 var workflows = [];
 var wfErrors = [];
 
@@ -312,9 +312,6 @@ jQuery(function() {
 
   // Delete workflow
   jQuery(".wf-button-delete").on("click", deleteWorkflow);
-
-  // Export workflow
-  jQuery(document).on("click", ".wf-button-export, .wf-button-export", exportWorkflows);
 
   // Import workflow via overlay
   jQuery(document).on("click", ".wf-button-import", function() {

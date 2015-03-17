@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF, exportRules */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -219,9 +219,6 @@ $(".editor .menu").on("click", "button.save", function () {
 
 // Show modal import window
 $(document).on("click", "button.import, .rl-button-import", importRules);
-
-// Export all rules (for modal import dialog)
-$(document).on("click", "button.export, a.cmd-export-all-rules, button.rl-button-export", exportRules);
 
 // Support for the quickjump <select>
 $("#rules-overview").on("change", quickJumpToRule);

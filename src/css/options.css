@@ -76,7 +76,7 @@ button.empty:before {
   content: "\e600";
 }
 
-button.export:before, .rl-button-export:before, .all-button-export:before {
+button.export:before, .all-button-export:before {
   content: "\e605";
 }
 
@@ -277,10 +277,6 @@ button.wf-button-delete:before {
   content: "\e609";
 }
 
-button.wf-button-export:before {
-  content: "\e605";
-}
-
 .wf-button-cancel:before {
   content: "\e602";
 }
@@ -338,4 +334,18 @@ h3 span.unsaved-changes {
   font-family: formofill;
   content: "\e600";
   margin-right: 10px;
+}
+
+#help-importexport .block {
+  float: left;
+  margin-left: 10px:
+}
+
+#help-importexport .block h3, #help-importexport .block .icon {
+  color: #888;
+}
+
+#help-importexport .row {
+  overflow: hidden;
+  margin-bottom: 40px;
 }
