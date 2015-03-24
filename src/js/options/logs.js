@@ -15,7 +15,7 @@ var displayLogs = function() {
     logEntries.slice(showLastEntries * -1).reverse().forEach(function (logEntry) {
       logCells[0].textContent = logEntry.createdAt;
       logCells[1].textContent = logEntry.location;
-      logCells[2].textContent = logEntry.message;
+      logCells[2].innerHTML = logEntry.message.replace(/\\n/g, "<br>").replace(/ /g, "&nbsp;");
       clone = document.importNode(logRow.content, true);
       logBody.appendChild(clone);
     });

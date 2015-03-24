@@ -56,7 +56,7 @@ var Logger = {
         entries.push({
           "createdAt": new Date().toLocaleString(),
           "location": parts[1].trim(),
-          "message": parts[2].trim()
+          "message": msg
         });
       }
 
