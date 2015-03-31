@@ -1,4 +1,4 @@
-/*global Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings*/
+/*global Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
 /*eslint no-unused-vars: 0*/
 
 // data of rules
@@ -21,7 +21,7 @@ var exportRulesData = function() {
   });
 };
 
-// The data to export
+// The workflow data to export
 var exportWorkflowsData = function() {
   return new Promise(function (resolve) {
     Storage.load(Utils.keys.workflows).then(function(workflowData) {
@@ -32,28 +32,6 @@ var exportWorkflowsData = function() {
       resolve(workflowData);
     });
   });
-};
-
-// import Workflows from file
-var executeImportWorkflows = function() {
-  var $warning = $("#modalimportworkflows .only-json");
-  $warning.hide();
-  var fileToImport = document.getElementById("importfile").files[0];
-  if (typeof fileToImport === "undefined" || fileToImport.type != "application/json") {
-    $warning.show();
-  } else {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var parsed = JSONF.parse(e.target.result);
-      Storage.save(parsed, Utils.keys.workflows).then(function () {
-        $("#modalimportrules").hide();
-        window.location.reload();
-      });
-    };
-
-    // Read file. This calls "onload" above
-    reader.readAsText(fileToImport);
-  }
 };
 
 // Export rules and workflows
@@ -67,7 +45,7 @@ var exportAll = function() {
     var now = new Date();
     var fileName = "fof-complete-export-" + now.toISOString() + ".json";
 
-    Utils.infoMsg("Complete export as '" + fileName + "'");
+    Utils.infoMsg("Completed export as '" + fileName + "'");
     Utils.download(JSONF.stringify(exportJson), fileName, "application/json");
   });
 };
@@ -91,12 +69,28 @@ var importAll = function() {
       var promises = [];
       var parsed = JSONF.parse(e.target.result);
 
-      // Data contains:
+      // Data contains (in case of combined format):
       // parsed.workflows
       // parsed.rules
+      //
+      // In case of old (rules only) format:
+      // parsed.tabSettings
+      // parsed.rules
 
-      // Save workflows
-      promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
+      // Old format with rules only?
+      // Convert so it can be imported
+      if(typeof parsed.tabSettings !== "undefined") {
+        parsed.rules = {
+          rules: parsed.rules,
+          tabSettings: parsed.tabSettings
+        };
+        parsed.workflows = [];
+      }
+
+      // Save workflows (if any)
+      if(typeof parsed.workflows !== "undefined") {
+        promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
+      }
 
       // Save the rules in all tabs
       parsed.rules.rules.forEach(function (editorTabAndRules) {
@@ -110,39 +104,10 @@ var importAll = function() {
         $("#modalimportall").hide();
         loadTabsSettings();
         loadRules(1);
-      });
-    };
-
-    // Read file. This calls "onload" above
-    reader.readAsText(fileToImport);
-  }
-};
-
-// import and save rules from chosen file
-var importAndSaveRules = function() {
-  var $warning = $("#modalimportrules .only-json");
-  $warning.hide();
-  var fileToImport = document.getElementById("rulesimport").files[0];
-
-  if (typeof fileToImport === "undefined" || fileToImport.type != "application/json") {
-    $warning.show();
-  } else {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var parsed = JSONF.parse(e.target.result);
-      var promises = [];
-
-      // Save all tabs separatly
-      parsed.rules.forEach(function (editorTabAndRules) {
-        promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
-      });
-      // save tabsetting
-      promises.push(Storage.save(parsed.tabSettings, Utils.keys.tabs));
-
-      Promise.all(promises).then(function () {
-        $("#modalimportrules").hide();
-        loadTabsSettings();
-        loadRules(1);
+        $(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
+        updateTabStats();
+        fillAvailableRules();
+        loadWorkflows();
       });
     };
 
@@ -152,8 +117,7 @@ var importAndSaveRules = function() {
 };
 
 // Handler Import / Export buttons
-$(document).on("click", "#modalimportrules .cmd-import-all-rules", importAndSaveRules)
-.on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
+$(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
   $(".modalimport").hide();
 })
 .on("click", ".all-button-export", exportAll)

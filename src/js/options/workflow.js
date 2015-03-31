@@ -1,4 +1,4 @@
-/* global Workflows jQuery Rules Logger Utils Storage executeImportWorkflows */
+/* global Workflows jQuery Rules Logger Utils Storage */
 var workflows = [];
 var wfErrors = [];
 
@@ -312,12 +312,6 @@ jQuery(function() {
 
   // Delete workflow
   jQuery(".wf-button-delete").on("click", deleteWorkflow);
-
-  // Import workflow via overlay
-  jQuery(document).on("click", ".wf-button-import", function() {
-    jQuery("#modalimportworkflows").show();
-  });
-  jQuery(document).on("click", "#modalimportworkflows .cmd-import-all-workflows", executeImportWorkflows);
 
   // Cancel a stuck workflow
   jQuery(".wf-button-cancel").on("click", cancelWorkflow);

@@ -38,6 +38,7 @@ var ChromeBootstrap = {
           window.location.hash = hash;
         }
       }
+
     };
 
     // Activate navigationitem via hashtag
@@ -48,5 +49,9 @@ var ChromeBootstrap = {
     });
 
     jQuery(document).on("click", "a.activate-menu", relocate);
+
+    jQuery(".menu a").on("click", function() {
+      jQuery(".notice").hide();
+    });
   }
 };

@@ -1,0 +1,14 @@
+{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "dummy"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: /.*options.*/,\n  name: \"error while filling a date field\",\n  fields: [{\n    selector: \"input[type=date]\",\n    value: \"not a date\"\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}
