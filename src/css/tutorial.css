@@ -1,0 +1,21 @@
+.introjs-prevbutton {
+  visibility: hidden;
+  width: 0;
+  display: none;
+}
+
+.introjs-skipbutton {
+  float: left;
+}
+
+.tuts {
+  display: none;
+}
+
+.introjs-helperLayer.hidden {
+  display: none;
+}
+
+.introjs-showElement {
+  z-index: 99599999!important;
+}

@@ -4,6 +4,10 @@ var ChromeBootstrap = {
   init: function() {
     // Menu functionality for chrome-bootstrap
     jQuery('.menu').on("click", "a", function(ev) {
+      if(this.classList.contains("no-click")) {
+        ev.preventDefault();
+        return false;
+      }
       jQuery('.mainview > *').removeClass("selected");
       jQuery('.menu li').removeClass("selected");
       jQuery('.mainview > *:not(.selected)').css('display', 'none');
@@ -51,6 +55,9 @@ var ChromeBootstrap = {
     jQuery(document).on("click", "a.activate-menu", relocate);
 
     jQuery(".menu a").on("click", function() {
+      if(this.classList.contains("no-click")) {
+        return false;
+      }
       jQuery(".notice").hide();
     });
   }

@@ -39,7 +39,8 @@ var I18n = {
   },
   _getAndInsert: function(path, appendDomSelector) {
     jQuery.get(chrome.runtime.getURL(path.join("/")), function (html) {
-      jQuery(appendDomSelector).html(html).trigger("i18n-loaded", [ path.join("/") ]);
+      jQuery(appendDomSelector).html(html);
+      jQuery(document).trigger("i18n-loaded", [ path.join("/") ]);
     });
   }
 };

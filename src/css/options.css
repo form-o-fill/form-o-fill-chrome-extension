@@ -98,13 +98,13 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
 
 .notice {
   display: none;
-  border: 1px solid #909090;
+  border: 1px solid #EBCCD1;
   padding: 10px 25px 10px 36px;
   border-radius: 5px;
   vertical-align: middle;
   font-size: 14px;
   position: relative;
-  background-color: #ccc;
+  background-color: #F2DEDE;
   margin-bottom: 10px;
 }
 
@@ -357,4 +357,8 @@ text-indent: -26px;
 #logs table td:nth-child(3) {
   font-family: "Courier New", Courier, monospace;
   font-size: 11px;
+}
+
+.unpacked-only {
+  margin: 10px 0;
 }

@@ -1,0 +1,47 @@
+<div class="tuts tut-tour-1">
+  <div class="step" data-element="#ruleeditor-ace" data-position="right">
+    <strong>This is the rule editor.</strong>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right">
+    <p>
+      Here you can insert the rules you just extracted from the <code>&lt;form&gt;</code>
+    </p>
+  </div>
+
+  <div class="step" data-element=".notice.extracted-present" data-position="bottom" data-buttons="false">
+    <p>
+      When there are <strong>extracted rules</strong> present, you will see this notification.
+    </p>
+    <p>
+      Pressing the link in the notification will insert the extracted rules into the current tab.
+    </p>
+    <p>
+      <strong>Do that now.</strong>
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-trigger="/extracted-present[display: none]">
+    <p>
+      The extracted rules are now copied to the rule editor.
+    </p>
+  </div>
+
+  <div class="step" data-element=".ace_selection" data-position="right">
+    <p>
+      This defines the url on which the rule will be active.
+    </p>
+  </div>
+</div>
+<script>
+  window.Tutorial.tour[1] = {
+    0: function(step) {
+      editor.editor().find('"url"', {}, false);
+      return document.querySelector(".ace_selection");
+    },
+    4: function(step) {
+      editor.editor().find('"url"', {}, false);
+      return document.querySelector(".ace_selection");
+    }
+  };
+</script>

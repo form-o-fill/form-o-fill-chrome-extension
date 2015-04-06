@@ -8,6 +8,16 @@ var jTab = function(tabIndex, name, isCurrent) {
 // maximal tab count including (+)-tab
 var maxTabs = 7;
 
+// Clear tab settings
+/*eslint-disable no-unused-vars */
+var resetTabSetting = function() {
+  var defaultTabs = [
+    { id: 1, name: chrome.i18n.getMessage("tabs_default_name") }
+  ];
+  Storage.save(defaultTabs, Utils.keys.tabs);
+};
+/*eslint-enable no-unused-vars */
+
 // Save tab settings
 var saveTabsSetting = function() {
   Logger.info("[tabs.js] Saving tab setting");
