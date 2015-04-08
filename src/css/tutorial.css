@@ -19,3 +19,12 @@
 .introjs-showElement {
   z-index: 99599999!important;
 }
+
+.ace-jsoneditor .ace_marker-layer .ace_active-line.ace_highlight-line {
+  background-color: #EEE;
+  border: 2px solid #3EBB3A;
+  margin-top: -3px;
+  border-radius: 5px;
+  padding-top: 1px;
+  box-shadow: #aaa 2px 2px;
+}

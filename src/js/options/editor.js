@@ -15,6 +15,29 @@ var Editor = function(selector) {
   this._session.setTabSize(2);
   this._session.setUseSoftTabs(true);
   this._session.setUseSoftTabs(true);
+  this._markers = [];
+};
+
+Editor.prototype.range = function(startRow, endRow) {
+  var Range = ace.require('ace/range').Range;
+  return new Range(startRow, 0, endRow, 255);
+};
+
+Editor.prototype.removeAllMarkers = function() {
+  var editor = this;
+  this._markers.forEach(function (markerId) {
+    editor._session.removeMarker(markerId);
+  });
+  this._markers = [];
+  return this;
+};
+
+Editor.prototype.setMarker = function(startLine, endLine) {
+  this.removeAllMarkers();
+  var marker = this.range(startLine - 1, endLine - 1);
+  var markerId = this._session.addMarker(marker, "ace_active-line ace_highlight-line", "fullLine");
+  this._markers.push(markerId);
+  return this;
 };
 
 Editor.prototype.editor = function() {

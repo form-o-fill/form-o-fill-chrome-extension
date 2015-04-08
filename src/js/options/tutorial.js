@@ -21,7 +21,8 @@
         trigger: data.trigger,
         buttons: (data.buttons === "false" ? false : true),
         overlay: (data.overlay === "false" ? false : true),
-        index: index
+        index: index,
+        elementChanged: false
       };
 
       steps.push(step);
@@ -31,6 +32,7 @@
   };
 
   Tutorial.prototype.onBeforeChangeHandler = function(tutorial) {
+    /*eslint-disable complexity */
     return function() {
       /*eslint-disable no-underscore-dangle */
       var stepIndex = tutorial.intro._currentStep;
@@ -58,9 +60,11 @@
         var target = Tutorial.tour[tutorial.tourNumber][step.index](step);
         if(target) {
           step.element = target;
+          step.elementChanged = true;
         }
       }
     };
+    /*eslint-enable complexity */
   };
 
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
@@ -70,11 +74,28 @@
       var step = tutorial.intro._introItems[stepIndex];
       /*eslint-enable no-underscore-dangle */
 
+      if(typeof Tutorial.tour[tutorial.tourNumber] !== "undefined" && typeof Tutorial.tour[tutorial.tourNumber][step.index] === "function") {
+        var target = Tutorial.tour[tutorial.tourNumber][step.index](step);
+        if(target) {
+          step.element = target;
+          step.elementChanged = true;
+        }
+      }
+
       var $helper = jQuery(".introjs-helperLayer");
       if(!step.overlay) {
         $helper.hide();
+        jQuery(".introjs-overlay").hide();
       } else {
         $helper.show();
+        jQuery(".introjs-overlay").show();
+      }
+
+      if(step.elementChanged) {
+        var ePos = jQuery(step.element).offset();
+        $helper.css("background-color", "transparent");
+        jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px").css("left", ePos.left + "px");
+        jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
       }
     };
   };
@@ -103,8 +124,9 @@
     var tutorial = this;
     var selector = "a.tut-start-tour-" + tutorial.tourNumber;
     jQuery(selector).on("click", function() {
-      tutorial.startTutorialMode();
-      tutorial.intro.start();
+      tutorial.startTutorialMode().then(function() {
+        tutorial.intro.start();
+      });
     });
     this.observeDomChanges();
   };
@@ -185,20 +207,23 @@
   // 2. clear data
   // 3. insert rules stub
   Tutorial.prototype.startTutorialMode = function() {
-    // 1. backup data
-    Promise.all([exportWorkflowsData(), exportRulesData()]).then(function(workflowsAndRules) {
-      var exportJson = {
-        workflows: workflowsAndRules[0],
-        rules: workflowsAndRules[1]
-      };
+    return new Promise(function(resolve) {
+      // 1. backup data
+      Promise.all([exportWorkflowsData(), exportRulesData()]).then(function(workflowsAndRules) {
+        var exportJson = {
+          workflows: workflowsAndRules[0],
+          rules: workflowsAndRules[1]
+        };
 
-      Storage.save(exportJson, Utils.keys.tutorialDataBackup).then(function () {
-        // 2. Clear data
-        resetTabSetting();
+        Storage.save(exportJson, Utils.keys.tutorialDataBackup).then(function () {
+          // 2. Clear data
+          resetTabSetting();
 
-        // 3. insert rule stub
-        editor.setValue("var rules = [\n];");
-        saveRules(1);
+          // 3. insert rule stub
+          editor.setValue("var rules = [\n];");
+          saveRules(1);
+          resolve();
+        });
       });
     });
   };
