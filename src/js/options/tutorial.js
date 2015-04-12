@@ -1,6 +1,11 @@
 /*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils resetTabSetting editor saveRules*/
+var tutorials = tutorials || [];
+
 (function tutorialScope(jQuery) {
   "use strict";
+
+  var tutorialRunning = false;
+
   var Tutorial = function(tourNumber) {
     this.tourNumber = tourNumber;
     this.steps = this.loadSteps(tourNumber);
@@ -126,6 +131,7 @@
     jQuery(selector).on("click", function() {
       tutorial.startTutorialMode().then(function() {
         tutorial.intro.start();
+        tutorialRunning = true;
       });
     });
     this.observeDomChanges();
@@ -160,21 +166,24 @@
         attrs = attrs.concat(mutation.target.style.cssText);
       });
 
+      /*eslint-disable complexity */
       tutorial.steps.every(function (step) {
         if(typeof step.trigger !== "undefined") {
           var typeToCheck = step.trigger[0];
           var triggerCls = step.trigger.substr(1);
 
-          if(typeToCheck === "+" && added.indexOf(triggerCls) !== -1) {
-            // Trigger Step
-            tutorial.intro.goToStep(step.index + 1);
-            return false;
-          }
+          if(added.indexOf(triggerCls) !== -1) {
+            if(typeToCheck === "+") {
+              // Trigger Step
+              tutorial.intro.goToStep(step.index + 1);
+              return false;
+            }
 
-          if(typeToCheck === "-" && removed.indexOf(triggerCls) !== -1) {
-            // Trigger Step
-            tutorial.intro.goToStep(step.index + 1);
-            return false;
+            if(typeToCheck === "-") {
+              // Trigger Step
+              tutorial.intro.goToStep(step.index + 1);
+              return false;
+            }
           }
 
           if(typeToCheck === "/") {
@@ -182,19 +191,24 @@
             var found = attrs.filter(function (attr) {
               return attr.indexOf(styleToCheckMatch[2]) > -1;
             });
+
             if(found.length > 0) {
               tutorial.intro.goToStep(step.index + 1);
               return false;
             }
           }
         }
+        /*eslint-enable complexity*/
+
         return true;
       });
     });
   };
 
   Tutorial.prototype.observeDomChanges = function() {
-    this.domObserver(this).observe(window.document.querySelector("#notices"), {
+    this.observer = this.domObserver(this);
+
+    this.observer.observe(window.document.querySelector("#notices"), {
       childList: true,
       subtree: true,
       attributes: true,
@@ -230,15 +244,29 @@
 
   window.Tutorial = Tutorial;
 
+  jQuery(".menu").on("click", "a", function () {
+    if(this.classList.contains("no-click") || !tutorialRunning) {
+      return true;
+    }
+    tutorials.forEach(function (tutorial) {
+      tutorial.intro.exit();
+      tutorial.observer.disconnect();
+    });
+    tutorials = [];
+    tutorialRunning = false;
+    editor.removeAllMarkers();
+  });
+
 })(jQuery);
+
 
 // If the tutorial tours are loaded, initialize the tutorial
 jQuery(document).on("i18n-loaded", function (event, pageName) {
   if(pageName.indexOf("tutorial/_tour") > -1) {
     var tutorialNumber = pageName.match(/tour([0-9]+)/)[1];
     var tutorial = new window.Tutorial(tutorialNumber);
+    tutorials.push(tutorial);
     tutorial.start();
   }
 });
-
 
