@@ -106,7 +106,6 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
   position: relative;
   background-color: #ccc;
   margin-bottom: 10px;
-  cursor: pointer;
 }
 
 .notice:before {
@@ -120,7 +119,7 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
   left: 7px;
 }
 
-.notice:after {
+.notice a.cmd-close-notice:after {
   font-family: "formofill";
   font-size: 18px;
   content: "\e607";
@@ -129,6 +128,7 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
   top: 0;
   right: 0;
   color: #999;
+  cursor: pointer;
 }
 
 .notice .code {

@@ -59,28 +59,36 @@
             <div id="notices">
               <div class="notice annotations-present">
                 There are syntax errors present (check the gutter annotations in the editor).
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice extracted-present">
                 There is an extracted form present, click <a href="#" class="cmd-append-extracted">here</a> to append the rule at the bottom of your current rules.
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error before-function-needs-to-be-a-function-or-array">
                 Please use a function for 'before' blocks like this: <span class="code">before: function(resolve) { ...}</span> or an array of functions (<span class="code">before: [ function(resolve, env) {}, function(resolve, env) {}]</span>).
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error before-function-needs-functions">
                 Need at least one before function for array usage: <span class="code">before: [ function(resolve, env) {} ]</span>.
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error before-function-needs-resolve-argument">
                 The definition of a before function needs 'resolve' as its first argument: <span class="code">before: function(resolve) { ...}</span>
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error before-function-needs-resolve-call">
                 Please call your 'resolve' function somewhere in the 'before' function:<br /><span class="code">before: function(resolve) { ... resolve(myData); }</span>
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error need-var-rules">
                 Please surround your rules with <span class="code">var rules = [ { ... rule 1 ... }, { ... rule 2 ... } ];</code>
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice error libs-using-reserved-namespaces">
                 Please don't use the following library export names since they are reserved by Form-O-Fill:
                 <ul></ul>
+                <a href="#" class="cmd-close-notice"></a>
               </div>
               <div class="notice form-fill-errors">
                 There have been errors while filling the form. The rule used was '<span class="rule-name"></span>' (url: '<span class="rule-url"></span>')
@@ -91,6 +99,7 @@
                     <th>error</th>
                   </tr>
                 </table>
+                <a href="#" class="cmd-close-notice"></a>
               </div>
             </div>
 

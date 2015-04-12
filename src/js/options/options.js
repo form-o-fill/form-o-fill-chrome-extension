@@ -224,17 +224,17 @@ $(document).on("click", "button.import, .rl-button-import", importRules);
 $("#rules-overview").on("change", quickJumpToRule);
 
 // Event handler for notices
-$(".notice.form-fill-errors").on("click", function () {
+$(".notice.form-fill-errors a.cmd-close-notice").on("click", function () {
   Storage.delete(Utils.keys.errors);
-  $(this).hide();
+  $(".notice").hide();
 });
 
-$(".notice.extracted-present").on("click", function () {
+$(".notice.extracted-present a.cmd-close-notice").on("click", function () {
   Storage.delete(Utils.keys.extractedRule);
-  $(this).hide();
+  $(".notice").hide();
 });
 
-$(".notice.annotations-present, .notice.error").on("click", function () {
-  $(this).hide();
+$(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function () {
+  $(".notice").hide();
 });
 
