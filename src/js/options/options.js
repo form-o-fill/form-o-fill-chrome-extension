@@ -165,6 +165,11 @@ var saveRules = function(tabId) {
     Rules.save(editor.getValue(), tabId).then(function () {
       Utils.infoMsg("Rules saved");
       updateTabStats();
+      // If the editor contained something that looks like a library function
+      // reimport the libs in the background page
+      if(editor.getValue().indexOf("export") > -1) {
+        chrome.runtime.sendMessage({action: "reloadLibs"});
+      }
     });
   }
 };

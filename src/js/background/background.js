@@ -1,4 +1,4 @@
-/*global Rules, Logger, Utils, FormUtil, Notification, JSONF, Storage, Testing, createCurrentPopupInIframe, Workflows */
+/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs */
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
@@ -268,6 +268,16 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   if(message.action === "lastActiveTabId" && lastActiveTab !== null) {
     Logger.info("[bg.js] received 'lastActiveTabId'. Sending tabId " + lastActiveTab.id);
     sendResponse(lastActiveTab.id);
+  }
+
+  // received from options.js to reload Libs
+  if(message.action === "reloadLibs" && lastActiveTab !== null) {
+    // Why reload libs? If the user changes a tab containing a library definition
+    // we must update it before the use executes a rule
+    // Otherwise the new function won't be found
+    // This is only useful for library functions used in before functions since those are
+    // evaluated in the context of the background page
+    Libs.import();
   }
 });
 
