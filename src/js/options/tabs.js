@@ -1,4 +1,4 @@
-/*global Logger, jQuery, Storage, Utils, Rules, editor, saveRules */
+/*global Logger, jQuery, Storage, Utils, Rules, editor, saveRules, loadRules */
 
 // returns the jQuery wrapped DOM representation of a tab
 var jTab = function(tabIndex, name, isCurrent) {
@@ -65,19 +65,27 @@ jQuery(function () {
       return;
     }
     e.preventDefault();
+
     var $current = jQuery(".tab.current");
     var $this = jQuery(this);
-    if ($current.data("tab-id") == $this.data("tab-id")) {
-      Logger.info("[tabs.js] Click on tab triggered EDIT mode");
+    var tabId = $this.data("tab-id");
+
+    if ($current.data("tab-id") == tabId) {
+      Logger.debug("[tabs.js] Click on tab triggered EDIT mode");
       $this.find("input").removeAttr("disabled").trigger("focus");
       $this.find("a").addClass("edit").removeClass("cmd-tabs-close");
     } else {
-      Logger.info("[tabs.js] Click on tab triggered change of current tab");
+      Logger.debug("[tabs.js] Click on tab triggered change of current tab");
+
+      // Save current editor
+      saveRules($current.data("tab-id"));
+
+      // Load rules into new tab
+      loadRules(tabId);
+
+      // make it "current"
       jQuery(".tab").removeClass("current");
       $this.addClass("current");
-      Storage.load(Utils.keys.rules + "-tab-" + $this.data("tab-id")).then(function (ruleData) {
-        editor.setValue(ruleData.code);
-      });
     }
   });
 
