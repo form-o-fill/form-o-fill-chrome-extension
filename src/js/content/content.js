@@ -1,4 +1,4 @@
-/*global FormFiller, JSONF, jQuery, Logger */
+/*global FormFiller, JSONF, jQuery, Logger, Libs */
 /*eslint complexity:0 */
 
 // This listens for messages coming from the background page
@@ -47,6 +47,8 @@ chrome.runtime.onConnect.addListener(function (port) {
   };
 
   port.onMessage.addListener(function (message) {
+    Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
+
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
       Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
@@ -106,11 +108,14 @@ chrome.runtime.onConnect.addListener(function (port) {
     if(message.action === "showMessage") {
       showOverlay(message.message);
     }
+
   });
 
   // Simple one-shot callbacks
-  // This is the content grabber available as context.findHtml() in before functions
   chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
+    Logger.info("[content.js] Got message via runtim.onMessage : " + JSONF.stringify(message) + " from bg.j");
+
+    // This is the content grabber available as context.findHtml() in before functions
     if (message.action === "grabContentBySelector") {
       Logger.info("[content.js] Grabber asked for '" + message.message + "'");
       var domElements = jQuery(message.message).map(function (index, $el) {
