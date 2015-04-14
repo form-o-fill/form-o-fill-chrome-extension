@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -103,6 +103,9 @@ var FormUtil = {
       }
     });
     return detectedLibs;
+  },
+  sendLibsReloadToContent: function(port) {
+    port.postMessage({"action": "reloadLibs"});
   },
   sendFieldsToContent: function(aRule, beforeData, port) {
     // Now send all field definitions to the content script
@@ -258,6 +261,9 @@ var FormUtil = {
     // Now we can display the WORKING throbber!
     port.postMessage({"action": "showOverlay"});
 
+    // reload LIBS just in case
+    FormUtil.sendLibsReloadToContent(port);
+
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
     // It also contains the grabber which can find content inside the current webpage
@@ -270,13 +276,12 @@ var FormUtil = {
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // import all custom library function and the rules
-    var promises = [ Libs.import() ].concat(this.generateBeforeFunctionsPromises(rule, context));
+    var promises = this.generateBeforeFunctionsPromises(rule, context);
 
     // call either the default - instantaneously resolving Promise (default) or
     // the array of before functions defined in the rule.
     Promise.all(promises).then(function beforeFunctionsPromise(data) {
-      // remove first entry (which is Libs.import)
-      beforeData = data.splice(1);
+      beforeData = data;
 
       // If the first beforeData is a function and executes to null then
       // the rules and workflows that are running should be *canceled*

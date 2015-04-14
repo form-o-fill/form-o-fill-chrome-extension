@@ -109,6 +109,11 @@ chrome.runtime.onConnect.addListener(function (port) {
       showOverlay(message.message);
     }
 
+    // reload the libraries
+    if(message.action === "reloadLibs") {
+      Libs.import();
+    }
+
   });
 
   // Simple one-shot callbacks
