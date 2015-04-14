@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -128,6 +128,7 @@ var FormUtil = {
     port.postMessage({"action": "hideWorkingOverlay"});
   },
   injectAndAttachToLibs: function(pathToScript, nameOnLib, nameOnWindow) {
+    Logger.info("[b/form_util.js] Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");");
     return new Promise(function (resolve) {
       chrome.tabs.executeScript(null, {file: pathToScript}, function () {
         chrome.tabs.executeScript({code: "Libs.add('" + nameOnLib + "', window." + nameOnWindow + "); console.log(Libs." + nameOnLib + ");"}, function () {
@@ -213,6 +214,29 @@ var FormUtil = {
       window.sessionStorage.setItem(Utils.keys.sessionStorage, "{}");
     }
   },
+  generateBeforeFunctionsPromises: function(rule, context) {
+    // Default instantaneous resolving promise:
+    var beforeFunctions = [function beforeFuncPromise() {
+      return new Promise(function promise(resolve) {
+        resolve(null);
+      });
+    }];
+
+    // Is there a 'before' block with an function or an array of functions?
+    if(typeof rule.before === "function") {
+      // A single before function
+      beforeFunctions = [ FormUtil.wrapInPromise(rule.before, context) ];
+    } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
+      // Assume an array of functions
+      beforeFunctions = rule.before.map(function beforeFuncMap(func) {
+        return FormUtil.wrapInPromise(func, context);
+      });
+    }
+
+    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(rule.before));
+
+    return beforeFunctions;
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var beforeData;
@@ -243,32 +267,16 @@ var FormUtil = {
       storage: FormUtil.storage
     };
 
-    // Default instantaneous resolving promise:
-    var beforeFunctions = [function beforeFuncPromise() {
-      return new Promise(function promise(resolve) {
-        resolve(null);
-      });
-    }];
-
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
-    // Is there a 'before' block with an function or an array of functions?
-    if(typeof rule.before === "function") {
-      // A single before function
-      beforeFunctions = [ FormUtil.wrapInPromise(rule.before, context) ];
-    } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
-      // Assume an array of functions
-      beforeFunctions = rule.before.map(function beforeFuncMap(func) {
-        return FormUtil.wrapInPromise(func, context);
-      });
-    }
-
-    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(rule.before));
+    // import all custom library function and the rules
+    var promises = [ Libs.import() ].concat(this.generateBeforeFunctionsPromises(rule, context));
 
     // call either the default - instantaneously resolving Promise (default) or
-    // the arrray of before functions defined in the rule.
-    Promise.all(beforeFunctions).then(function beforeFunctionsPromise(data) {
-      beforeData = data;
+    // the array of before functions defined in the rule.
+    Promise.all(promises).then(function beforeFunctionsPromise(data) {
+      // remove first entry (which is Libs.import)
+      beforeData = data.splice(1);
 
       // If the first beforeData is a function and executes to null then
       // the rules and workflows that are running should be *canceled*
@@ -282,7 +290,7 @@ var FormUtil = {
         return null;
       }
 
-      // beforeData is null when there is no before function defined in the rule definition
+      // beforeData is null when there is no info function defined in the rule definition
       if(beforeData !== null) {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
