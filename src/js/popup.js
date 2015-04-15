@@ -55,6 +55,13 @@ var Popup = {
       Storage.delete(Utils.keys.runningWorkflow).then(window.close);
     });
   },
+  updateHeight: function() {
+    var html = document.querySelector("html");
+    var body = document.querySelector("body");
+
+    html.style.minHeight = html.clientHeight;
+    body.style.minHeight = html.clientHeight;
+  },
   updateHtml: function(matchingRules, matchingWorkflows) {
     this.updateHeadline(matchingRules, matchingWorkflows);
     this.updateMatchingRules(matchingRules);
@@ -63,6 +70,7 @@ var Popup = {
     if(!Utils.isLiveExtension()) {
       this.sendPopupHtmlForTesting();
     }
+    this.updateHeight();
   },
   sendPopupHtmlForTesting: function() {
     chrome.extension.getBackgroundPage().Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
