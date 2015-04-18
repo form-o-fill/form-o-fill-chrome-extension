@@ -8,7 +8,7 @@
   This is called a "before function". There can only be one before function per rule.
 </p>
 <p>
-  Using a before function you can fetch test data from a service to use later in your value functions.
+  Using a before function you can eg. fetch test data from a service to use later in your value functions.
 </p>
 <p>
   Defining a before function is easy:
@@ -43,7 +43,7 @@
     When the data has been fetched (asynchronously), return the data using <code>resolve(data)</code>
   </div>
   <div class="code">
-    &nbsp;&nbsp;&nbsp;&nbsp;resolve(data.synsets);
+    &nbsp;&nbsp;&nbsp;&nbsp;resolve(data);
   </div>
 </div>
 <div class="block-of-code">
@@ -89,10 +89,12 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
+    &nbsp;<br />
     &nbsp;
   </div>
   <div class="code">
-    &nbsp;&nbsp;&nbsp;&nbsp;return $data[Math.round(Math.random()*10)+$data.length].terms[0];
+    &nbsp;&nbsp;&nbsp;&nbsp;// Assuming the above call returned <code>{ myReturnValue: "Hello" }</code><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;return $data.myReturnValue;
   </div>
 </div>
 <div class="block-of-code">

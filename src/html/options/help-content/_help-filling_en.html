@@ -19,8 +19,18 @@
 <h3>In case of an error</h3>
 <p>
   Since you can use value or before functons there may be errors executing those when filling the form.<br />
-  Those errors will reported as an notification.<br />
+  Those errors will be reported as an notification.<br />
   <img src="../../images/help/form-filling-error-notification.png" class="li-block" /><br />
-  Clicking on the notification will bring you back to the rules editor and display the error to you.<br />
-  <img src="../../images/help/form-filling-error-notice.png" class="li-block" />
+  Clicking on the notification will bring you back to the rules editor and display the error to you:
+  <div class="notice form-fill-errors" style="display: block;">
+    There have been errors while filling the form. The rule used was '<span class="rule-name">undefined in before function</span>' (url: '<span class="rule-url">/.*test.*/</span>')
+    <table>
+      <tbody><tr id="form-filling-errors-thead">
+          <th>selector</th>
+          <th>value</th>
+          <th>error</th>
+        </tr>
+        <tr><td>Inside before function</td><td>function&nbsp;(resolve,&nbsp;env)&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;a&nbsp;=&nbsp;env.notExisting.goAway;<br>&nbsp;&nbsp;&nbsp;&nbsp;resolve(env.notExisting);<br>&nbsp;&nbsp;}</td><td>Cannot read property 'goAway' of undefined</td></tr></tbody></table>
+    <a href="#" class="cmd-close-notice"></a>
+  </div>
 </p>

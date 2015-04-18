@@ -49,15 +49,15 @@
   }
 </pre>
 <p>
-  Please notice that the call to <code>linkHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml <code>then</code> function.
+  Please notice that the call to <code>findHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml <code>then</code> function.
 </p>
 
 <a name="help-before-context"></a>
 <h3>Saving and loading values in before functions with .storage</h3>
 <p>
-  before functions are usually used to prepare data to be filled into form fields.<br />
+  Before functions are usually used to prepare data to be filled into form fields.<br />
   Using the <code>context.storage</code> functions you can store arbitary data and restore it on demand.<br />
-  This is very useful to store data between workflow steps.
+  This is very useful for storing data between workflow steps.
 </p>
 <p>
   To save data use <code>context.storage.set("key", {some: "data"});</code>.<br />
