@@ -232,15 +232,15 @@ $("#rules-overview").on("change", quickJumpToRule);
 // Event handler for notices
 $(".notice.form-fill-errors a.cmd-close-notice").on("click", function () {
   Storage.delete(Utils.keys.errors);
-  $(".notice").hide();
+  $(this).parents(".notice").hide();
 });
 
 $(".notice.extracted-present a.cmd-close-notice").on("click", function () {
   Storage.delete(Utils.keys.extractedRule);
-  $(".notice").hide();
+  $(this).parents(".notice").hide();
 });
 
 $(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function () {
-  $(".notice").hide();
+  $(this).parents(".notice").hide();
 });
 
