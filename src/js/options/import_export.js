@@ -34,6 +34,23 @@ var exportWorkflowsData = function() {
   });
 };
 
+// Export rules as a newline seperated list of strings
+var exportRulesAsJs = function() {
+  var code = "";
+  exportRulesData().then(function(rules) {
+    var jsExport = rules.rules.map(function (codeAndTabId, index) {
+      return "//\n// Tab: " + rules.tabSettings[index].name + "\n//\n" + codeAndTabId.code.replace(/\\n/g, "\n") + "\n";
+    });
+    jsExport = jsExport.join("\n").replace(/\\\"/g, '"');
+
+    var now = new Date();
+    var fileName = "fof-rules-js-export-" + now.toISOString() + ".js";
+
+    Utils.infoMsg("Completed export as '" + fileName + "'");
+    Utils.download(jsExport, fileName, "application/json");
+  });
+};
+
 // Export rules and workflows
 var exportAll = function() {
   Promise.all([exportWorkflowsData(), exportRulesData()]).then(function(workflowsAndRules) {
@@ -43,7 +60,7 @@ var exportAll = function() {
     };
 
     var now = new Date();
-    var fileName = "fof-complete-export-" + now.toISOString() + ".json";
+    var fileName = "fof-complete-export-" + now.toISOString() + ".js";
 
     Utils.infoMsg("Completed export as '" + fileName + "'");
     Utils.download(JSONF.stringify(exportJson), fileName, "application/json");
@@ -122,4 +139,5 @@ $(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", 
 })
 .on("click", ".all-button-export", exportAll)
 .on("click", ".all-button-import", showImportAllModal)
-.on("click", ".cmd-import-all-data", importAll);
+.on("click", ".cmd-import-all-data", importAll)
+.on("click", ".all-button-export-js", exportRulesAsJs);
