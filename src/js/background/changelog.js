@@ -10,7 +10,13 @@ var Changelog = {
       title: "FoF updated: Save data between rules!",
       message: "Save data between rule executions. Ideal for workflows.",
       target: "#help-before-context"
+    },
+    "2.2.2": {
+      title: "FoF updated: Unified export/import!",
+      message: "Unified export/import for rules & workflows. See changelog!",
+      target: "#changelog"
     }
+
   },
   findForVersion: function(version) {
     if(typeof this.changes[version] !== "undefined") {
