@@ -16,6 +16,8 @@ global.chrome = require("./support/chrome_api.js");
 // jQuery loaded with the jsDOM window
 global.jQuery = require("./support/jquery.js")(jsdom.jsdom().parentWindow);
 
+global.document = jsdom.jsdom();
+
 // Stub out the normal logger from ogger.js
 global.Logger = {
   info: function() {},
