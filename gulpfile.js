@@ -106,7 +106,7 @@ var replaceOpts = {
 };
 
 var runTests = function() {
- return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
+  return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
     R: 'dot',
     c: true,
     debug: true
@@ -188,7 +188,7 @@ gulp.task('contentJs', ['clean'], function () {
 
 // Build options.js
 gulp.task('optionsJs', ['clean'], function () {
-  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"])
+  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js", "!src/js/options/tutorial.js"])
   .pipe(replace(replaceOpts))
   .pipe(concat('options.js'))
   .pipe(stripdebug())
@@ -206,7 +206,7 @@ gulp.task('popupJs', ['clean'], function () {
 });
 
 // Copies files that can be copied without changes
-gulp.task('copyUnchanged', ['clean'],  function() {
+gulp.task('copyUnchanged', ['clean'], function() {
   ["fonts", "images", "vendor", "_locales", "!src/vendor/jquery/jquery-2.1.3.js"].forEach(function (dir) {
     gulp.src('src/' + dir + '/**/*')
     .pipe(gulp.dest('build/' + dir));
@@ -219,7 +219,7 @@ gulp.task('copyUnchanged', ['clean'],  function() {
 });
 
 // Copies HTML files and removes comment and blocks (see above)
-gulp.task('copyHtml', ['copyUnchanged'],  function() {
+gulp.task('copyHtml', ['copyUnchanged'], function() {
   return gulp.src(['src/html/**/*.html', '!src/html/option/_logs_*.html'])
   .pipe(replace(replaceOpts))
   .pipe(cleanhtml())
