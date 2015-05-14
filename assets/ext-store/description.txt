@@ -28,6 +28,13 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.2.2
+- Workflows graduated from beta
+- Unified import/export functionality. Can import old format.
+- Fix library function bug in content.js. No need to reload the webpage when changing custom library functions anymore
+- Changing a tab save the current displayed rules
+- A new export that eases the incorporation of changed rules into your ruleset.
+
 ★ Version 2.2.1
 - Memory optimization pass
 - Storage methods for before and value functions
