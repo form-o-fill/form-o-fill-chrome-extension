@@ -1,0 +1,93 @@
+@startuml
+title What happens in Form-O-Fill\nwhen a website is visited?
+(*) --> "User Visits page"
+
+"User Visits page" --> "runWorkflowOrRule()"
+note right
+  In background.js triggered by 
+  tab.addListener or tab.onUpdated
+end note
+
+"runWorkflowOrRule()" --> "onTabReadyWorkflow()"
+note right
+  Check if a workflow is active and runs the step
+end note
+
+if "WF active?" then
+    if "          End of WF reached?"
+        --> [Yes] "Clear current workflow"
+        --> Set status = finished
+        --> Return
+    else
+        -right-> [No] "Load Rule to be executed"
+        if "Rule is undefined?" then
+        note right
+          Can happen if the user 
+          deletes a rule that is
+          used in a WF
+        end note
+        -right-> [Yes] Set status = "rule_not_found"
+        --> "Set runRules = false" as rr1
+        --> "Clear current workflow" as clear2
+        --> Return
+        else
+        --> [No] FormUtil.applyRule
+        --> Save currentStep
+        --> Set status = running_workflow
+        --> "Set runRules = false" as rr2
+        --> Return
+        endif
+    endif
+else
+    --> [No] "onTabReadyRules()"
+    --> Clear popup HTML
+    --> Read active tab
+    --> lastMatchingRules = []
+    if "Tab active?" then
+        --> [Yes] "Load all rules"
+        --> Select those with "content" matcher attr
+        --> Match every "content" rule
+        note right
+            action: "matchContent" -> content.js
+        end note
+        --> lastMatchingRules += "content" rules
+        --> Match "url" rules
+        --> lastMatchingRules += "url" rules
+        --> save lastMatchingRules to Storage
+        note right
+            This is done so that 
+            popup.js can load them
+        end note
+        --> Find workflows matching lastMatchingRules
+        note right
+            Match rule against the 
+            first step of the workflows
+        end note
+        --> Save WF matches to storage
+        note right
+            This is done so that 
+            popup.js can load them
+        end note
+        --> refresh match counter in ext. button
+        note right
+            lastMatchingRules + matching WFs
+        end note
+        if "More than one rules found?" then
+            --> [Yes] set HTML for popup window
+        else
+            if "autorun set on this rule?" then
+                --> [Yes] "FormUtil.applyRule" as app2
+                --> Return
+            else
+                --> [No] Return
+            endif
+        endif
+        
+    else
+        --> [No] Return
+    endif
+endif
+
+Return --> (*)
+
+@enduml
