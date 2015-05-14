@@ -10,7 +10,9 @@ var Testing = {
       text: textToDisplay || null
     };
     Logger.debug("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
-    chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
+    if (lastActiveTab !== null) {
+      chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
+    }
   }
 };
 
