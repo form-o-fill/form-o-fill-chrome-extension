@@ -51,10 +51,7 @@ Changelog:
 - Refactored a lot of code. Report issues on github or via email please.
 - Moved import/export to extra menu
 
-★ Version 1.6.1
-- Changed .findHtml() to return a promise. Please see changelog for migration.
-
-★ Version 1.1.1 - 1.6.0
+★ Version 1.1.1 - 1.6.1
 - See "Changelog" in extension options
 
 Find the source at
@@ -67,3 +64,4 @@ Form-O-Fill icon taken from the Entypo Pictogram suite
 (http://www.entypo.com/)
 
 Licensed under the MIT license.
+The Software shall be used for Good, not Evil.
