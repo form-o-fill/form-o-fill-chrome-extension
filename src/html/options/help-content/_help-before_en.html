@@ -138,7 +138,7 @@
     The rule or the workflow will be immediatly canceled and a message will be displayed.
   </div>
   <div class="code">
-    before: function(resolve. context) { <br />
+    before: function(resolve, context) { <br />
     &nbsp;&nbsp;... do some stuff ...<br />
     &nbsp;&nbsp;resolve(Libs.halt());<br />
     }
@@ -151,7 +151,7 @@
     <br />
   </div>
   <div class="code">
-    before: function(resolve. context) { <br />
+    before: function(resolve, context) { <br />
     &nbsp;&nbsp;... do some stuff ...<br />
     &nbsp;&nbsp;resolve(Libs.halt("Custom message to be displayed"));<br />
     }
