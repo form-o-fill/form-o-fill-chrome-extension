@@ -52,11 +52,12 @@ var onTabReadyRules = function(tabId) {
     lastMatchingRules = [];
 
     // return if the tab isn't active anymore
-    if (!tab.active) {
+    if (!tab.active || tab.url.indexOf("chrome") > -1) {
       return;
     }
 
     lastActiveTab = tab;
+    Logger.info("[bg.js] Setting active tab", tab);
 
     // This is a little bit complicated.
     // I wish the chromium API would implement Promises for all that.
