@@ -274,7 +274,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // received from options.js to reload Libs
   if(message.action === "reloadLibs" && lastActiveTab !== null) {
     // Why reload libs? If the user changes a tab containing a library definition
-    // we must update it before the use executes a rule
+    // we must update it before the user executes a rule
     // Otherwise the new function won't be found
     // This is only useful for library functions used in before functions since those are
     // evaluated in the context of the background page
