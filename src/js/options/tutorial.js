@@ -125,15 +125,19 @@ var tutorials = tutorials || [];
     return intro;
   };
 
+  Tutorial.prototype.execute = function(tutorial) {
+    tutorial.startTutorialMode().then(function() {
+      tutorial.intro.start();
+      tutorialRunning = true;
+    });
+  };
+
   Tutorial.prototype.start = function() {
     var tutorial = this;
+
+    // Bind on button
     var selector = "a.tut-start-tour-" + tutorial.tourNumber;
-    jQuery(selector).on("click", function() {
-      tutorial.startTutorialMode().then(function() {
-        tutorial.intro.start();
-        tutorialRunning = true;
-      });
-    });
+    jQuery(selector).on("click", function() { tutorial.execute(tutorial); });
     this.observeDomChanges();
   };
 
@@ -216,7 +220,7 @@ var tutorials = tutorials || [];
     });
   };
 
-  // This method activates the turorial mode:
+  // This method activates the tutorial mode:
   // 1. backup existing rules and workflows
   // 2. clear data
   // 3. insert rules stub
