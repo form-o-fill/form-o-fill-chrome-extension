@@ -13,3 +13,6 @@ PLATFORMS
 DEPENDENCIES
   hobbit
   hobbit-contrib
+
+BUNDLED WITH
+   1.10.2

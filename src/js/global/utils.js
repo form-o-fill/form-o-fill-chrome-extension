@@ -27,6 +27,9 @@ var Utils = {
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },
+  onFormOFillSite: function() {
+    return window.location.host === "form-o-fill.github.io" || (window.location.host === "localhost" && window.location.port === "4000");
+  },
   showExtractOverlay: function(whenFinishedCallback) {
     // Send message to content script
     chrome.runtime.sendMessage({"action": "lastActiveTabId"}, function(tabId) {
