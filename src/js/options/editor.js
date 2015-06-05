@@ -29,7 +29,7 @@ Editor.prototype.removeAllMarkers = function() {
     editor._session.removeMarker(markerId);
   });
   this._markers = [];
-  var nl = document.querySelectorAll(".ace_highlight-line").removeClass("ace_highlight-line");
+  var nl = document.querySelectorAll(".ace_highlight-line");
   var l = nl.length;
   while (l--) {
     nl[l].classList.remove("ace_highlight-line");
