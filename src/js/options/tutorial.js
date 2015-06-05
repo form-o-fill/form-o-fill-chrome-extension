@@ -297,3 +297,6 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
     tutorial.start();
   }
 });
+
+// Start a tutorial if set previously
+window.Tutorial.startOnOpen();
