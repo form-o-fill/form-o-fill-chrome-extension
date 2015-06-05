@@ -246,6 +246,17 @@ var tutorials = tutorials || [];
     });
   };
 
+  Tutorial.startOnOpen = function() {
+    chrome.runtime.sendMessage({action: "getTutorialOnOpenOptions"}, function (tutorialNumber) {
+      tutorialNumber = parseInt(tutorialNumber, 10);
+      tutorialNumber = 1;
+      if(tutorialNumber > 0) {
+        // Start the tutorial
+        jQuery("a.tut-start-tour-" + tutorialNumber).trigger("click");
+      }
+    });
+  };
+
   window.Tutorial = Tutorial;
 
   jQuery(".menu").on("click", "a", function () {
@@ -273,4 +284,5 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
     tutorial.start();
   }
 });
+
 

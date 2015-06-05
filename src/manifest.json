@@ -24,6 +24,12 @@
   "web_accessible_resources": [ 
     "html/options.html"
   ],
+  "externally_connectable": {
+    "matches": [
+      "*://form-o-fill.github.io/tutorial/*", 
+      "http://localhost:4000/tutorial/*"
+    ]
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "browser_action": {
     "default_title": "Form-O-Fill",
@@ -88,7 +94,8 @@
       "js/background/notification.js",
       "js/background/background.js",
       "js/background/context_menu.js",
-      "js/background/testing.js"
+      "js/background/testing.js",
+      "js/background/tutorial.js"
     ],
     "persistent": false
   }
