@@ -137,7 +137,9 @@ var tutorials = tutorials || [];
 
     // Bind on button
     var selector = "a.tut-start-tour-" + tutorial.tourNumber;
-    jQuery(selector).on("click", function() { tutorial.execute(tutorial); });
+    jQuery(selector).on("click", function() {
+      tutorial.execute(tutorial);
+    });
     this.observeDomChanges();
   };
 
@@ -249,10 +251,21 @@ var tutorials = tutorials || [];
   Tutorial.startOnOpen = function() {
     chrome.runtime.sendMessage({action: "getTutorialOnOpenOptions"}, function (tutorialNumber) {
       tutorialNumber = parseInt(tutorialNumber, 10);
-      tutorialNumber = 1;
+      // REMOVE START
+      // For debugging:
+      if(typeof window.debugTutorial !== "undefined") {
+        tutorialNumber = window.debugTutorial;
+      }
+      // REMOVE END
       if(tutorialNumber > 0) {
-        // Start the tutorial
-        jQuery("a.tut-start-tour-" + tutorialNumber).trigger("click");
+        var tutorial = tutorials.filter(function(theTutorial) {
+          return theTutorial.tourNumber == tutorialNumber;
+        });
+
+        if(tutorial.length === 1) {
+          // Start the tutorial
+          tutorial[0].execute(tutorial[0]);
+        }
       }
     });
   };
@@ -284,5 +297,3 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
     tutorial.start();
   }
 });
-
-
