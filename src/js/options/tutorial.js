@@ -1,4 +1,4 @@
-/*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils resetTabSetting editor saveRules*/
+/*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils resetTabSetting editor saveRules loadRules currentTabId*/
 var tutorials = tutorials || [];
 
 (function tutorialScope(jQuery) {
@@ -72,6 +72,16 @@ var tutorials = tutorials || [];
     /*eslint-enable complexity */
   };
 
+  Tutorial.prototype.executeJavascriptStep = function(step) {
+    if(typeof Tutorial.tour[this.tourNumber] !== "undefined" && typeof Tutorial.tour[this.tourNumber][step.index] === "function") {
+      var target = Tutorial.tour[this.tourNumber][step.index](step);
+      if(target) {
+        step.element = target;
+        step.elementChanged = true;
+      }
+    }
+  };
+
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
     return function() {
       /*eslint-disable no-underscore-dangle */
@@ -79,13 +89,9 @@ var tutorials = tutorials || [];
       var step = tutorial.intro._introItems[stepIndex];
       /*eslint-enable no-underscore-dangle */
 
-      if(typeof Tutorial.tour[tutorial.tourNumber] !== "undefined" && typeof Tutorial.tour[tutorial.tourNumber][step.index] === "function") {
-        var target = Tutorial.tour[tutorial.tourNumber][step.index](step);
-        if(target) {
-          step.element = target;
-          step.elementChanged = true;
-        }
-      }
+      // Javascript step function defined?
+      // returns the element to be marked
+      tutorial.executeJavascriptStep(step);
 
       var $helper = jQuery(".introjs-helperLayer");
       if(!step.overlay) {
@@ -102,7 +108,19 @@ var tutorials = tutorials || [];
         jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px").css("left", ePos.left + "px");
         jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
       }
+
+      // Last step? No "next step" link
+      if(tutorial.intro._introItems.length - 1 === stepIndex) {
+        jQuery(".introjs-nextbutton").hide();
+      }
     };
+  };
+
+  Tutorial.prototype.onCompleteHandler = function() {
+    // Restore saved rules/workflows
+    loadRules(currentTabId());
+
+    tutorialRunning = false;
   };
 
   Tutorial.prototype.initIntroJs = function() {
@@ -121,6 +139,8 @@ var tutorials = tutorials || [];
 
     intro.onbeforechange(this.onBeforeChangeHandler(this));
     intro.onafterchange(this.onAfterChangeHandler(this));
+    intro.oncomplete(this.onCompleteHandler);
+    intro.onexit(this.onCompleteHandler);
 
     return intro;
   };
@@ -143,6 +163,7 @@ var tutorials = tutorials || [];
     });
   };
 
+  // This extracts all classnames from added or removed DOM nodes
   Tutorial.prototype.mutatedClassNames = function(nodeList) {
     var mutClasses = [];
     var aNodes = [].slice.call(nodeList);
@@ -159,6 +180,7 @@ var tutorials = tutorials || [];
     return mutClasses;
   };
 
+  // This returns n array of text changed by the added DOM nodes
   Tutorial.prototype.mutatedTexts = function(nodeList) {
     var mutTexts = [];
 
@@ -300,6 +322,7 @@ var tutorials = tutorials || [];
         if(tutorial.length === 1) {
           // Start the tutorial
           tutorial[0].execute(tutorial[0]);
+          tutorialNumber = 0;
         }
       }
     });
