@@ -29,7 +29,7 @@ var FormUtil = {
       });
 
       // resolve found shared rules
-      Promise.all(importableRulesPromises).then(function importableRulesPromises(arrayOfRules) {
+      Promise.all(importableRulesPromises).then(function importableRulesPromises2(arrayOfRules) {
         var lookup = {};
         if(arrayOfRules.length > 0) {
           Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
