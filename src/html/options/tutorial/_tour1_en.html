@@ -36,18 +36,11 @@
     </p>
   </div>
 
-  <div class="step" data-position="right" data-trigger="/info[opacity: 1]" data-element=".menu .save">
+  <div class="step" data-position="right" data-trigger="?Rules formatted but not saved" data-element=".menu .save">
     <p>
-      To finish press the "Save" button now then let's go back to the original webpage.
+      To finish press the "Save" button.
     </p>
+    <p>This concludes the tour of the <strong>simple form extraction in Form-O-Fill</strong>.</p>
   </div>
 
 </div>
-<script>
-  window.Tutorial.tour[1] = {
-    4: function(step) {
-      editor.setMarker(2,2);
-      return document.querySelector(".ace_text-layer .ace_line:nth-child(2)");
-    }
-  };
-</script>

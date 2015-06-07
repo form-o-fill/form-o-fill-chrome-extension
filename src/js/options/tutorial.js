@@ -129,6 +129,7 @@ var tutorials = tutorials || [];
     tutorial.startTutorialMode().then(function() {
       tutorial.intro.start();
       tutorialRunning = true;
+      tutorial.observeDomChanges();
     });
   };
 
@@ -140,7 +141,6 @@ var tutorials = tutorials || [];
     jQuery(selector).on("click", function() {
       tutorial.execute(tutorial);
     });
-    this.observeDomChanges();
   };
 
   Tutorial.prototype.mutatedClassNames = function(nodeList) {
@@ -159,17 +159,32 @@ var tutorials = tutorials || [];
     return mutClasses;
   };
 
+  Tutorial.prototype.mutatedTexts = function(nodeList) {
+    var mutTexts = [];
+
+    for(var i = 0; i < nodeList.length; i++) {
+      if(nodeList[i].textContent) {
+        mutTexts.push(nodeList[i].textContent);
+      }
+    }
+    return mutTexts;
+  };
+
   Tutorial.prototype.domObserver = function(tutorial) {
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
     return new MutationObserver(function(mutations) {
       var added = [];
       var removed = [];
       var attrs = [];
+      var contentAdded = [];
 
       mutations.forEach(function (mutation) {
         added = added.concat(tutorial.mutatedClassNames(mutation.addedNodes));
+        contentAdded = contentAdded.concat(tutorial.mutatedTexts(mutation.addedNodes));
         removed = removed.concat(tutorial.mutatedClassNames(mutation.removedNodes));
-        attrs = attrs.concat(mutation.target.style.cssText);
+        if(typeof mutation.target.style !== "undefined") {
+          attrs = attrs.concat(mutation.target.style.cssText);
+        }
       });
 
       /*eslint-disable complexity */
@@ -179,12 +194,14 @@ var tutorials = tutorials || [];
           var triggerCls = step.trigger.substr(1);
 
           if(added.indexOf(triggerCls) !== -1) {
+            // + : element with class is visible
             if(typeToCheck === "+") {
               // Trigger Step
               tutorial.intro.goToStep(step.index + 1);
               return false;
             }
 
+            // - : element with class is invisible
             if(typeToCheck === "-") {
               // Trigger Step
               tutorial.intro.goToStep(step.index + 1);
@@ -192,6 +209,7 @@ var tutorials = tutorials || [];
             }
           }
 
+          // elements style attributes change
           if(typeToCheck === "/") {
             var styleToCheckMatch = triggerCls.match(/^(.*?)\[(.*?)\]/);
             var found = attrs.filter(function (attr) {
@@ -203,6 +221,12 @@ var tutorials = tutorials || [];
               return false;
             }
           }
+
+          // triggers when text gets visible SOMEWHERE ON THE PAGE
+          if(typeToCheck === "?" && contentAdded.indexOf(triggerCls) > -1) {
+            tutorial.intro.goToStep(step.index + 1);
+            return false;
+          }
         }
         /*eslint-enable complexity*/
 
@@ -212,13 +236,24 @@ var tutorials = tutorials || [];
   };
 
   Tutorial.prototype.observeDomChanges = function() {
+    var tutorial = this;
     this.observer = this.domObserver(this);
 
-    this.observer.observe(window.document.querySelector("#notices"), {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["style"]
+    // Observe:
+    // 1. All notices displayed
+    // 2. The info span that displays messages if the user clicks a menu button
+    var observeDomElements = [ "#notices", ".editor .menu span" ].map(function(selector) {
+      return document.querySelector(selector);
+    });
+
+    observeDomElements.forEach(function (observeDomElement) {
+      tutorial.observer.observe(observeDomElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+        attributeFilter: ["style"]
+      });
     });
   };
 
@@ -272,17 +307,24 @@ var tutorials = tutorials || [];
 
   window.Tutorial = Tutorial;
 
-  jQuery(".menu").on("click", "a", function () {
-    if(this.classList.contains("no-click") || !tutorialRunning) {
-      return true;
-    }
+  // Cancel all tutorials
+  var cancelAllTutorials = function() {
     tutorials.forEach(function (tutorial) {
+      // TODO: Attach to DONE event -> restore rules saved in startTutorialMode
       tutorial.intro.exit();
       tutorial.observer.disconnect();
     });
     tutorials = [];
     tutorialRunning = false;
     editor.removeAllMarkers();
+  };
+
+  // If the user clicks on a menu item, cancel all tutorials
+  jQuery(".menu").on("click", "a", function () {
+    if(this.classList.contains("no-click") || !tutorialRunning) {
+      return true;
+    }
+    cancelAllTutorials();
   });
 
 })(jQuery);
@@ -300,3 +342,16 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
 
 // Start a tutorial if set previously
 window.Tutorial.startOnOpen();
+
+// Define javascript trigered steps in tutorials
+// first index is the tour number, second index is the step in which
+// the javascript should be triggered.
+//
+// So this means "in tutorial 1 when step 4 is activated
+// set the editor line marker and select the DOM element returned".
+//window.Tutorial.tour[1] = {
+  //4: function() {
+    //editor.setMarker(2, 2);
+    //return document.querySelector(".ace_text-layer .ace_line:nth-child(2)");
+  //}
+//};
