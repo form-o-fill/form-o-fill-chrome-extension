@@ -49,7 +49,7 @@ var FormExtractor = {
     this.knownElements().forEach(function (selector) {
       Logger.info("[form_extractor.js] Looking for '" + selector + "'");
       $form.find(selector).each(function() {
-        Logger.info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ")");
+        Logger.info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ") <" + this.name + ">");
         var value = extractor._valueFor(this);
         // Only include field if value !== null
         if(value !== null) {
@@ -92,7 +92,7 @@ var FormExtractor = {
   },
   _valueCheckbox: function(domNode) {
     // if checked include the checkbox in the rule
-    return domNode.checked ? true : null;
+    return domNode.checked ? true : false;
   },
   _valueRadio: function(domNode) {
     // if checked include the radiobutton in the rule
