@@ -93,6 +93,11 @@ Editor.prototype.format = function(Rules) {
   this._editor.setValue(Rules.format(this._editor.getValue()), -1);
 };
 
+// redraw the editor
+Editor.prototype.redraw = function() {
+  this._editor.resize();
+};
+
 // resize the editor DOM to a max size
 Editor.prototype.resize = function() {
   var maxEditorHeight = document.querySelector("#ruleeditor").clientHeight - document.querySelector(".tabcontainer").clientHeight - document.querySelector(".menu").clientHeight - document.querySelector("header").clientHeight + 40;
