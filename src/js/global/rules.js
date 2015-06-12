@@ -253,6 +253,46 @@ var Rules = {
         });
       }
     });
+  },
+  //
+  // Imports a dump created by the option pages export functionality
+  // returns a promise that resolves when all rules/Wfs are imported
+  importAll: function(dumpString) {
+    var promises = [];
+    var parsed = JSONF.parse(dumpString);
+
+    // Data contains (in case of combined format):
+    // parsed.workflows
+    // parsed.rules
+    //
+    // In case of old (rules only) format:
+    // parsed.tabSettings
+    // parsed.rules
+
+    // Old format with rules only?
+    // Convert so it can be imported
+    if(typeof parsed.tabSettings !== "undefined") {
+      parsed.rules = {
+        rules: parsed.rules,
+        tabSettings: parsed.tabSettings
+      };
+      parsed.workflows = [];
+    }
+
+    // Save workflows (if any)
+    if(typeof parsed.workflows !== "undefined") {
+      promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
+    }
+
+    // Save the rules in all tabs
+    parsed.rules.rules.forEach(function (editorTabAndRules) {
+      promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
+    });
+    // save tabsetting
+    promises.push(Storage.save(parsed.rules.tabSettings, Utils.keys.tabs));
+
+    // resolve all saving promises
+    return Promise.all(promises);
   }
 };
 

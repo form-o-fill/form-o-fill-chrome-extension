@@ -78,46 +78,13 @@ var importAll = function() {
   $warning.hide();
   var fileToImport = document.getElementById("importall").files[0];
 
-  if (typeof fileToImport === "undefined" || fileToImport.type != "application/json") {
+  if (typeof fileToImport === "undefined" || (fileToImport.type != "application/json" && fileToImport.type != "text/javascript")) {
     $warning.show();
   } else {
     var reader = new FileReader();
     reader.onload = function(e) {
-      var promises = [];
       var parsed = JSONF.parse(e.target.result);
-
-      // Data contains (in case of combined format):
-      // parsed.workflows
-      // parsed.rules
-      //
-      // In case of old (rules only) format:
-      // parsed.tabSettings
-      // parsed.rules
-
-      // Old format with rules only?
-      // Convert so it can be imported
-      if(typeof parsed.tabSettings !== "undefined") {
-        parsed.rules = {
-          rules: parsed.rules,
-          tabSettings: parsed.tabSettings
-        };
-        parsed.workflows = [];
-      }
-
-      // Save workflows (if any)
-      if(typeof parsed.workflows !== "undefined") {
-        promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
-      }
-
-      // Save the rules in all tabs
-      parsed.rules.rules.forEach(function (editorTabAndRules) {
-        promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
-      });
-      // save tabsetting
-      promises.push(Storage.save(parsed.rules.tabSettings, Utils.keys.tabs));
-
-      // resolve all saving promises
-      Promise.all(promises).then(function () {
+      Rules.importAll(e.target.result).then(function() {
         $("#modalimportall").hide();
         loadTabsSettings();
         loadRules(1);
