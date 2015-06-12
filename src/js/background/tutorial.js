@@ -1,3 +1,4 @@
+/*global Rules */
 /*eslint no-undef:0 no-unused-vars:0 */
 
 // Handler for receiving messages from defined
@@ -5,23 +6,25 @@
 // This sets the active tutorial ID
 var activeTutorialNumber = null;
 
+// Handler for request from the tutorial site
 var externalMessageListener = function(request, sender) {
   if(!/tutorial\/tour-[0-9]+\.html$/.test(sender.url)) {
     return;
   }
 
-  // On tutorial site!
+  // Activate a tutorial when the user opens the options
+  // panel
   if(request.action === "activateTutorialOnOpenOptions") {
     // remember active tutorial
     activeTutorialNumber = parseInt(request.message, 10);
+    return;
   }
 
-
-  // request from tutorials site
-  // to import rules
+  // Import Rules and Wfs
   if(request.action === "importDump" && request.message !== "") {
-    // remember active tutorial
-    activeTutorialNumber = parseInt(request.message, 10);
+    // Import the dump
+    Rules.importAll(request.message);
+    return;
   }
 };
 chrome.runtime.onMessageExternal.addListener(externalMessageListener);
