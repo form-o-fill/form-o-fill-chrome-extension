@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -263,6 +263,7 @@ var FormUtil = {
 
     // reload LIBS just in case
     FormUtil.sendLibsReloadToContent(port);
+    Libs.import();
 
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
