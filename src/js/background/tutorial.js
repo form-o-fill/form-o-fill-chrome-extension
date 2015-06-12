@@ -15,6 +15,14 @@ var externalMessageListener = function(request, sender) {
     // remember active tutorial
     activeTutorialNumber = parseInt(request.message, 10);
   }
+
+
+  // request from tutorials site
+  // to import rules
+  if(request.action === "importDump" && request.message !== "") {
+    // remember active tutorial
+    activeTutorialNumber = parseInt(request.message, 10);
+  }
 };
 chrome.runtime.onMessageExternal.addListener(externalMessageListener);
 
