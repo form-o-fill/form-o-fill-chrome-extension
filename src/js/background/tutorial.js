@@ -1,4 +1,4 @@
-/*global Rules */
+/*global Rules lastActiveTab onTabReadyRules */
 /*eslint no-undef:0 no-unused-vars:0 */
 
 // Handler for receiving messages from defined
@@ -24,6 +24,7 @@ var externalMessageListener = function(request, sender) {
   if(request.action === "importDump" && request.message !== "") {
     // Import the dump
     Rules.importAll(request.message);
+    onTabReadyRules(lastActiveTab.id);
     return;
   }
 };
