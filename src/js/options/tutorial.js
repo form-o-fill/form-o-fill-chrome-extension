@@ -1,4 +1,4 @@
-/*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils resetTabSetting editor saveRules loadRules currentTabId Rules*/
+/*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils  editor loadRules currentTabId */
 var tutorials = tutorials || [];
 
 (function tutorialScope(jQuery) {
@@ -146,7 +146,7 @@ var tutorials = tutorials || [];
   };
 
   Tutorial.prototype.execute = function(tutorial) {
-    tutorial.startTutorialMode(tutorial.tourNumber).then(function() {
+    tutorial.startTutorialMode().then(function() {
       tutorial.intro.start();
       tutorialRunning = true;
       tutorial.observeDomChanges();
@@ -283,7 +283,7 @@ var tutorials = tutorials || [];
   // 1. backup existing rules and workflows
   // 2. clear data
   // 3. insert rules stub
-  Tutorial.prototype.startTutorialMode = function(tutorialNumber) {
+  Tutorial.prototype.startTutorialMode = function() {
     return new Promise(function(resolve) {
       // 1. backup data
       Promise.all([exportWorkflowsData(), exportRulesData()]).then(function(workflowsAndRules) {
@@ -292,23 +292,7 @@ var tutorials = tutorials || [];
           rules: workflowsAndRules[1]
         };
 
-        Storage.save(exportJson, Utils.keys.tutorialDataBackup).then(function () {
-          // 2. Clear data
-          resetTabSetting();
-
-          // 3. insert rule stub
-          //    this is defaulted to an empty ruleset but can be overwritten by creating a <textarea class="default-rules"></textarea>
-          var defaultRules = "var rules = [\n];";
-
-          var $defaultRules = jQuery(".tut-tour-" + tutorialNumber + " textarea.default-rules");
-          if($defaultRules.length === 1) {
-            defaultRules = $defaultRules.text();
-          }
-          editor.setValue(defaultRules);
-          editor.format(Rules);
-          saveRules(1);
-          resolve();
-        });
+        Storage.save(exportJson, Utils.keys.tutorialDataBackup).then(resolve);
       });
     });
   };
