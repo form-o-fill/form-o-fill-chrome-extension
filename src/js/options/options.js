@@ -213,6 +213,8 @@ loadRules(currentTabId());
 updateTabStats();
 editor.resize();
 editor.redraw();
+Libs.add("moment", window.moment);
+Libs.add("chance", window.chance);
 
 // Button handling for "save" and "load"
 $(".editor .menu").on("click", "button.save", function () {

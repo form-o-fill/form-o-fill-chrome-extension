@@ -131,10 +131,10 @@ var FormUtil = {
     port.postMessage({"action": "hideWorkingOverlay"});
   },
   injectAndAttachToLibs: function(pathToScript, nameOnLib, nameOnWindow) {
-    Logger.info("[b/form_util.js] Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");");
     return new Promise(function (resolve) {
       chrome.tabs.executeScript(null, {file: pathToScript}, function () {
-        chrome.tabs.executeScript({code: "Libs.add('" + nameOnLib + "', window." + nameOnWindow + "); console.log(Libs." + nameOnLib + ");"}, function () {
+        chrome.tabs.executeScript({code: "Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");"}, function () {
+          Logger.info("[b/form_util.js] Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");");
           resolve(pathToScript);
         });
       });
@@ -175,7 +175,7 @@ var FormUtil = {
   wrapInPromise: function wrapInPromise(func, context) {
     // Utility function to wrap a function in
     // a promise
-    return new Promise(function promise(resolve) {
+    return new Promise(function promise(resolve, reject) {
       try {
         func(resolve, context);
       } catch (e) {
@@ -276,9 +276,16 @@ var FormUtil = {
 
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
+    // Detect vendored libraries in before functions and import them into Libs
+    FormUtil.detectLibraries(JSONF.stringify(rule.before)).forEach(function (libPath) {
+      Logger.info("[b/form_util.js] Assigning " + libPath + " as it is used in the before function");
+      Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
+    });
+
     // import all custom library function and the rules
     var promises = this.generateBeforeFunctionsPromises(rule, context);
 
+    // Resolve all promises
     // call either the default - instantaneously resolving Promise (default) or
     // the array of before functions defined in the rule.
     Promise.all(promises).then(function beforeFunctionsPromise(data) {
@@ -338,8 +345,8 @@ var FormUtil = {
         });
       });
 
-    }).then(null, function error() {
-      //console.error(msg);
+    }).catch(function error(msg) {
+      console.error(msg);
     });
 
     port.onMessage.addListener(function portOnMessageListener(msg) {
