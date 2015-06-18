@@ -362,3 +362,7 @@ text-indent: -26px;
 .unpacked-only {
   margin: 10px 0;
 }
+
+.introjs-overlay.hidden {
+  display: none;
+}

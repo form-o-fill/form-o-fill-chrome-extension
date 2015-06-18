@@ -185,6 +185,7 @@ var loadRules = function(tabId) {
       ruleJson = ruleData.code;
     }
     editor.setValue(ruleJson, -1);
+    editor.editor().clearSelection();
     Utils.infoMsg("Rules loaded from disc");
   });
 };

@@ -60,21 +60,13 @@ var tutorials = tutorials || [];
       } else {
         jQuery(".introjs-overlay").show();
       }
-
-      if(typeof Tutorial.tour[tutorial.tourNumber] !== "undefined" && typeof Tutorial.tour[tutorial.tourNumber][step.index] === "function") {
-        var target = Tutorial.tour[tutorial.tourNumber][step.index](step);
-        if(target) {
-          step.element = target;
-          step.elementChanged = true;
-        }
-      }
     };
     /*eslint-enable complexity */
   };
 
   Tutorial.prototype.executeJavascriptStep = function(step) {
-    if(typeof Tutorial.tour[this.tourNumber] !== "undefined" && typeof Tutorial.tour[this.tourNumber][step.index] === "function") {
-      var target = Tutorial.tour[this.tourNumber][step.index](step);
+    if(typeof Tutorial.tour[this.tourNumber] !== "undefined" && typeof Tutorial.tour[this.tourNumber][step.index + 1] === "function") {
+      var target = Tutorial.tour[this.tourNumber][step.index + 1](step);
       if(target) {
         step.element = target;
         step.elementChanged = true;
@@ -94,19 +86,21 @@ var tutorials = tutorials || [];
       tutorial.executeJavascriptStep(step);
 
       var $helper = jQuery(".introjs-helperLayer");
-      if(!step.overlay) {
-        $helper.hide();
-        jQuery(".introjs-overlay").hide();
-      } else {
-        $helper.show();
-        jQuery(".introjs-overlay").show();
-      }
 
       if(step.elementChanged) {
-        var ePos = jQuery(step.element).offset();
         $helper.css("background-color", "transparent");
-        jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px").css("left", ePos.left + "px");
         jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
+
+        var ePos = jQuery(step.element).offset();
+        jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px"); //.css("left", ePos.left + "px");
+      }
+
+      if(!step.overlay) {
+        $helper.hide();
+        jQuery(".introjs-overlay").addClass("hidden").hide();
+      } else {
+        $helper.show();
+        jQuery(".introjs-overlay").removeCLass("hidden").show();
       }
 
       // Last step? No "next step" link
@@ -308,7 +302,7 @@ var tutorials = tutorials || [];
       // REMOVE END
       if(tutorialNumber > 0) {
         var tutorial = tutorials.filter(function(theTutorial) {
-          return theTutorial.tourNumber == tutorialNumber;
+          return theTutorial.tourNumber === tutorialNumber;
         });
 
         if(tutorial.length === 1) {
@@ -343,7 +337,6 @@ var tutorials = tutorials || [];
 
 })(jQuery);
 
-
 // If the tutorial tours are loaded, initialize the tutorial
 jQuery(document).on("i18n-loaded", function (event, pageName) {
   if(pageName.indexOf("tutorial/_tour") > -1) {
@@ -361,11 +354,12 @@ window.Tutorial.startOnOpen();
 // first index is the tour number, second index is the step in which
 // the javascript should be triggered.
 //
-// So this means "in tutorial 1 when step 4 is activated
-// set the editor line marker and select the DOM element returned".
-//window.Tutorial.tour[1] = {
-  //4: function() {
-    //editor.setMarker(2, 2);
-    //return document.querySelector(".ace_text-layer .ace_line:nth-child(2)");
-  //}
-//};
+// So this means "in tutorial 3 when step 1 is activated
+// set the editor line marker and select the DOM element returned.
+window.Tutorial.tour[3] = {
+  1: function() {
+    // Mark the value function in the editor
+    editor.setMarker(6, 8);
+    return document.querySelector(".ace_text-layer .ace_line:nth-child(6)");
+  }
+};
