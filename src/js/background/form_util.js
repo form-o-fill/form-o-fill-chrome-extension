@@ -175,7 +175,7 @@ var FormUtil = {
   wrapInPromise: function wrapInPromise(func, context) {
     // Utility function to wrap a function in
     // a promise
-    return new Promise(function promise(resolve, reject) {
+    return new Promise(function promise(resolve) {
       try {
         func(resolve, context);
       } catch (e) {
