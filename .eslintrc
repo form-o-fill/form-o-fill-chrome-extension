@@ -19,7 +19,7 @@
     # Rules comming from jshint:
     no-bitwise: 2 # Prohibit bitwise operators (&, |, ^, etc.).
     curly: [2, "all"] # require {} for every new block or scope
-    eqeqeq: "smart" # Require triple equals i.e. '===' and '!==' but allow typesafe '=='
+    eqeqeq: [2, "smart"] # Require triple equals i.e. '===' and '!==' but allow typesafe '=='
     guard-for-in: 2 # Require hasOwnProperty check inside 'for ... in ...'
     wrap-iife: [2, "any"] # Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
     no-use-before-define: 2 # Prohibit variable use before definition
@@ -96,7 +96,7 @@
     no-self-compare: 2 # disallow comparisons where both sides are exactly the same
     no-warning-comments: 0 # allow usage of configurable warning terms in comments: 0 #e.g. TODO or FIXME
     no-with: 2 # disallow use of the with statement
-    yoda: "never" # disallow Yoda conditions
+    yoda: [2, "never"] # disallow Yoda conditions
     radix: 2 #require use of the second argument for parseInt()
     eol-last: 0 # Its ok to have  NL at the end of the file
 
@@ -110,7 +110,7 @@
 
     # Style
     indent: [2, 2] # Indention check
-    brace-style: ["2", "1tbs"] # enforce one true brace style
+    brace-style: [2, "1tbs"] # enforce one true brace style
     camelcase: 2 #require camel case names
     consistent-this: 0 # dont enforces consistent naming when capturing the current execution context (off by default)
     func-names: 0 # dont require function expressions to have a name
