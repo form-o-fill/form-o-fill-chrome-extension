@@ -28,3 +28,7 @@
   padding-top: 1px;
   box-shadow: #aaa 2px 2px;
 }
+
+.introjs-tooltip.step-1 {
+  min-width: 400px
+}

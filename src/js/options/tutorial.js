@@ -27,7 +27,8 @@ var tutorials = tutorials || [];
         buttons: (data.buttons === "false" ? false : true),
         overlay: (data.overlay === "false" ? false : true),
         index: index,
-        elementChanged: false
+        elementChanged: false,
+        markLine: data.markLine
       };
 
       steps.push(step);
@@ -74,6 +75,25 @@ var tutorials = tutorials || [];
     }
   };
 
+  Tutorial.prototype.handleMarkLine = function(step) {
+    var marks = step.markLine.toString().split(",");
+    if(typeof marks[1] == "undefined") {
+      marks[1] = marks[0];
+    }
+    editor.setMarker(parseInt(marks[0], 10), parseInt(marks[1], 10));
+    step.element = document.querySelector(".ace_text-layer .ace_line:nth-child(" + marks[0] + ")");
+    step.elementChanged = true;
+  };
+
+
+  Tutorial.prototype.handleElementChanged = function($helper, step) {
+    $helper.css("background-color", "transparent");
+    jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
+
+    var ePos = jQuery(step.element).offset();
+    jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px");//.css("left", ePos.left + "px");
+  };
+
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
     return function() {
       /*eslint-disable no-underscore-dangle */
@@ -87,12 +107,12 @@ var tutorials = tutorials || [];
 
       var $helper = jQuery(".introjs-helperLayer");
 
-      if(step.elementChanged) {
-        $helper.css("background-color", "transparent");
-        jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
+      if(typeof step.markLine !== "undefined") {
+        tutorial.handleMarkLine(step);
+      }
 
-        var ePos = jQuery(step.element).offset();
-        jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px"); //.css("left", ePos.left + "px");
+      if(step.elementChanged) {
+        tutorial.handleElementChanged($helper, step);
       }
 
       if(!step.overlay) {
@@ -356,10 +376,10 @@ window.Tutorial.startOnOpen();
 //
 // So this means "in tutorial 3 when step 1 is activated
 // set the editor line marker and select the DOM element returned.
-window.Tutorial.tour[3] = {
-  1: function() {
-    // Mark the value function in the editor
-    editor.setMarker(6, 8);
-    return document.querySelector(".ace_text-layer .ace_line:nth-child(6)");
-  }
-};
+//window.Tutorial.tour[3] = {
+  //1: function() {
+    //// Mark the value function in the editor
+    //editor.setMarker(6, 8);
+    //return document.querySelector(".ace_text-layer .ace_line:nth-child(6)");
+  //}
+//};
