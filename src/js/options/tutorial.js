@@ -12,6 +12,19 @@ var tutorials = tutorials || [];
     this.intro = this.initIntroJs();
   };
 
+  // Cancel all tutorials
+  var cancelAllTutorials = function() {
+    tutorials.forEach(function (tutorial) {
+      if(typeof tutorial.observer !== "undefined") {
+        tutorial.observer.disconnect();
+      }
+      tutorial.intro.exit();
+    });
+    tutorials = [];
+    tutorialRunning = false;
+    editor.removeAllMarkers();
+  };
+
   Tutorial.tour = {};
 
   Tutorial.prototype.loadSteps = function(tourNumber) {
@@ -131,6 +144,9 @@ var tutorials = tutorials || [];
   };
 
   Tutorial.prototype.onCompleteHandler = function() {
+    // remove marker
+    cancelAllTutorials();
+
     // Restore saved rules/workflows
     loadRules(currentTabId());
 
@@ -335,17 +351,6 @@ var tutorials = tutorials || [];
   };
 
   window.Tutorial = Tutorial;
-
-  // Cancel all tutorials
-  var cancelAllTutorials = function() {
-    tutorials.forEach(function (tutorial) {
-      tutorial.intro.exit();
-      tutorial.observer.disconnect();
-    });
-    tutorials = [];
-    tutorialRunning = false;
-    editor.removeAllMarkers();
-  };
 
   // If the user clicks on a menu item, cancel all tutorials
   jQuery(".menu").on("click", "a", function () {

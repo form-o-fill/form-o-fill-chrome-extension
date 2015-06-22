@@ -32,3 +32,8 @@
 .introjs-tooltip.step-1 {
   min-width: 400px
 }
+
+.introjs-tooltip code {
+  background-color: #eee;
+  color: #AF2F2F;
+}
