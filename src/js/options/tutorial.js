@@ -338,7 +338,7 @@ var tutorials = tutorials || [];
       // REMOVE END
       if(tutorialNumber > 0) {
         var tutorial = tutorials.filter(function(theTutorial) {
-          return theTutorial.tourNumber === tutorialNumber;
+          return parseInt(theTutorial.tourNumber, 10) === tutorialNumber;
         });
 
         if(tutorial.length === 1) {
@@ -357,6 +357,10 @@ var tutorials = tutorials || [];
     if(this.classList.contains("no-click") || !tutorialRunning) {
       return true;
     }
+
+    // tell bg.js to reset the active tutorial number
+    chrome.runtime.sendMessage({action: "activateTutorialOnOpenOptions", message: 0});
+
     cancelAllTutorials();
   });
 
