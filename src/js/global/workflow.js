@@ -1,4 +1,4 @@
-/* global Storage, Utils, Logger, JSONF */
+/* global Storage, Utils, Logger, JSONF $ */
 /*eslint no-unused-vars:0 */
 var Workflows = {
   load: function() {
@@ -16,7 +16,9 @@ var Workflows = {
     return new Promise(function (resolve) {
       Workflows.load().then(function prFindById(wfs) {
         resolve(wfs.filter(function (wf) {
+          /*eslint-disable eqeqeq*/
           return wf.id == id;
+          /*eslint-enable eqeqeq*/
         })[0]);
       });
     });
@@ -28,7 +30,9 @@ var Workflows = {
   delete: function(workflowId) {
     this.load().then(function(workflows) {
       var newWfs = workflows.filter(function wfFilterDel(wf) {
+        /*eslint-disable eqeqeq*/
         return wf.id != workflowId;
+        /*eslint-enable eqeqeq*/
       });
       Workflows.save(newWfs);
     });
@@ -55,6 +59,17 @@ var Workflows = {
     return new Promise(function (resolve) {
       Storage.load(Utils.keys.lastMatchingWorkflows).then(function (rawMatches) {
         resolve(JSONF.parse(rawMatches));
+      });
+    });
+  },
+  exportDataJson: function() {
+    return new Promise(function (resolve) {
+      Storage.load(Utils.keys.workflows).then(function(workflowData) {
+        workflowData = workflowData.map(function cbWfDataMap(workflow) {
+          workflow.steps = $.makeArray(workflow.steps);
+          return workflow;
+        });
+        resolve(workflowData);
       });
     });
   }

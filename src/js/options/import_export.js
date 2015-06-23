@@ -1,43 +1,10 @@
-/*global Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
+/*global Workflows, Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
 /*eslint no-unused-vars: 0*/
-
-// data of rules
-var exportRulesData = function() {
-  return new Promise(function (resolve) {
-    var promises = [];
-    Storage.load(Utils.keys.tabs).then(function(tabSettings) {
-      tabSettings.forEach(function (setting) {
-        promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
-      });
-
-      Promise.all(promises).then(function(rulesFromAllTabs) {
-        var exportJson = {
-          "tabSettings": tabSettings,
-          "rules": rulesFromAllTabs
-        };
-        resolve(exportJson);
-      });
-    });
-  });
-};
-
-// The workflow data to export
-var exportWorkflowsData = function() {
-  return new Promise(function (resolve) {
-    Storage.load(Utils.keys.workflows).then(function(workflowData) {
-      workflowData = workflowData.map(function cbWfDataMap(workflow) {
-        workflow.steps = $.makeArray(workflow.steps);
-        return workflow;
-      });
-      resolve(workflowData);
-    });
-  });
-};
 
 // Export rules as a newline seperated list of strings
 var exportRulesAsJs = function() {
   var code = "";
-  exportRulesData().then(function(rules) {
+  Rules.exportDataJson().then(function(rules) {
     var jsExport = rules.rules.map(function (codeAndTabId, index) {
       return "//\n// Tab: " + rules.tabSettings[index].name + "\n//\n" + codeAndTabId.code.replace(/\\n/g, "\n") + "\n";
     });
@@ -53,7 +20,7 @@ var exportRulesAsJs = function() {
 
 // Export rules and workflows
 var exportAll = function() {
-  Promise.all([exportWorkflowsData(), exportRulesData()]).then(function(workflowsAndRules) {
+  Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
     var exportJson = {
       workflows: workflowsAndRules[0],
       rules: workflowsAndRules[1]
@@ -78,7 +45,7 @@ var importAll = function() {
   $warning.hide();
   var fileToImport = document.getElementById("importall").files[0];
 
-  if (typeof fileToImport === "undefined" || (fileToImport.type != "application/json" && fileToImport.type != "text/javascript")) {
+  if (typeof fileToImport === "undefined" || (fileToImport.type !== "application/json" && fileToImport.type !== "text/javascript")) {
     $warning.show();
   } else {
     var reader = new FileReader();

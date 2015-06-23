@@ -34,7 +34,7 @@ var Rules = {
     return new Promise(function (resolve) {
       rules.all().then(function(rulez) {
         var matchingRules = rulez.filter(function (rule) {
-          return typeof rule.name !== "undefined" && target == rule.name;
+          return typeof rule.name !== "undefined" && target === rule.name;
         });
         resolve(matchingRules[0]);
       });
@@ -168,7 +168,7 @@ var Rules = {
       var foundReservedNs = libMatches.map(function (matchStr) {
         return matchStr.match(/:\s*['"](.*?)['"]/)[1];
       }).filter(function (matchStr) {
-        return Utils.reservedLibNamespaces.indexOf(matchStr) != -1;
+        return Utils.reservedLibNamespaces.indexOf(matchStr) !== -1;
       });
 
       if(foundReservedNs.length > 0) {
@@ -259,7 +259,13 @@ var Rules = {
   // returns a promise that resolves when all rules/Wfs are imported
   importAll: function(dumpString) {
     var promises = [];
-    var parsed = JSONF.parse(dumpString);
+    var parsed;
+
+    if(typeof dumpString === "object") {
+      parsed = dumpString;
+    } else {
+      parsed = JSONF.parse(dumpString);
+    }
 
     // Data contains (in case of combined format):
     // parsed.workflows
@@ -293,6 +299,24 @@ var Rules = {
 
     // resolve all saving promises
     return Promise.all(promises);
+  },
+  exportDataJson: function() {
+    return new Promise(function (resolve) {
+      var promises = [];
+      Storage.load(Utils.keys.tabs).then(function(tabSettings) {
+        tabSettings.forEach(function (setting) {
+          promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
+        });
+
+        Promise.all(promises).then(function(rulesFromAllTabs) {
+          var exportJson = {
+            "tabSettings": tabSettings,
+            "rules": rulesFromAllTabs
+          };
+          resolve(exportJson);
+        });
+      });
+    });
   }
 };
 
