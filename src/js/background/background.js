@@ -44,12 +44,13 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
 // When the user changes a tab, search for matching rules for that url
 // or matching rules for that content
 var onTabReadyRules = function(tabId) {
+  lastMatchingRules = [];
+
   // Clear popup HTML
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
   Logger.info("[bg.js] onTabReadyRules on Tab " + tabId);
 
   chrome.tabs.get(tabId, function (tab) {
-    lastMatchingRules = [];
 
     // return if the tab isn't active anymore
     if (!tab.active || tab.url.indexOf("chrome") > -1) {

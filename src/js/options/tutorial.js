@@ -1,4 +1,4 @@
-/*global jQuery introJs window exportWorkflowsData exportRulesData Storage Utils Rules editor loadRules currentTabId */
+/*global jQuery introJs window editor loadRules currentTabId */
 var tutorials = tutorials || [];
 
 (function tutorialScope(jQuery) {
@@ -17,9 +17,10 @@ var tutorials = tutorials || [];
     tutorials.forEach(function (tutorial) {
       if(typeof tutorial.observer !== "undefined") {
         tutorial.observer.disconnect();
+        tutorial.intro.exit();
       }
-      tutorial.intro.exit();
     });
+    Tutorial.endTutorialMode();
     tutorials = [];
     tutorialRunning = false;
     editor.removeAllMarkers();
@@ -143,17 +144,12 @@ var tutorials = tutorials || [];
     };
   };
 
-  Tutorial.prototype.onCompleteHandler = function(tutorial) {
-    return function() {
-      // remove marker
-      cancelAllTutorials();
+  Tutorial.prototype.onCompleteHandler = function() {
+    // remove marker
+    cancelAllTutorials();
 
-      // Restore saved rules/workflows
-      tutorial.endTutorialMode().then(function () {
-        loadRules(currentTabId());
-        tutorialRunning = false;
-      });
-    };
+    // Restore saved rules/workflows
+    Tutorial.endTutorialMode();
   };
 
   Tutorial.prototype.initIntroJs = function() {
@@ -170,22 +166,18 @@ var tutorials = tutorials || [];
       exitOnOverlayClick: false
     });
 
-    var onCompleteHandler = this.onCompleteHandler(this);
-
     intro.onbeforechange(this.onBeforeChangeHandler(this));
     intro.onafterchange(this.onAfterChangeHandler(this));
-    intro.oncomplete(onCompleteHandler);
-    intro.onexit(onCompleteHandler);
+    intro.oncomplete(this.onCompleteHandler);
+    intro.onexit(this.onCompleteHandler);
 
     return intro;
   };
 
   Tutorial.prototype.execute = function(tutorial) {
-    tutorial.startTutorialMode().then(function() {
-      tutorial.intro.start();
-      tutorialRunning = true;
-      tutorial.observeDomChanges();
-    });
+    tutorial.intro.start();
+    tutorialRunning = true;
+    tutorial.observeDomChanges();
   };
 
   Tutorial.prototype.start = function() {
@@ -314,29 +306,10 @@ var tutorials = tutorials || [];
     });
   };
 
-  // This method activates the tutorial mode:
-  // 1. backup existing rules and workflows
-  // 2. clear data
-  // 3. insert rules stub
-  Tutorial.prototype.startTutorialMode = function() {
-    return new Promise(function(resolve) {
-      // 1. backup data
-      Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
-        var exportJson = {
-          workflows: workflowsAndRules[0],
-          rules: workflowsAndRules[1]
-        };
-
-        Storage.save(exportJson, Utils.keys.tutorialDataBackup).then(resolve);
-      });
-    });
-  };
-
   // restore backup data stored before the tutorials started
-  Tutorial.prototype.endTutorialMode = function() {
-    return Storage.load(Utils.keys.tutorialDataBackup).then(function(dump) {
-      Rules.importAll(dump);
-      chrome.runtime.sendMessage({action: "resetTutorialState"});
+  Tutorial.endTutorialMode = function() {
+    chrome.runtime.sendMessage({action: "resetTutorialState"}, function() {
+      window.location.reload();
     });
   };
 
