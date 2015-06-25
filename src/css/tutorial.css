@@ -29,7 +29,7 @@
   box-shadow: #aaa 2px 2px;
 }
 
-.introjs-tooltip.step-1 {
+.introjs-tooltip[data-width=xl] {
   min-width: 400px
 }
 

@@ -1,4 +1,4 @@
-/*global jQuery introJs window editor loadRules currentTabId */
+/*global jQuery introJs window editor Rules loadRules updateTabStats */
 var tutorials = tutorials || [];
 
 (function tutorialScope(jQuery) {
@@ -41,8 +41,10 @@ var tutorials = tutorials || [];
         buttons: (data.buttons === "false" ? false : true),
         overlay: (data.overlay === "false" ? false : true),
         index: index,
+        width: data.width,
         elementChanged: false,
-        markLine: data.markLine
+        markLine: data.markLine,
+        importRules: data.importRules
       };
 
       steps.push(step);
@@ -62,6 +64,15 @@ var tutorials = tutorials || [];
       step.tooltipClass = "step-" + stepIndex;
       step.position = tutorial.steps[stepIndex].position || "bottom";
 
+      if(typeof step.importRules !== "undefined") {
+        var importDump = document.querySelector(step.importRules).textContent;
+        Rules.importAll(importDump).then(function() {
+          loadRules(1);
+          updateTabStats();
+          editor.redraw();
+        });
+      }
+
       if(!step.buttons) {
         jQuery(".introjs-tooltipbuttons").hide();
         jQuery(".introjs-tooltipReferenceLayer").hide();
@@ -75,6 +86,8 @@ var tutorials = tutorials || [];
       } else {
         jQuery(".introjs-overlay").show();
       }
+
+
     };
     /*eslint-enable complexity */
   };
@@ -94,11 +107,14 @@ var tutorials = tutorials || [];
     if(typeof marks[1] == "undefined") {
       marks[1] = marks[0];
     }
-    editor.setMarker(parseInt(marks[0], 10), parseInt(marks[1], 10));
-    step.element = document.querySelector(".ace_text-layer .ace_line:nth-child(" + marks[0] + ")");
-    step.elementChanged = true;
+    if(marks[0] === "0") {
+      editor.removeAllMarkers();
+    } else {
+      editor.setMarker(parseInt(marks[0], 10), parseInt(marks[1], 10));
+      step.element = document.querySelector(".ace_text-layer .ace_line:nth-child(" + marks[0] + ")");
+      step.elementChanged = true;
+    }
   };
-
 
   Tutorial.prototype.handleElementChanged = function($helper, step) {
     $helper.css("background-color", "transparent");
@@ -110,6 +126,8 @@ var tutorials = tutorials || [];
 
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
     return function() {
+      jQuery(".introjs-tooltip").attr("data-width", "");
+
       /*eslint-disable no-underscore-dangle */
       var stepIndex = tutorial.intro._currentStep;
       var step = tutorial.intro._introItems[stepIndex];
@@ -140,6 +158,10 @@ var tutorials = tutorials || [];
       // Last step? No "next step" link
       if(tutorial.intro._introItems.length - 1 === stepIndex) {
         jQuery(".introjs-nextbutton").hide();
+      }
+
+      if(typeof step.width !== "undefined") {
+        jQuery(".introjs-tooltip").attr("data-width", step.width);
       }
     };
   };

@@ -1,4 +1,21 @@
 <div class="tuts tut-tour-4">
+  <textarea class="rulesToImport" id="tour4-r1">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Rules Tour 4"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-4\\.html/,\n  \"name\": \"Tour 4 : Before function 101 (using JSON)\",\n  \"before\": function(resolve, context) {\n    // The URL will return { \"setByJson\": \"I was set by an JSON\" }\n    jQuery.getJSON(\"https://form-o-fill.github.io/tutorial/tour4.json\").done(resolve);\n  },\n  \"fields\": [{\n    \"selector\": \"input[name='text']\",\n    \"value\": function($e, data) {\n      return data.setByJson;\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+  }</textarea>
 
   <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="4,9">
     <p>
@@ -11,10 +28,10 @@
       All before functions receive two parameters.
     </p>
     <p>
-      The first is a <strong>callback function</strong> that you will need to call once you're done preparing data.
+      The first is a <i>callback function</i> that you will need to call once you're done preparing data.
     </p>
     <p>
-      The second is the <strong>context</strong> object. It contains many useful functions. This will be a topic of a later tutorial.
+      The second is the <i>context</i> object. It contains many useful functions. This will be a topic of a later tutorial.
     </p>
   </div>
 
@@ -26,22 +43,65 @@
 
   <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="8">
     <p>
-      This line containing the call to <code>resolve()</code> it the key point of before functions.
+      This line containing the call to <code>resolve()</code> and is the most important point of before functions.
     </p>
     <p>
-      You <strong>must</strong> call this function once you have prepared your data.
+      You <i>must</i> call this function once you have prepared your data.
     </p>
   </div>
 
   <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="12,14">
     <p>
-      The <code>data</code> passed as the parameter to <code>resolve</code> will be available in value functions.
+      The <code>data</code> passed as the parameter to <code>resolve</code> will be available as the second parameter to value functions (eg. <code>data</code>).
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="0">
+    <p>
+      That concludes the first part of Tour 4.
+    </p>
+    <p>
+      Carry on if you want to learn how to populate the <code>data</code> by using JSON stored on another server.
     </p>
   </div>
 
   <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false">
     <p>
-      That concludes tour 4 of the Form-O-Fill tutorials. Thanks for taking the time.
+      Still here? Good.
+    </p>
+    <p>
+      To request data from somewhere it should be in JSON format. That's the easiest to use.
+    </p>
+    <p>
+      Use <code>jQuery.getJSON("YOUR-URL").done(resolve)</code> to fetch the data and send it to value functions.
+    </p>
+    <p>
+      The <code>done(resolve)</code> part will automatically make all JSON returned from the target URL available.
+    </p>
+    <p>
+      Let's try that out.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="top" data-overlay="false" data-import-rules="#tour4-r1" data-mark-line="6">
+    <p>
+      I imported a rule that is using jQuery to fetch data from a URL.
+    </p>
+    <p>
+      The <code>done(resolve)</code> makes it available in the value function ...
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="11">
+    <p>
+      ... which is used here.
+    </p>
+    <p>
+      You can do much more inside before functions: Transform data, collect and combine multiple JSON files or ask for user input.
+      But that are topics for another tutorial.
+    </p>
+    <p>
+      Thanks!
     </p>
   </div>
 
