@@ -1,0 +1,10 @@
+{
+  "libs": [
+    "browser",
+    "jquery",
+    "ecma5"
+  ],
+  "loadEagerly": [
+    "src/js/**/*.js"
+  ]
+}
