@@ -1,0 +1,73 @@
+<div class="tuts tut-tour-5">
+
+  <textarea id="tour5-r1" class="rulesToImport">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Rules Tour 5"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-5\\.html/,\n  \"name\": \"Tour 5 : Using build.in libraries (moment.js)\",\n  \"fields\": [{\n    \"selector\": \"input[name='date']\",\n    \"value\": function($e, data) {\n      return Libs.moment().add(7, \"days\").format(\"YYYY-MM-DD\");\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="6,10">
+    <p>
+      To use the build-in libraries you need to use a value function (see tour 3) for the <code>"value"</code> entry.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="8">
+    <p>
+      Here we read in the current value of the <code>input</code> field. We do that because we want to append to the current value.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="9">
+  <p>
+    Here you see the call to <i>change.js</i>
+    </p>
+    <p>
+      All libraries are available under the <code>Libs</code> namespace.
+    </p>
+    <p>
+      This call to <code>chance.name()</code> returns a new random name.
+    </p>
+    <p>
+      By returning the current plus the random value we tell Form-O-Fill to fill the <code>input</code> field with that combination.
+    </p>
+    <p>
+      All available methods callable on <code>Lib.chance</code> are documented on the <a href="http://chancejs.com/#basics" target="_blank">chance.js site (opens in a new tab)</a>.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="0">
+    Next let's look at what <i>moment.js</i> has to offer.
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-import-rules="#tour5-r1" data-position="top" data-overlay="false" data-mark-line="7">
+    <p>
+      Here we return the current date plus seven days and fill the <code>input type=date</code> field with it.
+    </p>
+    <p>
+      As with <i>chance.js</i> the methods that <i>moment.js</i> has to offer <a href="http://momentjs.com/docs/#/parsing/" target="_blank">are documented on their site</a>.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="0">
+    <p>
+      There is more to libraries in Form-O-Fill. You can even define your own libraries to make common functions available in multiple rules.
+    </p>
+    <p>
+      That will be the topic of another tutorial. Until then, have fun!
+    </p>
+  </div>
+
+</div>
