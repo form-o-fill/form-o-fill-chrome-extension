@@ -1,5 +1,5 @@
 /*global Logger Utils lastActiveTab JSONF Rules Storage Workflows */
-/*eslint no-unused-vars: [2, "Testing"] */
+/*eslint no-unused-vars: 0 */
 
 var Testing = {
   setVar: function(key, value, textToDisplay) {

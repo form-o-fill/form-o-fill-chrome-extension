@@ -42,7 +42,9 @@ var createWorkflow = function () {
 // Find a single error
 var findError = function(wfId, stepName) {
   var err = wfErrors.filter(function (error) {
+    /*eslint-disable eqeqeq */
     return error.wfId == wfId && stepName == error.missingStepName;
+    /*eslint-enable eqeqeq */
   });
   return err[0];
 };
@@ -155,8 +157,10 @@ var loadWorkflows = function(selectedWfId) {
       jQuery("#workfloweditor").hide();
     } else {
       optionHtml = optionHtml.concat(rawWorkflows.map(function optionHtmlMap(wfData) {
+        /*eslint-disable eqeqeq */
         selected = wfData.id == selectedWfId ? "selected" : "";
         return "<option " + selected + " data-workflow-id='" + wfData.id + "'>" + wfData.name + " (#" + wfData.id + ")</option>";
+        /*eslint-enable eqeqeq */
       }));
     }
     $wfSelect.html(optionHtml.join());
@@ -261,7 +265,9 @@ var deleteWorkflow = function() {
 
   // remove selected workflow from array
   workflows = workflows.filter(function delWfFilter(wf) {
+    /*eslint-disable eqeqeq */
     return currentWfId != wf.id;
+    /*eslint-enable eqeqeq */
   });
 
   if(workflows.length > 0) {

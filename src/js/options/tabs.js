@@ -80,7 +80,9 @@ jQuery(function () {
     var $this = jQuery(this);
     var tabId = $this.data("tab-id");
 
+    /*eslint-disable eqeqeq */
     if ($current.data("tab-id") == tabId) {
+      /*eslint-enable eqeqeq */
       Logger.debug("[tabs.js] Click on tab triggered EDIT mode");
       $this.find("input").removeAttr("disabled").trigger("focus");
       $this.find("a").addClass("edit").removeClass("cmd-tabs-close");
@@ -113,7 +115,7 @@ jQuery(function () {
       Logger.info("[tabs.js] Edit mode canceled by pressing ESC");
       jQuery(".tab a.edit").removeClass("edit");
       loadTabsSettings();
-    } else if(e.which == 13) {
+    } else if(e.which === 13) {
       Logger.info("[tabs.js] Edit mode ended by pressing ENTER");
       jQuery(".tab a.edit").removeClass("edit");
       saveTabsSetting();

@@ -125,6 +125,7 @@ var tutorials = tutorials || [];
   };
 
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
+    /*eslint-disable complexity*/
     return function() {
       jQuery(".introjs-tooltip").attr("data-width", "");
 
@@ -164,6 +165,7 @@ var tutorials = tutorials || [];
         jQuery(".introjs-tooltip").attr("data-width", step.width);
       }
     };
+    /*eslint-enable complexity*/
   };
 
   Tutorial.prototype.onCompleteHandler = function() {

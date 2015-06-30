@@ -15,7 +15,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
-  if(port.name != "FormOFill") {
+  if(port.name !== "FormOFill") {
     return;
   }
 
