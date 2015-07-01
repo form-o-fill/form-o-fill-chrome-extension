@@ -33,7 +33,7 @@
     "sinon": "^1.10.3",
     "sinon-chai": "^2.6.0",
     "through2": "^2.0.0",
-    "webdriverio": "^3.0.0",
+    "webdriverio": "^2.3.0",
     "yargs": "^3.14.0"
   },
   "scripts": {
