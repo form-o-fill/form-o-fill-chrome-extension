@@ -15,8 +15,12 @@ var Changelog = {
       title: "FoF updated: Unified export/import!",
       message: "Unified export/import for rules & workflows. See changelog!",
       target: "#changelog"
+    },
+    "2.3.0": {
+      title: "FoF updated: Live tutorials!",
+      message: "Learn the features of FoF with the live tutorials. Seee options.",
+      target: "#tutorials"
     }
-
   },
   findForVersion: function(version) {
     if(typeof this.changes[version] !== "undefined") {
