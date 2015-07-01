@@ -16,7 +16,7 @@
     "gulp-cleanhtml": "^0.1.0",
     "gulp-concat": "^2.4.1",
     "gulp-debug": "^2.0.1",
-    "gulp-eslint": "^0.14.0",
+    "gulp-eslint": "^0.15.0",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-minify-css": "^1.2.0",
     "gulp-replace-task": "^0.2.1",
@@ -33,7 +33,7 @@
     "sinon": "^1.10.3",
     "sinon-chai": "^2.6.0",
     "through2": "^2.0.0",
-    "webdriverio": "^2.3.0",
+    "webdriverio": "^2.4.5",
     "yargs": "^3.14.0"
   },
   "scripts": {
