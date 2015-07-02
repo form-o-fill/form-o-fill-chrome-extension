@@ -18,7 +18,7 @@ var Changelog = {
     },
     "2.3.0": {
       title: "FoF updated: Live tutorials!",
-      message: "Learn the features of FoF with the live tutorials. Seee options.",
+      message: "Learn the features of FoF with the live tutorials. See options.",
       target: "#tutorials"
     }
   },
