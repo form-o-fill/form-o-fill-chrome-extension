@@ -18,6 +18,8 @@ var stripdebug = require('gulp-strip-debug');
 var uglify = require('gulp-uglify');
 var zip = require('gulp-zip');
 var argv = require('yargs').argv;
+var webdriver = require('gulp-webdriver');
+var connect = require('gulp-connect');
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -253,6 +255,22 @@ gulp.task('watch', function () {
   gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
 
+// Starts a simple webserver
+gulp.task('webserver:start', function() {
+  connect.server({
+    root: "testcases/docroot-for-testing",
+    livereload: false,
+    port: 9292
+  });
+});
+
+// Kills the server
+gulp.task('webserver:stop', connect.serverClose);
+
+gulp.task("integration", [ "webserver:start", "integration:run" ], function() {
+  connect.serverClose();
+});
+
 // Integration testing (end-to-end)
 // Uses webdriverio as an abstraction layer over chromedriver
 //
@@ -261,7 +279,7 @@ gulp.task('watch', function () {
 //
 // Specify a single spec with
 // gulp integration --grep "a\sregex"
-gulp.task('integration', function () {
+gulp.task('integration:run', [ "webserver:start" ], function () {
 
   var specs = [
     "./test/integration/test_setup_scene.js",
@@ -291,13 +309,9 @@ gulp.task('integration', function () {
   }
 
   return gulp.src(specs, {read: false})
-  .pipe(mocha(mochaOpts))
-  .on('error', function (err) {
-    console.error(err);
-  })
-  .on('end', function() {
-    browser.endAll();
-  });
+  .pipe(webdriver({desiredCapabilities: {
+    browserName: "chrome"
+  }}));
 });
 
 // running "gulp" will execute this

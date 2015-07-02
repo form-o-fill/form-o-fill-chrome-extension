@@ -32,8 +32,9 @@ describe("the form extraction", function() {
     .click(".extension-options-url a")
     .pause(global.pause)
     .click("a.cmd-append-extracted")
+    .pause(global.pause)
     .execute(function () {
-        return editor.getValue();
+      return editor.getValue();
     }, function (err, ret) {
       var fail = function(expected, actual) {
         expect(JSON.stringify(expected)).to.eql(JSON.stringify(actual));
@@ -64,7 +65,6 @@ describe("the form extraction", function() {
       fail({ selector: 'textarea[name=\'textarea\']', value: 'textarea' }, rule.fields[18]);
       fail({ selector: 'select[name=\'select\']', value: 'option2' }, rule.fields[19]);
       fail({ selector: 'select[name=\'selectmultiple\']', "value": ["multiple1", "multiple2"]}, rule.fields[20]);
-      fail(false, rule.autorun);
     })
     .close()
     .call(done);

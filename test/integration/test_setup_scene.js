@@ -47,15 +47,15 @@ describe("test setup", function() {
     });
 
     page.getText(".browser-action-badge-text", function (err, text) {
-      expect(text).to.eql("8");
+      expect(text).to.eql("10");
     });
 
     page.getText(".matching-rules-count", function (err, text) {
-      expect(text).to.eql("8");
+      expect(text).to.eql("10");
     });
 
     page.getHTML(".popup-html", function (err, text) {
-      expect(text).to.match(/<h3>Found 8 matches<\/h3>/);
+      expect(text).to.match(/<h3>Found 10 matches<\/h3>/);
     });
 
     page.call(done);
