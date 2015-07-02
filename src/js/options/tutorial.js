@@ -266,20 +266,18 @@ var tutorials = tutorials || [];
           var typeToCheck = step.trigger[0];
           var triggerCls = step.trigger.substr(1);
 
-          if(added.indexOf(triggerCls) !== -1) {
-            // + : element with class is visible
-            if(typeToCheck === "+") {
-              // Trigger Step
-              tutorial.intro.goToStep(step.index + 1);
-              return false;
-            }
+          // + : element with class is visible
+          if(added.indexOf(triggerCls) !== -1 && typeToCheck === "+") {
+            // Trigger Step
+            tutorial.intro.goToStep(step.index + 1);
+            return false;
+          }
 
-            // - : element with class is invisible
-            if(typeToCheck === "-") {
-              // Trigger Step
-              tutorial.intro.goToStep(step.index + 1);
-              return false;
-            }
+          // - : element with class is invisible
+          if(removed.indexOf(triggerCls) !== -1 && typeToCheck === "-") {
+            // Trigger Step
+            tutorial.intro.goToStep(step.index + 1);
+            return false;
           }
 
           // elements style attributes change
