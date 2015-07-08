@@ -4,7 +4,6 @@
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).
 // This sets the active tutorial ID
-var activeTutorialNumber = null;
 var didBackup = false;
 
 var Tutorial = Tutorial || {};
@@ -16,9 +15,18 @@ Tutorial.isValidMessageSourceForTutorial = function (msgSender) {
   return false;
 };
 
+Tutorial.setActiveTutorial = function(tutorianNumber) {
+  window.sessionStorage.setItem("activeTutorialNumber", tutorianNumber);
+};
+
+Tutorial.getActiveTutorial = function() {
+  return parseInt(window.sessionStorage.getItem("activeTutorialNumber"), 10);
+};
+
 Tutorial.activateTutorialOnOpenOptionsHandler = function(request) {
   // remember active tutorial
-  activeTutorialNumber = parseInt(request.message, 10);
+  var activeTutorialNumber = parseInt(request.message, 10);
+  Tutorial.setActiveTutorial(activeTutorialNumber);
   Logger.info("[bg/tutorial.js] Setting activeTutorialNumber = " + activeTutorialNumber);
 };
 
@@ -84,14 +92,14 @@ chrome.runtime.onMessage.addListener(tutorialMessagesListener);
 var internalMessageListener = function(message, sender, responseCb) {
   // Send active tutorial number to options.js
   if(message.action === "getTutorialOnOpenOptions") {
-    responseCb(activeTutorialNumber || 0);
+    responseCb(Tutorial.getActiveTutorial() || 0);
   }
 
   // Reset state
   if(message.action === "resetTutorialState") {
     Tutorial.restoreBackedUpRulesHandler();
     didBackup = false;
-    activeTutorialNumber = 0;
+    Tutorial.setActiveTutorial(0);
     responseCb();
   }
 };
