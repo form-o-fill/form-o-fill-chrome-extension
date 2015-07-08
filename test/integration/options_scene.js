@@ -8,7 +8,7 @@ describe("the options panel", function () {
     .click(".extension-options-url a")
     .pause(global.pause)
     .getValue("li.tab.current input", function (err, text) {
-      expect(text).to.eq("dummy");
+      expect(text).to.eql(["dummy", "Workflows"]);
     })
     .isVisible("li.tab.more", function (err, isVisible) {
       // "More" tab
@@ -28,12 +28,6 @@ describe("the options panel", function () {
     .isVisible(".menu button.format", function (err, isVisible) {
       expect(isVisible).to.eq(true);
     })
-    .isVisible(".menu button.export", function (err, isVisible) {
-      expect(isVisible).to.eq(true);
-    })
-    .isVisible(".menu button.import", function (err, isVisible) {
-      expect(isVisible).to.eq(true);
-    })
     .getElementSize("#ruleeditor-ace", function (err, size) {
       // Editor window
       expect(size.height).to.be.above(200);
@@ -41,7 +35,7 @@ describe("the options panel", function () {
     })
     .getText(".navigation .menu li", function (err, text) {
       // Navigation links
-      expect(text).to.eql(["Rule Editor", "Help", "About", "Changelog", "Logs"]);
+      expect(text).to.eql(["Rule Editor", "Workflows", "Import / Export", "Help", "Tutorials", "About", "Changelog", "unpacked only:", "Logs", "Start Tour 1", "Start Tour 3", "Start Tour 4", "Start Tour 5"]);
     })
     .close()
     .call(done);

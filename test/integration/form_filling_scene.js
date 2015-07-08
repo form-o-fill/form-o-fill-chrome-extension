@@ -34,7 +34,7 @@ describe("the form filling", function() {
     });
 
     it("works for a rule that uses the ENV in a before function", function (done) {
-      importAndExecute("Using the ENV in a before function", 'Hello ENV: {"url":{"url":"http://localhost:9292/form-o-fill-testing/simple.html","protocol":"http:","host":"localhost","port":"9292","path":"/form-o-fill-testing/simple.html","query":"","hash":""}}', done);
+      importAndExecute("Using the ENV in a before function", 'Hello ENV: {"url":{"url":"http://localhost:9292/form-o-fill-testing/simple.html","protocol":"http:","host":"localhost","port":"9292","path":"/form-o-fill-testing/simple.html","query":"","hash":""},"storage":{"base":{}}}', done);
     });
 
   });

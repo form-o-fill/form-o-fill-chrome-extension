@@ -7,7 +7,7 @@ describe("the popup HTML", function() {
     it("contains selectable <li> elements", function(done){
       Tests.visit("simple")
       .getTagName(".popup-html li.select-rule", function (err, tagNames) {
-        expect(tagNames.length).to.eql(8);
+        expect(tagNames.length).to.eql(10);
       })
       .call(done);
     });

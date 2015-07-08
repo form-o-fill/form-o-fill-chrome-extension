@@ -6,6 +6,8 @@ describe("the form extraction", function() {
 
   it("shows the extraction overlay", function(done) {
     Tests.visit("form-extraction")
+    .refresh() // need to refresh here ... ?!
+    .pause(global.pause)
     .click(".popup-html a.cmd-show-extract-overlay")
     .isVisible("div.form-o-fill-overlay-form", function (err, isVisible) {
       expect(isVisible).to.be_true;
