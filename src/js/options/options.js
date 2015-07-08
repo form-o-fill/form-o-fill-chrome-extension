@@ -36,13 +36,13 @@ var currentTabId = function() {
 // TODO: use a promise here
 var appendRule = function(prettyRule, responseCallback) {
   // Use
-  Rules.load().then(function(rulesFunction) {
-    var lines = [];
-    if(rulesFunction.length > 0) {
-      lines.push(",");
-    }
-    lines = lines.concat(prettyRule.split("\n"));
-    editor.document().insertLines(editor.document().getLength() - 1, lines);
+  Rules.load(currentTabId()).then(function(arrayOfRules) {
+    var rule = Rule.create(JSONF.parse(prettyRule), currentTabId(), arrayOfRules.length + 1);
+    arrayOfRules.push(rule);
+    var formattedRules = arrayOfRules.map(function (singleRule) {
+      return singleRule.prettyPrint();
+    });
+    editor.session().setValue(Rules.format("var rules = [ " + formattedRules.join(",") + "];"), -1);
 
     // Prettify code a little
     editor.session().setValue(Rules.format(editor.session().getValue()), -1);
