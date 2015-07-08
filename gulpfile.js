@@ -190,7 +190,7 @@ gulp.task('contentJs', ['clean'], function () {
 
 // Build options.js
 gulp.task('optionsJs', ['clean'], function () {
-  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js", "!src/js/options/tutorial.js"], { nonegate: false })
+  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"], { nonegate: false })
   .pipe(replace(replaceOpts))
   .pipe(concat('options.js'))
   .pipe(stripdebug())
