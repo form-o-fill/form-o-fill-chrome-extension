@@ -2,7 +2,7 @@
 
 // Create HTML overlays for form masking
 var getOverlays = function getOverlays() {
-  var overlays = ["<div class='form-o-fill-overlay-cover'></div>"];
+  var overlays = [];
   jQuery("form").each(function formEach(index) {
     var $form = jQuery(this);
 
@@ -26,7 +26,7 @@ var cleanupOverlays = function cleanupOverlays() {
   jQuery("form").each(function formEach() {
     jQuery(this).removeAttr("form-o-fill-id");
   });
-  jQuery(".form-o-fill-overlay-form, .form-o-fill-overlay-cover").remove();
+  jQuery(".form-o-fill-overlay-form").remove();
   jQuery(document).off("click", ".form-o-fill-overlay-form").off("click", "body");
 };
 
