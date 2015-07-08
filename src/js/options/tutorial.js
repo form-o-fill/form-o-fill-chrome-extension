@@ -153,7 +153,7 @@ var tutorials = tutorials || [];
         jQuery(".introjs-overlay").addClass("hidden").hide();
       } else {
         $helper.show();
-        jQuery(".introjs-overlay").removeCLass("hidden").show();
+        jQuery(".introjs-overlay").removeClass("hidden").show();
       }
 
       // Last step? No "next step" link
