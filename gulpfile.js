@@ -141,7 +141,7 @@ gulp.task('lint', function () {
 
 // Optimize CSS
 gulp.task('css', ['clean'], function () {
-  return gulp.src(["src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
+  return gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
   .pipe(replace(replaceOpts))
   .pipe(concat('formofill.css'))
   .pipe(minifyCSS())
