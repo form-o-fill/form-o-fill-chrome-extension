@@ -1,8 +1,6 @@
-Developers like working on cool apps but every once in a while THE FORM™ comes along to suck all fun out of the developers life.
+FORM-O-FILL is a advanced highly programmable form-filler.
 
-Working on such form entry processes is in itself usually not fun but filling out a form for test purposes again and again is even worse.
-
-FORM-O-FILL is there to ease that pain.
+It provides form content extraction, one-click form filling, advanced multi-page workflows and more.
 
 Features:
 ✓ Extract already entered forms to auto-create the rule definition with the click of a button (or two).
@@ -11,22 +9,26 @@ Features:
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
 ✓ Use before functions to fetch, generate and store data that can then be used in value functions.
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
-✓ One click apply of a matching rule or even auto apply the rule
-✓ Two click apply when there are multiple matching rules.
-✓ Auto apply configurable for each rule
-✓ Reuse rules inside other rules (shared rules)
+✓ Use workflows to create multi page rules.
+✓ One click apply of a matching rule or even auto apply the rule.
+✓ Two click apply when there are multiple matching rules or workflows.
+✓ "Automatic execution" configurable for each rule.
+✓ Reuse rules inside other rules (shared rules).
 ✓ Browser notifications to show you what happened.
-✓ Use workflows to create multi page rules
 
 Requires:
 Chrome 33+
 
 Permissions requested:
-- Read all open tabs (Used for finding the tab to fill a form in)
-- Read all http/https URLs (Well its a form filler and it should be able to fill data everywhere) 
+- Read and change all data on all sites (It's a form filler :) IT should work everywhere)
 - Notifications (Show problems and extract notification)
+- Communicate ith websites (Used for the live tutorials)
 
 Changelog:
+
+★ Version 2.3.0
+- Live tutorial are here! Learn Form-O-Fill's features step by step. 
+- Fixed: input[type=checkbox] fields are extracted when not checked.
 
 ★ Version 2.2.2
 - Workflows graduated from beta
