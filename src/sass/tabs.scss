@@ -16,7 +16,7 @@
   border-right: 1px solid #ddd;
   padding: 6px;
   display: inline-block;
-  margin-left: 10px;
+  margin-left:  10px;
   margin-bottom: -1px;
   border-radius: 3px 3px 0 0;
   cursor: pointer;
@@ -25,7 +25,7 @@
 }
 
 .tabs .tab:first-child {
-  margin-left: 0;
+  margin-left: 0
 }
 
 .tabs .tab input {
@@ -83,7 +83,7 @@
 }
 
 .tabs .tab.current input {
-  color: #111;
+  color: #111
 }
 
 .tabs .tab input[type=text] {
@@ -96,5 +96,3 @@
   font-size: 11px;
   margin-left: 5px;
 }
-
-/*# sourceMappingURL=tabs.css.map */

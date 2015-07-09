@@ -1,8 +1,6 @@
-/* global browser */
 /*eslint-env node */
-"use strict";
 
-// npm install --save-dev gulp gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css gulp-load-plugins chai gulp-spawn-mocha sinon sinon-chai jsdom
+// npm install --save-dev gulp gulp-sourcemaps gulp-sass gulp-webdriver gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css chai gulp-spawn-mocha sinon sinon-chai jsdom
 
 var chalk = require('chalk');
 var cleanhtml = require('gulp-cleanhtml');
@@ -20,6 +18,8 @@ var zip = require('gulp-zip');
 var argv = require('yargs').argv;
 var webdriver = require('gulp-webdriver');
 var connect = require('gulp-connect');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -99,14 +99,11 @@ var replaceOpts = {
     {
       match: /##VERSION##/g,
       replacement: manifest.version
-    },
-    {
-      match: /"management",\n/g,
-      replacement: ""
     }
   ]
 };
 
+// Helper to run all tests thru mocha
 var runTests = function() {
   return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
     R: 'dot',
@@ -115,7 +112,9 @@ var runTests = function() {
   })).on('error', console.warn.bind(console));
 };
 
+//
 // Output which version to build where to
+//
 gulp.task('announce', function() {
   gulpUtil.log(
     'Building version', chalk.cyan(manifest.version),
@@ -124,14 +123,17 @@ gulp.task('announce', function() {
   );
 });
 
+//
 // Cleans build and dist dirs
-// I sense a bug here!
+//
 gulp.task('clean', ["announce"], function() {
   return gulp.src(['build/**'], {read: false})
   .pipe(rm({async: false}));
 });
 
-// ESLINT the javascript BEFORE uglifier ran over them
+//
+// ESLINT the javascript (BEFORE uglifier ran over them)
+//
 gulp.task('lint', function () {
   return gulp.src(['src/js/**/*.js'])
   .pipe(eslint())
@@ -139,8 +141,10 @@ gulp.task('lint', function () {
   .pipe(eslint.failOnError());
 });
 
+//
 // Optimize CSS
-gulp.task('css', ['clean'], function () {
+//
+gulp.task('optimizeCss', ['clean'], function () {
   return gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
   .pipe(replace(replaceOpts))
   .pipe(concat('formofill.css'))
@@ -148,8 +152,10 @@ gulp.task('css', ['clean'], function () {
   .pipe(gulp.dest('build/css/'));
 });
 
+//
 // Build global.js
 // Sadly until I use require.js here the order is important :(
+//
 gulp.task('globalJs', ['clean'], function () {
   return gulp.src([
     "src/js/global/utils.js",
@@ -168,7 +174,9 @@ gulp.task('globalJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+//
 // Build background.js
+//
 gulp.task('backgroundJs', ['clean'], function () {
   return gulp.src("src/js/background/*.js")
   .pipe(replace(replaceOpts))
@@ -178,7 +186,9 @@ gulp.task('backgroundJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+//
 // Build content.js
+//
 gulp.task('contentJs', ['clean'], function () {
   return gulp.src("src/js/content/*.js")
   .pipe(replace(replaceOpts))
@@ -188,7 +198,9 @@ gulp.task('contentJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+//
 // Build options.js
+//
 gulp.task('optionsJs', ['clean'], function () {
   return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"], { nonegate: false })
   .pipe(replace(replaceOpts))
@@ -198,7 +210,9 @@ gulp.task('optionsJs', ['clean'], function () {
   .pipe(gulp.dest('build/js/'));
 });
 
+//
 // Build popup.js
+//
 gulp.task('popupJs', ['clean'], function () {
   return gulp.src("src/js/popup.js")
   .pipe(replace(replaceOpts))
@@ -207,7 +221,9 @@ gulp.task('popupJs', ['clean'], function () {
   .pipe(gulp.dest('build/js'));
 });
 
+//
 // Copies files that can be copied without changes
+//
 gulp.task('copyUnchanged', ['clean'], function() {
   ["fonts", "images", "vendor", "_locales", "!src/vendor/jquery/jquery-2.1.3.js"].forEach(function (dir) {
     gulp.src('src/' + dir + '/**/*', { nonegate: false })
@@ -220,7 +236,9 @@ gulp.task('copyUnchanged', ['clean'], function() {
   .pipe(gulp.dest('build/css'));
 });
 
+//
 // Copies HTML files and removes comment and blocks (see above)
+//
 gulp.task('copyHtml', ['copyUnchanged'], function() {
   return gulp.src(['src/html/**/*.html', '!src/html/options/_logs_*.html'], { nonegate: false })
   .pipe(replace(replaceOpts))
@@ -228,21 +246,46 @@ gulp.task('copyHtml', ['copyUnchanged'], function() {
   .pipe(gulp.dest('build/html'));
 });
 
+//
 // Copies and replaces the manifest.json file (see above)
+//
 gulp.task('mangleManifest', [ 'clean' ], function() {
   return gulp.src('src/manifest.json')
   .pipe(replace(replaceOpts))
   .pipe(gulp.dest('build'));
 });
 
+//
+// SASS -> CSS
+// Output is expanded since it will be compressed if
+// running 'build'
+gulp.task('sass', function () {
+  gulp.src('src/sass/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({outputStyle: "expanded"}).on('error', sass.logError))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('src/css'));
+});
+
+//
+// Watch and live compile SASS -> CSS
+//
+gulp.task('sass:watch', function () {
+  gulp.watch('src/sass/*.scss', ['sass']);
+});
+
+//
 // Build a distribution
-gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'css', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
+//
+gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'sass', 'optimizeCss', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
   .pipe(zip(distFilename))
   .pipe(gulp.dest('dist'));
 });
 
+//
 // Run tests
+//
 gulp.task('test', function () {
   gulpUtil.log('Running tests');
   return runTests().on('error', function (e) {
@@ -250,12 +293,16 @@ gulp.task('test', function () {
   });
 });
 
+//
 // Run tests through watching
-gulp.task('watch', function () {
+//
+gulp.task('test:watch', function () {
   gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
 });
 
-// Starts a simple webserver
+//
+// Starts a simple webserver hosting the integration test files
+//
 gulp.task('webserver:start', function() {
   connect.server({
     root: "testcases/docroot-for-testing",
@@ -264,7 +311,9 @@ gulp.task('webserver:start', function() {
   });
 });
 
-// Kills the server
+//
+// Kills the server (for integration tests)
+//
 gulp.task('webserver:stop', connect.serverClose);
 
 gulp.task("integration", [ "webserver:start", "integration:run" ], function() {
@@ -314,7 +363,10 @@ gulp.task('integration:run', [ "webserver:start" ], function () {
   }}));
 });
 
+//
+// DEFAULT
 // running "gulp" will execute this
+//
 gulp.task('default', function () {
   runTests();
 });

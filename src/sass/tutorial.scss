@@ -17,7 +17,7 @@
 }
 
 .introjs-showElement {
-  z-index: 99599999 !important;
+  z-index: 99599999!important;
 }
 
 .ace-jsoneditor .ace_marker-layer .ace_active-line.ace_highlight-line {
@@ -30,12 +30,10 @@
 }
 
 .introjs-tooltip[data-width=xl] {
-  min-width: 400px;
+  min-width: 400px
 }
 
 .introjs-tooltip code {
   background-color: #eee;
   color: #AF2F2F;
 }
-
-/*# sourceMappingURL=tutorial.css.map */

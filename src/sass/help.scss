@@ -4,7 +4,7 @@
 
 #help .topics a {
   display: inline-block;
-  padding: 10px;
+  padding:  10px;
   background-color: #eee;
   margin-left: 10px;
   margin-top: 10px;
@@ -66,7 +66,7 @@
   font-family: "formofill";
   vertical-align: middle;
   content: "\e602";
-  color: #c51919;
+  color: rgb(197, 25, 25);
 }
 
 #help code {
@@ -98,5 +98,3 @@
   font-family: monospace;
   width: 64%;
 }
-
-/*# sourceMappingURL=help.css.map */

@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'formofill';
-  src: url("../fonts/formofill.woff?-n1boxl") format("woff");
+  src: url('../fonts/formofill.woff?-n1boxl') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -113,7 +113,7 @@ button.import:before, .rl-button-import:before, .all-button-import:before {
   font-size: 24px;
   vertical-align: middle;
   content: "\e602";
-  color: #c51919;
+  color: rgb(197, 25, 25);
   position: absolute;
   top: 6px;
   left: 7px;
@@ -329,7 +329,7 @@ h3 span.unsaved-changes {
 }
 
 #changelog li {
-  text-indent: -26px;
+text-indent: -26px;
   margin-left: 38px;
   margin-bottom: 5px;
 }
@@ -366,5 +366,3 @@ h3 span.unsaved-changes {
 .introjs-overlay.hidden {
   display: none;
 }
-
-/*# sourceMappingURL=options.css.map */
