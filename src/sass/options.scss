@@ -366,3 +366,8 @@ text-indent: -26px;
 .introjs-overlay.hidden {
   display: none;
 }
+
+@import "help";
+@import "logs";
+@import "tabs";
+@import "tutorial";

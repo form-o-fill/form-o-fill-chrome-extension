@@ -145,11 +145,19 @@ gulp.task('lint', function () {
 // Optimize CSS
 //
 gulp.task('optimizeCss', ['clean'], function () {
-  return gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
+
+  // Optimize main options.css
+  gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
   .pipe(replace(replaceOpts))
-  .pipe(concat('formofill.css'))
+  .pipe(concat('options.css'))
   .pipe(minifyCSS())
   .pipe(gulp.dest('build/css/'));
+
+  // optimize content and popup css
+  return gulp.src(['src/css/content.css', 'src/css/popup.css'])
+  .pipe(minifyCSS())
+  .pipe(replace(replaceOpts))
+  .pipe(gulp.dest('build/css'));
 });
 
 //
@@ -229,11 +237,6 @@ gulp.task('copyUnchanged', ['clean'], function() {
     gulp.src('src/' + dir + '/**/*', { nonegate: false })
     .pipe(gulp.dest('build/' + dir));
   });
-
-  return gulp.src(['src/css/content.css', 'src/css/popup.css'])
-  .pipe(minifyCSS())
-  .pipe(replace(replaceOpts))
-  .pipe(gulp.dest('build/css'));
 });
 
 //
