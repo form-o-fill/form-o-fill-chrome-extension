@@ -1,0 +1,16 @@
+#changelog ul {
+  border-bottom: 1px solid #ddd;
+}
+
+#changelog li {
+text-indent: -26px;
+  margin-left: 38px;
+  margin-bottom: 5px;
+}
+
+#changelog li:before {
+  font-family: formofill;
+  content: "\e600";
+  margin-right: 10px;
+}
+

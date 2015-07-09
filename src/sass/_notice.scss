@@ -1,0 +1,49 @@
+.notice:last-child {
+  margin-bottom: 0;
+}
+
+.notice {
+  display: none;
+  border: 1px solid #EBCCD1;
+  padding: 10px 25px 10px 36px;
+  border-radius: 5px;
+  vertical-align: middle;
+  font-size: 14px;
+  position: relative;
+  background-color: #F2DEDE;
+  margin-bottom: 10px;
+}
+
+.notice:before {
+  font-family: "formofill";
+  font-size: 24px;
+  vertical-align: middle;
+  content: "\e602";
+  color: rgb(197, 25, 25);
+  position: absolute;
+  top: 6px;
+  left: 7px;
+}
+
+.notice a.cmd-close-notice:after {
+  font-family: "formofill";
+  font-size: 18px;
+  content: "\e607";
+  padding: 2px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #999;
+  cursor: pointer;
+}
+
+.notice .code {
+  font-family: "droid sans mono", monospace, "courier new", courier, sans-serif;
+  background-color: #bbb;
+  padding: 2px 4px;
+}
+
+.notice.form-fill-errors span {
+  text-decoration: underline;
+}
+

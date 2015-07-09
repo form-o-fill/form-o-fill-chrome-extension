@@ -12,14 +12,6 @@ body {
   padding: 10px;
 }
 
-.chrome-bootstrap {
-  font-family: 'Open Sans', Arial,sans-serif;
-}
-
-.chrome-bootstrap .frame .view, .chrome-bootstrap .frame .content {
-  width: 100%;
-}
-
 .navigation h1:before {
   font-family: "formofill";
   content: "\e600";
@@ -29,135 +21,6 @@ body {
   font-size: 3rem;
   z-index: -1;
   left: 40px;
-}
-
-#ruleeditor {
-  height: 100%;
-  width: 80%;
-}
-
-#ruleeditor-ace {
-  width: 800px;
-  height: 100%;
-  border: 1px solid #909090;
-}
-
-.editor .menu {
-  margin-bottom: 10px;
-}
-
-.menu button {
-  vertical-align: bottom;
-  padding: 0 6px;
-  width: auto;
-  outline: none;
-}
-
-.menu button:before {
-  font-family: "formofill";
-  font-size: 16px;
-  vertical-align: middle;
-  margin-right: 4px;
-}
-
-button.save:before {
-  content: "\e603";
-}
-
-button.reload:before {
-  content: "\e60a";
-}
-
-button.format:before {
-  content: "\e608";
-}
-
-button.empty:before {
-  content: "\e600";
-}
-
-button.export:before, .all-button-export:before {
-  content: "\e605";
-}
-
-button.import:before, .rl-button-import:before, .all-button-import:before {
-  content: "\e604";
-}
-
-.editor .menu .info, #workflows span.info {
-  color: #999;
-  line-height: 32px;
-  vertical-align: middle;
-  margin-left: 10px;
-  font-size: 11px;
-}
-
-.notice:last-child {
-  margin-bottom: 0;
-}
-
-.notice {
-  display: none;
-  border: 1px solid #EBCCD1;
-  padding: 10px 25px 10px 36px;
-  border-radius: 5px;
-  vertical-align: middle;
-  font-size: 14px;
-  position: relative;
-  background-color: #F2DEDE;
-  margin-bottom: 10px;
-}
-
-.notice:before {
-  font-family: "formofill";
-  font-size: 24px;
-  vertical-align: middle;
-  content: "\e602";
-  color: rgb(197, 25, 25);
-  position: absolute;
-  top: 6px;
-  left: 7px;
-}
-
-.notice a.cmd-close-notice:after {
-  font-family: "formofill";
-  font-size: 18px;
-  content: "\e607";
-  padding: 2px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: #999;
-  cursor: pointer;
-}
-
-.notice .code {
-  font-family: "droid sans mono", monospace, "courier new", courier, sans-serif;
-  background-color: #bbb;
-  padding: 2px 4px;
-}
-
-.notice.form-fill-errors span {
-  text-decoration: underline;
-}
-
-.form-fill-errors table {
-  margin-top: 10px;
-  font-family: monospace, Arial, Helvetica;
-  border: 1px solid #bbb;
-}
-
-.form-fill-errors th {
-  text-align: left;
-  background-color: transparent;
-}
-
-.form-fill-errors tr:first-child {
-  background-color: #ddd;
-}
-
-.form-fill-errors td {
-  padding: 0 10px 0 0;
 }
 
 .overlay .close-button {
@@ -185,110 +48,6 @@ span.version {
   display: block;
 }
 
-#help .topic > a[name].anchor {
-  margin: 0;
-  height: 0;
-}
-
-/* Workflows */
-#workflows .tab input {
-  width: auto;
-}
-
-#workflows .menu {
-  margin-top: 7px;
-}
-
-#workfloweditor {
-  min-height: 100%;
-  width: 800px;
-  margin-top: 10px;
-  border: 1px solid #909090;
-  overflow: hidden;
-  padding: 5px;
-}
-
-#workfloweditor .wf-name {
-  width: 100%;
-}
-
-#workfloweditor select.rulelist {
-  width: 80%;
-  margin-right: 10px;
-}
-
-#workfloweditor li {
-  padding: 0 0 5px 0;
-  cursor: pointer;
-}
-
-#workfloweditor li {
-  padding: 5px 5px 5px 0;
-  cursor: move;
-  background-color: #FAFAF7;
-  margin-bottom: 5px;
-}
-
-#workfloweditor li:before {
-  font-family: "formofill";
-  font-size: 24px;
-  vertical-align: middle;
-  margin-right: 4px;
-  content: "\e60b";
-}
-
-#workfloweditor li button {
-  margin-left: 10px;
-}
-
-#workfloweditor button:before, .wf-all button:before, .wf-button-cancel:before, .icon:before {
-  font-family: "formofill";
-  font-size: 16px;
-  vertical-align: middle;
-  margin-right: 4px;
-}
-
-#workfloweditor .wf-delete-step:before {
-  content: "\e609";
-}
-
-#workfloweditor .wf-add-step:before {
-  content: "\e606";
-}
-
-.wf-add-wf:before {
-  content: "\e608";
-}
-
-#workfloweditor .actions {
-  overflow: hidden;
-}
-
-#workfloweditor .actions button {
-  float: left;
-  margin-right: 5px;
-}
-
-button.wf-button-save:before {
-  content: "\e603";
-}
-
-button.wf-button-delete:before {
-  content: "\e609";
-}
-
-.wf-button-cancel:before {
-  content: "\e602";
-}
-
-button.wf-button-import:before {
-  content: "\e604";
-}
-
-.wf-all select {
-  min-width: 30%;
-}
-
 h3 span.unsaved-changes {
   float: right;
   font-size: 11px;
@@ -296,62 +55,10 @@ h3 span.unsaved-changes {
   display: none;
 }
 
-#workflows #notices {
-  margin-top: 15px;
-}
-
-#workfloweditor li.has-error {
-  color: Red;
-  font-weight: bold;
-}
-
-#workfloweditor li.has-error span.has-error {
-  margin-left: 15px;
-}
-
-.wf-cancel-hint {
-  font-size: 10px;
-}
-
 .beta {
   color: #f00000;
   transform: rotate(45deg);
   position: absolute;
-}
-
-#help-importexport button {
-  width: 200px;
-  text-align: left;
-}
-
-#changelog ul {
-  border-bottom: 1px solid #ddd;
-}
-
-#changelog li {
-text-indent: -26px;
-  margin-left: 38px;
-  margin-bottom: 5px;
-}
-
-#changelog li:before {
-  font-family: formofill;
-  content: "\e600";
-  margin-right: 10px;
-}
-
-#help-importexport .block {
-  float: left;
-  margin-left: 10px;
-}
-
-#help-importexport .block h3, #help-importexport .block .icon {
-  color: #888;
-}
-
-#help-importexport .row {
-  overflow: hidden;
-  margin-bottom: 40px;
 }
 
 #logs table td:nth-child(3) {
@@ -363,11 +70,14 @@ text-indent: -26px;
   margin: 10px 0;
 }
 
-.introjs-overlay.hidden {
-  display: none;
-}
-
+@import "../vendor/introjs/introjs.min.css";
+@import "editor";
+@import "workflows";
 @import "help";
 @import "logs";
 @import "tabs";
 @import "tutorial";
+@import "notice";
+@import "chrome_bootstrap_overwrites";
+@import "introjs_overwrites";
+@import "changelog";

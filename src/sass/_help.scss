@@ -98,3 +98,27 @@
   font-family: monospace;
   width: 64%;
 }
+
+#help-importexport button {
+  width: 200px;
+  text-align: left;
+}
+#help-importexport .block {
+  float: left;
+  margin-left: 10px;
+}
+
+#help-importexport .block h3, #help-importexport .block .icon {
+  color: #888;
+}
+
+#help-importexport .row {
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+#help .topic > a[name].anchor {
+  margin: 0;
+  height: 0;
+}
+
