@@ -9,8 +9,9 @@ var Editor = function(selector) {
   this._editor = ace.edit(document.querySelector(selector));
   this._session = this._editor.getSession();
   this._document = this._session.getDocument();
-  this._editor.setTheme("ace/theme/jsoneditor");
+  this._editor.setTheme("ace/theme/clouds");
   this._editor.setAutoScrollEditorIntoView(true);
+  this._editor.$blockScrolling = Infinity;
   this._session.setMode("ace/mode/javascript");
   this._session.setTabSize(2);
   this._session.setUseSoftTabs(true);
