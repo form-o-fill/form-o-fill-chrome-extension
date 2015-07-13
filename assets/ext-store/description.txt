@@ -1,4 +1,4 @@
-FORM-O-FILL is a advanced highly programmable form-filler.
+FORM-O-FILL is an advanced highly programmable form-filler.
 
 It provides form content extraction, one-click form filling, advanced multi-page workflows and more.
 
