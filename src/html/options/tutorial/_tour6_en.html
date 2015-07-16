@@ -1,0 +1,87 @@
+<div class="tuts tut-tour-6">
+
+<textarea class="rulesToImport" id="tour6-r1">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Rules Tour 6"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-6\\.html/,\n  \"name\": \"Tour 6 : Clicking on things\",\n  \"fields\": [{\n    \"selector\": \"input[type=text]\",\n    \"value\": \"filled by the rule\"\n  }, {\n    \"selector\": \"input[type=submit]\",\n    \"value\": Libs.h.click\n    }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="4,12">
+    <p>
+      This rule has two field definitions.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="5,6">
+    <p>
+      The first is for the <code>input[type=text]</code> field.
+    </p>
+    <p>
+      Nothing new here.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="8,10">
+    <p>
+      In this field definition it gets more interesting.
+    </p>
+    <p>
+      It specifies the <code>input[type=submit]</code> field as the target of the action.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="10">
+    <p>
+      The <em>value</em> for this field definition is a function that simply clicks on the element it is targeted at thereby submitting the form. 
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="10">
+    <p>
+      This is the common way to submit forms.
+    </p>
+    <p>
+      Because writing that <em>value function</em> is tedious, Form-O-Fill has a helper function that simplifies the usage.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-import-rules="#tour6-r1" data-mark-line="0" data-overlay="false">
+    <p>
+      I changed the rule to one using the helper function.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="9">
+    <p>
+      Instead of writing a <code>function()</code> you can simply use <code>Lib.h.click</code> as the value for the <em>"value"</em>.
+    </p>
+    <p>
+      Note the missing round brackets at the end.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-mark-line="0" data-overlay="false">
+    <p>
+      This is the most important feature you will need for workflows to function correctly.
+    </p>
+    <p>
+      But that is a topic for later ...
+    </p>
+    <p>
+      Until then ... enjoy! 
+    </p>
+  </div>
+
+</div>

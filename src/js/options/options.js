@@ -7,7 +7,7 @@ var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
 
 I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportall", "tutorials"]);
-I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5"], "tutorial");
+I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6"], "tutorial");
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);
