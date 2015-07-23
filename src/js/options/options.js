@@ -213,7 +213,7 @@ var quickJumpToRule = function() {
 loadRules(currentTabId());
 updateTabStats();
 editor.resize();
-editor.redraw();
+setTimeout(editor.redraw, 250);
 
 // Button handling for "save" and "load"
 $(".editor .menu").on("click", "button.save", function () {
