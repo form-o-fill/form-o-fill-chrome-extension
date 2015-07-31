@@ -36,6 +36,7 @@ var createWorkflow = function () {
   jQuery("#workfloweditor").show().data("workflowId", 0);
   jQuery(".wf-name").trigger("focus").select();
   jQuery(".wf-all select").append("<option data-workflow-id='0' selected>new workflow (unsaved)</option>");
+  jQuery(document).trigger("fof:wf:create");
   unsavedChanges(true);
 };
 
@@ -79,11 +80,15 @@ var fillRuleSelect = function(rules) {
 
 // Add selected rule as workflow step
 var addStepToWorkflow = function() {
-  var ruleName = jQuery(".rulelist option:selected").data("ruleName");
+  var $rule = jQuery(".rulelist option:selected");
+  var ruleName = $rule.data("ruleName");
+  var ruleId = $rule.data("ruleId");
+
   if(typeof ruleName !== "undefined") {
     jQuery("#workfloweditor ol").append(stepHtml(ruleName));
     unsavedChanges(true);
     bindSortable();
+    jQuery(document).trigger("fof:wf:added:" + ruleId);
   }
 };
 
