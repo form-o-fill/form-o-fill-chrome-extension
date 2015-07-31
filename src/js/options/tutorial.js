@@ -1,10 +1,8 @@
-/*global jQuery introJs window editor Rules loadRules updateTabStats */
+/*global jQuery introJs window editor Rules loadRules updateTabStats Logger*/
 var tutorials = tutorials || [];
 
 (function tutorialScope(jQuery) {
   "use strict";
-
-  var tutorialRunning = false;
 
   var Tutorial = function(tourNumber) {
     this.tourNumber = tourNumber;
@@ -12,17 +10,47 @@ var tutorials = tutorials || [];
     this.intro = this.initIntroJs();
   };
 
+  // unbind all previousl bound document handlers
+  Tutorial.prototype.unbindPageEvents = function() {
+    if(typeof this.boundPageEvents !== "undefined") {
+      this.boundPageEvents.forEach(function (eventName) {
+        jQuery(document).off(eventName);
+      });
+    }
+    this.boundPageEvents = [];
+  };
+
+  // Bind events to step triggers
+  // setting data-trigger="!fof:event:name" triggers that step if
+  // the event is throwen
+  Tutorial.prototype.bindPageEvents = function() {
+    var tutorial = this;
+
+    this.steps.forEach(function (step) {
+      // Trigger set and starts with "!" ?
+      if(typeof step.trigger !== "undefined" && step.trigger.indexOf("!") === 0) {
+        var eventname = step.trigger.substr(1);
+        // Bind event to goto the current step
+        jQuery(document).on(eventname, function() {
+          var gotoStep = step.index + 1;
+          Logger.info("[o/tutorial.js] Triggering step " + gotoStep + " via " + eventname + "event");
+          tutorial.intro.goToStep(gotoStep);
+        });
+      }
+    });
+  };
+
   // Cancel all tutorials
   var cancelAllTutorials = function() {
     tutorials.forEach(function (tutorial) {
       if(typeof tutorial.observer !== "undefined") {
         tutorial.observer.disconnect();
+        tutorial.unbindPageEvents();
         tutorial.intro.exit();
       }
     });
     Tutorial.endTutorialMode();
     tutorials = [];
-    tutorialRunning = false;
     editor.removeAllMarkers();
   };
 
@@ -200,7 +228,7 @@ var tutorials = tutorials || [];
 
   Tutorial.prototype.execute = function(tutorial) {
     tutorial.intro.start();
-    tutorialRunning = true;
+    tutorial.bindPageEvents();
     tutorial.observeDomChanges();
   };
 
@@ -210,6 +238,7 @@ var tutorials = tutorials || [];
     // Bind on button
     var selector = "a.tut-start-tour-" + tutorial.tourNumber;
     jQuery(selector).on("click", function() {
+      Logger.info("[o/tutorial.js] Executing tutorial #" + tutorial.tourNumber);
       tutorial.execute(tutorial);
     });
   };
@@ -224,7 +253,7 @@ var tutorials = tutorials || [];
         return node.className;
       });
       classNames = classNames.filter(function (className) {
-        return className !== "";
+        return className !== "" && typeof className !== "undefined";
       });
       mutClasses = mutClasses.concat(classNames);
     }
@@ -266,6 +295,20 @@ var tutorials = tutorials || [];
           var typeToCheck = step.trigger[0];
           var triggerCls = step.trigger.substr(1);
 
+          // REMOVE START
+          if (added.length > 0) {
+            Logger.info("[o/tutorial.js] added classes", added);
+          }
+
+          if (contentAdded.length > 0) {
+            Logger.info("[o/tutorial.js] added content", contentAdded);
+          }
+
+          if (removed.length > 0) {
+            Logger.info("[o/tutorial.js] removed classes", removed);
+          }
+          // REMOVE END
+
           // + : element with class is visible
           if(added.indexOf(triggerCls) !== -1 && typeToCheck === "+") {
             // Trigger Step
@@ -280,7 +323,7 @@ var tutorials = tutorials || [];
             return false;
           }
 
-          // elements style attributes change
+          // / : elements style attributes change
           if(typeToCheck === "/") {
             var styleToCheckMatch = triggerCls.match(/^(.*?)\[(.*?)\]/);
             var found = attrs.filter(function (attr) {
@@ -293,7 +336,7 @@ var tutorials = tutorials || [];
             }
           }
 
-          // triggers when text gets visible SOMEWHERE ON THE PAGE
+          // ? : triggers when text gets visible SOMEWHERE ON THE PAGE
           if(typeToCheck === "?" && contentAdded.indexOf(triggerCls) > -1) {
             tutorial.intro.goToStep(step.index + 1);
             return false;
@@ -335,6 +378,8 @@ var tutorials = tutorials || [];
     });
   };
 
+  // Starts a tutorial when the page opens.
+  // Usually set by the tutorial site
   Tutorial.startOnOpen = function() {
     chrome.runtime.sendMessage({action: "getTutorialOnOpenOptions"}, function (tutorialNumber) {
       tutorialNumber = parseInt(tutorialNumber, 10);
@@ -360,18 +405,6 @@ var tutorials = tutorials || [];
 
   window.Tutorial = Tutorial;
 
-  // If the user clicks on a menu item, cancel all tutorials
-  jQuery(".menu").on("click", "a", function () {
-    if(this.classList.contains("no-click") || !tutorialRunning) {
-      return true;
-    }
-
-    // tell bg.js to reset the active tutorial number
-    chrome.runtime.sendMessage({action: "activateTutorialOnOpenOptions", message: 0});
-
-    cancelAllTutorials();
-  });
-
 })(jQuery);
 
 // If the tutorial tours are loaded, initialize the tutorial
@@ -381,22 +414,24 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
     var tutorial = new window.Tutorial(tutorialNumber);
     tutorials.push(tutorial);
     tutorial.start();
+    Logger.info("[o/tutorial.js] Added tutorial #" + tutorialNumber + " to list of tutorials. Now contains " + tutorials.length + " tutorials");
   }
 });
-
-// Start a tutorial if set previously
-window.Tutorial.startOnOpen();
 
 // Define javascript trigered steps in tutorials
 // first index is the tour number, second index is the step in which
 // the javascript should be triggered.
 //
-// So this means "in tutorial 3 when step 1 is activated
-// set the editor line marker and select the DOM element returned.
-//window.Tutorial.tour[3] = {
-  //1: function() {
-    //// Mark the value function in the editor
-    //editor.setMarker(6, 8);
+// So this means "in tutorial 7 when step 4 is activated
+window.Tutorial.tour[7] = {
+  4: function() {
+    // Activate the second tab
+    jQuery(".tab")[1].click();
     //return document.querySelector(".ace_text-layer .ace_line:nth-child(6)");
-  //}
-//};
+    return null;
+  },
+  5: function() {
+    jQuery(".menu a[href=#workflows]").trigger("click");
+    return document.querySelector(".wf-all select");
+  }
+};
