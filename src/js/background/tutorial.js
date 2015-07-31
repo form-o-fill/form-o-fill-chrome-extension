@@ -9,7 +9,7 @@ var didBackup = false;
 var Tutorial = Tutorial || {};
 
 Tutorial.isValidMessageSourceForTutorial = function (msgSender) {
-  if(/tutorial\/tour-[0-9]+\.html.*$/.test(msgSender.url) || /^chrome-extension:.*options\.html$/.test(msgSender.url)) {
+  if(/tutorial\/tour-[0-9-]+\.html.*$/.test(msgSender.url) || /^chrome-extension:.*options\.html$/.test(msgSender.url)) {
     return true;
   }
   return false;
