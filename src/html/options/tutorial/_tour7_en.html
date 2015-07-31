@@ -1,0 +1,123 @@
+<div class="tuts tut-tour-7">
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right">
+    <p>
+      Here is the rule for page 1.
+    </p>
+    <p></p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="5,13">
+    <p>
+      It fills the two field with random data using <em>chance.js</em>.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="15,16">
+    <p>
+      This is the important part when using workflows.
+    </p>
+    <p>
+      You need to click/submit the form so that the workflow can continue.
+    </p>
+    <p>
+      Here it is done by using <code>Libs.h.click</code> on the submit button.
+    </p>
+  </div>
+
+  <!-- Tab 2 -->
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="top" data-overlay="false" data-mark-line="8,9">
+    <p>
+      Same for the rule for the second page.
+    </p>
+    <p>
+      Let's create a workflow using both rules.
+    </p>
+  </div>
+
+  <div class="step" data-element=".wf-all select" data-position="bottom-middle-aligned" data-overlay="false" data-mark-line="0" data-buttons="false">
+    <p>
+      Currently there are no workflow defined so lets create one.
+    </p>
+    <p>
+      Click to the right on <b>"create new workflow"</b>.
+    </p>
+  </div>
+
+  <div class="step" data-element=".wf-name" data-overlay="false" data-position="bottom" data-trigger="!fof:wf:create">
+    <p>
+      This is the name of the workflow. 
+      It will be displayed in the popup menu in blue like so:<br />
+      <span class="select-workflow icon-cascade">new workflow (1 steps)</span>
+    </p>
+  </div>
+
+  <div class="step" data-element=".rulelist" data-overlay="false" data-position="bottom">
+    <p>
+      Here you will find a list of all defined rules to choose from for the workflow.
+    </p>
+    <p>
+      They are displayed prefixed with their corresponding tab name.
+    </p>
+  </div>
+
+  <div class="step" data-element=".rulelist" data-overlay="false" data-position="bottom" data-buttons="false">
+    <p>
+      Choose <em>"Tour 7 : Workflows - Step 1"</em> and press the <em>"add to workflow"</em> button to the right.
+    </p>
+  </div>
+
+  <div class="step" data-element=".rulelist" data-overlay="false" data-position="bottom" data-trigger="!fof:wf:added:1-0" data-buttons="false">
+    <p>
+      Now add the second rule to the workflow.
+    </p>
+    <p>
+      Choose <em>"Tour 7 : Workflows - Step 2"</em> from the rule list and press the <em>"add to workflow"</em> button again.
+    </p>
+  </div>
+
+  <div class="step" data-element="#workfloweditor ol" data-position="right" data-trigger="!fof:wf:added:2-0">
+    <p>
+      Now the workflow is ready.
+    </p>
+    <p>
+      Since you took care to (Libs.h.)click those <code>submit</code> buttons in every rule the workflow can continue to work even if the URL changes.
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#workfloweditor ol" data-position="bottom">
+    <p>
+      You can change the order of rules in the workflow by using the handles on the left of each step to drag-drop them into place.
+    </p>
+  </div>
+
+  <div class="step" data-element=".wf-button-save" data-position="right" data-buttons="false">
+    <p>
+      But for now just save the workflow.
+    </p>
+  </div>
+
+  <div class="step" data-element=".wf-button-cancel" data-position="right" data-trigger="?Workflow #1 saved">
+    <p>
+      This button comes in handy if a workflow gets <em>stuck</em> when executing.
+    </p>
+    <p>
+      This can happen for various reasons.
+    </p>
+    <p>
+      To cancel stuck workflows you can press this button.
+    </p>
+  </div>
+
+  <div class="step" data-element=".wf-all" data-position="bottom" data-overlay="false">
+    <p>
+      This concldes the tutorial on how to create and use workflows.
+    </p>
+    <p>
+      See you again!
+    </p>
+  </div>
+
+
+</div>
