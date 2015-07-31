@@ -96,7 +96,9 @@ Editor.prototype.format = function(Rules) {
 
 // redraw the editor
 Editor.prototype.redraw = function() {
-  this._editor.resize();
+  if(typeof this._editor !== "undefined") {
+    this._editor.resize();
+  }
 };
 
 // resize the editor DOM to a max size
