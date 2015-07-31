@@ -12,10 +12,16 @@ var ChromeBootstrap = {
       jQuery('.menu li').removeClass("selected");
       jQuery('.mainview > *:not(.selected)').css('display', 'none');
 
-      jQuery(ev.currentTarget).parent().addClass("selected");
-      var currentView = jQuery(jQuery(ev.currentTarget).attr('href'));
+      var $parent = jQuery(ev.currentTarget).parent();
+      $parent.addClass("selected");
+
+      var anchor = jQuery(ev.currentTarget).attr('href');
+      var currentView = jQuery(anchor);
       currentView.css('display', 'block');
       currentView.addClass("selected");
+
+      $parent.parent()[0].className = "menu " + anchor.substr(1);
+
       jQuery('body')[0].scrollTop = 0;
     });
 
