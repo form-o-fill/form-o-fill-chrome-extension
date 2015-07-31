@@ -37,3 +37,22 @@
   background-color: #eee;
   color: #AF2F2F;
 }
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'formofill';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-cascade:before {
+  content: "\e608";
+}
+
+.select-workflow {
+  color: #192E98;
+}
