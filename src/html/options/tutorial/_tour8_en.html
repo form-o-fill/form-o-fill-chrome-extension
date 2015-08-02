@@ -1,0 +1,209 @@
+<div class="tuts tut-tour-8">
+
+  <textarea class="rulesToImport" id="tour8-r1">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Tour 8"
+      },
+      {
+        "id": "2",
+        "name": "Libs"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-8\\.html/,\n  \"name\": \"Tour 8 : Custom libraries\",\n  \"fields\": [{\n    \"selector\": \"input[name=field-1]\",\n    \"value\": function($e) {\n      // Naive string reversal\n      var reversed = \"\";\n      for(var i=$e.val().length-1; i >= 0; i--) {\n        reversed += $e.val()[i];\n      }\n      return reversed;\n    } \n  }, {\n    \"selector\": \"input[name=field-2]\",\n    \"value\": function($e) {\n      // Naive string reversal\n      var reversed = \"\";\n      for(var i=$e.val().length-1; i >= 0; i--) {\n        reversed += $e.val()[i];\n      }\n      return reversed;\n    } \n  }, {\n    \"selector\": \"input[name=field-3]\",\n    \"value\": function($e) {\n      // Naive string reversal\n      var reversed = \"\";\n      for(var i=$e.val().length-1; i >= 0; i--) {\n        reversed += $e.val()[i];\n      }\n      return reversed;\n    } \n  }]\n}];",
+        "tabId": 1
+      },
+      {
+        "code": "var libs = [{\n  export: \"reverseFieldValue\",\n  lib: function(parameter) {\n    return \"reversed field value\";\n  }\n}];",
+        "tabId": 2
+      }
+    ]
+  }
+}</textarea>
+
+
+  <textarea class="rulesToImport" id="tour8-r2">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Tour 8"
+      },
+      {
+        "id": "2",
+        "name": "Libs"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-8\\.html/,\n  \"name\": \"Tour 8 : Custom libraries\",\n  \"fields\": [{\n    \"selector\": \"input[name=field-1]\",\n    \"value\": function($e) {\n      return Libs.reverseFieldValue($e.val());\n    } \n  }, {\n    \"selector\": \"input[name=field-2]\",\n    \"value\": function($e) {\n      return Libs.reverseFieldValue($e.val());\n    } \n  }, {\n    \"selector\": \"input[name=field-3]\",\n    \"value\": function($e) {\n      return Libs.reverseFieldValue($e.val());\n    } \n  }]\n}];",
+        "tabId": 1
+      },
+      {
+        "code": "var libs = [{\n  export: \"reverseFieldValue\",\n  lib: function(parameter) {\n    // Naive string reversal\n    var reversed = \"\";\n    for(var i=parameter.length-1; i >= 0; i--) {\n      reversed += parameter[i];\n    }\n    return reversed;\n  }\n}];",
+        "tabId": 2
+      }
+    ]
+  }
+}</textarea>
+
+  <textarea class="rulesToImport" id="tour8-r3">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Tour 8"
+      },
+      {
+        "id": "2",
+        "name": "Libs"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-8\\.html/,\n  \"name\": \"Tour 8 : Custom libraries\",\n  \"fields\": [{\n    \"selector\": \"input[name=field-1]\",\n    \"value\": Libs.reverseFieldValue\n  }, {\n    \"selector\": \"input[name=field-2]\",\n    \"value\": Libs.reverseFieldValue\n  }, {\n    \"selector\": \"input[name=field-3]\",\n    \"value\": Libs.reverseFieldValue\n  }]\n}];",
+        "tabId": 1
+      },
+      {
+        "code": "var libs = [{\n  export: \"reverseFieldValue\",\n  lib: function($element) {\n    // Naive string reversal\n    var parameter = $element.val();\n    var reversed = \"\";\n    for(var i=parameter.length-1; i >= 0; i--) {\n      reversed += parameter[i];\n    }\n    return reversed;\n  }\n}];",
+        "tabId": 2
+      }
+    ]
+  }
+}</textarea>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="7,12">
+    <p>
+      This rule fills the three form fields with their reversed value.
+    </p>
+    <p>
+      It is duplicated in every value function.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="7,12">
+    <p>
+      Let's start by creating a tab that can hold all library functions we create.
+    </p>
+  </div>
+
+  <div class="step" data-element="li.tab.more input" data-position="left" data-buttons="false" data-overlay="false" data-mark-line="0">
+    <p>
+      This buttons creates a new tab.
+    </p>
+    <p>
+      You can have up to seven tabs. 
+    </p>
+    <p>
+      <b>Press it now.</b>
+    </p>
+  </div>
+
+  <div class="step" data-element=".tab.current a" data-position="right" data-buttons="false" data-trigger="!fof:tabs:created" data-overlay="false">
+    <p>
+      Now press the title of the tab (<em>"New Rules"</em>) and rename it to <em>"Libs"</em>.
+    </p>
+    <p>
+      Press <code>Enter</code> or the green floppy disc symbol to save the name of the tab.
+    </p>
+  </div>
+
+  <div class="step" data-import-rules="#tour8-r1" data-element="#ruleeditor-ace" data-position="right" data-trigger="!fof:tabs:saved:2">
+    <p>
+      Renaming the tab makes it clear that this tab only contains library functions and is just a best practice.
+    </p>
+    <p>
+      To start I have inserted a library function stub in the code editor.
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="1,6">
+    <p>
+      Since the tab can contain multiple library definitions it is an <code>array ([])</code>.
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="2,3">
+    <p>
+      Instead of <code>name</code> and <code>fields</code> keys that would be used in a normal rule you have <code>export</code> and <code>lib</code>.
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="2">
+    <p>
+      <code>export</code> defines the name under which the function will be accessible in the <code>Libs</code> namespace.
+    </p>
+    <p>
+      In this case it will be <code>Libs.reverseFieldValue()</code>.
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="3,5">
+    <p>
+      The <code>lib</code> key contains the function that will be executed. It can take an arbitary number of paramters.
+    </p>
+    <p>
+      Here it takes just one : <code>parameter</code>. We will pass in the value to reverse in here. 
+    </p>
+  </div>
+
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="4">
+    <p>
+      Next we must transfer one occurence of the reverse function to the <code>lib</code> value.
+    </p>
+  </div>
+
+  <!-- Step 11 -->
+  <div class="step" data-import-rules="#tour8-r2" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="0">
+    <p>
+      Done.
+    </p>
+    <p>
+      Instead of using <code>$e.val()</code> we use the parameter value and reverse that.
+    </p>
+    <p>
+      Let's look at the function call.
+    </p>
+  </div>
+
+  <!-- Step 12 -->
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="6,8">
+    <p>
+      The value function simply calls <code>Libs.reverseFieldValue()</code>.
+    </p>
+    <p>
+      The parameter is filled with the value of the found form field.
+    </p>
+  </div>
+
+  <!-- Step 13 -->
+  <div class="step" data-overlay="false" data-element="#ruleeditor-ace" data-position="right" data-mark-line="0">
+    <p>
+      We can simplify the rule even further.
+    </p>
+    <p>
+      Since Form-O-Fill will call all value functions with the first parameter being the <code>$element</code> that it has found via the selector we can just use that and remove the <code>function()</code> part in the value function.
+    </p>
+    <p>
+      Let's see what that looks like.
+    </p>
+  </div>
+
+  <!-- Step 14 -->
+  <div class="step" data-import-rules="#tour8-r3" data-overlay="false" data-element="#ruleeditor-ace" data-position="right">
+    <p>
+      Now it looks nice and clean.
+    </p>
+    <p>
+      That's a wrap for this tutorial. Have fun!
+    </p>
+  </div>
+
+</div>

@@ -39,6 +39,8 @@ Editor.prototype.removeAllMarkers = function() {
   return this;
 };
 
+// Sets a marker inside the rule editor
+// This gets highlighted via CSS and is used for tutorials
 Editor.prototype.setMarker = function(startLine, endLine) {
   this.removeAllMarkers();
   var marker = this.range(startLine - 1, endLine - 1);
@@ -81,7 +83,7 @@ Editor.prototype.cleanUp = function() {
   for(i = lastLineIndex; i > 0; i--) {
     line = this._document.getLine(i).trim();
     if(line === "") {
-      this._document.removeLines(i, i);
+      this._document.removeFullLines(i, i);
     } else {
       break;
     }
@@ -103,12 +105,17 @@ Editor.prototype.redraw = function() {
 
 // resize the editor DOM to a max size
 Editor.prototype.resize = function() {
-  var maxEditorHeight = document.querySelector("#ruleeditor").clientHeight - document.querySelector(".tabcontainer").clientHeight - document.querySelector(".menu").clientHeight - document.querySelector("header").clientHeight + 40;
-  var editorDomNode = document.querySelector("#ruleeditor-ace");
-  editorDomNode.setAttribute("style", "height: " + maxEditorHeight + "px");
+  var $ruleEditor = document.querySelector("#ruleeditor");
+  var $tabContainer = document.querySelector(".tabcontainer");
+  var $menu = document.querySelector(".menu");
+  var $header = document.querySelector("header");
+
+  var maxEditorHeight = $ruleEditor.clientHeight - $tabContainer.clientHeight - $menu.clientHeight - $header.clientHeight + 40;
+  document.querySelector("#ruleeditor-ace").setAttribute("style", "height: " + maxEditorHeight + "px");
 };
 
 // Throttle the resize down so the screen doesn't flicker
+// One resize per 200 ms
 Editor.prototype._resizeThrottler = function(editor) {
   return function() {
     if(!editor._resizeTimeout) {

@@ -94,8 +94,11 @@ var tutorials = tutorials || [];
 
       if(typeof step.importRules !== "undefined") {
         var importDump = document.querySelector(step.importRules).textContent;
-        Rules.importAll(importDump).then(function() {
-          loadRules(1);
+        Rules.importAll(importDump).then(function(parsedDump) {
+          Logger.info("[o/tutorial.js] Imported Dump", parsedDump);
+          var activeTabId = jQuery(".tab.current").data("tabId");
+          loadRules(activeTabId);
+          Logger.info("[o/tutorial.js] Reloaded Tab " + activeTabId);
           updateTabStats();
           editor.redraw();
         });
@@ -149,7 +152,7 @@ var tutorials = tutorials || [];
     jQuery(".introjs-fixParent").removeClass("introjs-fixParent");
 
     var ePos = jQuery(step.element).offset();
-    jQuery(".introjs-tooltipReferenceLayer").css("top", ePos.top + "px");//.css("left", ePos.left + "px");
+    jQuery(".introjs-tooltipReferenceLayer, .introjs-helperLayer").css("top", ePos.top + "px").css("left", ePos.left + "px");
   };
 
   Tutorial.prototype.onAfterChangeHandler = function(tutorial) {
@@ -162,15 +165,15 @@ var tutorials = tutorials || [];
       var step = tutorial.intro._introItems[stepIndex];
       /*eslint-enable no-underscore-dangle */
 
-      // Javascript step function defined?
-      // returns the element to be marked
-      tutorial.executeJavascriptStep(step);
-
       var $helper = jQuery(".introjs-helperLayer");
 
       if(typeof step.markLine !== "undefined") {
         tutorial.handleMarkLine(step);
       }
+
+      // Javascript step function defined?
+      // returns the element to be marked
+      tutorial.executeJavascriptStep(step);
 
       if(step.elementChanged) {
         tutorial.handleElementChanged($helper, step);
@@ -422,16 +425,33 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
 // first index is the tour number, second index is the step in which
 // the javascript should be triggered.
 //
+// Why?
+// Because intro.js can only cope with elements existing on the page when
+// the page loads and not those inserted via JS.
+//
 // So this means "in tutorial 7 when step 4 is activated
 window.Tutorial.tour[7] = {
   4: function() {
     // Activate the second tab
     jQuery(".tab")[1].click();
-    //return document.querySelector(".ace_text-layer .ace_line:nth-child(6)");
     return null;
   },
   5: function() {
     jQuery(".menu a[href=#workflows]").trigger("click");
     return document.querySelector(".wf-all select");
+  }
+};
+
+window.Tutorial.tour[8] = {
+  3: function() {
+    return document.querySelector("li.tab.more input");
+  },
+  4: function() {
+    return document.querySelector("li.tab.current");
+  },
+  12: function() {
+    // Activate first tab
+    jQuery(".tab")[0].click();
+    return document.querySelector(".ace_text-layer .ace_line:nth-child(6) span:last-of-type");
   }
 };

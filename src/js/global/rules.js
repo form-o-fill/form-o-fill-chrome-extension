@@ -299,7 +299,7 @@ var Rules = {
       promises.push(Storage.save(parsed.rules.tabSettings, Utils.keys.tabs));
 
       // resolve all saving promises
-      Promise.all(promises).then(resolve);
+      Promise.all(promises).then(resolve(parsed));
     });
   },
   exportDataJson: function() {

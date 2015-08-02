@@ -36,6 +36,7 @@ var saveTabsSetting = function() {
     jQuery(".tab.current input").attr("disabled", true);
     jQuery(".tab a.edit").removeClass("edit").addClass("cmd-tabs-close");
     Utils.infoMsg("Tab setting saved");
+    jQuery(document).trigger("fof:tabs:saved");
   });
 };
 
@@ -105,6 +106,7 @@ jQuery(function () {
   jQuery(".tabs").on("click", ".tab a.edit", function (e) {
     e.preventDefault();
     Logger.info("[tabs.js] Saving tab setting");
+    jQuery(document).trigger("fof:tabs:saved:" + jQuery(".tab.current").data("tabId"));
     saveTabsSetting();
   });
 
@@ -118,6 +120,7 @@ jQuery(function () {
     } else if(e.which === 13) {
       Logger.info("[tabs.js] Edit mode ended by pressing ENTER");
       jQuery(".tab a.edit").removeClass("edit");
+      jQuery(document).trigger("fof:tabs:saved:" + jQuery(".tab.current").data("tabId"));
       saveTabsSetting();
     }
   });
@@ -156,6 +159,7 @@ jQuery(function () {
     editor.setValue("var rules = [\n];\n");
     saveTabsSetting();
     saveRules(nextTabId);
+    jQuery(document).trigger("fof:tabs:created", { tabId: nextTabId });
   });
 
   loadTabsSettings();

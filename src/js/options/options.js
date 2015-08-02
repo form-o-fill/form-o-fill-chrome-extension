@@ -3,7 +3,6 @@
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 var editor = new Editor("#ruleeditor-ace");
-
 var noticesVisible = false;
 
 I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportall", "tutorials"]);
@@ -14,7 +13,7 @@ if(Utils.debug) {
 
 ChromeBootstrap.init();
 
-// reset notices once the user starts typing again
+// reset notices once the user starts typing
 editor.on("change", function() {
   if(noticesVisible) {
     $("#ruleeditor .notice").hide();
@@ -31,20 +30,23 @@ var currentTabId = function() {
   return 1;
 };
 
-// Append text to the end of the rule definitions
+// Append extracted rule to the end of the rule definitions
 // TODO: use a promise here
 var appendRule = function(prettyRule, responseCallback) {
-  // Use
   Rules.load(currentTabId()).then(function(arrayOfRules) {
+    // Create a rule from the parsed json and append to already present rules
     var rule = Rule.create(JSONF.parse(prettyRule), currentTabId(), arrayOfRules.length + 1);
     arrayOfRules.push(rule);
+
+    // Pretty print all rules
     var formattedRules = arrayOfRules.map(function (singleRule) {
       return singleRule.prettyPrint();
     });
+
+    // Set editor content to formatted rules
     editor.session().setValue(Rules.format("var rules = [ " + formattedRules.join(",") + "];"), -1);
 
     // Prettify code a little
-    editor.session().setValue(Rules.format(editor.session().getValue()), -1);
     editor.editor().scrollToRow(editor.document().getLength());
     editor.resize();
     Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
@@ -123,7 +125,7 @@ var updateTabStats = function() {
       });
     });
 
-    // rulesStats has now a count of all rules per tab
+    // rulesStats now has a count of all rules per tab
     Object.keys(rulesStats.tabCount).forEach(function (key) {
       $(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats.tabCount[key] + ")");
     });
@@ -167,6 +169,7 @@ var saveRules = function(tabId) {
       updateTabStats();
       // If the editor contained something that looks like a library function
       // reimport the libs in the background page
+      // because they COULD have been changed
       if(editor.getValue().indexOf("export") > -1) {
         chrome.runtime.sendMessage({action: "reloadLibs"});
       }
@@ -189,11 +192,7 @@ var loadRules = function(tabId) {
   });
 };
 
-// import rules from disc
-var importRules = function() {
-  $("#modalimportrules").show();
-};
-
+// This centers the editor on a rule selected in the quickjump menu
 var quickJumpToRule = function() {
   var selected = $(this).find("option:selected");
   var tabId = selected.val().split("-")[0];
@@ -211,41 +210,46 @@ var quickJumpToRule = function() {
 // Load data from tab and prefill editor
 loadRules(currentTabId());
 updateTabStats();
+
+// Try to make ACE behave :)
 editor.resize();
 setTimeout(editor.redraw, 250);
 
 // Start a tutorial if set previously
+// This can only be set by defined URLs (see manifest)
 window.Tutorial.startOnOpen();
 
 // Button handling for "save" and "load"
-$(".editor .menu").on("click", "button.save", function () {
+$(".editor .menu").on("click", "button.save", function() {
   saveRules(currentTabId());
-}).on("click", "button.reload", function () {
+}).on("click", "button.reload", function() {
   loadRules(currentTabId());
-}).on("click", "button.format", function () {
+}).on("click", "button.format", function() {
   editor.format(Rules);
   Utils.infoMsg("Rules formatted but not saved");
 });
 
 // Show modal import window
-$(document).on("click", "button.import, .rl-button-import", importRules);
+$(document).on("click", "button.import, .rl-button-import", $("#modalimportrules").show);
 
 // Support for the quickjump <select>
 $("#rules-overview").on("change", quickJumpToRule);
 
 // Event handler for notices
-$(".notice.form-fill-errors a.cmd-close-notice").on("click", function () {
+$(".notice.form-fill-errors a.cmd-close-notice").on("click", function() {
   Storage.delete(Utils.keys.errors);
   $(this).parents(".notice").hide();
 });
 
-$(".notice.extracted-present a.cmd-close-notice").on("click", function () {
+$(".notice.extracted-present a.cmd-close-notice").on("click", function() {
   Storage.delete(Utils.keys.extractedRule);
   $(this).parents(".notice").hide();
 });
 
-$(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function () {
+$(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function() {
   $(this).parents(".notice").hide();
 });
 
-I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6", "tour7"], "tutorial");
+// Load all tutorials and insert them in the DOM
+// Must be last.
+I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6", "tour7", "tour8"], "tutorial");
