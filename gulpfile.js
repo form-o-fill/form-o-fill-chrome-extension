@@ -53,6 +53,7 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 // 9.  Rename the "scriptsBuild" part in the manifest to be the "scripts" part
 //     These contain the optimized files for the final build
 // 10. Replace ##VERSION## with the correct version string from the manifest
+// 11. Replaces the local reference URL to the tutorial site with the live one
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
@@ -99,7 +100,12 @@ var replaceOpts = {
     {
       match: /##VERSION##/g,
       replacement: manifest.version
+    },
+    {
+      match: /http:\/\/localhost:4000\//g,
+      replacement: "http://form-o-fill.github.io/"
     }
+
   ]
 };
 
