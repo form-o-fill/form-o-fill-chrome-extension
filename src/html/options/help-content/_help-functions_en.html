@@ -106,3 +106,12 @@
     &nbsp;&nbsp;}]
   </div>
 </div>
+<p>
+  Please notice that you <b>can't set variables inside value functions and access those values inside before functions</b>.
+</p>
+<p>
+  This means that <code>context.storage.set("key", "value")</code> inside a value function will save that value in the <b>scope of all defined value functions</b>.
+</p>
+<p>
+  You can set a value in a value funtions and use it inside other value functions, but not inside a before functions.
+</p>
