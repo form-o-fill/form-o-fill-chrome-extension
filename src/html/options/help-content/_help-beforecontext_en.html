@@ -32,7 +32,7 @@
 </p>
 <p>
   You pass a <a href="http://api.jquery.com/category/selectors/" target="_blank">jQuery compatible selector</a> to the finder (<code>.findHtml()</code>). It will return a <a href="https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Promise">Promise</a> on which you can call <code>.then(function(html) {});</code> on.<br />
-  The first and only parameter to that function will be the found HTML of the tag (aka. innerHTML) or <code>null</code> if the selector was not found.
+  The first and only parameter to that function will be the found HTML of the tag (aka. outerHTML) or <code>null</code> if the selector was not found.
 </p>
 <p>
   Use it in a before function to construct your data return value like so:
@@ -61,7 +61,7 @@
 </p>
 <p>
   To save data use <code>context.storage.set("key", {some: "data"});</code>.<br />
-  To load data use <code>context.storage.get("key")</code>, which will return <code>{some: "data"});</code>.<br />
+  To load data use <code>context.storage.get("key")</code>, which will - in this example - return <code>{some: "data"}</code>.<br />
   Delete all stored data with <code>context.storage.delete()</code>.
 </p>
 <p>
