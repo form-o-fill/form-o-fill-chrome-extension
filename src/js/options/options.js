@@ -252,4 +252,4 @@ $(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-not
 
 // Load all tutorials and insert them in the DOM
 // Must be last.
-I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6", "tour7", "tour8", "tour9"], "tutorial");
+I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6", "tour7", "tour8", "tour9", "tour10"], "tutorial");
