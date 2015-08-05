@@ -1,0 +1,92 @@
+<div class="tuts tut-tour-11">
+
+  <textarea class="rulestoImport" id="tour11-r1">{
+  "workflows": [
+    {
+      "id": 1,
+      "name": "Tour 9",
+      "steps": [
+        "Tour 9 : Context object (.storage.set)",
+        "Tour 9 : Context object (.storage.get)"
+      ]
+    }
+  ],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Tour 9"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-9-3\\.html/,\n  \"name\": \"Tour 9 : Context object (.storage.set)\",\n  \"fields\": [{\n    \"selector\": \"input[name=field]\",\n    \"value\": function($e, data) {\n      // This saves the value accessible for all value functions, even\n      // on page 2\n      context.storage.set(\"tutorial-field\", $e.val());\n      // Don't fill it -> return null\n      return null;\n    }\n  }, {\n    \"selector\": \"input[type=submit]\",\n    \"value\": Libs.h.click\n  }]\n}, {\n  \"url\": /tutorial\\/tour-9-3-2\\.html/,\n  \"name\": \"Tour 9 : Context object (.storage.get)\",\n  \"fields\": [{\n    \"selector\": \"input[name=field]\",\n    \"value\": function($e, data) {\n      // restore value\n      return context.storage.get(\"tutorial-field\");\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+  <textarea class="rulesToImport" id="tour11-r2">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Tour 9"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /tutorial\\/tour-9-3\\.html/,\n  \"name\": \"Tour 9 : Context object (.storage in before function)\",\n  \"before\": function(resolve, context) {\n    // Random name from chance.js\n    var randomName = Libs.chance.name();\n    // Save it to storage\n    context.storage.set(\"tutorial-name\", randomName);\n    // blank resolve\n    resolve();\n  },\n  \"fields\": [{\n    \"selector\": \"input[name=field]\",\n    \"value\": function($e, data) {\n      // return the value from the before function storage.set\n      return context.storage.get(\"tutorial-name\");\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+
+  <div class="step" data-import-rules="#tour11-r1" data-element="#ruleeditor-ace" data-position="right" data-overlay="false">
+    <p>
+      This tab contains a rule for page one and two of the workflow.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="5,12">
+    <p>
+      For the first page it finds the <code>input</code> element and saves its current value under the name "tutorial-field" into the storage.
+    </p>
+    <p>
+      It then returns <code>null</code> so that Form-O-Fill will not act on the field.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="21,25">
+    <p>
+      For the second page it again selects the <code>input</code> field and uses <code>context.storage.get</code> to fetch the value saved on page 1.
+    </p>
+  </div>
+
+  <div class="step" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="0">
+    <p>
+      Please note that data saved <b>in value functions</b> is only accessible in other value functions.
+    </p>
+    <p>
+      There is another place where storing variables can be quite useful: before functions.
+    </p>
+    <p>
+      Values saved in before functions can also be used in value functions, but not the other way round.
+    </p>
+  </div>
+
+  <div class="step" data-import-rules="#tour11-r2" data-element="#ruleeditor-ace" data-position="right" data-overlay="false" data-mark-line="0">
+    <p>
+      This is what it looks like if the data is set in a before function.
+    </p>
+    <p>
+      Nothing new here.
+    </p>
+    <p>
+      This is all there is to the <code>context</code>. Have fun!
+    </p>
+  </div>
+
+</div>
