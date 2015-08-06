@@ -26,6 +26,11 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.3.1
+- Added tutorials for workflows, custom libraries and context object.
+- contest.storage.set workd in value functions
+- Updated external dependencies
+
 ★ Version 2.3.0
 - Live tutorial are here! Learn Form-O-Fill's features step by step. 
 - Fixed: input[type=checkbox] fields are extracted when not checked.

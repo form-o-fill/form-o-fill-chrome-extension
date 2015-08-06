@@ -20,6 +20,11 @@ var Changelog = {
       title: "FoF updated: Live tutorials!",
       message: "Learn the features of FoF with the live tutorials. See options.",
       target: "#tutorials"
+    },
+    "2.3.1": {
+      title: "FoF updated: More tutorials!",
+      message: "Added tutorials for workflows, context and more. Have a look!",
+      target: "#tutorials"
     }
   },
   findForVersion: function(version) {
