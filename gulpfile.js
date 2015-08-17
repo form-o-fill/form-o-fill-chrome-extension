@@ -102,8 +102,8 @@ var replaceOpts = {
       replacement: manifest.version
     },
     {
-      match: /http:\/\/localhost:4000\//g,
-      replacement: "http://form-o-fill.github.io/"
+      match: /href="http:\/\/localhost:4000\//g,
+      replacement: "href=\"http://form-o-fill.github.io/"
     }
 
   ]
