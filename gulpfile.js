@@ -216,7 +216,16 @@ gulp.task('contentJs', ['clean'], function () {
 // Build options.js
 //
 gulp.task('optionsJs', ['clean'], function () {
-  return gulp.src(["src/js/options/*.js", "!src/js/options/logs.js"], { nonegate: false })
+  return gulp.src([
+    "src/js/options/editor.js",
+    "src/js/options/chrome_bootstrap.js",
+    "src/js/options/tabs.js",
+    "src/js/options/import_export.js",
+    "src/js/options/tutorial.js",
+    "src/js/options/options.js",
+    "src/js/options/help.js",
+    "src/js/options/workflow.js"
+  ])
   .pipe(replace(replaceOpts))
   .pipe(concat('options.js'))
   .pipe(stripdebug())
