@@ -28,7 +28,9 @@ var Utils = {
     return window.location.host === Utils.liveExtensionId;
   },
   onFormOFillSite: function() {
+    /*eslint-disable no-extra-parens*/
     return window.location.host === "form-o-fill.github.io" || (window.location.host === "localhost" && window.location.port === "4000");
+    /*eslint-enable no-extra-parens*/
   },
   showExtractOverlay: function(whenFinishedCallback) {
     // Send message to content script

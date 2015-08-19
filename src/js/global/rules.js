@@ -1,5 +1,5 @@
-/*global Logger, js_beautify, JSONF, Rule */
-/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
+/*global Logger js_beautify JSONF Rule Storage Rule */
+/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
 
 // REMOVE START
 /*eslint-disable no-undef, block-scoped-var */
@@ -224,9 +224,11 @@ var Rules = {
         var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S)]*\\}.*$";
         resolveMatches = ruleFunc.toString().match(regex);
         // No call to resolve?
+        /*eslint-disable no-extra-parens*/
         if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
           ruleFuncErrors.needResolveCall = true;
         }
+        /*eslint-enable no-extra-parens*/
       }
     });
 

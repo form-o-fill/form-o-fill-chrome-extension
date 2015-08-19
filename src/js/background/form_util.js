@@ -11,7 +11,7 @@ var FormUtil = {
           return aRule.name === ruleName;
         })[0];
         resolve({
-          ruleToImport: (ruleToImport || null),
+          ruleToImport: ruleToImport || null,
           ruleThatImports: ruleName
         });
       });

@@ -36,7 +36,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
   Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
 
   // If there is only one match we need something in the testpage to click on
-  if((matchingRules.length + lastMatchingWorkflows.length) === 1) {
+  if(matchingRules.length + lastMatchingWorkflows.length === 1) {
     Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + matchingRules[0].name + "</li>", "Popup HTML (one match)");
   }
 };
@@ -178,7 +178,7 @@ var onTabReadyWorkflow = function() {
 
           // Save workflow state so we can continue even after a page reload
           Storage.save({
-            currentStep: (runningWorkflow.currentStep + 1),
+            currentStep: runningWorkflow.currentStep + 1,
             steps: runningWorkflow.steps
           }, Utils.keys.runningWorkflow).then(function () {
             resolve({status: "running_workflow", runRule: false});

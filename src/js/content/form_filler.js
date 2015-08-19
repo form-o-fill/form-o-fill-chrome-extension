@@ -68,7 +68,7 @@ var FormFiller = {
     domNode.checked = setValue;
   },
   _fillRadio: function(domNode, value) {
-    domNode.checked = (domNode.value === value);
+    domNode.checked = domNode.value === value;
   },
   _fillSelectOne: function(domNode, value) {
     var i = 0;
