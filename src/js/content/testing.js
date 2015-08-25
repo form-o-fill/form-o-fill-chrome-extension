@@ -68,8 +68,21 @@ var installTestingCode = function() {
   }).on("click", "a.cmd-show-extract-overlay", function () {
     // Execute extract form function
     showExtractOverlay();
+  }).on("click", ".popup-html li.select-workflow", function() {
+    // Clicks on the simulated popup should trigger workflow
+    var domNode = this;
+    var data = jQuery(this).data();
+    var message = {
+      "action": "fillWithWorkflow",
+      "index": data.workflowIndex,
+      "id": data.workflowId
+    };
+    chrome.extension.sendMessage(message, function() {
+      Testing.setTestingVar("rule-filled-id", message.id, "Filled form with workflow #id");
+      Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with workflow #name");
+      domNode = null;
+    });
   });
-
 
 };
 
