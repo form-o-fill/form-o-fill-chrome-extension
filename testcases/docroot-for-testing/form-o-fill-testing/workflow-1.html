@@ -19,8 +19,7 @@
       "name": "Form-O-Fill Workflow Test",
       "steps": [
         "step 1 -> 2",
-        "step 2 -> 3",
-        "step 3 -> 1"
+        "step 2 -> 3"
       ]
     }
   ],
@@ -33,7 +32,7 @@
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  name: \"step 1 -> 2\",\n  url: /workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 1\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 2 -> 3\",\n  url: /workflow-2/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 2\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 3 -> 1\",\n  url: /workflow-3/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 3\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}\n];",
+        "code": "var rules = [{\n  name: \"step 1 -> 2\",\n  url: /workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 1\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}, {\n  name: \"step 2 -> 3\",\n  url: /workflow-2/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"Filled by step 2\"\n  }, {\n    selector: \"form\",\n    value: function($e) {\n      $e.trigger(\"submit\");\n    }\n  }]\n}\n];",
         "tabId": 1
       }
     ]
