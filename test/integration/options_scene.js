@@ -35,7 +35,12 @@ describe("the options panel", function () {
     })
     .getText(".navigation .menu li", function (err, text) {
       // Navigation links
-      expect(text).to.eql(["Rule Editor", "Workflows", "Import / Export", "Help", "Tutorials", "About", "Changelog", "unpacked only:", "Logs", "Start Tour 1", "Start Tour 3", "Start Tour 4", "Start Tour 5"]);
+      expect(text).to.contain("Rule Editor");
+      expect(text).to.contain("Workflows");
+      expect(text).to.contain("Import / Export");
+      expect(text).to.contain("Tutorials");
+      expect(text).to.contain("About");
+      expect(text).to.contain("Changelog");
     })
     .close()
     .call(done);
