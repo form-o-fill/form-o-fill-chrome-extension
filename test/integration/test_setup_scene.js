@@ -6,6 +6,7 @@ describe("test setup", function() {
     // not chrome://extensions but this:
     browser
     .url("chrome://extensions-frame/")
+    .pause(1000)
     .getText(".extension-title", function(err, text) {
       var isInstalled = text.some(function (t) {
         return t === "Form-O-Fill - The programmable form filler";
