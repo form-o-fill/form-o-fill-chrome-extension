@@ -45,7 +45,7 @@ var importAll = function() {
   $warning.hide();
   var fileToImport = document.getElementById("importall").files[0];
 
-  if (typeof fileToImport === "undefined" || (fileToImport.type !== "application/json" && fileToImport.type !== "text/javascript")) {
+  if (typeof fileToImport === "undefined" || (fileToImport.type !== "application/json" && fileToImport.type !== "text/javascript" && fileToImport.type !== "application/javascript")) {
     $warning.show();
   } else {
     var reader = new FileReader();
