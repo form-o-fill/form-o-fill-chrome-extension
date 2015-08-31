@@ -65,10 +65,17 @@ var Workflows = {
   exportDataJson: function() {
     return new Promise(function (resolve) {
       Storage.load(Utils.keys.workflows).then(function(workflowData) {
+
+        // Not workflow saved yet.
+        if (typeof workflowData === "undefined") {
+          resolve([]);
+        }
+
         workflowData = workflowData.map(function cbWfDataMap(workflow) {
           workflow.steps = $.makeArray(workflow.steps);
           return workflow;
         });
+
         resolve(workflowData);
       });
     });
