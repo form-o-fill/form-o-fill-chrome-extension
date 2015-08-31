@@ -26,6 +26,9 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.3.1.1
+- Quickfix for broken import/export
+
 ★ Version 2.3.1
 - Added tutorials for workflows, custom libraries and context object.
 - contest.storage.set workd in value functions
