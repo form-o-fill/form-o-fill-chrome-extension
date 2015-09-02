@@ -27,9 +27,25 @@ var Libs = {
 };
 
 // helper for use in value functions
+//
+// "value" : Libs.h.click                                               => Clicks on the element specified by 'selector'
+// "value" : Libs.h.ifEmpty("hello")                                    => Fills the field only if empty with the value
+// "value" : Lib.g.ifEmpty(function($e, data) { return "some value"; }) => Executes the function only if the field is empty
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
+  },
+  ifEmpty: function(value) {
+
+    /*eslint-disable no-new-func*/
+    if(typeof value === "function") {
+      return value;
+    }
+    var preparedValue = value.replace(/'/g, "\\\'");
+    var emptyFunc = new Function("$e", "data", "return ($e && typeof $e.val === \"function\" && !$e.val()) ? '" + preparedValue + "' : null;");
+    /*eslint-enable no-new-func*/
+
+    return emptyFunc;
   }
 };
 Libs.add("h", valueFunctionHelper);
