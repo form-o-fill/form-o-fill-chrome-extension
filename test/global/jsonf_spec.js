@@ -64,4 +64,12 @@ describe("JSONF", function(){
     expect(JSONF.parse(serialized)()).to.eql({a: 42});
   });
 
+  it("works with dynamic created functions", function(){
+    /*eslint-disable no-undef, no-unused-vars, block-scoped-var, no-new-func*/
+    var func = new Function("return true;");
+    /*eslint-enable no-undef, no-unused-vars, block-scoped-var, no-new-func*/
+    var serialized = JSONF.stringify(func);
+    expect(JSONF.parse(serialized)()).to.eql(true);
+  });
+
 });

@@ -25,7 +25,7 @@ var JSONF = {
     }
 
     if (typeof value === "string") {
-      var rfunc = /^function\s*(\w*)\s*\((.*?)\)[\s\S]*?\{([\s\S]*)\}/m;
+      var rfunc = /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m;
       var rregexp = /^\/(.*?)\/$/m;
       var match = value.match(rfunc);
 
