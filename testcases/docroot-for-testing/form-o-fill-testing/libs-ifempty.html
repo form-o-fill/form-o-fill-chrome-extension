@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    Empty field: <input type=text id="empty" value="" /><br>
+    Filled field: <input type=text id="full" value="original content" /><br>
+    Empty Textarea: <textarea id="textarea"></textarea>
+    Filled Textarea: <textarea id="textarea-filled">original content</textarea>
+    <table id="form-o-fill-testing-info"></table>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "dummy"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [];",
+      "tabId": 1
+    }
+  ]
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+  </body>
+</html>

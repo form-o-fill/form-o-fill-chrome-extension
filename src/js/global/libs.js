@@ -36,13 +36,12 @@ var valueFunctionHelper = {
     $domNode.click();
   },
   ifEmpty: function(value) {
-
     /*eslint-disable no-new-func*/
     if(typeof value === "function") {
       return value;
     }
     var preparedValue = value.replace(/'/g, "\\\'");
-    var emptyFunc = new Function("$e", "data", "return ($e && typeof $e.val === \"function\" && !$e.val()) ? '" + preparedValue + "' : null;");
+    var emptyFunc = new Function("$e", "data", "return ($e && typeof $e.val === \"function\" && $e.val() === '') ? '" + preparedValue + "' : null;");
     /*eslint-enable no-new-func*/
 
     return emptyFunc;
