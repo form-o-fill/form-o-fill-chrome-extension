@@ -14,18 +14,22 @@
     Filled Textarea: <textarea id="textarea-filled">original content</textarea>
     <table id="form-o-fill-testing-info"></table>
     Rules Import: <textarea id="form-o-fill-testing-import">{
-  "tabSettings": [
-    {
-      "id": "1",
-      "name": "dummy"
-    }
-  ],
-  "rules": [
-    {
-      "code": "var rules = [];",
-      "tabId": 1
-    }
-  ]
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": 1,
+        "name": "Rules"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  url: /libs-ifempty/,\n  name: \"Usage of Libs.h.ifEmpty\",\n  fields: [{\n    \"selector\": \"#empty\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#full\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#textarea\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#textarea-filled\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
 }</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+
   </body>
 </html>
