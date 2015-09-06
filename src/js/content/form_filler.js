@@ -3,7 +3,7 @@
 var FormFiller = {
   error: null,
   // This fills the field with a value
-  fill: function(selector, value, beforeData) {
+  fill: function(selector, value, beforeData, flags) {
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
     var fillMethod = null;
@@ -28,6 +28,12 @@ var FormFiller = {
     for (i = 0; i < domNodes.length; ++i) {
       domNode = domNodes[i];
       fillMethod = this._fillMethod(domNode);
+
+      // Check for "onlyEmpty" flag and break the loop
+      if(flags.onlyEmpty === true && domNode.value === "") {
+        Logger.info("[form_filler.js] Skipped the loop because the target was not empty");
+        break;
+      }
 
       // if the value is a function, call it with the jQuery wrapped domNode
       // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object

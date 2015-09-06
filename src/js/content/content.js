@@ -51,13 +51,13 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
-      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value));
+      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value) + "; flags : " + JSONF.stringify(message.flags));
       // REMOVE START
       if (message.beforeData && message.beforeData !== null) {
         Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
       }
       // REMOVE END
-      currentError = FormFiller.fill(message.selector, message.value, message.beforeData);
+      currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags);
       if(typeof currentError !== "undefined" && currentError !== null) {
         Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);

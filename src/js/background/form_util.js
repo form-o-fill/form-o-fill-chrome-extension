@@ -107,6 +107,16 @@ var FormUtil = {
   sendLibsReloadToContent: function(port) {
     port.postMessage({"action": "reloadLibs"});
   },
+  buildFlags: function(ruleDef, fieldDef) {
+    // onlyEmpty: If true only fills the field if the target is currently "empty"
+    //            Can be set on rules or field defs. Latter overwrites first.
+    var onlyEmpty;
+    onlyEmpty = typeof ruleDef.onlyEmpty === "boolean" ? ruleDef.onlyEmpty : false;
+    onlyEmpty = typeof fieldDef.onlyEmpty === "boolean" ? fieldDef.onlyEmpty : onlyEmpty;
+    return {
+      onlyEmpty: onlyEmpty
+    };
+  },
   sendFieldsToContent: function(aRule, beforeData, port) {
     // Now send all field definitions to the content script
     var message;
@@ -115,6 +125,7 @@ var FormUtil = {
         "action": "fillField",
         "selector": field.selector,
         "value": JSONF.stringify(field.value),
+        "flags": FormUtil.buildFlags(aRule, field),
         "beforeData": beforeData
       };
       port.postMessage(message);
