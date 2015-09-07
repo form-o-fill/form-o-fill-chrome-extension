@@ -31,7 +31,7 @@ Changelog:
 
 ★ Version 2.3.1
 - Added tutorials for workflows, custom libraries and context object.
-- contest.storage.set workd in value functions
+- contest.storage.set works in value functions
 - Updated external dependencies
 
 ★ Version 2.3.0
