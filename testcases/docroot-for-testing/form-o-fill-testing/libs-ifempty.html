@@ -8,10 +8,17 @@
   </head>
   <body>
     <h1>TESTING SERVER RUNNING</h1>
-    Empty field: <input type=text id="empty" value="" /><br>
-    Filled field: <input type=text id="full" value="original content" /><br>
-    Empty Textarea: <textarea id="textarea"></textarea>
-    Filled Textarea: <textarea id="textarea-filled">original content</textarea>
+    Empty field: <input type=text id="empty" value="" /> .val()<br>
+    Filled field: <input type=text id="full" value="original content" />. val()<br>
+
+    Empty Textarea: <textarea id="textarea"></textarea> .val()<br>
+    Filled Textarea: <textarea id="textarea-filled">original content</textarea> .val()<br>
+
+    No Checkbox selected: <input type="checkbox" id="checkbox" /> (prop checked)<br>
+    Checkbox selected: <input type="checkbox" id="checkbox-filled" checked/> (prop checked)<br>
+
+    Radio: <input type="radio" id="radiobutton"> (prop checked)<br>
+    Selected Radio: <input type="radio" id="radiobutton-filled" checked> (prop checked)<br>
     <table id="form-o-fill-testing-info"></table>
     Rules Import: <textarea id="form-o-fill-testing-import">{
   "workflows": [],
