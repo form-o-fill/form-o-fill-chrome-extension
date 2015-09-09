@@ -26,6 +26,10 @@ Permissions requested:
 
 Changelog:
 
+★ Version 2.3.2
+- Rules and field definitions accept a 'onlyEmpty' flag which fills the field only in empty
+- Add tutorial for shared rules
+
 ★ Version 2.3.1.1
 - Quickfix for broken import/export
 
