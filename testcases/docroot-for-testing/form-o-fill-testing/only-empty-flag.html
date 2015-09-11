@@ -13,12 +13,6 @@
 
     Empty Textarea: <textarea id="textarea"></textarea> .val()<br>
     Filled Textarea: <textarea id="textarea-filled">original content</textarea> .val()<br>
-
-    No Checkbox selected: <input type="checkbox" id="checkbox" /> (prop checked)<br>
-    Checkbox selected: <input type="checkbox" id="checkbox-filled" checked/> (prop checked)<br>
-
-    Radio: <input type="radio" id="radiobutton"> (prop checked)<br>
-    Selected Radio: <input type="radio" id="radiobutton-filled" checked> (prop checked)<br>
     <table id="form-o-fill-testing-info"></table>
     Rules Import: <textarea id="form-o-fill-testing-import">{
   "workflows": [],
@@ -31,7 +25,7 @@
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  url: /libs-ifempty/,\n  name: \"Usage of Libs.h.ifEmpty\",\n  fields: [{\n    \"selector\": \"#empty\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#full\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#textarea\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }, {\n    \"selector\": \"#textarea-filled\",\n    \"value\": Libs.h.ifEmpty(\"filled by rule\")\n  }]\n}\n];",
+        "code": "var rules = [{\n  url: /libs-ifempty/,\n  name: \"Usage of onlyEmpty in rule\",\n  onlyEmpty: true,\n  fields: [{\n    \"selector\": \"#empty\",\n    \"value\": \"#empty\"\n  }, {\n    \"selector\": \"#full\",\n    \"value\": \"#full\"\n  }, {\n    \"selector\": \"#textarea\",\n    \"value\": \"#textarea\"\n  }, {\n    \"selector\": \"#textarea-filled\",\n    \"value\": \"#textarea-filled\"\n  }]\n}, {\n  url: /libs-ifempty/,\n  name: \"Usage of onlyEmpty in field definition\",\n  onlyEmpty: false,\n  fields: [{\n    \"selector\": \"#empty\",\n    \"value\": \"#empty\",\n    onlyEmpty: true\n  }, {\n    \"selector\": \"#full\",\n    \"value\": \"#full\",\n    onlyEmpty: true\n  }, {\n    \"selector\": \"#textarea\",\n    \"value\": \"#textarea\",\n    onlyEmpty: true\n  }, {\n    \"selector\": \"#textarea-filled\",\n    \"value\": \"#textarea-filled\",\n    onlyEmpty: true\n  }]\n}\n];",
         "tabId": 1
       }
     ]
