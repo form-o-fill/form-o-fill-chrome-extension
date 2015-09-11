@@ -30,7 +30,7 @@ var FormFiller = {
       fillMethod = this._fillMethod(domNode);
 
       // Check for "onlyEmpty" flag and break the loop
-      if(flags.onlyEmpty === true && domNode.value === "") {
+      if(flags.onlyEmpty === true && domNode.value !== "") {
         Logger.info("[form_filler.js] Skipped the loop because the target was not empty");
         break;
       }
