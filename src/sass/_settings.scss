@@ -1,0 +1,21 @@
+#settings {
+  .comment {
+    line-height: 20px;
+    margin-left: 16px;
+    color: #999;
+  }
+
+  .tabcontainer {
+    margin-bottom: 15px;
+  }
+
+  .tab.current input {
+    width: auto;
+  }
+
+  li.info {
+    display: inline-block;
+    color: #22AD19;
+    margin-left: 15px;
+  }
+}

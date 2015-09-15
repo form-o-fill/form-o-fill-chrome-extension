@@ -5,7 +5,7 @@
 var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
 
-I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportall", "tutorials"]);
+I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "tutorials"]);
 
 if(Utils.debug) {
   I18n.loadPages(["logs"]);

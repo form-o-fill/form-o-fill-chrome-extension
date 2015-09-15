@@ -17,7 +17,8 @@ var Utils = {
     runningWorkflow: "form-o-fill-runningworkflow",
     sessionStorage: "form-o-fill-sessionStorage",
     tutorialDataBackup: "form-o-fill-tutorialDataBackup",
-    tutorialActive: "form-o-fill-tut-active"
+    tutorialActive: "form-o-fill-tut-active",
+    settings: "form-o-fill-settings"
   },
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
