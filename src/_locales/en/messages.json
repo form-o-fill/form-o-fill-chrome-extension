@@ -13,6 +13,9 @@
       }
     }
   },
+  "found_1_match": {
+    "message": "Found 1 match"
+  },
   "found_no_matches": {
     "message": "Found no matching rules. <a href='#' class='cmd-show-extract-overlay'>Create one ?</a>",
     "placeholders": {

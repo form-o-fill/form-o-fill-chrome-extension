@@ -79,7 +79,9 @@ var Popup = {
     var ruleMatchesCount = matchingRules.length;
     var createRuleUrl = chrome.extension.getURL("html/options.html#createRule!" + encodeURI(this.currentUrl));
     var message = chrome.i18n.getMessage("found_no_matches", [ createRuleUrl ]);
-    if (ruleMatchesCount > 0) {
+    if (ruleMatchesCount === 1) {
+      message = chrome.i18n.getMessage("found_1_match");
+    } else if (ruleMatchesCount > 0) {
       message = chrome.i18n.getMessage("found_n_matches", [ ruleMatchesCount + matchingWorkflows.length ]);
     }
     document.querySelectorAll("h3")[0].innerHTML = message;
