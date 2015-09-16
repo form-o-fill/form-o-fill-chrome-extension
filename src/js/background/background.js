@@ -4,6 +4,7 @@ var lastMatchingRules = [];
 var lastActiveTab = null;
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
+var optionSettings = null;
 
 /*eslint-disable no-unused-vars*/
 var testingMode = false;
@@ -113,7 +114,7 @@ var onTabReadyRules = function(tabId) {
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)
-            if (totalMatchesCount !== 1) {
+            if (totalMatchesCount !== 1 || optionSettings.alwaysShowPopup) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
               if (!Utils.isLiveExtension()) {
                 createCurrentPopupInIframe(tab.id);
@@ -281,6 +282,13 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     // evaluated in the context of the background page
     Libs.import();
   }
+
+  // Set local version of settngs based on what is set in option.js
+  // This is called from options.js whenever settings are changed (or initialially loaded)
+  if(message.action === "setSettings" && message.message) {
+    optionSettings = message.message;
+    Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
+  }
 });
 
 // REMOVE START
@@ -299,6 +307,13 @@ chrome.runtime.onMessage.addListener(function (message) {
   }
 });
 // REMOVE END
+
+// When this file loads:
+Storage.load(Utils.keys.settings).then(function(settings) {
+  if(typeof settings === "undefined") {
+    // TODO! Load default settings here
+  }
+});
 
 // Fires when the extension is install or updated
 chrome.runtime.onInstalled.addListener(function (details) {

@@ -1,6 +1,6 @@
 /*global Utils*/
 var Settings = function() {
-  this.settings = {};
+  this.settings = null;
 };
 
 Settings.prototype.init = function() {
@@ -23,6 +23,7 @@ Settings.prototype.loadSettings = function() {
     settings.settings = currentSettings;
 
     settings.applySettings();
+    settings.sendToBg(currentSettings);
   });
 };
 
@@ -40,10 +41,15 @@ Settings.prototype.showInfo = function(msg) {
   }
 };
 
+Settings.prototype.sendToBg = function(currentSettings) {
+  chrome.runtime.sendMessage({action: "setSettings", message: currentSettings});
+};
+
 Settings.prototype.saveSettings = function() {
   var currentSettings = {
     alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked
   };
+  this.sendToBg(currentSettings);
   Storage.save(currentSettings, Utils.keys.settings);
 };
 
