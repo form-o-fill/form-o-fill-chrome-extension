@@ -55,7 +55,8 @@
 <div class="block-of-code">
   <div class="explaining">
     If you set this to <code>true</code> and only this rule matches, it will be auto-executed.<br />
-    No need to click the button.
+    No need to click the button.<br />
+    (Optional, default is <code>false</code>)
   </div>
   <div class="code">
     &nbsp;&nbsp;autorun: true,
@@ -64,7 +65,7 @@
 <div class="block-of-code">
   <div class="explaining">
     If you set this to <code>true</code> the target fields will only be filled if<br />
-    currently empty. Default is false.<br />
+    currently empty. Default is <code>false</code>.<br />
     Can be overwritten in the field definition.
   </div>
   <div class="code">
@@ -81,7 +82,7 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    A field has a <code>selector</code> and an <code>value</code>.
+    A field must have a <code>selector</code> and a <code>value</code>.
   </div>
   <div class="code">
     &nbsp;&nbsp;{
@@ -97,7 +98,8 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    The value to fill the field with.
+    The value to fill the field with.<br />
+    Can be a <a href="#help-functions">function</a>.
   </div>
   <div class="code">
     &nbsp;&nbsp;&nbsp;&nbsp;value: "Nyan Nyan Nyan",
@@ -107,6 +109,7 @@
   <div class="explaining">
     Only fill this field if currently empty.<br />
     Can also be set for the whole rule (see above).
+    Optional, can be omitted.
   </div>
   <div class="code">
     &nbsp;&nbsp;&nbsp;&nbsp;onlyEmpty: true
