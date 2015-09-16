@@ -22,7 +22,7 @@ Chrome 33+
 Permissions requested:
 - Read and change all data on all sites (It's a form filler :) IT should work everywhere)
 - Notifications (Show problems and extract notification)
-- Communicate ith websites (Used for the live tutorials)
+- Communicate with websites (Used for the live tutorials)
 
 Changelog:
 
