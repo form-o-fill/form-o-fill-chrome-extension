@@ -283,8 +283,8 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     Libs.import();
   }
 
-  // Set local version of settngs based on what is set in option.js
-  // This is called from options.js whenever settings are changed (or initialially loaded)
+  // Set local version of settings based on what is set in option.js
+  // This is called from options.js whenever settings are changed (or initially loaded)
   if(message.action === "setSettings" && message.message) {
     optionSettings = message.message;
     Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
@@ -308,11 +308,12 @@ chrome.runtime.onMessage.addListener(function (message) {
 });
 // REMOVE END
 
-// When this file loads:
+// When this file loads, load and store settings
 Storage.load(Utils.keys.settings).then(function(settings) {
   if(typeof settings === "undefined") {
-    // TODO! Load default settings here
+    settings = Utils.defaultSettings;
   }
+  optionSettings = settings;
 });
 
 // Fires when the extension is install or updated

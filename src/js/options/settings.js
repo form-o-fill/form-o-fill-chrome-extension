@@ -16,9 +16,7 @@ Settings.prototype.loadSettings = function() {
   var settings = this;
   Storage.load(Utils.keys.settings).then(function(currentSettings) {
     if(typeof currentSettings === "undefined") {
-      currentSettings = {
-        alwaysShowPopup: false
-      };
+      currentSettings = Utils.defaultSettings;
     }
     settings.settings = currentSettings;
 

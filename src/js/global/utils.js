@@ -20,6 +20,9 @@ var Utils = {
     tutorialActive: "form-o-fill-tut-active",
     settings: "form-o-fill-settings"
   },
+  defaultSettings: {
+    alwaysShowPopup: false
+  },
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
     "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
