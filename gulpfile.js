@@ -225,7 +225,8 @@ gulp.task('optionsJs', ['clean'], function () {
     "src/js/options/options.js",
     "src/js/options/help.js",
     "src/js/options/workflow.js",
-    "src/js/options/settings.js"
+    "src/js/options/settings.js",
+    "src/js/options/rule_summary.js"
   ])
   .pipe(replace(replaceOpts))
   .pipe(concat('options.js'))
@@ -290,7 +291,7 @@ gulp.task('sass', function () {
 // Watch and live compile SASS -> CSS
 //
 gulp.task('sass:watch', function () {
-  gulp.watch('src/sass/*.scss', ['sass']);
+  gulp.watch('src/sass/**/*.scss', ['sass']);
 });
 
 //

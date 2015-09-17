@@ -57,6 +57,10 @@ Editor.prototype.session = function() {
   return this._session;
 };
 
+Editor.prototype.selection = function() {
+  return this._session.selection;
+};
+
 Editor.prototype.document = function() {
   return this._document;
 };

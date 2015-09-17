@@ -1,0 +1,23 @@
+.rule-summary {
+  border: 1px solid #999;
+  margin: 4px 8px 4px 0;
+  overflow: hidden;
+  border-collapse: collapse;
+
+  td {
+    padding: 4px;
+  }
+
+  .rule-name {
+    color: #fff;
+    background-color: #999;
+  }
+
+  .yes {
+    color: Green;
+  }
+}
+
+.hidden {
+  display: none;
+}
