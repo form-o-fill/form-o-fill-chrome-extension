@@ -65,12 +65,6 @@ var ChromeBootstrap = {
         return false;
       }
 
-      if(this.classList.contains("the-rule-editor-menu")) {
-        jQuery(".rule-summary").removeClass("hidden");
-      } else {
-        jQuery(".rule-summary").addClass("hidden");
-      }
-
       jQuery(".notice").hide();
     });
   }
