@@ -1,4 +1,4 @@
-/*global editor jQuery*/
+/*global editor jQuery Rules Workflows*/
 var ruleSummary = {
   currentRow: null,
   refeshTimeout: false
@@ -14,6 +14,7 @@ jQuery(".menu a").on("click", function() {
 });
 
 
+/*eslint-disable complexity */
 var ruleSummaryFind = function(term, startInRow, backward) {
   var src = editor._document.getAllLines();
 
@@ -43,29 +44,63 @@ var ruleSummaryFind = function(term, startInRow, backward) {
   return null;
 };
 
+var ruleSummaryRefreshByRule = function(rule) {
+  document.querySelector(".rule-fields-count").innerHTML = rule.fields.length;
+  document.querySelector(".rs-autorun-toggle").checked = rule.autorun;
+  document.querySelector(".rs-only-empty-toggle").checked = rule.onlyEmpty;
+
+  Workflows.load().then(function(arrayOfWfs) {
+    var foundTheRule = arrayOfWfs.some(function(aWorkflow) {
+      return jQuery.makeArray(aWorkflow.steps).some(function(ruleName) {
+        return ruleName === rule.name;
+      });
+    });
+
+    var $wf = document.querySelector(".rule-workflow-part");
+    $wf.innerHTML = foundTheRule ? "Yes" : "No";
+    $wf.classList.remove("no");
+    $wf.classList.remove("yes");
+    $wf.classList.add(foundTheRule ? "yes" : "no");
+  });
+};
+
 var ruleSummaryRefresh = function() {
   var row = editor.editor().getSelectionRange().start.row;
+
   if(row !== ruleSummary.currentRow) {
     ruleSummary.currentRow = row;
-    // try to find the "name" attrribute backwards
-    var line = ruleSummaryFind(/name["']?\s*:/, row, true);
+
+    var currentLine = editor.session().getLine(row);
+    var back = true;
+
+    // If the current line is the url, cahcnes are we should look forward instead of backward
+    if(/url/.test(currentLine)) {
+      back = false;
+    }
+
+    // try to find the "name" attribute in the first direction
+    var line = ruleSummaryFind(/name["']?\s*:/, row, back);
 
     if(!line) {
-      // try forward ...
-      line = ruleSummaryFind(/name["']?\s*:/, row, false);
+      // try in the oter direction ...
+      back = !back;
+      line = ruleSummaryFind(/name["']?\s*:/, row, back);
     }
 
     if(line) {
       // Extract name:
-      // TODO!
-      ruleSummary.name = null;
+      var nameMatches = line.match(/:\s*["'](.*?)["']/);
+      if(nameMatches[1] !== "") {
+        ruleSummary.name = nameMatches[1];
+      }
+      document.querySelector(".rule-name").innerHTML = ruleSummary.name;
 
-      // Now try to find the opening rule bracket
-      // to scope the next search
-      line = ruleSummaryFind(/{$/, row, true);
+      Rules.findByName(ruleSummary.name).then(ruleSummaryRefreshByRule);
     }
   }
+  ruleSummary.refeshTimeout = false;
 };
+/*eslint-enable complexity */
 
 // A changeSelection event is trigger by the ACE editor
 // when a use clicks inside the editor.
