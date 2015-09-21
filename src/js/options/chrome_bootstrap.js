@@ -25,40 +25,14 @@ var ChromeBootstrap = {
       jQuery('body')[0].scrollTop = 0;
     });
 
-    jQuery('.mainview > *:not(.selected)').css('display', 'none');
-
-    var relocate = function(target) {
-      var hash = window.location.hash;
-
-      if (typeof target === "string") {
-        hash = target;
-      }
-
-      if (hash) {
-        var main = hash.replace(/-.*$/, "");
-        var sub = hash.replace(/^.*?-/, "");
-        var $nav = jQuery(".navigation a[href='" + main + "']");
-        if ($nav.length === 1) {
-          $nav.trigger("click");
-        }
-
-        // Activate sub-item
-        if (sub !== "") {
-          window.location.hash = "#help";
-          window.location.hash = hash;
-        }
-      }
-
-    };
-
     // Activate navigationitem via hashtag
-    jQuery(window).on("load", relocate);
+    jQuery(window).on("load", ChromeBootstrap.relocate);
 
     jQuery(document).on("click", "a[href*=#help-]", function() {
-      relocate(this.href.replace(/^.*#/, "#"));
+      ChromeBootstrap.relocate(this.href.replace(/^.*#/, "#"));
     });
 
-    jQuery(document).on("click", "a.activate-menu", relocate);
+    jQuery(document).on("click", "a.activate-menu", ChromeBootstrap.relocate);
 
     jQuery(".menu a").on("click", function() {
       if(this.classList.contains("no-click")) {
@@ -67,5 +41,27 @@ var ChromeBootstrap = {
 
       jQuery(".notice").hide();
     });
+  },
+  relocate: function(target) {
+    var hash = window.location.hash;
+
+    if (typeof target === "string") {
+      hash = target;
+    }
+
+    if (hash) {
+      var main = hash.replace(/-.*$/, "");
+      var sub = hash.replace(/^.*?-/, "");
+      var $nav = jQuery(".navigation a[href='" + main + "']");
+      if ($nav.length === 1) {
+        $nav.trigger("click");
+      }
+
+      // Activate sub-item
+      if (sub !== "") {
+        window.location.hash = "#help";
+        window.location.hash = hash;
+      }
+    }
   }
 };
