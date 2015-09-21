@@ -42,7 +42,8 @@ var ruleSummaryFind = function(term, startInRow, backward) {
 //
 // Refresh all items in the rule summary
 var ruleSummaryRefreshByRule = function(rule) {
-  ruleSummaryShow(true);
+  ruleSummary.currentRule = rule;
+
   document.querySelector(".rule-fields-count").innerHTML = rule.fields.length;
   document.querySelector(".rs-autorun-toggle").checked = rule.autorun;
   document.querySelector(".rs-only-empty-toggle").checked = rule.onlyEmpty;
@@ -121,3 +122,19 @@ jQuery(".menu a").on("click", function() {
     ruleSummaryShow(false);
   }
 });
+
+var ruleSummaryToggle = function(attrToToggle) {
+  return function() {
+    // get current cursor position
+    // read current rules in tab
+    // find rule from ruleSummary.currentRule
+    // add/remove attrToToggle
+    // save rules
+    // insert into editor
+    // restore cursorpos
+  };
+};
+
+jQuery(document)
+  .on("click", ".rs-autorun-toggle", ruleSummaryToggle("autorun"))
+  .on("click", ".rs-only-empty-toggle", ruleSummaryToggle("onlyEmpty"));
