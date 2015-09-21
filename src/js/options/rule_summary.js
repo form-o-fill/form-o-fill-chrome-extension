@@ -4,15 +4,10 @@ var ruleSummary = {
   refeshTimeout: false
 };
 
-// Hide or show rule summary
-jQuery(".menu a").on("click", function() {
-  if(this.classList.contains("the-rule-editor-menu")) {
-    jQuery(".rule-summary").removeClass("hidden");
-  } else {
-    jQuery(".rule-summary").addClass("hidden");
-  }
-});
-
+var ruleSummaryShow = function(show) {
+  var method = show ? "remove" : "add";
+  document.querySelector(".rule-summary").classList[method]("hidden");
+};
 
 /*eslint-disable complexity */
 var ruleSummaryFind = function(term, startInRow, backward) {
@@ -44,7 +39,10 @@ var ruleSummaryFind = function(term, startInRow, backward) {
   return null;
 };
 
+//
+// Refresh all items in the rule summary
 var ruleSummaryRefreshByRule = function(rule) {
+  ruleSummaryShow(true);
   document.querySelector(".rule-fields-count").innerHTML = rule.fields.length;
   document.querySelector(".rs-autorun-toggle").checked = rule.autorun;
   document.querySelector(".rs-only-empty-toggle").checked = rule.onlyEmpty;
@@ -57,10 +55,13 @@ var ruleSummaryRefreshByRule = function(rule) {
     });
 
     var $wf = document.querySelector(".rule-workflow-part");
+
     $wf.innerHTML = foundTheRule ? "Yes" : "No";
     $wf.classList.remove("no");
     $wf.classList.remove("yes");
     $wf.classList.add(foundTheRule ? "yes" : "no");
+
+    ruleSummaryShow(true);
   });
 };
 
@@ -111,7 +112,12 @@ editor.selection().on("changeSelection", function() {
     ruleSummary.refeshTimeout = true;
     setTimeout(ruleSummaryRefresh, 1000);
   }
-  // Ifsame return as ruleSummary.currentRow;
-  // else setTimeout -> generate rule summary (throttle timeout!)
-  // editor.getValue().split("\n")
+});
+
+// Hide or show rule summary
+// when the user clicks on the menu item
+jQuery(".menu a").on("click", function() {
+  if(!this.classList.contains("the-rule-editor-menu")) {
+    ruleSummaryShow(false);
+  }
 });
