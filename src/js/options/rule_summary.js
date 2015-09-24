@@ -39,14 +39,24 @@ var ruleSummaryFind = function(term, startInRow, backward) {
   return null;
 };
 
+var ruleSummaryYesNo = function(selector, foundTheRule) {
+  var $wf = document.querySelector(selector);
+  $wf.innerHTML = foundTheRule ? "Yes" : "No";
+  $wf.classList.remove("no");
+  $wf.classList.remove("yes");
+  $wf.classList.add(foundTheRule ? "yes" : "no");
+};
+
 //
 // Refresh all items in the rule summary
 var ruleSummaryRefreshByRule = function(rule) {
   ruleSummary.currentRule = rule;
 
   document.querySelector(".rule-fields-count").innerHTML = rule.fields.length;
-  document.querySelector(".rs-autorun-toggle").checked = rule.autorun;
-  document.querySelector(".rs-only-empty-toggle").checked = rule.onlyEmpty;
+
+  var usesImport = rule.fields.some(function(fieldDef) {
+    return typeof fieldDef.import !== "undefined";
+  });
 
   Workflows.load().then(function(arrayOfWfs) {
     var foundTheRule = arrayOfWfs.some(function(aWorkflow) {
@@ -55,12 +65,10 @@ var ruleSummaryRefreshByRule = function(rule) {
       });
     });
 
-    var $wf = document.querySelector(".rule-workflow-part");
-
-    $wf.innerHTML = foundTheRule ? "Yes" : "No";
-    $wf.classList.remove("no");
-    $wf.classList.remove("yes");
-    $wf.classList.add(foundTheRule ? "yes" : "no");
+    ruleSummaryYesNo(".rule-workflow-part", foundTheRule);
+    ruleSummaryYesNo(".rule-import-part", usesImport);
+    ruleSummaryYesNo(".rule-autorun-part", rule.autorun === true);
+    ruleSummaryYesNo(".rule-empty-only-part", rule.onlyEmpty === true);
 
     ruleSummaryShow(true);
   });
@@ -122,19 +130,3 @@ jQuery(".menu a").on("click", function() {
     ruleSummaryShow(false);
   }
 });
-
-var ruleSummaryToggle = function(attrToToggle) {
-  return function() {
-    // get current cursor position
-    // read current rules in tab
-    // find rule from ruleSummary.currentRule
-    // add/remove attrToToggle
-    // save rules
-    // insert into editor
-    // restore cursorpos
-  };
-};
-
-jQuery(document)
-  .on("click", ".rs-autorun-toggle", ruleSummaryToggle("autorun"))
-  .on("click", ".rs-only-empty-toggle", ruleSummaryToggle("onlyEmpty"));
