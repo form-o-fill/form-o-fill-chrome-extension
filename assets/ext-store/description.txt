@@ -30,6 +30,7 @@ Changelog:
 - Settings panel added. Toggle popup display when one rule matches on and off.
 - Rules and field definitions accept a 'onlyEmpty' flag which fills the field only if empty
 - Add tutorial for shared rules
+- Add rule summary panel
 
 ★ Version 2.3.1.1
 - Quickfix for broken import/export
