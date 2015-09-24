@@ -1,4 +1,4 @@
-/*global FormError, jQuery, JSONF, Logger, Utils*/
+/*global FormError, jQuery, JSONF, Logger, Utils, takeScreenshot*/
 /*eslint complexity:0, no-unused-vars: 0*/
 var FormFiller = {
   error: null,
@@ -35,6 +35,11 @@ var FormFiller = {
         break;
       }
 
+      // Screenshot?
+      if(flags.takeScreenshot === true) {
+        takeScreenshot().then(this._saveScreenshot);
+      }
+
       // if the value is a function, call it with the jQuery wrapped domNode
       // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
       if(typeof parsedValue === "function") {
@@ -56,6 +61,10 @@ var FormFiller = {
     }
 
     return returnValue;
+  },
+  _saveScreenshot: function(dataUri) {
+    //TODO: save image in localStorage using window.location.href or <title> and scale beforehand (FS, 2015-09-24)
+    //      see http://stackoverflow.com/questions/20958078/resize-base64-image-in-javascript-without-using-canvas
   },
   _fillDefault: function(domNode, value) {
     domNode.value = value;

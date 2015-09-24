@@ -19,7 +19,8 @@
     "contextMenus",
     "notifications",
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "<all_urls>"
   ],
   "web_accessible_resources": [ 
     "html/options.html"

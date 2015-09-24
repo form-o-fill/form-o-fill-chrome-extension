@@ -111,10 +111,13 @@ var FormUtil = {
     // onlyEmpty: If true only fills the field if the target is currently "empty"
     //            Can be set on rules or field defs. Latter overwrites first.
     var onlyEmpty;
+    var takeScreenshot;
     onlyEmpty = typeof ruleDef.onlyEmpty === "boolean" ? ruleDef.onlyEmpty : false;
     onlyEmpty = typeof fieldDef.onlyEmpty === "boolean" ? fieldDef.onlyEmpty : onlyEmpty;
+    takeScreenshot = typeof fieldDef.takeScreenshot === "boolean" ? fieldDef.takeScreenshot : false;
     return {
-      onlyEmpty: onlyEmpty
+      onlyEmpty: onlyEmpty,
+      takeScreenshot: takeScreenshot
     };
   },
   sendFieldsToContent: function(aRule, beforeData, port) {

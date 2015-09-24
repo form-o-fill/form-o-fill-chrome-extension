@@ -46,6 +46,18 @@ chrome.runtime.onConnect.addListener(function (port) {
     displayTimeout = setTimeout(hideOverlay, 1500);
   };
 
+  // Takes screenshot
+  // returns a Data URL that can be used in <img> tags
+  /*eslint-disable no-unused-vars */
+  var takeScreenshot = function() {
+    return new Promise(function (resolve) {
+      chrome.tabs.captureVisibleTab(function(screenshotDataUri) {
+        resolve(screenshotDataUri);
+      });
+    });
+  };
+  /*eslint-enable no-unused-vars */
+
   port.onMessage.addListener(function (message) {
     Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
 
@@ -89,12 +101,12 @@ chrome.runtime.onConnect.addListener(function (port) {
         jQuery("#" + workingOverlayId).show();
       }, 350);
 
-      // Show another overlay when things take REALLY long to finishs
+      // Show another overlay when things take REALLY long to finish
       takingLongTimeout = setTimeout(function () {
         jQuery("#" + workingOverlayId).html("This is really taking too long.");
       }, 5000);
 
-      // Finally if everything fails, clear overlay after 10 seconds
+      // Finally if everything fails, clear overlay after 12 seconds
       wontFinishTimeout = setTimeout(hideOverlay, 12000);
     }
 
@@ -113,7 +125,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     if(message.action === "reloadLibs") {
       Libs.import();
     }
-
   });
 
   // Simple one-shot callbacks
@@ -145,7 +156,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       responseCb();
     }
 
-    // Save a variable set in backgound via storage.set in the context of the content script
+    // Save a variable set in background via storage.set in the context of the content script
     // This makes the storage usable in value functions
     if(message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
       Logger.info("[content.js] Saving " + message.key + " = " + message.value);
