@@ -208,14 +208,12 @@ runWorkflowOrRule = function (tabId) {
 
 // Takes screenshot of a tab
 // returns a Data URL that can be used in <img> tags
-var takeScreenshot = function(tabId) {
-  /*eslint-disable no-unused-vars */
-  return new Promise(function (resolve) {
-    chrome.tabs.captureVisibleTab(tabId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
-      resolve(screenshotDataUri);
-    });
+var takeScreenshot = function(tabId, ruleMetadata) {
+  chrome.tabs.captureVisibleTab(tabId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
+    //TODO: save screenshot to localstorage (resize?) (FS, 2015-09-25)
+    //chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
+    // or save image data uri via Utils.download
   });
-  /*eslint-enable no-unused-vars */
 };
 
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
@@ -313,13 +311,21 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
   });
 });
+// REMOVE END
 
-chrome.runtime.onMessage.addListener(function (message) {
+// Listen for messages from content.js
+chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
+  // REMOVE START
   if(message.action === "log" && message.message) {
     Logger.store(message.message);
   }
+  // REMOVE END
+
+  // The content page (form_filler.js) requests a screenshot to be taken
+  if(message.action === "takeScreenshot" && message.value) {
+    takeScreenshot(lastActiveTab.id, message.value);
+  }
 });
-// REMOVE END
 
 // When this file loads, load and store settings
 Storage.load(Utils.keys.settings).then(function(settings) {

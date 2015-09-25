@@ -39,7 +39,7 @@ var FormFiller = {
       if(flags.takeScreenshot === true) {
         // Only the BG page has the permissions to do a screenshot
         // so here we send it the request to do so
-        chrome.runtime.sendMessage({action: "takeScreenshot", value: true})
+        chrome.runtime.sendMessage({action: "takeScreenshot", value: meta});
       }
 
       // if the value is a function, call it with the jQuery wrapped domNode
@@ -63,11 +63,6 @@ var FormFiller = {
     }
 
     return returnValue;
-  },
-  _saveScreenshot: function(dataUri) {
-    debugger;
-    //TODO: save image in localStorage using window.location.href or <title> and scale beforehand (FS, 2015-09-24)
-    //      see http://stackoverflow.com/questions/20958078/resize-base64-image-in-javascript-without-using-canvas
   },
   _fillDefault: function(domNode, value) {
     domNode.value = value;
