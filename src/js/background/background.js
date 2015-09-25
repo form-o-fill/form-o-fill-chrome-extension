@@ -205,6 +205,19 @@ runWorkflowOrRule = function (tabId) {
   });
 };
 
+
+// Takes screenshot of a tab
+// returns a Data URL that can be used in <img> tags
+var takeScreenshot = function(tabId) {
+  /*eslint-disable no-unused-vars */
+  return new Promise(function (resolve) {
+    chrome.tabs.captureVisibleTab(tabId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
+      resolve(screenshotDataUri);
+    });
+  });
+  /*eslint-enable no-unused-vars */
+};
+
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   runWorkflowOrRule(activeInfo.tabId);

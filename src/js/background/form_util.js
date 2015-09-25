@@ -124,12 +124,24 @@ var FormUtil = {
     // Now send all field definitions to the content script
     var message;
     aRule.fields.forEach(function ruleFieldsForEach(field) {
+      // The message contains ...
+      //
+      // action: "fillField"
+      // selector: the query selector to use
+      // value: The value to fill the field with (or a value function to execute)
+      // flags: boolean flags to honor (like onlyEmpty)
+      // beforeData: The resolved before data
+      // meta: meta data about the source of the data
       message = {
         "action": "fillField",
         "selector": field.selector,
         "value": JSONF.stringify(field.value),
         "flags": FormUtil.buildFlags(aRule, field),
-        "beforeData": beforeData
+        "beforeData": beforeData,
+        "meta": {
+          ruleId: aRule.id,
+          name: aRule.nameClean
+        }
       };
       port.postMessage(message);
       Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);

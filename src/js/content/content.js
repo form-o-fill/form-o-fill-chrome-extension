@@ -46,18 +46,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     displayTimeout = setTimeout(hideOverlay, 1500);
   };
 
-  // Takes screenshot
-  // returns a Data URL that can be used in <img> tags
-  /*eslint-disable no-unused-vars */
-  var takeScreenshot = function() {
-    return new Promise(function (resolve) {
-      chrome.tabs.captureVisibleTab(function(screenshotDataUri) {
-        resolve(screenshotDataUri);
-      });
-    });
-  };
-  /*eslint-enable no-unused-vars */
-
   port.onMessage.addListener(function (message) {
     Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
 
@@ -69,7 +57,7 @@ chrome.runtime.onConnect.addListener(function (port) {
         Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
       }
       // REMOVE END
-      currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags);
+      currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
       if(typeof currentError !== "undefined" && currentError !== null) {
         Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
