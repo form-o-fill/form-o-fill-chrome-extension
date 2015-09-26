@@ -18,7 +18,8 @@ var Utils = {
     sessionStorage: "form-o-fill-sessionStorage",
     tutorialDataBackup: "form-o-fill-tutorialDataBackup",
     tutorialActive: "form-o-fill-tut-active",
-    settings: "form-o-fill-settings"
+    settings: "form-o-fill-settings",
+    screenshots: "form-o-fill-screenshots"
   },
   defaultSettings: {
     alwaysShowPopup: false
@@ -63,6 +64,14 @@ var Utils = {
         jQuery(this).html("");
       });
     }, fadeAfterMSec);
+  },
+  downloadImage: function(base64, filename) {
+    var a = document.createElement("a");
+    a.download = filename;
+    a.href = base64;
+    document.querySelector("body").appendChild(a);
+    a.click();
+    document.querySelector("body").removeChild(a);
   },
   download: function(data, filename, mimeType) {
     // Creates and triggers a download from a string

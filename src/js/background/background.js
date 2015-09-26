@@ -205,14 +205,36 @@ runWorkflowOrRule = function (tabId) {
   });
 };
 
+// Generates a filename that is safe for disc storage
+var generateFilename = function(metadata) {
+  var ruleNameAsFilename = metadata.name.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
+  return "fof-screenshot-" + metadata.ruleId.replace(/([0-9]+)-([0-9]+)/, "tab-$1-rule-$2-field-") + metadata.fieldIndex + "_" + ruleNameAsFilename;
+};
 
 // Takes screenshot of a tab
 // returns a Data URL that can be used in <img> tags
-var takeScreenshot = function(tabId, ruleMetadata) {
-  chrome.tabs.captureVisibleTab(tabId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
-    //TODO: save screenshot to localstorage (resize?) (FS, 2015-09-25)
-    //chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
-    // or save image data uri via Utils.download
+var takeScreenshot = function(windowId, ruleMetadata) {
+  chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
+
+    // Save image to disc
+    Utils.downloadImage(screenshotDataUri, generateFilename(ruleMetadata));
+
+    // Load the screenshots saved so far and add the new one
+    // TODO: chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
+    // Only save if memory sufficient -> ask for permission for "unlimitedStorage"
+    Storage.load(Utils.keys.screenshots).then(function modifyScreenshots(screenshots) {
+      screenshots = screenshots || {};
+      var saveAs = ruleMetadata.ruleId + "_" + ruleMetadata.fieldIndex;
+
+      screenshots[saveAs] = {
+        ruleName: ruleMetadata.name,
+        dataUri: screenshotDataUri
+      };
+
+      Storage.save(screenshots, Utils.keys.screenshots).then(function() {
+        Logger.info("[bg.js] Saved a screenshot as '" + saveAs + "' (" + ruleMetadata.name + ")");
+      });
+    });
   });
 };
 
@@ -314,7 +336,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 // REMOVE END
 
 // Listen for messages from content.js
-chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
+chrome.runtime.onMessage.addListener(function (message) {
   // REMOVE START
   if(message.action === "log" && message.message) {
     Logger.store(message.message);
@@ -323,7 +345,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
 
   // The content page (form_filler.js) requests a screenshot to be taken
   if(message.action === "takeScreenshot" && message.value) {
-    takeScreenshot(lastActiveTab.id, message.value);
+    Logger.info("[bg.js] Request from content.js to take a screenshot of tabId " + lastActiveTab.windowId);
+    takeScreenshot(lastActiveTab.windowId, message.value);
   }
 });
 

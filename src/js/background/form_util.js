@@ -123,7 +123,7 @@ var FormUtil = {
   sendFieldsToContent: function(aRule, beforeData, port) {
     // Now send all field definitions to the content script
     var message;
-    aRule.fields.forEach(function ruleFieldsForEach(field) {
+    aRule.fields.forEach(function ruleFieldsForEach(field, fieldIndex) {
       // The message contains ...
       //
       // action: "fillField"
@@ -140,7 +140,8 @@ var FormUtil = {
         "beforeData": beforeData,
         "meta": {
           ruleId: aRule.id,
-          name: aRule.nameClean
+          name: aRule.nameClean,
+          fieldIndex: fieldIndex
         }
       };
       port.postMessage(message);
