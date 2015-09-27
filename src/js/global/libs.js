@@ -1,4 +1,4 @@
-/*global Logger Rules lastActiveTab */
+/*global Logger Rules lastActiveTab FormFiller */
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -32,6 +32,9 @@ var Libs = {
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
+  },
+  screenshot: function(saveAs) {
+    chrome.runtime.sendMessage({action: "takeScreenshot", value: FormFiller.currentRuleMetadata, flag: saveAs});
   }
 };
 Libs.add("h", valueFunctionHelper);

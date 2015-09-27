@@ -242,9 +242,11 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
     if(typeof potentialFilename === "string") {
       // use user defined name
       fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
-    } else {
+    } else if(ruleMetadata) {
       // use generated name
       fName = generateFilename(ruleMetadata);
+    } else {
+      return;
     }
     Utils.downloadImage(screenshotDataUri, fName);
 
@@ -359,7 +361,7 @@ chrome.runtime.onMessage.addListener(function (message) {
   // REMOVE END
 
   // The content page (form_filler.js) requests a screenshot to be taken
-  if(message.action === "takeScreenshot" && message.value && typeof message.flag !== "undefined") {
+  if(message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + lastActiveTab.windowId);
     takeScreenshot(lastActiveTab.windowId, message.value, message.flag);
   }

@@ -7,6 +7,7 @@ var FormFiller = {
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
     var fillMethod = null;
+    this.currentRuleMetadata = meta;
 
     if (domNodes.length === 0) {
       return new FormError(selector, value, "Could not find field");
