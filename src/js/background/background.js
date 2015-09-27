@@ -211,30 +211,45 @@ var generateFilename = function(metadata) {
   return "fof-screenshot-" + metadata.ruleId.replace(/([0-9]+)-([0-9]+)/, "tab-$1-rule-$2-field-") + metadata.fieldIndex + "_" + ruleNameAsFilename;
 };
 
-// Takes screenshot of a tab
-// returns a Data URL that can be used in <img> tags
-var takeScreenshot = function(windowId, ruleMetadata) {
+// saves a screenshot to localStorage
+var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
+  // Load the screenshots saved so far and add the new one
+  // TODO: chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
+  // Only save if memory sufficient -> ask for permission for "unlimitedStorage"
+  Storage.load(Utils.keys.screenshots).then(function modifyScreenshots(screenshots) {
+    screenshots = screenshots || {};
+    var saveAs = ruleMetadata.ruleId + "_" + ruleMetadata.fieldIndex;
+
+    screenshots[saveAs] = {
+      ruleName: ruleMetadata.name,
+      dataUri: screenshotDataUri
+    };
+
+    Storage.save(screenshots, Utils.keys.screenshots).then(function() {
+      Logger.info("[bg.js] Saved a screenshot as '" + saveAs + "' (" + ruleMetadata.name + ")");
+    });
+  });
+};
+
+// Takes screenshot of a window
+// and downloads it to disk
+var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
   chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
 
-    // Save image to disc
-    Utils.downloadImage(screenshotDataUri, generateFilename(ruleMetadata));
+    var fName;
 
-    // Load the screenshots saved so far and add the new one
-    // TODO: chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
-    // Only save if memory sufficient -> ask for permission for "unlimitedStorage"
-    Storage.load(Utils.keys.screenshots).then(function modifyScreenshots(screenshots) {
-      screenshots = screenshots || {};
-      var saveAs = ruleMetadata.ruleId + "_" + ruleMetadata.fieldIndex;
+    // force download of the image
+    if(typeof potentialFilename === "string") {
+      // use user defined name
+      fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
+    } else {
+      // use generated name
+      fName = generateFilename(ruleMetadata);
+    }
+    Utils.downloadImage(screenshotDataUri, fName);
 
-      screenshots[saveAs] = {
-        ruleName: ruleMetadata.name,
-        dataUri: screenshotDataUri
-      };
-
-      Storage.save(screenshots, Utils.keys.screenshots).then(function() {
-        Logger.info("[bg.js] Saved a screenshot as '" + saveAs + "' (" + ruleMetadata.name + ")");
-      });
-    });
+    // save the image to localStorage
+    //TODO: scale image then -> (FS, 2015-09-27)saveScreenshot(ruleMetadata, screenshotDataUri);
   });
 };
 
@@ -344,9 +359,9 @@ chrome.runtime.onMessage.addListener(function (message) {
   // REMOVE END
 
   // The content page (form_filler.js) requests a screenshot to be taken
-  if(message.action === "takeScreenshot" && message.value) {
-    Logger.info("[bg.js] Request from content.js to take a screenshot of tabId " + lastActiveTab.windowId);
-    takeScreenshot(lastActiveTab.windowId, message.value);
+  if(message.action === "takeScreenshot" && message.value && typeof message.flag !== "undefined") {
+    Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + lastActiveTab.windowId);
+    takeScreenshot(lastActiveTab.windowId, message.value, message.flag);
   }
 });
 

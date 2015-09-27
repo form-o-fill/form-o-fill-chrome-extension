@@ -1,4 +1,4 @@
-/*global FormError, jQuery, JSONF, Logger, Utils, takeScreenshot*/
+/*global FormError, jQuery, JSONF, Logger, Utils */
 /*eslint complexity:0, no-unused-vars: 0, max-params: 5*/
 var FormFiller = {
   error: null,
@@ -55,11 +55,11 @@ var FormFiller = {
       }
 
       // Screenshot?
-      if(flags.takeScreenshot === true) {
+      if(flags.screenshot !== "undefined") {
         // Only the BG page has the permissions to do a screenshot
         // so here we send it the request to do so
-        Logger.info("[form_filler.js] sending request to take a Screenshot to bg.js");
-        chrome.runtime.sendMessage({action: "takeScreenshot", value: meta});
+        Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
+        chrome.runtime.sendMessage({action: "takeScreenshot", value: meta, flag: flags.screenshot});
       }
 
     }

@@ -108,16 +108,20 @@ var FormUtil = {
     port.postMessage({"action": "reloadLibs"});
   },
   buildFlags: function(ruleDef, fieldDef) {
-    // onlyEmpty: If true only fills the field if the target is currently "empty"
-    //            Can be set on rules or field defs. Latter overwrites first.
+    // onlyEmpty:  If true only fills the field if the target is currently "empty"
+    //             Can be set on rules or field defs. Latter overwrites first.
+    // screenshot: Takes a screenshot if truthy. If string saves it under that name.
     var onlyEmpty;
-    var takeScreenshot;
     onlyEmpty = typeof ruleDef.onlyEmpty === "boolean" ? ruleDef.onlyEmpty : false;
     onlyEmpty = typeof fieldDef.onlyEmpty === "boolean" ? fieldDef.onlyEmpty : onlyEmpty;
-    takeScreenshot = typeof fieldDef.takeScreenshot === "boolean" ? fieldDef.takeScreenshot : false;
+
+    var screenshot;
+    screenshot = typeof ruleDef.screenshot !== "undefined" ? ruleDef.screenshot : false;
+    screenshot = typeof fieldDef.screenshot !== "undefined" ? fieldDef.screenshot : screenshot;
+
     return {
       onlyEmpty: onlyEmpty,
-      takeScreenshot: takeScreenshot
+      screenshot: screenshot
     };
   },
   sendFieldsToContent: function(aRule, beforeData, port) {
@@ -151,7 +155,7 @@ var FormUtil = {
   reportErrors: function(theErrors, rule, port) {
     Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
     if(theErrors.length > 0) {
-      Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function NotificationCreate() {
+      Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function notificationCreated() {
         FormUtil.saveErrors(theErrors, rule);
       });
     }
