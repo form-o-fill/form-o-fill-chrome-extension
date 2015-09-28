@@ -14,16 +14,27 @@
     </div>
 
     <div class="checkbox">
-      <label>
-        <input type="checkbox" name="always-show-popup" id="settings-always-show-popup">
-        <span>Always show popup</span>
-        <div class="comment">
-          Check this if you want Form-O-Fill to always show the rule selection popup when you click the action button.
-        </div>
-        <div class="comment">
-          If unchecked Form-O-Fill will instantly execute the rule <strong>if only one rule matches</strong>.
-        </div>
-        </label>
+    <label>
+      <input type="checkbox" name="always-show-popup" id="settings-always-show-popup" />
+      <span>Always show popup</span>
+      <div class="comment">
+        Check this if you want Form-O-Fill to always show the rule selection popup when you click the action button.
       </div>
+      <div class="comment">
+        If unchecked Form-O-Fill will instantly execute the rule <strong>if only one rule matches</strong>.
+      </div>
+    </label>
     </div>
+
+    <div class="text">
+      <label>
+        <input type="range" name="screenshot-quality" id="settings-screenshot-quality" min="30" max="100" step="10" value="60">
+        <span>JPEG image quality (<span class="settings-screenshot-quality-percent">60</span>%)</span>
+        <div class="comment">
+          If you take a screenshot using <code>Libs.h.screenshot</code> or the rule/field definition flags this quality setting will be used.
+        </div>
+      </label>
+    </div>
+
   </div>
+</div>

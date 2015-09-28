@@ -22,7 +22,8 @@ var Utils = {
     screenshots: "form-o-fill-screenshots"
   },
   defaultSettings: {
-    alwaysShowPopup: false
+    alwaysShowPopup: false,
+    jpegQuality: 60
   },
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {

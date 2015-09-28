@@ -45,8 +45,10 @@ Settings.prototype.sendToBg = function(currentSettings) {
 
 Settings.prototype.saveSettings = function() {
   var currentSettings = {
-    alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked
+    alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked,
+    jpegQuality: document.querySelector("#settings-screenshot-quality").value
   };
+
   this.sendToBg(currentSettings);
   Storage.save(currentSettings, Utils.keys.settings);
 };
@@ -55,6 +57,11 @@ Settings.prototype.bindHandlers = function() {
   var settings = this;
   document.querySelector("#settings").addEventListener("change", function(evt) {
     if(evt.target && evt.target.nodeName === "INPUT") {
+
+      if(evt.target.id === "settings-screenshot-quality") {
+        document.querySelector(".settings-screenshot-quality-percent").innerHTML = evt.target.value;
+      }
+
       settings.saveSettings();
       settings.showInfo("Settings saved");
       evt.preventDefault();
@@ -66,6 +73,9 @@ Settings.prototype.applySettings = function() {
   if(this.settings.alwaysShowPopup === true) {
     document.querySelector("#settings-always-show-popup").checked = true;
   }
+  document.querySelector("#settings-screenshot-quality").value = this.settings.jpegQuality;
+  document.querySelector(".settings-screenshot-quality-percent").innerHTML = this.settings.jpegQuality;
+
 };
 
 var settings = new Settings();
