@@ -1,0 +1,151 @@
+<a name="help-fielddefscreenshot"></a>
+<h3>Taking screenshots</h3>
+<p>
+  You can take screenshots of the page at any time if you want.
+</p>
+<p>
+  There are four ways to trigger screenshots:<br />
+  <ul>
+    <li>Inside a field definition</li>
+    <li>At the end of the last field definition</li>
+    <li>Automatically at every step of a workflow</li>
+    <li>Manually via <code>Libs.h.screenshot</code></li>
+  </ul>
+</p>
+
+<!-- SCREENSHOT INSIDE FIELD DEF -->
+<p>
+  To trigger a screenshot from inside a field definition, simply add <code>screenshot: true</code> ir <code>screenshot: "some_filename"</code>:
+</p>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;...
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Setting <code>screenshot</code> to <code>true</code> will execute this field definition and <em>then</em> take a screenshot and save it to disk.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;screenshot: true
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Setting <code>screenshot</code> to a string will save a screenshot under that name.<br />
+    The <code>.jpg</code> extension will be added automatically.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;screenshot: "save_with_this_name"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }]
+  </div>
+</div>
+
+<!-- SCREENSHOT INSIDE RULES -->
+<p>
+  Taking a screenshot at the end of the field definitions is primarily important if the rule is part of a workflow.
+</p>
+<p>
+  This can be used to document every step of a running workflow.
+</p>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    var rules = [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;...
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Setting <code>screenshot</code> to <code>true</code> will take a screenshot at the very end of the rule execution.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;screenshot: true
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }]
+  </div>
+</div>
+
+<!-- SCREENSHOT WORKFLOW -->
+<p>
+  If you want to take screenshots on every workflow step there is an easy way to do so:
+</p>
+<p>
+  In the <em>workflow panel</em> check the <em>"Save a screenshot for every workflow step"</em> option and save the workflow.
+</p>
+
+<!-- SCREENSHOT MANUALLY -->
+
+<p>
+  Last but not least: Taking a screenshot via <code>Libs.h.screenshot</code>
+</p>
+<p>
+  This helper function can be used inside value functions and takes a screenshot whenever you want.
+</p>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    fields: [{
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining"></div>
+  <div class="code">
+    &nbsp;&nbsp;selector: ".some-class",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) { 
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Save a screenshot as "save_with_this_name.jpg"
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;Libs.h.screenshot("save_with_this_name");
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }]
+  </div>
+</div>
