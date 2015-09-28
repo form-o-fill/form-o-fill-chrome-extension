@@ -173,6 +173,11 @@ var onTabReadyWorkflow = function() {
 
           resolve({status: "rule_not_found", runRule: false});
         } else {
+          // Should a screenshot be taken?
+          if(runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
+            rule.screenshot = true;
+          }
+
           // Fill with this rule
           FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length, lastActiveTab);
           FormUtil.applyRule(rule, lastActiveTab);
@@ -180,7 +185,8 @@ var onTabReadyWorkflow = function() {
           // Save workflow state so we can continue even after a page reload
           Storage.save({
             currentStep: runningWorkflow.currentStep + 1,
-            steps: runningWorkflow.steps
+            steps: runningWorkflow.steps,
+            flags: runningWorkflow.flags
           }, Utils.keys.runningWorkflow).then(function () {
             resolve({status: "running_workflow", runRule: false});
           });
@@ -234,6 +240,7 @@ var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
 // Takes screenshot of a window
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
+  //TODO: quality setting -> settings panel (FS, 2015-09-28)
   chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
 
     var fName;
@@ -297,7 +304,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     Workflows.findById(message.id).then(function prLoadMatches(matchingWf) {
       // Now save the steps of that workflow to the storage and
       // mark the current running workflow
-      Storage.save({ currentStep: 0, steps: matchingWf.steps }, Utils.keys.runningWorkflow).then(function () {
+      Storage.save({ currentStep: 0, steps: matchingWf.steps, flags: matchingWf.flags }, Utils.keys.runningWorkflow).then(function () {
         onTabReadyWorkflow();
       });
     });

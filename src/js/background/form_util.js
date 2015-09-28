@@ -116,8 +116,7 @@ var FormUtil = {
     onlyEmpty = typeof fieldDef.onlyEmpty === "boolean" ? fieldDef.onlyEmpty : onlyEmpty;
 
     var screenshot;
-    screenshot = typeof ruleDef.screenshot !== "undefined" ? ruleDef.screenshot : false;
-    screenshot = typeof fieldDef.screenshot !== "undefined" ? fieldDef.screenshot : screenshot;
+    screenshot = typeof fieldDef.screenshot !== "undefined" ? fieldDef.screenshot : false;
 
     return {
       onlyEmpty: onlyEmpty,
@@ -127,7 +126,17 @@ var FormUtil = {
   sendFieldsToContent: function(aRule, beforeData, port) {
     // Now send all field definitions to the content script
     var message;
+    var screenshotFlagFromRule = aRule.screenshot === true ? true : false;
+
     aRule.fields.forEach(function ruleFieldsForEach(field, fieldIndex) {
+
+      // If the rule has screenshot : true and this is the last executing field definition
+      // take a screenshot via the fields screenshot flag
+      if(screenshotFlagFromRule && fieldIndex === aRule.fields.length - 1) {
+        Logger.info("[form_util.js] Flagging field #" + fieldIndex + " with screenshot = true (rule: " + aRule.nameClean + ")");
+        field.screenshot = true;
+      }
+
       // The message contains ...
       //
       // action: "fillField"
@@ -368,6 +377,8 @@ var FormUtil = {
       Promise.all(FormUtil.generateLibsPromises(usedLibs)).then(function prUsedLibsAll() {
         // Check for rules to import (shared rules)
         FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
+
+          // NOW! Fill that rule
           FormUtil.sendFieldsToContent(aRule, beforeData, port);
 
           // Get errors. Receiver is in content.js
