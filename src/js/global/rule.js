@@ -11,6 +11,7 @@ var Rule = function() {
     delete clone.tabId;
     delete clone.type;
     delete clone.autorun;
+    delete clone.screenshot;
     delete clone.onlyEmpty;
     delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
