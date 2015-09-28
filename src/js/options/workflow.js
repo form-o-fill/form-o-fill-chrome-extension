@@ -6,6 +6,9 @@ var wfErrors = [];
 var emptyWorkflow = {
   id: 0,
   name: "new workflow",
+  flags: {
+    screenshot: false
+  },
   steps: []
 };
 
@@ -36,6 +39,7 @@ var createWorkflow = function () {
   jQuery("#workfloweditor").show().data("workflowId", 0);
   jQuery(".wf-name").trigger("focus").select();
   jQuery(".wf-all select").append("<option data-workflow-id='0' selected>new workflow (unsaved)</option>");
+  document.querySelector(".wf-options input[name=wf-take-screenshot]").checked = false;
   jQuery(document).trigger("fof:wf:create");
   unsavedChanges(true);
 };
@@ -70,6 +74,13 @@ var fillWorkflow = function(data) {
   });
   jQuery("#workfloweditor ol li").remove();
   jQuery("#workfloweditor ol").html(stepsHtml.join(""));
+
+  var screenshot = false;
+  if(data.flags && data.flags.screenshot === true) {
+    screenshot = true;
+  }
+  document.querySelector(".wf-options input[name=wf-take-screenshot]").checked = screenshot;
+
   bindSortable();
 };
 
@@ -180,11 +191,18 @@ var loadWorkflows = function(selectedWfId) {
 // Save a workflow
 var saveWorkflow = function() {
   var currentWfId = parseInt(jQuery("#workfloweditor").data("workflowId"), 10);
+  var flags = {};
+
+  // Should a screenshot be taken on every step?
+  if(document.querySelector(".wf-options input[name=wf-take-screenshot]").checked) {
+    flags.screenshot = true;
+  }
 
   var workflow = {
     id: currentWfId,
     name: jQuery(".wf-name").val(),
-    steps: currentWfSteps()
+    steps: currentWfSteps(),
+    flags: flags
   };
 
   if(currentWfId === 0) {
