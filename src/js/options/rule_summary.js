@@ -69,6 +69,7 @@ var ruleSummaryRefreshByRule = function(rule) {
     ruleSummaryYesNo(".rule-import-part", usesImport);
     ruleSummaryYesNo(".rule-autorun-part", rule.autorun === true);
     ruleSummaryYesNo(".rule-empty-only-part", rule.onlyEmpty === true);
+    ruleSummaryYesNo(".rule-screenshot-at-end", rule.screenshot === true);
 
     ruleSummaryShow(true);
   });
