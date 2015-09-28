@@ -6,13 +6,14 @@ Features:
 ✓ Extract already entered forms to auto-create the rule definition with the click of a button (or two).
 ✓ Use Javascript to program the rules.
 ✓ Use static values or dynamically generated values for every field (value functions are just javascript).
+✓ Automatically take screenshots
 ✓ Get nice error reporting when applying the rule to the form doesn't work.
 ✓ Use before functions to fetch, generate and store data that can then be used in value functions.
 ✓ Organize your work into tabs. All tabs are searched for matching rules.
 ✓ Use workflows to create multi page rules.
 ✓ One click apply of a matching rule or even auto apply the rule.
 ✓ Two click apply when there are multiple matching rules or workflows.
-✓ "Automatic execution" configurable for each rule.
+✓ "Automatic execution" configurable for every rule.
 ✓ Reuse rules inside other rules (shared rules).
 ✓ Browser notifications to show you what happened.
 
@@ -20,6 +21,7 @@ Requires:
 Chrome 33+
 
 Permissions requested:
+- Ability to take screenshots.
 - Read and change all data on all sites (It's a form filler :) IT should work everywhere)
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
