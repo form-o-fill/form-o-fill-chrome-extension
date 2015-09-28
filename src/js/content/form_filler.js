@@ -56,7 +56,7 @@ var FormFiller = {
       }
 
       // Screenshot?
-      if(flags.screenshot !== "undefined") {
+      if(flags.screenshot !== "undefined" && flags.screenshot !== false) {
         // Only the BG page has the permissions to do a screenshot
         // so here we send it the request to do so
         Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
