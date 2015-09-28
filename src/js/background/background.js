@@ -240,9 +240,9 @@ var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
 // Takes screenshot of a window
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
-  //TODO: quality setting -> settings panel (FS, 2015-09-28)
-  chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: 60}, function(screenshotDataUri) {
+  var quality = optionSettings.jpegQuality || 60;
 
+  chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: quality}, function(screenshotDataUri) {
     var fName;
 
     // force download of the image
