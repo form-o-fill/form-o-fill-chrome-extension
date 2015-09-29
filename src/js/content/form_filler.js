@@ -1,5 +1,5 @@
 /*global FormError, jQuery, JSONF, Logger, Utils */
-/*eslint complexity:0, no-unused-vars: 0, max-params: 5*/
+/*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
 var FormFiller = {
   error: null,
   // This fills the field with a value
