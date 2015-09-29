@@ -13,6 +13,11 @@ var Testing = {
     if (lastActiveTab !== null) {
       chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
     }
+  },
+  appendTestLog: function(msg) {
+    if (lastActiveTab !== null) {
+      chrome.tabs.sendMessage(lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
+    }
   }
 };
 

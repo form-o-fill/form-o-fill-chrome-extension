@@ -1,4 +1,4 @@
-/*global Utils */
+/*global Utils Testing */
 /* eslint no-unused-vars: 0 */
 var Logger = {
   out: function (level, msg, obj) {
@@ -8,6 +8,10 @@ var Logger = {
       "action": "log",
       "message": msg
     });
+
+    if(typeof Testing !== "undefined") {
+      Testing.appendTestLog(msg);
+    }
 
     if (obj) {
       console[level]("[*FOF*]%s %O", msg, obj);

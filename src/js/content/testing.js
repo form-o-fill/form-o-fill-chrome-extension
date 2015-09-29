@@ -30,6 +30,7 @@ var installTestingCode = function() {
     Testing.setTestingVar("testing-mode", bgInfo.testingMode, "Testing mode");
     Testing.setTestingVar("rule-count", bgInfo.ruleCount, "Number of rules");
     Testing.setTestingVar("lib-count", bgInfo.libCount, "Number of library functions");
+    Testing.setTestingVar("log", "<ul></ul>", "Log");
   });
 
   // Listen to messages from background.js
@@ -37,6 +38,11 @@ var installTestingCode = function() {
     // Set a variable in the DOM based on what is sent from bg.js
     if(message.action === "setTestingVar" && message.key && typeof message.value !== "undefined") {
       Testing.setTestingVar(message.key, message.value, message.text);
+      sendResponse(true);
+    }
+
+    if(message.action === "appendTestLog" && typeof message.value !== "undefined") {
+      jQuery("td.log ul").append("<li>" + message.value + "</li>");
       sendResponse(true);
     }
   });
