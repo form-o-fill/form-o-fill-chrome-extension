@@ -218,6 +218,7 @@ var generateFilename = function(metadata) {
 };
 
 // saves a screenshot to localStorage
+/*
 var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
   // Load the screenshots saved so far and add the new one
   // TODO: chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
@@ -236,6 +237,7 @@ var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
     });
   });
 };
+*/
 
 // Takes screenshot of a window
 // and downloads it to disk
