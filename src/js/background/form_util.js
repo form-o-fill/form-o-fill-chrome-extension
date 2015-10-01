@@ -308,6 +308,7 @@ var FormUtil = {
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
     // It also contains the grabber which can find content inside the current webpage
+    // and the storage object
     var context = {
       url: Utils.parseUrl(lastActiveTab.url),
       findHtml: FormUtil.createGrabber(lastActiveTab.id),
