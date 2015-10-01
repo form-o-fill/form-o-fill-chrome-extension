@@ -175,6 +175,7 @@ var onTabReadyWorkflow = function() {
         } else {
           // Should a screenshot be taken?
           if(runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
+            Logger.info("[background.js] setting rule.screenshot = true because Wf config said so");
             rule.screenshot = true;
           }
 
@@ -243,22 +244,21 @@ var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
   var quality = optionSettings.jpegQuality || 60;
+  var fName;
+
+  // force download of the image
+  if(typeof potentialFilename === "string") {
+    // use user defined name
+    fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
+  } else if(ruleMetadata) {
+    // use generated name
+    fName = generateFilename(ruleMetadata);
+  } else {
+    return;
+  }
 
   chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: quality}, function(screenshotDataUri) {
-    var fName;
-
-    // force download of the image
-    if(typeof potentialFilename === "string") {
-      // use user defined name
-      fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
-    } else if(ruleMetadata) {
-      // use generated name
-      fName = generateFilename(ruleMetadata);
-    } else {
-      return;
-    }
     Utils.downloadImage(screenshotDataUri, fName);
-
     // save the image to localStorage
     //TODO: scale image then -> (FS, 2015-09-27)saveScreenshot(ruleMetadata, screenshotDataUri);
   });
@@ -370,6 +370,7 @@ chrome.runtime.onMessage.addListener(function (message) {
   // REMOVE END
 
   // The content page (form_filler.js) requests a screenshot to be taken
+  // the message.flag can be the filename or true/false
   if(message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + lastActiveTab.windowId);
     takeScreenshot(lastActiveTab.windowId, message.value, message.flag);
