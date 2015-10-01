@@ -1,4 +1,4 @@
-/*global jQuery */
+/*global jQuery Logger*/
 /*eslint no-unused-vars: 0*/
 var Utils = {
   // Will be set to false in BUILD:
@@ -73,6 +73,9 @@ var Utils = {
     document.querySelector("body").appendChild(a);
     a.click();
     document.querySelector("body").removeChild(a);
+    if(typeof Logger !== "undefined") {
+      Logger.info("[utils.js] Downloading image '" + filename);
+    }
   },
   download: function(data, filename, mimeType) {
     // Creates and triggers a download from a string

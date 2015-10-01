@@ -5,7 +5,7 @@ var Storage = {
     var key = keyToLoadFrom || Utils.keys.rules;
     return new Promise(function (resolve) {
       chrome.storage.local.get(key, function (persistedData) {
-        Logger.debug("[storage.js] loaded '" + key + "' = " + JSONF.stringify(persistedData));
+        Logger.debug("[storage.js] loaded '" + key + "'", JSONF.stringify(persistedData));
         resolve(persistedData[key]);
       });
     });
@@ -17,7 +17,7 @@ var Storage = {
       value[key] = rulesCode;
       chrome.storage.local.set(value, function () {
         if(typeof chrome.runtime.lastError === "undefined") {
-          Logger.debug("[storage.js] Saved '" + key + "' = " + JSONF.stringify(value[key]));
+          Logger.debug("[storage.js] Saved '" + key + "'", JSONF.stringify(value[key]));
           resolve(true);
         } else {
           reject(new Error(chrome.runtime.lastError));
