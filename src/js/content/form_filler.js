@@ -54,15 +54,15 @@ var FormFiller = {
         // Fill field using the specialized method or default
         returnValue = fillMethod(domNode, parsedValue, selector) || null;
       }
+    }
 
-      // Screenshot?
-      if(flags.screenshot !== "undefined" && flags.screenshot !== false) {
-        // Only the BG page has the permissions to do a screenshot
-        // so here we send it the request to do so
-        Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
-        chrome.runtime.sendMessage({action: "takeScreenshot", value: meta, flag: flags.screenshot});
-      }
-
+    // Screenshot?
+    if(flags.screenshot !== "undefined" && flags.screenshot !== false) {
+      // Only the BG page has the permissions to do a screenshot
+      // so here we send it the request to do so
+      Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
+      FormFiller.screenshotsTaken.push(meta.fieldIndex);
+      chrome.runtime.sendMessage({action: "takeScreenshot", value: meta, flag: flags.screenshot});
     }
 
     return returnValue;
