@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    Input field: <input value="Value from pageload" id="target" /><br>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": 1,
+        "name": "Rules"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": \"http://localhost:9292/form-o-fill-testing/screenshots.html\",\n  \"name\": \"Screenshot (field def automatic)\",\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": \"filled by rule\",\n    \"screenshot\": true\n  }]\n},{\n  \"url\": \"http://localhost:9292/form-o-fill-testing/screenshots.html\",\n  \"name\": \"Screenshot (field def save as)\",\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": \"filled by rule\",\n    \"screenshot\": \"screenshot-save-as\"\n  }]\n},{\n  \"url\": \"http://localhost:9292/form-o-fill-testing/screenshots.html\",\n  \"name\": \"Screenshot (rule def automatic)\",\n  \"screenshot\": true,\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": \"filled by rule\"\n  },{\n    \"selector\": \"input\",\n    \"value\": \"this should be on the screenshot\"\n  }]\n},{\n  \"url\": \"http://localhost:9292/form-o-fill-testing/screenshots.html\",\n  \"name\": \"Screenshot (field def Libs)\",\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": \"this should be on the screenshot\"\n  },{\n    \"selector\": \"input\",\n    \"value\": function() {\n      Libs.h.screenshot(\"screenshot-libs-h\");\n      return \"this should not be on the screenshot\";\n    }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>
