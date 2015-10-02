@@ -18,8 +18,7 @@ var Utils = {
     sessionStorage: "form-o-fill-sessionStorage",
     tutorialDataBackup: "form-o-fill-tutorialDataBackup",
     tutorialActive: "form-o-fill-tut-active",
-    settings: "form-o-fill-settings",
-    screenshots: "form-o-fill-screenshots"
+    settings: "form-o-fill-settings"
   },
   defaultSettings: {
     alwaysShowPopup: false,
@@ -73,9 +72,11 @@ var Utils = {
     document.querySelector("body").appendChild(a);
     a.click();
     document.querySelector("body").removeChild(a);
-    if(typeof Logger !== "undefined") {
-      Logger.info("[utils.js] Downloading image '" + filename);
+    // REMOVE START
+    if (typeof Logger !== "undefined") {
+      Logger.info("[utils.js] Downloading image '" + filename + "'");
     }
+    // REMOVE END
   },
   download: function(data, filename, mimeType) {
     // Creates and triggers a download from a string
