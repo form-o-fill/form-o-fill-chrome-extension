@@ -218,28 +218,6 @@ var generateFilename = function(metadata) {
   return "fof-screenshot-" + metadata.ruleId.replace(/([0-9]+)-([0-9]+)/, "tab-$1-rule-$2-field-") + metadata.fieldIndex + "_" + ruleNameAsFilename;
 };
 
-// saves a screenshot to localStorage
-/*
-var saveScreenshot = function(ruleMetadata, screenshotDataUri) {
-  // Load the screenshots saved so far and add the new one
-  // TODO: chrome.storage.local.getBytesInUse(null, function(b) { console.error(b); });
-  // Only save if memory sufficient -> ask for permission for "unlimitedStorage"
-  Storage.load(Utils.keys.screenshots).then(function modifyScreenshots(screenshots) {
-    screenshots = screenshots || {};
-    var saveAs = ruleMetadata.ruleId + "_" + ruleMetadata.fieldIndex;
-
-    screenshots[saveAs] = {
-      ruleName: ruleMetadata.name,
-      dataUri: screenshotDataUri
-    };
-
-    Storage.save(screenshots, Utils.keys.screenshots).then(function() {
-      Logger.info("[bg.js] Saved a screenshot as '" + saveAs + "' (" + ruleMetadata.name + ")");
-    });
-  });
-};
-*/
-
 // Takes screenshot of a window
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
@@ -259,8 +237,6 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
 
   chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: quality}, function(screenshotDataUri) {
     Utils.downloadImage(screenshotDataUri, fName);
-    // save the image to localStorage
-    //TODO: scale image then -> (FS, 2015-09-27)saveScreenshot(ruleMetadata, screenshotDataUri);
   });
 };
 
