@@ -21,14 +21,14 @@ Requires:
 Chrome 33+
 
 Permissions requested:
-- Ability to take screenshots.
-- Read and change all data on all sites (It's a form filler :) IT should work everywhere)
+- Read and change all data on all sites (It's a form filler :) It should work everywhere)
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
 Changelog:
 
 ★ Version 2.4.0
+- Take screenshots whenever you want.
 - Settings panel added. Toggle popup display when one rule matches on and off.
 - Rules and field definitions accept a 'onlyEmpty' flag which fills the field only if empty
 - Add tutorial for shared rules

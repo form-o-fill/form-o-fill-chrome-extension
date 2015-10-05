@@ -25,6 +25,11 @@ var Changelog = {
       title: "FoF updated: More tutorials!",
       message: "Added tutorials for workflows, context and more. Have a look!",
       target: "#tutorials"
+    },
+    "2.4.0": {
+      title: "FoF updated: Screenshot + onlyEmpty",
+      message: "Take screenshots! Fill only empty fields!",
+      target: "#help-screenshot"
     }
   },
   findForVersion: function(version) {
