@@ -61,7 +61,6 @@ var FormFiller = {
       // Only the BG page has the permissions to do a screenshot
       // so here we send it the request to do so
       Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
-      FormFiller.screenshotsTaken.push(meta.fieldIndex);
       chrome.runtime.sendMessage({action: "takeScreenshot", value: meta, flag: flags.screenshot});
     }
 
