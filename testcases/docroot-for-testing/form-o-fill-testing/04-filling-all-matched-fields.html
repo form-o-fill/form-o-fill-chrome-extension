@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    Input field: <input value="Value from pageload" id="i1" /><br>
+    Input field: <input value="Value from pageload" id="i2" /><br>
+    Input field: <input value="Value from pageload" id="i3" /><br>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "filling all matches"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: /.*filling-all-matched-fields.*/,\n  autorun: true,\n  name: \"Fills all matching fields\",\n  fields: [{\n    selector: \"input\",\n    value: \"filled\"\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}
+    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>

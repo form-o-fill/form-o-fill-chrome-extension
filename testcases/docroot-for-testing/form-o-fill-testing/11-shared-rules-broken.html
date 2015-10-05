@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    Input field: <input value="Value from pageload" id="i1" /><br>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "tabSettings": [
+    {
+      "id": "1",
+      "name": "shared rule"
+    }
+  ],
+  "rules": [
+    {
+      "code": "var rules = [{\n  url: \"shared-rule-only\",\n  name: \"supplying shared rules\",\n  fields: [{\n    selector: \"#i1\",\n    value: \"shared rule 1\"\n  }, {\n    selector: \"#i2\",\n    value: \"shared rule 2\"\n  }, {\n    selector: \"#i3\",\n    value: \"shared rule 3\"\n  }]\n}, {\n  url: /.*shared-rules.*/,\n  name: \"using shared rules\",\n  autorun: true,\n  fields: [{\n    \"import\": \"non existing shared rule\"\n  }, {\n    selector: \"#i1\",\n    value: \"filled by original\"\n  }]\n}\n];",
+      "tabId": 1
+    }
+  ]
+}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>
