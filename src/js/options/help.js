@@ -10,7 +10,7 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
       "help-editor",
       "help-basic",
       "help-functions",
-      "help-fielddefscreenshot",
+      "help-screenshot",
       "help-libraries",
       "help-ownlibraries",
       "help-before",
