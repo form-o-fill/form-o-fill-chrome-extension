@@ -127,6 +127,23 @@ chrome.runtime.onConnect.addListener(function (port) {
     if(message.action === "reloadLibs") {
       Libs.import();
     }
+
+    // execute setupContent function
+    if(message.action === "setupContent" && message.value) {
+      Logger.info("[content.js] Executing setupContent function", message.value);
+
+      // Parse and execute function
+      var error = null;
+
+      try {
+        JSONF.parse(message.value)();
+      } catch (e) {
+        Logger.error("[content.js] error while executing setupContent function");
+        error = e.message;
+      }
+
+      port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
+    }
   });
 
   // Simple one-shot callbacks

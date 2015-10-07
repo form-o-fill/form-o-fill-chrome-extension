@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    <div id="container">
+      Input field: <input value="Value from pageload" id="target" /><br>
+    </div>
+    Rules Import: <textarea id="form-o-fill-testing-import">
+{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Freischalten"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"url\": /19-setup-content/,\n  \"name\": \"setupContent\",\n  \"setupContent\": function() {\n    jQuery(\"#container\").append(\"Created by setupContent <input type=text id=target2 value=''/>\");\n  },\n  \"fields\": [{\n    \"selector\": \"#target2\",\n    \"value\": \"filled by field def\"\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}
+    </textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>

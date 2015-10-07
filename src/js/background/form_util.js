@@ -129,7 +129,6 @@ var FormUtil = {
     var screenshotFlagFromRule = aRule.screenshot === true ? true : false;
 
     aRule.fields.forEach(function ruleFieldsForEach(field, fieldIndex) {
-
       // If the rule has screenshot : true and this is the last executing field definition
       // take a screenshot via the fields screenshot flag
       if(screenshotFlagFromRule && fieldIndex === aRule.fields.length - 1) {
@@ -376,8 +375,25 @@ var FormUtil = {
       // Detect vendored libraries
       var usedLibs = FormUtil.detectLibraries(JSONF.stringify(rule.fields));
 
+      // Import libs promises
+      var morePromises = FormUtil.generateLibsPromises(usedLibs);
+
+      // setupContent:
+      // Generate a promise that resolves when the setupContent has been executed
+      if(typeof rule.setupContent === "function") {
+        morePromises.push(new Promise(function (resolve) {
+          Logger.info("[form_util.js] Adding setupContent promise to stack");
+          port.postMessage({ "action": "setupContent", "value": JSONF.stringify(rule.setupContent) });
+          port.onMessage.addListener(function(message) {
+            if(message.action === "setupContentDone") {
+              resolve();
+            }
+          });
+        }));
+      }
+
       // Resolve all promises
-      Promise.all(FormUtil.generateLibsPromises(usedLibs)).then(function prUsedLibsAll() {
+      Promise.all(morePromises).then(function prUsedLibsAll() {
         // Check for rules to import (shared rules)
         FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
 
