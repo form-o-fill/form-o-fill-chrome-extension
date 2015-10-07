@@ -176,20 +176,26 @@ var Rules = {
       }
     }
 
-    // Check for before function structure
     if (errors.length === 0) {
+      // Check for before/after function structure
       var ruleCodeCheck = this.text2function(editor.getValue());
+
       ruleCodeCheck.forEach(function (ruleFunction) {
         if(ruleFunction.hasOwnProperty("before")) {
           Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
-          that.checkBeforeFunction(ruleFunction.before, errors);
+          that.checkSurroundFunction(ruleFunction.before, errors);
+        }
+        if(ruleFunction.hasOwnProperty("after")) {
+          Logger.info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
+          that.checkSurroundFunction(ruleFunction.after, errors);
         }
       });
+
     }
     return errors;
   },
-  checkBeforeFunction: function(ruleFunction, errors) {
-    // before function can be either a function or an array of functions
+  checkSurroundFunction: function(ruleFunction, errors) {
+    // before/after function can be either a function or an array of functions
     // Not a function or an array of functions
     if(typeof ruleFunction !== "function" && typeof ruleFunction.length === "undefined") {
       errors.push("before-function-needs-to-be-a-function-or-array");

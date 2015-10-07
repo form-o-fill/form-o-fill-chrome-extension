@@ -32,7 +32,7 @@ var FormUtil = {
       Promise.all(importableRulesPromises).then(function importableRulesPromises2(arrayOfRules) {
         var lookup = {};
         if(arrayOfRules.length > 0) {
-          Logger.info("[form_util.js] Found importable rules:", arrayOfRules);
+          Logger.info("[b/form_util.js] Found importable rules:", arrayOfRules);
         }
 
         // Check for imports that could not be found
@@ -133,7 +133,7 @@ var FormUtil = {
       // If the rule has screenshot : true and this is the last executing field definition
       // take a screenshot via the fields screenshot flag
       if(screenshotFlagFromRule && fieldIndex === aRule.fields.length - 1) {
-        Logger.info("[form_util.js] Flagging field #" + fieldIndex + " with screenshot = true (rule: " + aRule.nameClean + ")");
+        Logger.info("[b/form_util.js] Flagging field #" + fieldIndex + " with screenshot = true (rule: " + aRule.nameClean + ")");
         field.screenshot = true;
       }
 
@@ -152,17 +152,18 @@ var FormUtil = {
         "flags": FormUtil.buildFlags(aRule, field),
         "beforeData": beforeData,
         "meta": {
-          ruleId: aRule.id,
-          name: aRule.nameClean,
-          fieldIndex: fieldIndex
+          "ruleId": aRule.id,
+          "name": aRule.nameClean,
+          "fieldIndex": fieldIndex,
+          "lastField": fieldIndex === aRule.fields.length - 1 ? true : false
         }
       };
       port.postMessage(message);
-      Logger.info("[form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+      Logger.info("[b/form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
     });
   },
   reportErrors: function(theErrors, rule, port) {
-    Logger.warn("[form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
+    Logger.warn("[b/form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
     if(theErrors.length > 0) {
       Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function notificationCreated() {
         FormUtil.saveErrors(theErrors, rule);
@@ -219,9 +220,9 @@ var FormUtil = {
       try {
         func(resolve, context);
       } catch (e) {
-        Logger.warn("[form_util.js] Got an exception executing before function: " + func);
-        Logger.warn("[form_util.js] Original exception: " + e);
-        Logger.warn("[form_util.js] Original stack: " + e.stack);
+        Logger.warn("[b/form_util.js] Got an exception executing before function: " + func);
+        Logger.warn("[b/form_util.js] Original exception: " + e);
+        Logger.warn("[b/form_util.js] Original stack: " + e.stack);
 
         var error = {
           error: {
@@ -257,28 +258,39 @@ var FormUtil = {
       window.sessionStorage.setItem(Utils.keys.sessionStorage, "{}");
     }
   },
-  generateBeforeFunctionsPromises: function(rule, context) {
+  generateFunctionsPromises: function(beforeOrAfter, rule, context) {
     // Default instantaneous resolving promise:
-    var beforeFunctions = [function beforeFuncPromise() {
+    var prepFunctions = [function beforeFuncPromise() {
       return new Promise(function promise(resolve) {
         resolve(null);
       });
     }];
 
     // Is there a 'before' block with an function or an array of functions?
-    if(typeof rule.before === "function") {
+    if(typeof rule[beforeOrAfter] === "function") {
       // A single before function
-      beforeFunctions = [ FormUtil.wrapInPromise(rule.before, context) ];
-    } else if(typeof rule.before === "object" && typeof rule.before.length !== "undefined") {
+      prepFunctions = [ FormUtil.wrapInPromise(rule[beforeOrAfter], context) ];
+    } else if(typeof rule[beforeOrAfter] === "object" && typeof rule[beforeOrAfter].length !== "undefined") {
       // Assume an array of functions
-      beforeFunctions = rule.before.map(function beforeFuncMap(func) {
+      prepFunctions = rule[beforeOrAfter].map(function beforeFuncMap(func) {
         return FormUtil.wrapInPromise(func, context);
       });
     }
 
-    Logger.info("[form_util.js] set 'before' function to " + JSONF.stringify(rule.before));
+    Logger.info("[form_util.js] set '" + beforeOrAfter + "' function to " + JSONF.stringify(rule[beforeOrAfter]));
 
-    return beforeFunctions;
+    return prepFunctions;
+  },
+  createContext: function() {
+    // The context is passed as the second argument to the before function.
+    // It represents to environment in which the rule is executed.
+    // It also contains the grabber which can find content inside the current webpage
+    // and the storage object
+    return {
+      url: Utils.parseUrl(lastActiveTab.url),
+      findHtml: FormUtil.createGrabber(lastActiveTab.id),
+      storage: FormUtil.storage
+    };
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
@@ -305,16 +317,6 @@ var FormUtil = {
     FormUtil.sendLibsReloadToContent(port);
     Libs.import();
 
-    // The context is passed as the second argument to the before function.
-    // It represents to environment in which the rule is executed.
-    // It also contains the grabber which can find content inside the current webpage
-    // and the storage object
-    var context = {
-      url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(lastActiveTab.id),
-      storage: FormUtil.storage
-    };
-
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // Detect vendored libraries in before functions and import them into Libs
@@ -324,7 +326,7 @@ var FormUtil = {
     });
 
     // import all custom library function and the rules
-    var promises = this.generateBeforeFunctionsPromises(rule, context);
+    var promises = this.generateFunctionsPromises("before", rule, FormUtil.createContext());
 
     // Resolve all promises
     // call either the default - instantaneously resolving Promise (default) or
@@ -383,7 +385,7 @@ var FormUtil = {
           FormUtil.sendFieldsToContent(aRule, beforeData, port);
 
           // Get errors. Receiver is in content.js
-          Logger.info("[form_util.js] Posted to content.js: 'getErrors'");
+          Logger.info("[b/form_util.js] Posted to content.js: 'getErrors'");
           port.postMessage({"action": "getErrors"});
         });
       });
@@ -397,6 +399,22 @@ var FormUtil = {
       if(msg.action === "getErrors") {
         var sentErrors = JSONF.parse(msg.errors);
         FormUtil.reportErrors(sentErrors, rule, port);
+      }
+    });
+
+    // Listen for messages from content.js
+    chrome.runtime.onMessage.addListener(function (message) {
+      // Message that the form filling is done
+      if(message.action === "fillFieldFinished") {
+
+        // If the rule has a "after" function, execute it
+        // It has access to the same context object used in the before function
+        // The signature is the same as with before functions
+        if(typeof rule.after === "function") {
+          Promise.all(FormUtil.generateFunctionsPromises("after", rule, FormUtil.createContext())).then(function() {
+            Logger.info("[b/form_util.js] Executed after function: " + JSONF.stringify(rule.after));
+          });
+        }
       }
     });
   }

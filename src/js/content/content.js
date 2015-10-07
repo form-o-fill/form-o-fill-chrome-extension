@@ -52,15 +52,29 @@ chrome.runtime.onConnect.addListener(function (port) {
     // Request to fill one field with a value
     if (message.action === "fillField" && message.selector && message.value) {
       Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value) + "; flags : " + JSONF.stringify(message.flags));
+
       // REMOVE START
       if (message.beforeData && message.beforeData !== null) {
         Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
       }
       // REMOVE END
+
       currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
+
+      // Remember the error
       if(typeof currentError !== "undefined" && currentError !== null) {
         Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
+      }
+
+      // Send a message that we are done filling the form
+      if(message.meta.lastField) {
+        Logger.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
+
+        chrome.runtime.sendMessage({
+          "action": "fillFieldFinished",
+          "errors": JSONF.stringify(errors)
+        });
       }
     }
 
@@ -117,7 +131,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   // Simple one-shot callbacks
   chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
-    Logger.info("[content.js] Got message via runtim.onMessage : " + JSONF.stringify(message) + " from bg.j");
+    Logger.info("[content.js] Got message via runtime.onMessage : " + JSONF.stringify(message) + " from bg.j");
 
     // This is the content grabber available as context.findHtml() in before functions
     if (message.action === "grabContentBySelector") {
