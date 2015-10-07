@@ -1,4 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
+/* eslint complexity: 6 */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -265,7 +266,7 @@ var FormUtil = {
       });
     }];
 
-    // Is there a 'before' block with an function or an array of functions?
+    // Is there a 'before' or 'after' block with an function or an array of functions?
     if(typeof rule[beforeOrAfter] === "function") {
       // A single before function
       prepFunctions = [ FormUtil.wrapInPromise(rule[beforeOrAfter], context) ];
@@ -290,6 +291,21 @@ var FormUtil = {
       findHtml: FormUtil.createGrabber(lastActiveTab.id),
       storage: FormUtil.storage
     };
+  },
+  generateSetupContentPromise: function(setupContentFunc, port) {
+    // This returns a promise that resolves when the
+    // content.js has executed the setupContent function
+    return new Promise(function (resolve) {
+      Logger.info("[form_util.js] Adding setupContent promise to stack");
+      port.postMessage({ "action": "setupContent", "value": JSONF.stringify(setupContentFunc) });
+      port.onMessage.addListener(function(message) {
+        // The content.js will post a complete message when the setupContent function has been
+        // executed
+        if(message.action === "setupContentDone") {
+          resolve();
+        }
+      });
+    });
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
@@ -324,12 +340,13 @@ var FormUtil = {
       Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
     });
 
-    // import all custom library function and the rules
+    // Promises for before functions:
     var promises = this.generateFunctionsPromises("before", rule, FormUtil.createContext());
 
     // Resolve all promises
-    // call either the default - instantaneously resolving Promise (default) or
+    // call either the instantaneously resolving Promise (default) or
     // the array of before functions defined in the rule.
+    //TODO: move to sep functions (FS, 2015-10-07)
     Promise.all(promises).then(function beforeFunctionsPromise(data) {
       beforeData = data;
 
@@ -345,7 +362,7 @@ var FormUtil = {
         return null;
       }
 
-      // beforeData is null when there is no info function defined in the rule definition
+      // beforeData is null when there is no before function defined in the rule definition
       if(beforeData !== null) {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
@@ -356,6 +373,7 @@ var FormUtil = {
 
         if (filteredErrors.length > 0) {
           // Produce error objects compatible to those used for form filling errors
+          //TODO: extract creation of errors (FS, 2015-10-07)
           errors = filteredErrors.map(function filteredErrorsMap(errorObj) {
             return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
           });
@@ -375,29 +393,22 @@ var FormUtil = {
       // Detect vendored libraries
       var usedLibs = FormUtil.detectLibraries(JSONF.stringify(rule.fields));
 
-      // Import libs promises
+      // generate promises for importing those libraries
       var morePromises = FormUtil.generateLibsPromises(usedLibs);
 
-      // setupContent:
-      // Generate a promise that resolves when the setupContent has been executed
+      // setupContent function defined? Add those to the promises
       if(typeof rule.setupContent === "function") {
-        morePromises.push(new Promise(function (resolve) {
-          Logger.info("[form_util.js] Adding setupContent promise to stack");
-          port.postMessage({ "action": "setupContent", "value": JSONF.stringify(rule.setupContent) });
-          port.onMessage.addListener(function(message) {
-            if(message.action === "setupContentDone") {
-              resolve();
-            }
-          });
-        }));
+        morePromises.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
       }
 
       // Resolve all promises
+      // lib import + setupContent
       Promise.all(morePromises).then(function prUsedLibsAll() {
         // Check for rules to import (shared rules)
         FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
 
           // NOW! Fill that rule
+          //TODO: use a promise here and only getErrors when resolved (FS, 2015-10-07)
           FormUtil.sendFieldsToContent(aRule, beforeData, port);
 
           // Get errors. Receiver is in content.js
