@@ -13,6 +13,9 @@ var installTestingCode = function() {
       } else {
         $info.find("." + key).html(value);
       }
+    },
+    appendTestLog: function(msg) {
+      jQuery("td.log ul").append("<li>" + msg + "</li>");
     }
   };
 
@@ -42,11 +45,14 @@ var installTestingCode = function() {
     }
 
     if(message.action === "appendTestLog" && typeof message.value !== "undefined") {
-      jQuery("td.log ul").append("<li>" + message.value + "</li>");
+      Testing.appendTestLog(message.value);
       sendResponse(true);
     }
   });
 
+  //
+  // Bind some handlers to make working with the testcases
+  // easier
   jQuery(document).on("click", "#form-o-fill-testing-import-submit", function () {
     // Attach an listener to the <button> so that the rules that should be imported can be send
     // to the background/testing.js page
@@ -90,6 +96,10 @@ var installTestingCode = function() {
     });
   });
 
+  // Make the Testn object available in dev
+  if(!Utils.isLiveExtension()) {
+    window.Testing = Testing;
+  }
 };
 
 // Enable only if we are running inside a special testing URL and are not bound to the live extension ID

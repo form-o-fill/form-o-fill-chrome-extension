@@ -9,9 +9,11 @@ var Logger = {
       "message": msg
     });
 
+    // REMOVE START
     if(typeof Testing !== "undefined") {
       Testing.appendTestLog(msg);
     }
+    // REMOVE END
 
     if (obj) {
       console[level]("[*FOF*]%s %O", msg, obj);
