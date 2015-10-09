@@ -1,5 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
-/* eslint complexity: 6 */
+/* eslint complexity: [2, 6] */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
