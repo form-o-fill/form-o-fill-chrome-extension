@@ -434,6 +434,12 @@ var FormUtil = {
       // Message that the form filling is done
       if(message.action === "fillFieldFinished") {
 
+        // If the rule has a teardownContent functions execute it
+        // This is sent to content.js and run in the context of the content page
+        if(typeof rule.teardownContent === "function") {
+          port.postMessage({ action: "teardownContent", value: JSONF.stringify(rule.teardownContent)});
+        }
+
         // If the rule has a "after" function, execute it
         // It has access to the same context object used in the before function
         // The signature is the same as with before functions

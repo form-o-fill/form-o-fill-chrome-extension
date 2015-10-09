@@ -144,6 +144,18 @@ chrome.runtime.onConnect.addListener(function (port) {
 
       port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
     }
+
+    // execute teardownContent function
+    // It has jQuery available and the context object from value functions and setupContent
+    if(message.action === "teardownContent" && message.value) {
+      Logger.info("[content.js] Executing teardownContent function", message.value);
+
+      try {
+        JSONF.parse(message.value)();
+      } catch (e) {
+        Logger.error("[content.js] error while executing teardownContent function");
+      }
+    }
   });
 
   // Simple one-shot callbacks
