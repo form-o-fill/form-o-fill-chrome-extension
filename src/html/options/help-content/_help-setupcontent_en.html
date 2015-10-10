@@ -1,0 +1,60 @@
+<a name="help-setupcontent"></a>
+<h3>Prepare the webpage for rule execution</h3>
+<p>
+  While <code>before</code> functions are useful for preparing data they cannot access the webpage the user is seeing (aka. content page).
+</p>
+<p>
+  This is where <code>setupContent</code> shines. It is executed before the form filling starts in the context of the content page and thus has full access to the DOM.
+</p>
+
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    var rules = [{
+  </div>
+</div>
+
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;setupContent: function() {
+  </div>
+</div>
+
+
+<div class="block-of-code">
+  <div class="explaining">
+    You can use <code>jQuery</code> here.<br/>
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;jQuery(".some-dom-element").trigger("click");
+  </div>
+</div>
+
+<div class="block-of-code">
+  <div class="explaining">
+    Or you can also use the <a href="#help-functions-context">context object</a>.<br />
+    It is <em>the same object</em> as available in value functions.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;jQuery(".nice").val(context.storage.get("some-key-set-in-value-function"));
+  </div>
+</div>
+
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}
+  </div>
+</div>
+
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    }];
+  </div>
+</div>
