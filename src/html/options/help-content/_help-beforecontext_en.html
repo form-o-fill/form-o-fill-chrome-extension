@@ -1,7 +1,7 @@
 <a name="help-before"></a>
-<h3>The context object in before functions</h3>
+<h3>The context object in before/after functions</h3>
 <p>
-  The context object passed as the before functions second parameter has a certain structure.<br />
+  The context object passed as the before/after functions second parameter has a certain structure.<br />
   It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>) and a method to store and retrieve data between rule executions (<code>.storage</code>).
 </p>
 
@@ -26,7 +26,7 @@
   }
 </pre>
 
-<h3>Using the HTML finder in a before function</h3>
+<h3>Using the HTML finder in a before/after function</h3>
 <p>
   The context object also includes a function that allows you to modify your rules based on the HTML of the page the rule is executed in.
 </p>
@@ -49,15 +49,16 @@
   }
 </pre>
 <p>
-  Please notice that the call to <code>findHtml</code> is asynchronous so you should call the before function <code>resolve</code> inside the findHtml <code>then</code> function.
+  Please notice that the call to <code>findHtml</code> is asynchronous so you should call the before function's <code>resolve</code> inside the findHtml <code>then</code> function.
 </p>
 
 <a name="help-before-context"></a>
-<h3>Saving and loading values in before functions with .storage</h3>
+<h3>Saving and loading values in before/after functions with .storage</h3>
 <p>
   Before functions are usually used to prepare data to be filled into form fields.<br />
-  Using the <code>context.storage</code> functions you can store arbitary data and restore it on demand.<br />
-  This is very useful for storing data between workflow steps.
+  Using the <code>context.storage</code> functions you can store arbitrary data and restore it on demand.<br />
+  This is very useful for storing data between workflow steps.<br />
+  This is also available in after functions.
 </p>
 <p>
   To save data use <code>context.storage.set("key", {some: "data"});</code>.<br />

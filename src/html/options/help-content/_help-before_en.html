@@ -1,17 +1,17 @@
 <a name="help-before"></a>
-<h3>Declaring a before function</h3>
+<h3>Before and after functions</h3>
 <p>
-  One of the most powerful features of Form-O-Fill is the ability to run a block of code <em>before</em> the form filling starts
-  and use the data retrieved there to fill in the values.
+  One of the most powerful features of Form-O-Fill is the ability to run a block of code <em>before</em> or <em>after</em> the form filling.
 </p>
 <p>
-  This is called a "before function". There can only be one before function per rule.
+  This is called a "before" ot "after" function depending on the time of execution.
 </p>
 <p>
-  Using a before function you can eg. fetch test data from a service to use later in your value functions.
+  Using a before function you can eg. fetch test data from a service to use later in your value functions.<br />
+  An after function can eg. reset some state on the server and make it ready for the next run.
 </p>
 <p>
-  Defining a before function is easy:
+  Defining a before or after function is easy:
 </p>
 <div class="block-of-code">
   <div class="explaining">
@@ -106,31 +106,42 @@
   </div>
 </div>
 <p>
-  Hint: If the fetched json data needs no transformation, <code>resolve</code> can also be passed as a function reference to <code>done</code>: <code>jQuery.getJSON('...').done(resolve);</code>.
+  Please note that these functions are executed in the context of the <em>extension's background page</em> and thus have no direct access to the current webpage the user is seeing.<br />
+  You can use the <a href="#help-beforecontext-findhtml">findHTML function</a> described below to work around this.
 </p>
-
-<h3>Providing multiple before functions in an array</h3>
-
+<p>
+  Hint: If you fetch data and it doesn't need transformation, <code>resolve</code> can also be passed as a function reference to <code>done</code>: <code>jQuery.getJSON('...').done(resolve);</code>.
+</p>
+<p>
+  After function follow the same semantic but are ran when all field definition have been executed (aka. The End):
+</p>
 <div class="block-of-code">
   <div class="explaining">
-    You call also pass an array of functions to <code>"before"</code>.<br />
-    Those will be resolved and the resulting <code>data</code> argument to a value function will then be an array of resolved data.
+    <code>after</code> functions share the signature with <code>before</code> functions
   </div>
   <div class="code">
-    before: [<br />
-    &nbsp;&nbsp;function(resolve) { resolve("a"); },<br />
-    &nbsp;&nbsp;function(resolve) { resolve("b"); }<br />
-    ],<br />
-    fields: [{<br />
-    &nbsp;&nbsp;selector: "input",<br />
-    &nbsp;&nbsp;value: function(dataArray, env) {<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;// dataArray === ["a", "b"]<br />
-    &nbsp;&nbsp;}<br />
-    }]
+    after: function(resolve, context) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    You get access to the same <code>context</code> object as in the <code>before</code> function.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;... some code ...<br />
+    &nbsp;&nbsp;resolve(); // No return argument here.
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }
   </div>
 </div>
 
-<h3>Canceling the rule processing using Libs.halt()</h3>
+<h3>Canceling the rule processing in before functions using Libs.halt()</h3>
 <div class="block-of-code">
   <div class="explaining">
     If you need to cancel the processing of a rule based on a condition in your before function you can do so.<br />
