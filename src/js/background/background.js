@@ -388,6 +388,7 @@ Storage.load(Utils.keys.settings).then(function(settings) {
     settings = Utils.defaultSettings;
   }
   optionSettings = settings;
+  setCyclicRulesRecheck(optionSettings.reevalRules);
 });
 
 // Fires when the extension is install or updated
