@@ -3,6 +3,8 @@
 // It is delivered with the production code but disabled
 var installTestingCode = function() {
 
+  var shouldLog = !jQuery("body").hasClass("test-no-log");
+
   var Testing = {
     setTestingVar: function(key, value, text) {
       var $info = jQuery("#form-o-fill-testing-info");
@@ -15,7 +17,9 @@ var installTestingCode = function() {
       }
     },
     appendTestLog: function(msg) {
-      jQuery("td.log ul").append("<li>" + msg + "</li>");
+      if(shouldLog) {
+        jQuery("td.log ul").append("<li>" + msg + "</li>");
+      }
     }
   };
 
