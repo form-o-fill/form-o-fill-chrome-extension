@@ -25,6 +25,7 @@ var Utils = {
     jpegQuality: 60,
     reevalRules: false
   },
+  reevalRulesInterval: 2000,
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
     "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },

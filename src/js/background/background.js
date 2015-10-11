@@ -253,7 +253,7 @@ var setCyclicRulesRecheck = function(shouldCheck) {
   if(shouldCheck) {
     recheckInterval = setInterval(function() {
       onTabReadyRules(lastActiveTab.id);
-    }, 5000);
+    }, Utils.reevalRulesInterval);
     Logger.info("[bg.js] Activate interval for rule rechecking");
     useBadgeBgColor = intervalBadgeBgColor;
   } else if(recheckInterval) {
