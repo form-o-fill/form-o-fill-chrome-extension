@@ -22,7 +22,8 @@ var Utils = {
   },
   defaultSettings: {
     alwaysShowPopup: false,
-    jpegQuality: 60
+    jpegQuality: 60,
+    reevalRules: false
   },
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {

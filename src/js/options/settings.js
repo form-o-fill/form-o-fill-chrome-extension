@@ -46,7 +46,8 @@ Settings.prototype.sendToBg = function(currentSettings) {
 Settings.prototype.saveSettings = function() {
   var currentSettings = {
     alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked,
-    jpegQuality: document.querySelector("#settings-screenshot-quality").value
+    jpegQuality: document.querySelector("#settings-screenshot-quality").value,
+    reevalRules: document.querySelector("#settings-reeval-rules").checked
   };
 
   this.sendToBg(currentSettings);
@@ -73,9 +74,13 @@ Settings.prototype.applySettings = function() {
   if(this.settings.alwaysShowPopup === true) {
     document.querySelector("#settings-always-show-popup").checked = true;
   }
+
+  if(this.settings.reevalRules === true) {
+    document.querySelector("#settings-reeval-rules").checked = true;
+  }
+
   document.querySelector("#settings-screenshot-quality").value = this.settings.jpegQuality;
   document.querySelector(".settings-screenshot-quality-percent").innerHTML = this.settings.jpegQuality;
-
 };
 
 var settings = new Settings();

@@ -5,6 +5,11 @@ var lastActiveTab = null;
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
 var optionSettings = null;
+var recheckInterval = null;
+
+var defaultBadgeBgColor = [0, 136, 255, 200];
+var intervalBadgeBgColor = [243, 60, 14, 255];
+var useBadgeBgColor = defaultBadgeBgColor;
 
 /*eslint-disable no-unused-vars*/
 var testingMode = false;
@@ -13,7 +18,8 @@ var testingMode = false;
 // set the browser action badge
 var setBadge = function(txt, tabId) {
   chrome.browserAction.setBadgeText({"text": txt, "tabId": tabId});
-  chrome.browserAction.setBadgeBackgroundColor({"color": [0, 136, 255, 200], "tabId": tabId});
+  chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": tabId});
+
   Testing.setVar("browser-action-badge-text", txt, "Browser action badge text");
 };
 
@@ -240,6 +246,23 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
   });
 };
 
+// This function manages the interval that is used if
+// the user has "reeval-rules" checked in settings.
+// It executes the rules matching every two seconds
+var setCyclicRulesRecheck = function(shouldCheck) {
+  if(shouldCheck) {
+    recheckInterval = setInterval(function() {
+      onTabReadyRules(lastActiveTab.id);
+    }, 5000);
+    Logger.info("[bg.js] Activate interval for rule rechecking");
+    useBadgeBgColor = intervalBadgeBgColor;
+  } else if(recheckInterval) {
+    clearInterval(recheckInterval);
+    Logger.info("[bg.js] Deactivate interval for rule rechecking");
+    useBadgeBgColor = defaultBadgeBgColor;
+  }
+};
+
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   runWorkflowOrRule(activeInfo.tabId);
@@ -322,6 +345,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // This is called from options.js whenever settings are changed (or initially loaded)
   if(message.action === "setSettings" && message.message) {
     optionSettings = message.message;
+
+    // There is one special setting: "reeval-rules".
+    // If this is set to true then we need to start an interval an poll every ~2 seconds for url/content changes
+    // and reevaluate all rules
+    setCyclicRulesRecheck(optionSettings.reevalRules);
+
     Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
   }
 });

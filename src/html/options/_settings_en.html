@@ -14,16 +14,27 @@
     </div>
 
     <div class="checkbox">
-    <label>
-      <input type="checkbox" name="always-show-popup" id="settings-always-show-popup" />
-      <span>Always show popup</span>
-      <div class="comment">
-        Check this if you want Form-O-Fill to always show the rule selection popup when you click the action button.
-      </div>
-      <div class="comment">
-        If unchecked Form-O-Fill will instantly execute the rule <strong>if only one rule matches</strong>.
-      </div>
-    </label>
+      <label>
+        <input type="checkbox" name="always-show-popup" id="settings-always-show-popup" />
+        <span>Always show popup</span>
+        <div class="comment">
+          Check this if you want Form-O-Fill to always show the rule selection popup when you click the action button.
+        </div>
+        <div class="comment">
+          If unchecked Form-O-Fill will instantly execute the rule <strong>if only one rule matches</strong>.
+        </div>
+      </label>
+    </div>
+
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="reeval-rules" id="settings-reeval-rules" />
+        <span>Re-match rules every two seconds</span>
+        <div class="comment">
+          Form-o-Fill will re-check if rules match every two seconds when this option is activated.<br/>
+          Very useful for single page apps that dynamically change the DOM / the URL without a reload.
+        </div>
+      </label>
     </div>
 
     <div class="text">
@@ -35,6 +46,5 @@
         </div>
       </label>
     </div>
-
   </div>
 </div>
