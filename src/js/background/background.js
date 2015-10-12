@@ -212,6 +212,7 @@ runWorkflowOrRule = function (tabId) {
   // First check (and run) workflows
   return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
     // If a workflow step has been run, don't run rules
+    // otherwise do run
     if(workflowStatus.runRule) {
       onTabReadyRules(tabId);
     }
@@ -252,7 +253,7 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
 var setCyclicRulesRecheck = function(shouldCheck) {
   if(shouldCheck) {
     recheckInterval = setInterval(function() {
-      onTabReadyRules(lastActiveTab.id);
+      runWorkflowOrRule(lastActiveTab.id);
     }, Utils.reevalRulesInterval);
     Logger.info("[bg.js] Activate interval for rule rechecking");
     useBadgeBgColor = intervalBadgeBgColor;
