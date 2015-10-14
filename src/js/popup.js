@@ -5,8 +5,9 @@ var Popup = {
     var popup = this;
 
     // Load last matching Rules and workflows
-    Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches()]).then(function popupInitMatches(lastMatches) {
+    Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches(), Storage.load(Utils.keys.settings)]).then(function popupInitMatches(lastMatches) {
       popup.updateHtml(lastMatches[0], lastMatches[1]);
+      popup.updateToggle(lastMatches[2].reevalRules);
     });
 
     popup.attachEventHandlers();
@@ -53,7 +54,18 @@ var Popup = {
     }).on("click", "a.cmd-cancel-workflows", function () {
       // Cancel blocking workflow
       Storage.delete(Utils.keys.runningWorkflow).then(window.close);
+    }).on("click", "a.cmd-toggle-re-match", function() {
+      // Toggle automatic re-matching of rules on/off
+      chrome.extension.sendMessage({"action": "toggleSetting", message: "reevalRules"}, function(currentState) {
+        popup.updateToggle(currentState);
+      });
     });
+  },
+  updateToggle: function(currentState) {
+    var cl = document.querySelector("a.cmd-toggle-re-match").classList;
+    cl.remove("on");
+    cl.remove("off");
+    cl.add(currentState === true ? "on" : "off");
   },
   updateHeight: function() {
     var html = document.querySelector("html");

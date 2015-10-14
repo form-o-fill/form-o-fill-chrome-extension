@@ -112,6 +112,14 @@ h3 .cmd-show-extract-overlay {
   font-size: 9px;
   float: right;
   margin: 0 10px 10px 0;
+
+  &.on {
+    color: #11C711;
+  }
+
+  &.off {
+    color: Red;
+  }
 }
 
 .actions .cmd-cancel-workflows {

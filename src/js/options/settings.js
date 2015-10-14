@@ -1,4 +1,4 @@
-/*global Utils*/
+/*global Utils Logger */
 var Settings = function() {
   this.settings = null;
 };
@@ -6,10 +6,24 @@ var Settings = function() {
 Settings.prototype.init = function() {
   this.bindHandlers();
   this.loadSettings();
+  this.listen();
 };
 
 Settings.prototype.get = function(key) {
   return this.settings[key];
+};
+
+Settings.prototype.listen = function() {
+  var settings = this;
+  chrome.runtime.onMessage.addListener(function(request) {
+    if(request.action === "toggleSetting" && request.message) {
+      Logger.info("[settings.js] received toggleSetting for " + request.message + ". currently : " + settings.get(request.message));
+      var msg = {};
+      msg[request.message] = !settings.get(request.message);
+      settings.saveSettings(msg);
+      settings.loadSettings();
+    }
+  });
 };
 
 Settings.prototype.loadSettings = function() {
@@ -43,12 +57,19 @@ Settings.prototype.sendToBg = function(currentSettings) {
   chrome.runtime.sendMessage({action: "setSettings", message: currentSettings});
 };
 
-Settings.prototype.saveSettings = function() {
+Settings.prototype.saveSettings = function(overwrites) {
   var currentSettings = {
     alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked,
     jpegQuality: document.querySelector("#settings-screenshot-quality").value,
     reevalRules: document.querySelector("#settings-reeval-rules").checked
   };
+
+  // ALlow overwriting of atributes
+  if(typeof overwrites === "object") {
+    Object.keys(overwrites).forEach(function(key) {
+      currentSettings[key] = overwrites[key];
+    });
+  }
 
   this.sendToBg(currentSettings);
   Storage.save(currentSettings, Utils.keys.settings);

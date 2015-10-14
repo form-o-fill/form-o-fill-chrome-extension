@@ -8,7 +8,7 @@ var optionSettings = null;
 var recheckInterval = null;
 
 var defaultBadgeBgColor = [0, 136, 255, 200];
-var intervalBadgeBgColor = [243, 60, 14, 255];
+var intervalBadgeBgColor = [43, 206, 7, 255];
 var useBadgeBgColor = defaultBadgeBgColor;
 
 /*eslint-disable no-unused-vars*/
@@ -57,10 +57,10 @@ var onTabReadyRules = function(tabId) {
   chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
   Logger.info("[bg.js] onTabReadyRules on Tab " + tabId);
 
-  chrome.tabs.get(tabId, function (tab) {
+  chrome.tabs.get(tabId, function(tab) {
 
     // return if the tab isn't active anymore
-    if (!tab.active || tab.url.indexOf("chrome") > -1) {
+    if (!tab.active || tab.url.indexOf("chrome") === 0) {
       return;
     }
 
@@ -251,16 +251,21 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
 // the user has "reeval-rules" checked in settings.
 // It executes the rules matching every two seconds
 var setCyclicRulesRecheck = function(shouldCheck) {
+  if(recheckInterval) {
+    clearInterval(recheckInterval);
+    recheckInterval = null; // Collect it
+    Logger.info("[bg.js] Deactivate interval for rule rechecking");
+    useBadgeBgColor = defaultBadgeBgColor;
+  }
+
   if(shouldCheck) {
     recheckInterval = setInterval(function() {
-      runWorkflowOrRule(lastActiveTab.id);
+      if(lastActiveTab !== null) {
+        runWorkflowOrRule(lastActiveTab.id);
+      }
     }, Utils.reevalRulesInterval);
     Logger.info("[bg.js] Activate interval for rule rechecking");
     useBadgeBgColor = intervalBadgeBgColor;
-  } else if(recheckInterval) {
-    clearInterval(recheckInterval);
-    Logger.info("[bg.js] Deactivate interval for rule rechecking");
-    useBadgeBgColor = defaultBadgeBgColor;
   }
 };
 
@@ -354,10 +359,20 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
     Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
   }
+
+  // Toggles  binary setting on/off
+  if(message.action === "toggleSetting" && message.message) {
+    var currentState = optionSettings[message.message];
+    if(typeof currentState === "boolean") {
+      currentState = !currentState;
+      optionSettings[message.message] = currentState;
+      sendResponse(currentState);
+    }
+  }
 });
 
 // REMOVE START
-// Messages from content.js
+// Debug Messages from content.js
 chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function(message) {
     if(message.action === "log" && message.message) {
