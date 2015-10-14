@@ -398,7 +398,7 @@ chrome.runtime.onMessage.addListener(function (message) {
   }
 });
 
-// When this file loads, load and store settings
+// When this file loads, load settings and activate cyclic re-match
 Storage.load(Utils.keys.settings).then(function(settings) {
   if(typeof settings === "undefined") {
     settings = Utils.defaultSettings;
