@@ -136,6 +136,9 @@ var Popup = {
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;
       li.dataset.ruleName = rule.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();
+      if(typeof rule.color !== "undefined") {
+        li.style.color = rule.color;
+      }
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);

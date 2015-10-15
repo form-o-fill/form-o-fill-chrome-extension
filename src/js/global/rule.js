@@ -13,6 +13,7 @@ var Rule = function() {
     delete clone.autorun;
     delete clone.screenshot;
     delete clone.onlyEmpty;
+    delete clone.color;
     delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
   };

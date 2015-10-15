@@ -26,6 +26,14 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
+    A name for this rule. Mandatory.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;name: "This is my first rule. So excited!",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
     A regular expression that is matched against the current full URL.<br />
     Can be omitted if you use <code>content</code>.<br />
     Can also be a string like<br />
@@ -46,17 +54,8 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    A name for this rule. Used when multiple matches are available.
-  </div>
-  <div class="code">
-    &nbsp;&nbsp;name: "This is my first rule. So excited!",
-  </div>
-</div>
-<div class="block-of-code">
-  <div class="explaining">
     If you set this to <code>true</code> and only this rule matches, it will be auto-executed.<br />
-    No need to click the button.<br />
-    (Optional, default is <code>false</code>)
+    No need to click the button. Optional, default is <code>false</code>.
   </div>
   <div class="code">
     &nbsp;&nbsp;autorun: true,
@@ -64,7 +63,7 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    Takes a screenshot the moment the last field definition is done executing.
+    Takes a <a href="#help-screenshot">screenshot</a> the moment the last field definition is done executing.
   </div>
   <div class="code">
     &nbsp;&nbsp;screenshot: true,
@@ -77,7 +76,16 @@
     Can be overwritten in the field definition.
   </div>
   <div class="code">
-    &nbsp;&nbsp;onlyEmpty: true
+    &nbsp;&nbsp;onlyEmpty: true,
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Sets text color for the rule in the popup.<br />
+    Can be any CSS color. 
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;color: "#bada55"
   </div>
 </div>
 <div class="block-of-code">
@@ -117,7 +125,7 @@
   <div class="explaining">
     Only fill this field if currently empty.<br />
     Can also be set for the whole rule (see above).
-    Optional, can be omitted.
+    Can be omitted and defaults to <code>false</code>.
   </div>
   <div class="code">
     &nbsp;&nbsp;&nbsp;&nbsp;onlyEmpty: true
