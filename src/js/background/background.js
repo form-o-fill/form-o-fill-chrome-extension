@@ -1,4 +1,4 @@
-/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs */
+/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs*/
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
@@ -41,6 +41,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
   /*eslint-enable max-nested-callbacks*/
   Testing.setVar("matching-rules-count", matchingRules.length, "Matching rule #");
   Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
+  Testing.setVar("settings", JSONF.stringify(optionSettings), "Current settings");
 
   // If there is only one match we need something in the testpage to click on
   if(matchingRules.length + lastMatchingWorkflows.length === 1) {
@@ -351,32 +352,32 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     // evaluated in the context of the background page
     Libs.import();
   }
-
-  // Set local version of settings based on what is set in option.js
-  // This is called from options.js whenever settings are changed (or initially loaded)
-  if(message.action === "setSettings" && message.message) {
-    optionSettings = message.message;
-
-    // There is one special setting: "reeval-rules".
-    // If this is set to true then we need to start an interval an poll every ~2 seconds for url/content changes
-    // and reevaluate all rules
-    setCyclicRulesRecheck(optionSettings.reevalRules);
-
-    Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
-  }
-
-  // Toggles binary setting on/off
-  if(message.action === "toggleSetting" && message.message) {
-    var currentState = optionSettings[message.message];
-    if(typeof currentState === "boolean") {
-      currentState = !currentState;
-      optionSettings[message.message] = currentState;
-      Logger.info("[bg.js] Settings " + message.message + " to " + currentState);
-      setCyclicRulesRecheck(optionSettings.reevalRules);
-      sendResponse(currentState);
-    }
-  }
 });
+
+// Saves settings changed by popup or settings page
+/*eslint-disable no-unused-vars */
+var setSettings = function(settings, value) {
+  // First form key => value
+  if(typeof value !== "undefined") {
+    optionSettings[settings] = value;
+  } else {
+    // Second form: set all
+    optionSettings = settings;
+  }
+
+  // Save settings
+  Storage.save(optionSettings, Utils.keys.settings);
+
+  // Set cyclic refresh if neccessary
+  setCyclicRulesRecheck(optionSettings.reevalRules);
+
+  Testing.setVar("settings", JSONF.stringify(optionSettings), "Current settings");
+  Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
+
+  // Tell options page to reload the settings
+  chrome.runtime.sendMessage({action: "reloadSettings"});
+};
+/*eslint-enable no-unused-vars */
 
 // REMOVE START
 // Debug Messages from content.js
@@ -403,15 +404,6 @@ chrome.runtime.onMessage.addListener(function (message) {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + lastActiveTab.windowId);
     takeScreenshot(lastActiveTab.windowId, message.value, message.flag);
   }
-});
-
-// When this file loads, load settings and activate cyclic re-match
-Storage.load(Utils.keys.settings).then(function(settings) {
-  if(typeof settings === "undefined") {
-    settings = Utils.defaultSettings;
-  }
-  optionSettings = settings;
-  setCyclicRulesRecheck(optionSettings.reevalRules);
 });
 
 // Fires when the extension is install or updated
@@ -444,5 +436,19 @@ chrome.runtime.onInstalled.addListener(function (details) {
   if(Utils.version.indexOf(".") > -1) {
     Notification.forVersion(Utils.version);
   }
+});
+
+//
+// WHEN THIS FILE IS LOADED:
+//
+
+// Load the settings and defulat them if not saved before
+Storage.load(Utils.keys.settings).then(function(settings) {
+  Logger.info("[bg.js] loading settings : " + JSONF.stringify(settings));
+  if(typeof settings === "undefined") {
+    settings = Utils.defaultSettings;
+  }
+  optionSettings = settings;
+  setCyclicRulesRecheck(optionSettings.reevalRules);
 });
 

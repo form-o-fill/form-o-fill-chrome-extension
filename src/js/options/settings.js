@@ -1,6 +1,4 @@
-/*global Utils Logger */
 var Settings = function() {
-  this.settings = null;
 };
 
 Settings.prototype.init = function() {
@@ -9,18 +7,10 @@ Settings.prototype.init = function() {
   this.listen();
 };
 
-Settings.prototype.get = function(key) {
-  return this.settings[key];
-};
-
 Settings.prototype.listen = function() {
   var settings = this;
   chrome.runtime.onMessage.addListener(function(request) {
-    if(request.action === "toggleSetting" && request.message) {
-      Logger.info("[settings.js] received toggleSetting for " + request.message + ". currently : " + settings.get(request.message));
-      var msg = {};
-      msg[request.message] = !settings.get(request.message);
-      settings.saveSettings(msg);
+    if(request.action === "reloadSettings") {
       settings.loadSettings();
     }
   });
@@ -28,14 +18,8 @@ Settings.prototype.listen = function() {
 
 Settings.prototype.loadSettings = function() {
   var settings = this;
-  Storage.load(Utils.keys.settings).then(function(currentSettings) {
-    if(typeof currentSettings === "undefined") {
-      currentSettings = Utils.defaultSettings;
-    }
-    settings.settings = currentSettings;
-
-    settings.applySettings();
-    settings.sendToBg(currentSettings);
+  settings.getBg(function(bgWindow) {
+    settings.applySettings(bgWindow.optionSettings);
   });
 };
 
@@ -53,8 +37,10 @@ Settings.prototype.showInfo = function(msg) {
   }
 };
 
-Settings.prototype.sendToBg = function(currentSettings) {
-  chrome.runtime.sendMessage({action: "setSettings", message: currentSettings});
+Settings.prototype.getBg = function(cb) {
+  chrome.runtime.getBackgroundPage(function(bgWindow) {
+    cb(bgWindow);
+  });
 };
 
 Settings.prototype.saveSettings = function(overwrites) {
@@ -64,15 +50,16 @@ Settings.prototype.saveSettings = function(overwrites) {
     reevalRules: document.querySelector("#settings-reeval-rules").checked
   };
 
-  // ALlow overwriting of atributes
+  // Allow overwriting of atributes
   if(typeof overwrites === "object") {
     Object.keys(overwrites).forEach(function(key) {
       currentSettings[key] = overwrites[key];
     });
   }
 
-  this.sendToBg(currentSettings);
-  Storage.save(currentSettings, Utils.keys.settings);
+  this.getBg(function(bgWindow) {
+    bgWindow.setSettings(currentSettings);
+  });
 };
 
 Settings.prototype.bindHandlers = function() {
@@ -91,17 +78,11 @@ Settings.prototype.bindHandlers = function() {
   });
 };
 
-Settings.prototype.applySettings = function() {
-  if(this.settings.alwaysShowPopup === true) {
-    document.querySelector("#settings-always-show-popup").checked = true;
-  }
-
-  if(this.settings.reevalRules === true) {
-    document.querySelector("#settings-reeval-rules").checked = true;
-  }
-
-  document.querySelector("#settings-screenshot-quality").value = this.settings.jpegQuality;
-  document.querySelector(".settings-screenshot-quality-percent").innerHTML = this.settings.jpegQuality;
+Settings.prototype.applySettings = function(options) {
+  document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
+  document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
+  document.querySelector("#settings-screenshot-quality").value = options.jpegQuality;
+  document.querySelector(".settings-screenshot-quality-percent").innerHTML = options.jpegQuality;
 };
 
 var settings = new Settings();

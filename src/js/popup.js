@@ -5,9 +5,12 @@ var Popup = {
     var popup = this;
 
     // Load last matching Rules and workflows
-    Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches(), Storage.load(Utils.keys.settings)]).then(function popupInitMatches(lastMatches) {
-      popup.updateHtml(lastMatches[0], lastMatches[1]);
-      popup.updateToggle(lastMatches[2].reevalRules);
+    Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches()]).then(function popupInit(data) {
+      popup.updateHtml(data[0], data[1]);
+    });
+
+    chrome.runtime.getBackgroundPage(function(bgWindow) {
+      popup.updateToggle(bgWindow.optionSettings.reevalRules);
     });
 
     popup.attachEventHandlers();
@@ -56,9 +59,11 @@ var Popup = {
       Storage.delete(Utils.keys.runningWorkflow).then(window.close);
     }).on("click", "a.cmd-toggle-re-match", function() {
       // Toggle automatic re-matching of rules on/off
-      Logger.info("[popup.js] sending toggleSetting -> reevalRules to bg.js");
-      chrome.extension.sendMessage({"action": "toggleSetting", message: "reevalRules"}, function(currentState) {
-        popup.updateToggle(currentState);
+      var targetState = !this.classList.contains("on");
+      Logger.info("[popup.js] setting toggleSetting -> reevalRules in bg.js (state: " + targetState + ")");
+      chrome.runtime.getBackgroundPage(function(bgWindow) {
+        bgWindow.setSettings("reevalRules", targetState);
+        popup.updateToggle(targetState);
       });
     });
   },
@@ -87,7 +92,9 @@ var Popup = {
     this.updateHeight();
   },
   sendPopupHtmlForTesting: function() {
-    chrome.extension.getBackgroundPage().Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
+    chrome.extension.getBackgroundPage(function(bgWindow) {
+      bgWindow.Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
+    });
   },
   updateHeadline: function(matchingRules, matchingWorkflows) {
     var ruleMatchesCount = matchingRules.length;
