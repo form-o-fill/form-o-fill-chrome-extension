@@ -56,16 +56,18 @@ var Popup = {
       Storage.delete(Utils.keys.runningWorkflow).then(window.close);
     }).on("click", "a.cmd-toggle-re-match", function() {
       // Toggle automatic re-matching of rules on/off
+      Logger.info("[popup.js] sending toggleSetting -> reevalRules to bg.js");
       chrome.extension.sendMessage({"action": "toggleSetting", message: "reevalRules"}, function(currentState) {
         popup.updateToggle(currentState);
       });
     });
   },
   updateToggle: function(currentState) {
+    Logger.info("[popup.js] setting toggle to " + currentState);
     var cl = document.querySelector("a.cmd-toggle-re-match").classList;
     cl.remove("on");
     cl.remove("off");
-    cl.add(currentState === true ? "on" : "off");
+    cl.add(currentState ? "on" : "off");
   },
   updateHeight: function() {
     var html = document.querySelector("html");

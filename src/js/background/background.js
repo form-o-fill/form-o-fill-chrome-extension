@@ -60,7 +60,7 @@ var onTabReadyRules = function(tabId) {
   chrome.tabs.get(tabId, function(tab) {
 
     // return if the tab isn't active anymore
-    if (!tab.active || tab.url.indexOf("chrome") === 0) {
+    if (chrome.runtime.lastError || !tab.active || tab.url.indexOf("chrome") === 0) {
       return;
     }
 
@@ -267,6 +267,11 @@ var setCyclicRulesRecheck = function(shouldCheck) {
     Logger.info("[bg.js] Activate interval for rule rechecking");
     useBadgeBgColor = intervalBadgeBgColor;
   }
+
+  // Set BG color now even if not rematching has been done
+  if(lastActiveTab !== null) {
+    chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": lastActiveTab.id});
+  }
 };
 
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
@@ -360,12 +365,14 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
   }
 
-  // Toggles  binary setting on/off
+  // Toggles binary setting on/off
   if(message.action === "toggleSetting" && message.message) {
     var currentState = optionSettings[message.message];
     if(typeof currentState === "boolean") {
       currentState = !currentState;
       optionSettings[message.message] = currentState;
+      Logger.info("[bg.js] Settings " + message.message + " to " + currentState);
+      setCyclicRulesRecheck(optionSettings.reevalRules);
       sendResponse(currentState);
     }
   }
