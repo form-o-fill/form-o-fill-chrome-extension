@@ -13,6 +13,13 @@ var Popup = {
       popup.updateToggle(bgWindow.optionSettings.reevalRules);
     });
 
+    // For chrome < 42: set the link
+    if(typeof chrome.runtime.openOptionsPage === "undefined") {
+      var toOptionsLink = document.querySelector("a.to-options");
+      toOptionsLink.href = chrome.extension.getURL("html/options.html");
+      toOptionsLink.target = "blank";
+    }
+
     popup.attachEventHandlers();
     Logger.info("[popup.js] popup init done");
   },
@@ -49,6 +56,9 @@ var Popup = {
       popup.sendMessageAndClose(message);
     });
 
+    //
+    // Bind click events
+    //
     jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
       // Show Extract Overlay when user clicks "create one" link
       Utils.showExtractOverlay(function() {
@@ -65,6 +75,13 @@ var Popup = {
         bgWindow.setSettings("reevalRules", targetState);
         popup.updateToggle(targetState);
       });
+    }).on("click", "a.to-options", function(e) {
+      // Click on options link
+      // Chrome 42: use API, othersiw use normal href + target
+      if(typeof chrome.runtime.openOptionsPage === "function") {
+        chrome.runtime.openOptionsPage();
+        e.stopPropagation();
+      }
     });
   },
   updateToggle: function(currentState) {
@@ -85,14 +102,13 @@ var Popup = {
     this.updateHeadline(matchingRules, matchingWorkflows);
     this.updateMatchingRules(matchingRules);
     this.updateMatchingWorkflows(matchingWorkflows);
-    this.updateOptionsLink();
     if(!Utils.isLiveExtension()) {
       this.sendPopupHtmlForTesting();
     }
     this.updateHeight();
   },
   sendPopupHtmlForTesting: function() {
-    chrome.extension.getBackgroundPage(function(bgWindow) {
+    chrome.runtime.getBackgroundPage(function(bgWindow) {
       bgWindow.Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
     });
   },
@@ -142,12 +158,6 @@ var Popup = {
       fragment.appendChild(li);
     });
     ul.appendChild(fragment);
-  },
-  updateOptionsLink: function() {
-    var toOptionsLink = document.querySelectorAll("a.to-options")[0];
-    toOptionsLink.href = chrome.extension.getURL("html/options.html");
-    toOptionsLink.textContent = chrome.i18n.getMessage("options");
-    toOptionsLink.classList.remove("hidden");
   }
 };
 
