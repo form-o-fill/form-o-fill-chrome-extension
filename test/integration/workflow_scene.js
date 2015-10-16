@@ -7,7 +7,7 @@ describe("using workflows", function() {
     .click(".popup-html .select-workflow")
     .pause(global.pause)
     .url().then(function(currentUrl) {
-      expect(currentUrl.value).to.eql("http://localhost:9292/form-o-fill-testing/workflow-3.html?");
+      expect(currentUrl.value).to.eql("http://localhost:9292/form-o-fill-testing/16-workflow-3.html?");
     })
     .call(done);
   });

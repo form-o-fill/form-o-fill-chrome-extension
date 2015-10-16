@@ -8,7 +8,7 @@ describe("the options panel", function () {
     .click(".extension-options-url a")
     .pause(global.pause)
     .getValue("li.tab.current input", function (err, text) {
-      expect(text).to.eql(["dummy", "Workflows"]);
+      expect(text).to.eql(["dummy", "Workflows", "Settings"]);
     })
     .isVisible("li.tab.more", function (err, isVisible) {
       // "More" tab
@@ -41,6 +41,7 @@ describe("the options panel", function () {
       expect(text).to.contain("Tutorials");
       expect(text).to.contain("About");
       expect(text).to.contain("Changelog");
+      expect(text).to.contain("Settings");
     })
     .close()
     .call(done);

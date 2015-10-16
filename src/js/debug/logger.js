@@ -11,7 +11,8 @@ var Logger = {
 
     // REMOVE START
     if(typeof Testing !== "undefined") {
-      Testing.appendTestLog(msg);
+      // Takes too much of a performance hit
+      //Testing.appendTestLog(msg);
     }
     // REMOVE END
 
