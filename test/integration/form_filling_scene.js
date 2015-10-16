@@ -7,7 +7,7 @@ describe("the form filling", function() {
   var importAndExecute = function(ruleToImport, expectedText, done) {
     var ruleName = ruleToImport.replace(/ /g, "-").toLowerCase();
 
-    Tests.visit("simple")
+    Tests.visit("13-simple")
     .click("li.select-rule[data-rule-name='" + ruleName + "']")
     .pause(500)
     .getValue("#target", function (err, text) {
@@ -41,7 +41,7 @@ describe("the form filling", function() {
 
   describe("filling all matched fields", function() {
     it("fills all matched fields with the same value", function (done) {
-      Tests.visit("filling-all-matched-fields")
+      Tests.visit("04-filling-all-matched-fields")
       .pause(500)
       .getValue("#i1", function (err, attr) { expect(attr).to.eq("filled"); })
       .getValue("#i2", function (err, attr) { expect(attr).to.eq("filled"); })
@@ -52,7 +52,7 @@ describe("the form filling", function() {
 
   describe("when errors occur while executing the rule", function() {
     it("reports before function errors as notifications", function (done) {
-      Tests.visit("simple")
+      Tests.visit("13-simple")
       .click("li.select-rule[data-rule-name='error-thrown-in-before-function']")
       .pause(500)
       .getValue("#target", function (err, text) {
@@ -68,7 +68,7 @@ describe("the form filling", function() {
     });
 
     it("reports undefined as errors in a notifications", function (done) {
-      Tests.visit("simple")
+      Tests.visit("13-simple")
       .click("li.select-rule[data-rule-name='undefined-in-before-function']")
       .pause(500)
       .getValue("#target", function (err, text) {

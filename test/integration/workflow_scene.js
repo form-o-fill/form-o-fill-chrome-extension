@@ -3,7 +3,7 @@ require("../support/integration_helper");
 describe("using workflows", function() {
 
   it("works", function (done) {
-    Tests.visit("workflow-1")
+    Tests.visit("16-workflow-1")
     .click(".popup-html .select-workflow")
     .pause(global.pause)
     .url().then(function(currentUrl) {

@@ -4,7 +4,7 @@ describe("the options panel", function () {
   this.timeout(9999);
 
   it("is contains all essential parts", function (done){
-    Tests.visit("options")
+    Tests.visit("09-options")
     .click(".extension-options-url a")
     .pause(global.pause)
     .getValue("li.tab.current input", function (err, text) {

@@ -5,7 +5,7 @@ describe("filling different types of fields", function() {
   this.timeout(99999);
 
   it("fills all known types", function (done) {
-    Tests.visit("all-types")
+    Tests.visit("01-all-types")
     .getValue("input[type=text]", function (err, value) { expect(value).to.eql("input[type=text]"); })
     .isSelected("input[type=radio]", function (err, value) { expect(value).to.be_true; })
     .isSelected("input[name='checkbox-value']", function (err, value) { expect(value).to.eql(true); })

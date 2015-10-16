@@ -25,7 +25,7 @@ describe("test setup", function() {
   });
 
   it("imports rules and shows some meta infos", function(done) {
-    var page = Tests.visit("simple");
+    var page = Tests.visit("13-simple");
 
     page.getText(".extension-id", function (err, text) {
       expect(text).to.match(/[a-z0-9]{32}/);

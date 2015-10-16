@@ -5,7 +5,7 @@ describe("the form extraction", function() {
   this.timeout(99999);
 
   it("shows the extraction overlay", function(done) {
-    Tests.visit("form-extraction")
+    Tests.visit("05-form-extraction")
     .refresh() // need to refresh here ... ?!
     .pause(global.pause)
     .click(".popup-html a.cmd-show-extract-overlay")
@@ -15,7 +15,7 @@ describe("the form extraction", function() {
   });
 
   it("shows a notification when the user clicks the overlay", function(done) {
-    Tests.visit("form-extraction")
+    Tests.visit("05-form-extraction")
     .click(".popup-html a.cmd-show-extract-overlay")
     .click("div.form-o-fill-overlay-form")
     .pause(global.pause)
@@ -26,7 +26,7 @@ describe("the form extraction", function() {
   });
 
   it("inserts extracted rules into the editor", function(done) {
-    Tests.visit("form-extraction")
+    Tests.visit("05-form-extraction")
     .click(".popup-html a.cmd-show-extract-overlay")
     .pause(global.pause)
     .click("div.form-o-fill-overlay-form")
