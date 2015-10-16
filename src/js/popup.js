@@ -1,4 +1,4 @@
-/*global Utils, Logger, Rules, jQuery, Workflows, Storage */
+/*global Utils, Logger, Rules, Workflows, Storage */
 var Popup = {
   currentUrl: null,
   init: function() {
@@ -32,57 +32,70 @@ var Popup = {
   attachEventHandlers: function() {
     var popup = this;
 
-    // User selects on of many rules in the popup
-    jQuery("ul").on("click", "li.select-rule", function () {
-      var data = jQuery(this).data();
-      Logger.info("[popup.js] fill with rule " + data.ruleIndex + " clicked");
-      var message = {
-        "action": "fillWithRule",
-        "index": data.ruleIndex,
-        "id": data.ruleId
-      };
-      popup.sendMessageAndClose(message);
-    });
+    /*eslint-disable complexity*/
+    document.addEventListener("click", function(evt) {
+      var node = evt.target;
+      var message;
 
-    // User select a workflow
-    jQuery("ul").on("click", "li.select-workflow", function () {
-      var data = jQuery(this).data();
-      Logger.info("[popup.js] fill with workflow #" + data.workflowIndex + " clicked");
-      var message = {
-        "action": "fillWithWorkflow",
-        "index": data.workflowIndex,
-        "id": data.workflowId
-      };
-      popup.sendMessageAndClose(message);
-    });
+      if(!node) {
+        return;
+      }
 
-    //
-    // Bind click events
-    //
-    jQuery("#popup").on("click", "a.cmd-show-extract-overlay", function () {
+      // User selects on of many rules in the popup
+      if(node.classList.contains("select-rule")) {
+        Logger.info("[popup.js] fill with rule " + node.dataset.ruleIndex + " clicked");
+        message = {
+          "action": "fillWithRule",
+          "index": node.dataset.ruleIndex,
+          "id": node.dataset.ruleId
+        };
+        popup.sendMessageAndClose(message);
+      }
+
+      // User select a workflow
+      if(node.classList.contains("select-workflow")) {
+        Logger.info("[popup.js] fill with workflow #" + node.dataset.workflowIndex + " clicked");
+        message = {
+          "action": "fillWithWorkflow",
+          "index": node.dataset.workflowIndex,
+          "id": node.dataset.workflowId
+        };
+        popup.sendMessageAndClose(message);
+      }
+
       // Show Extract Overlay when user clicks "create one" link
-      Utils.showExtractOverlay(function() {
-        window.close();
-      });
-    }).on("click", "a.cmd-cancel-workflows", function () {
+      if(node.classList.contains("cmd-show-extract-overlay")) {
+        Utils.showExtractOverlay(function() {
+          window.close();
+        });
+      }
+
       // Cancel blocking workflow
-      Storage.delete(Utils.keys.runningWorkflow).then(window.close);
-    }).on("click", "a.cmd-toggle-re-match", function() {
+      if(node.classList.contains("cmd-cancel-workflows")) {
+        // Cancel blocking workflow
+        Storage.delete(Utils.keys.runningWorkflow).then(window.close);
+      }
+
       // Toggle automatic re-matching of rules on/off
-      var targetState = !this.classList.contains("on");
-      Logger.info("[popup.js] setting toggleSetting -> reevalRules in bg.js (state: " + targetState + ")");
-      chrome.runtime.getBackgroundPage(function(bgWindow) {
-        bgWindow.setSettings("reevalRules", targetState);
-        popup.updateToggle(targetState);
-      });
-    }).on("click", "a.to-options", function(e) {
+      if(node.classList.contains("cmd-toggle-re-match")) {
+        var targetState = !node.classList.contains("on");
+        Logger.info("[popup.js] setting toggleSetting -> reevalRules in bg.js (state: " + targetState + ")");
+        chrome.runtime.getBackgroundPage(function(bgWindow) {
+          bgWindow.setSettings("reevalRules", targetState);
+          popup.updateToggle(targetState);
+        });
+      }
+
       // Click on options link
-      // Chrome 42: use API, othersiw use normal href + target
-      if(typeof chrome.runtime.openOptionsPage === "function") {
-        chrome.runtime.openOptionsPage();
-        e.stopPropagation();
+      if(node.classList.contains("to-options")) {
+        // Chrome 42: use API, otherwise use normal href + target
+        if(typeof chrome.runtime.openOptionsPage === "function") {
+          chrome.runtime.openOptionsPage();
+          evt.stopPropagation();
+        }
       }
     });
+    /*eslint-enable complexity*/
   },
   updateToggle: function(currentState) {
     Logger.info("[popup.js] setting toggle to " + currentState);
@@ -109,7 +122,7 @@ var Popup = {
   },
   sendPopupHtmlForTesting: function() {
     chrome.runtime.getBackgroundPage(function(bgWindow) {
-      bgWindow.Testing.setVar("popup-html", jQuery("body").html(), "Popup HTML");
+      bgWindow.Testing.setVar("popup-html", document.querySelector("body").innerHTML, "Popup HTML");
     });
   },
   updateHeadline: function(matchingRules, matchingWorkflows) {
