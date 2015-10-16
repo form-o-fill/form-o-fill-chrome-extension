@@ -1,0 +1,79 @@
+module.exports = {
+  context: __dirname + "/src/js",
+  entry: {
+    background: "background/background.js",
+    popup:      "popup/popup.js",
+    content:    "content/content.js",
+    global:     "global/global.js",
+    options:    "options/options.js",
+  },
+  output: {
+    path: "src/js",
+    filename: "[name].js",
+    pathinfo: true
+  },
+  module: {
+    loaders: [
+      { test: /\.js$/, loader: "babel-loader" }
+    ]
+  },
+  resolve: {
+    extensions: ["", ".js", ".json"]
+  }
+};
+
+Bundles
+-------
+
+background.js
+- background.js
+- changelog.js
+- context_menu.js
+- form_util.js
+- notification.js
+- testing.js
+- tutorial.js
+
+popup.js
+- popup.js
+
+content.js
+- content.js
+- context.js
+- context_menu.js
+- extract_instrumentation.js
+- form_errors.js
+- form_extractor.js
+- form_filler.js
+- testing.js
+
+global.js
+- utils.js
+- jsonf.js
+- storage.js
+- rule.js
+- rules.js
+- i18n.js
+- libs.js
+- workflow.js
+
+options.js
+- editor.js
+- chrome_bootstrap.js
+- tabs.js
+- import_export.js
+- tutorial.js
+- options.js
+- help.js
+- workflow.js
+- settings.js
+- rule_summary.js
+
+options.css
+- options.scss
+
+content.css
+- content.scss
+
+popup.css
+- popup.scss
