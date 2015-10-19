@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body class="test-no-log">
+    <style>
+      input[type=text] {
+        width: 300px;
+      }
+    </style>
+    <h1>TESTING SERVER RUNNING - 2</h1>
+    Target 0:<input id="target0" type="text" value="value from pageload" /> ("set by setupContent")</br />
+    Target 1:<input id="target1" type="text" value="value from pageload" /> (2value by json.json via jQuery.getJSON")</br />
+    Target 2:<input id="target2" type="text" value="value from pageload" /> (Libs.chance.name: some name)</br />
+    Target 3:<input id="target3" type="text" value="value from pageload" /> (Libs.moment.format: "2015-10-19T21:38:52+02:00")</br />
+    Target 4:<input id="target4" type="text" value="value from pageload" /> (Libs.h.click: "clicked")</br />
+    Target 5:<input id="target5" type="text" value="value from pageload" /> (Libs.customFunction: "returned by customerFunction")</br />
+    Target 6:<input id="target6" type="text" value="value from pageload" /> (context.url: "localhost")</br />
+    Target 7:<input id="target7" type="text" value="value from pageload" /> (context.findHtml: "&lt;title>Form-O-Fill Testpage&lt;/title>")</br />
+    Target 8:<input id="target8" type="text" value="value from pageload" /> (shared rules: "set by shared rule")</br />
+    Target 9:<input id="target9" type="text" value="value from pageload" /> (field def: screenshot)</br />
+
+    <table id="form-o-fill-testing-info"></table>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="22-complex.js"></script>
+  </body>
+</html>
