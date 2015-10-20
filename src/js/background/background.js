@@ -294,6 +294,7 @@ chrome.browserAction.onClicked.addListener(function (){
 });
 
 // Listen for messages from other background/popup scripts
+// Also listens to messages from testcases
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
   Logger.info("[bj.js] Received message " + JSONF.stringify(message));
@@ -351,6 +352,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     // This is only useful for library functions used in before functions since those are
     // evaluated in the context of the background page
     Libs.import();
+  }
+
+  // Toggle rematch mode on/off
+  if(message.action === "testToggleRematch") {
+    optionSettings.reevalRules = !optionSettings.reevalRules;
+    setCyclicRulesRecheck(optionSettings.reevalRules);
   }
 });
 

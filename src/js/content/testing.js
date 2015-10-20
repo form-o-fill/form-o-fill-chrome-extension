@@ -98,6 +98,9 @@ var installTestingCode = function() {
       Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with workflow #name");
       domNode = null;
     });
+  }).on("click", ".cmd-toggle-re-match", function() {
+    // Click on rematch button should activate rematch mode
+    chrome.extension.sendMessage({action: "testToggleRematch"});
   });
 
   // Make the Testn object available in dev
