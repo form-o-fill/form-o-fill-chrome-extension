@@ -106,8 +106,11 @@ var addStepToWorkflow = function() {
 // load available rules and fill select field
 var fillAvailableRules = function() {
   Rules.all().then(function availableRules(rules) {
+    var valid = rules.filter(function(rule) {
+      return typeof rule.name !== "undefined";
+    });
     jQuery(".rulelist option").remove();
-    fillRuleSelect(rules);
+    fillRuleSelect(valid);
   });
 };
 
