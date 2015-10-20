@@ -229,7 +229,7 @@ var generateFilename = function(metadata) {
 // Takes screenshot of a window
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
-  var quality = optionSettings.jpegQuality || 60;
+  var quality = parseInt(optionSettings.jpegQuality, 10) || 60;
   var fName;
 
   // force download of the image
