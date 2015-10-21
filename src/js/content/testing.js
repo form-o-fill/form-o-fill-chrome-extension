@@ -60,7 +60,8 @@ var installTestingCode = function() {
   jQuery(document).on("click", "#form-o-fill-testing-import-submit", function () {
     // Attach an listener to the <button> so that the rules that should be imported can be send
     // to the background/testing.js page
-    var rulesCode = jQuery("#form-o-fill-testing-import").val();
+    // There is a little "obfuscating" involved (see replace) to help testing.
+    var rulesCode = jQuery("#form-o-fill-testing-import").val().replace(/([a-zA-Z])@([a-zA-Z])/g,"$1 $2");
     chrome.runtime.sendMessage({action: "importRules", value: rulesCode}, function () {
       window.location.reload();
     });
