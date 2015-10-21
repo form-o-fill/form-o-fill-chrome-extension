@@ -25,12 +25,19 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
-Changelog:
+★ Version 2.5.0
+- Added 'after' function as a complement to the 'before' function.
+- Added setupContent and teardownContent. Work like before/after only executed inside the content page.
+- Added "automatic rematch" mode that searches for matching rules every two seconds and not only on page load.
+- Added "color" attribute for rule definitions. Colors rule in popup. Use for grouping.
+- Bugfix: rules with no name appeared in workflow dropdown.
+- Bugfix: screenshots broken after changing quality setting
+- Optimization: remove jQuery dependency from popup.
 
 ★ Version 2.4.0
 - Take screenshots whenever you want.
 - Settings panel added. Toggle popup display when one rule matches on and off.
-- Rules and field definitions accept a 'onlyEmpty' flag which fills the field only if empty
+- Rules and field definitions accept an 'onlyEmpty' flag which fills the field only if empty
 - Add tutorial for shared rules
 - Add rule summary panel
 
@@ -46,30 +53,7 @@ Changelog:
 - Live tutorial are here! Learn Form-O-Fill's features step by step. 
 - Fixed: input[type=checkbox] fields are extracted when not checked.
 
-★ Version 2.2.2
-- Workflows graduated from beta
-- Unified import/export functionality. Can import old format.
-- Fix library function bug in content.js. No need to reload the webpage when changing custom library functions anymore
-- Changing a tab save the current displayed rules
-- A new export that eases the incorporation of changed rules into your ruleset.
-
-★ Version 2.2.1
-- Memory optimization pass
-- Storage methods for before and value functions
-
-★ Version 2.1.1
-- Fix bug with throbber overlay not showing
-
-★ Version 2.1.0
-- Ability to cancel workflow/rule from inside before function with Libs.halt()
- 
-★ Version 2.0.0
-- Workflow allow chaining of rules to form complex sequences of actions. See help!
-- Libs.h.click can be used as a value function.
-- Refactored a lot of code. Report issues on github or via email please.
-- Moved import/export to extra menu
-
-★ Version 1.1.1 - 1.6.1
+★ Version 1.1.1 - 2.2.2
 - See "Changelog" in extension options
 
 Find the source at

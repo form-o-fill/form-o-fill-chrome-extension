@@ -30,6 +30,11 @@ var Changelog = {
       title: "FoF updated: Screenshot + onlyEmpty",
       message: "Take screenshots! Fill only empty fields!",
       target: "#help-screenshot"
+    },
+    "2.5.0": {
+      title: "FoF updated: setupContent + auto. rematch",
+      message: "prepare function for content! automatic rematch for SPAs!",
+      target: "#changelog"
     }
   },
   findForVersion: function(version) {
