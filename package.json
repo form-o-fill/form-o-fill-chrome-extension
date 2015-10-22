@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
+    "babel-loader": "^5.3.2",
     "chai": "^3.0.0",
     "chai-as-promised": "^5.1.0",
     "chalk": "^1.0.0",
@@ -38,6 +39,7 @@
     "sinon-chai": "^2.6.0",
     "through2": "^2.0.0",
     "webdriverio": "^2.4.5",
+    "webpack": "^1.12.2",
     "yargs": "^3.27.0"
   },
   "scripts": {
