@@ -9,6 +9,9 @@
 ---
   env:
     browser: true
+    es6: true
+  ecmaFeatures:
+    modules: true
   globals:
     module: true
     chrome: true
