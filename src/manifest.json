@@ -46,7 +46,6 @@
       ],
       "js": [ 
         "vendor/jquery/jquery-2.1.4.min.js", 
-        "js/debug/logger.js", 
         "js/global/utils.js", 
         "js/global/jsonf.js", 
         "js/global/rule.js", 
@@ -58,9 +57,8 @@
         "js/content/form_errors.js", 
         "js/content/form_filler.js", 
         "js/content/form_extractor.js", 
-        "js/content/extract_instrumentation.js",
         "js/content/context_menu.js",
-        "js/content/content.js",
+        "js/content.js",
         "js/content/testing.js" 
       ],
       "css": [
