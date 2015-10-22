@@ -239,7 +239,7 @@ gulp.task('optionsJs', ['clean'], function () {
 // Build popup.js
 //
 gulp.task('popupJs', ['clean'], function () {
-  return gulp.src("src/js/popup.js")
+  return gulp.src("src/js/popup/popup.js")
   .pipe(replace(replaceOpts))
   .pipe(stripdebug())
   .pipe(uglify())
