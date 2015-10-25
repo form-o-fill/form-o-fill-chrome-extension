@@ -1,5 +1,8 @@
-/*global jQuery, Rule, Logger, Utils*/
 /* eslint no-unused-vars: 0 */
+import Logger from "../debug/logger";
+import jQuery from "jquery";
+import Rule from "../global/rule";
+
 var FormExtractor = {
   _knownElements: null,
   knownElements: function() {
@@ -138,3 +141,5 @@ var FormExtractor = {
     });
   }
 };
+
+module.exports = FormExtractor;

@@ -1,4 +1,8 @@
-/*global jQuery, FormExtractor, Storage, Logger, Utils, JSONF*/
+import jQuery from "jquery";
+import FormExtractor from "./form_extractor";
+import Logger from "../debug/logger";
+import JSONF from "../global/jsonf";
+import Utils from "../global/utils";
 
 // Create HTML overlays for form masking
 var getOverlays = function getOverlays() {
@@ -90,3 +94,8 @@ chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, send
     responseCallback(JSONF.stringify(matches));
   }
 });
+
+module.exports = {
+  extractRules: extractRules,
+  showExtractOverlay: showExtractOverlay
+};

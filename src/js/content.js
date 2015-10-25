@@ -47,113 +47,147 @@
   \****************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/*global FormFiller, JSONF, jQuery, Logger, Libs */
 	/*eslint complexity:0 */
 	"use strict";
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	var _overlay = __webpack_require__(/*! ./overlay */ 1);
 
-	var Overlay = _interopRequireWildcard(_overlay);
+	var _overlay2 = _interopRequireDefault(_overlay);
 
-	Overlay.init();
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	var _form_filler = __webpack_require__(/*! ./form_filler */ 6);
+
+	var _form_filler2 = _interopRequireDefault(_form_filler);
+
+	var _globalLibs = __webpack_require__(/*! ../global/libs */ 8);
+
+	var _globalLibs2 = _interopRequireDefault(_globalLibs);
+
+	var _context_menu = __webpack_require__(/*! ./context_menu */ 9);
+
+	var _context_menu2 = _interopRequireDefault(_context_menu);
+
+	var _context = __webpack_require__(/*! ./context */ 10);
+
+	var _context2 = _interopRequireDefault(_context);
+
+	var _testing = __webpack_require__(/*! ./testing */ 11);
+
+	var _testing2 = _interopRequireDefault(_testing);
+
+	_overlay2["default"].init();
+	_context_menu2["default"].init();
+	_testing2["default"].init();
+	window.context = _context2["default"];
 
 	chrome.runtime.onConnect.addListener(function (port) {
 	  var errors = [];
 	  var currentError = null;
 
-	  Logger.info("[content.js] Got a connection from " + port.name);
+	  _debugLogger2["default"].info("[content.js] Got a connection from " + port.name);
 
 	  if (port.name !== "FormOFill") {
 	    return;
 	  }
 
 	  port.onMessage.addListener(function (message) {
-	    Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
+	    _debugLogger2["default"].info("[content.js] Got message via port.onMessage : " + _globalJsonf2["default"].stringify(message) + " from bg.js");
 
 	    // Request to fill one field with a value
 	    if (message.action === "fillField" && message.selector && message.value) {
-	      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value) + "; flags : " + JSONF.stringify(message.flags));
+	      _debugLogger2["default"].info("[content.js] Filling " + message.selector + " with value " + _globalJsonf2["default"].stringify(message.value) + "; flags : " + _globalJsonf2["default"].stringify(message.flags));
 
 	      // REMOVE START
 	      if (message.beforeData && message.beforeData !== null) {
-	        Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
+	        _debugLogger2["default"].info("[content.js] Also got beforeData = " + _globalJsonf2["default"].stringify(message.beforeData));
 	      }
 	      // REMOVE END
 
-	      currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
+	      currentError = _form_filler2["default"].fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
 
 	      // Remember the error
 	      if (typeof currentError !== "undefined" && currentError !== null) {
-	        Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
+	        _debugLogger2["default"].info("[content.js] Got error " + _globalJsonf2["default"].stringify(currentError));
 	        errors.push(currentError);
 	      }
 
 	      // Send a message that we are done filling the form
 	      if (message.meta.lastField) {
-	        Logger.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
+	        _debugLogger2["default"].info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
 
 	        chrome.runtime.sendMessage({
 	          "action": "fillFieldFinished",
-	          "errors": JSONF.stringify(errors)
+	          "errors": _globalJsonf2["default"].stringify(errors)
 	        });
 	      }
 	    }
 
 	    // request to return all accumulated errors
 	    if (message.action === "getErrors") {
-	      Logger.info("[content.js] Returning " + errors.length + " errors to bg.js");
+	      _debugLogger2["default"].info("[content.js] Returning " + errors.length + " errors to bg.js");
 	      var response = {
 	        "action": "getErrors",
-	        "errors": JSONF.stringify(errors)
+	        "errors": _globalJsonf2["default"].stringify(errors)
 	      };
 	      port.postMessage(response);
 	    }
 
 	    // reload the libraries
 	    if (message.action === "reloadLibs") {
-	      Libs["import"]();
+	      _globalLibs2["default"]["import"]();
 	    }
 
 	    // execute setupContent function
 	    if (message.action === "setupContent" && message.value) {
-	      Logger.info("[content.js] Executing setupContent function", message.value);
+	      _debugLogger2["default"].info("[content.js] Executing setupContent function", message.value);
 
 	      // Parse and execute function
 	      var error = null;
 
 	      try {
-	        JSONF.parse(message.value)();
+	        _globalJsonf2["default"].parse(message.value)();
 	      } catch (e) {
-	        Logger.error("[content.js] error while executing setupContent function");
+	        _debugLogger2["default"].error("[content.js] error while executing setupContent function");
 	        error = e.message;
 	      }
 
-	      port.postMessage({ action: "setupContentDone", value: JSONF.stringify(error) });
+	      port.postMessage({ action: "setupContentDone", value: _globalJsonf2["default"].stringify(error) });
 	    }
 
 	    // execute teardownContent function
 	    // It has jQuery available and the context object from value functions and setupContent
 	    if (message.action === "teardownContent" && message.value) {
-	      Logger.info("[content.js] Executing teardownContent function", message.value);
+	      _debugLogger2["default"].info("[content.js] Executing teardownContent function", message.value);
 
 	      try {
-	        JSONF.parse(message.value)();
+	        _globalJsonf2["default"].parse(message.value)();
 	      } catch (e) {
-	        Logger.error("[content.js] error while executing teardownContent function");
+	        _debugLogger2["default"].error("[content.js] error while executing teardownContent function");
 	      }
 	    }
 	  });
 
 	  // Simple one-shot callbacks
 	  chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
-	    Logger.info("[content.js] Got message via runtime.onMessage : " + JSONF.stringify(message) + " from bg.j");
+	    _debugLogger2["default"].info("[content.js] Got message via runtime.onMessage : " + _globalJsonf2["default"].stringify(message) + " from bg.j");
 
 	    // This is the content grabber available as context.findHtml() in before functions
 	    if (message.action === "grabContentBySelector") {
-	      Logger.info("[content.js] Grabber asked for '" + message.message + "'");
-	      var domElements = jQuery(message.message).map(function (index, $el) {
+	      _debugLogger2["default"].info("[content.js] Grabber asked for '" + message.message + "'");
+	      var domElements = (0, _jquery2["default"])(message.message).map(function (index, $el) {
 	        return $el;
 	      });
 	      if (domElements.length === 0) {
@@ -170,7 +204,7 @@
 	    // Save a variable set in background via storage.set in the context of the content script
 	    // This makes the storage usable in value functions
 	    if (message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
-	      Logger.info("[content.js] Saving " + message.key + " = " + message.value);
+	      _debugLogger2["default"].info("[content.js] Saving " + message.key + " = " + message.value);
 	      window.sessionStorage.setItem(message.key, message.value);
 	    }
 
@@ -287,17 +321,14 @@
 	  });
 	};
 
-	var init = function init() {
-	  runtimeListener();
-	  portListener();
+	var Overlay = {
+	  init: function init() {
+	    runtimeListener();
+	    portListener();
+	  }
 	};
 
-	module.exports = {
-	  overlayHtml: overlayHtml,
-	  hideOverlay: hideOverlay,
-	  showOverlay: showOverlay,
-	  init: init
-	};
+	module.exports = Overlay;
 
 /***/ },
 /* 2 */
@@ -2301,6 +2332,1543 @@
 	    });
 	  }
 	};
+
+	module.exports = Logger;
+
+/***/ },
+/* 5 */
+/*!*************************!*\
+  !*** ./global/jsonf.js ***!
+  \*************************/
+/***/ function(module, exports) {
+
+	/*eslint no-new-func:0, complexity: 0*/
+	"use strict";
+
+	var JSONF = {
+	  _undef: "**JSONF-UNDEFINED**",
+	  stringify: function stringify(object) {
+	    return JSON.stringify(object, this._serializer, 2);
+	  },
+	  parse: function parse(jsonString) {
+	    return JSON.parse(jsonString, this._deserializer);
+	  },
+	  _serializer: function _serializer(key, value) {
+	    // undefined
+	    if (typeof value === "undefined") {
+	      return JSONF._undef;
+	    }
+
+	    // Is a FUNCTION or REGEXP ?
+	    if (value !== null && (typeof value === "function" || typeof value.test === "function")) {
+	      return value.toString();
+	    }
+	    return value;
+	  },
+	  _deserializer: function _deserializer(key, value) {
+	    if (key === "" && typeof value === "string" && value.indexOf("function") !== 0 && value.indexOf("/") !== 0) {
+	      return value;
+	    }
+
+	    if (typeof value === "string") {
+	      var rfunc = /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m;
+	      var rregexp = /^\/(.*?)\/$/m;
+	      var match = value.match(rfunc);
+
+	      // Function?
+	      if (match) {
+	        var args = match[2].split(',').map(function (arg) {
+	          return arg.replace(/\s+/, '');
+	        });
+	        return new Function(args, match[3].trim());
+	      }
+
+	      // RegEx?
+	      match = value.match(rregexp);
+	      if (match) {
+	        return new RegExp(match[1]);
+	      }
+
+	      // Undefined?
+	      if (value === JSONF._undef) {
+	        return undefined;
+	      }
+	    }
+	    return value;
+	  }
+	};
+
+	module.exports = JSONF;
+
+/***/ },
+/* 6 */
+/*!********************************!*\
+  !*** ./content/form_filler.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _form_errors = __webpack_require__(/*! ./form_errors */ 7);
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var FormFiller = {
+	  error: null,
+	  // This fills the field with a value
+	  fill: function fill(selector, value, beforeData, flags, meta) {
+	    var domNodes = document.querySelectorAll(selector);
+	    var domNode = null;
+	    var fillMethod = null;
+	    this.currentRuleMetadata = meta;
+
+	    if (domNodes.length === 0) {
+	      return new _form_errors.FormError(selector, value, "Could not find field");
+	    }
+	    _debugLogger2["default"].info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
+
+	    var parsedValue = _globalJsonf2["default"].parse(value);
+
+	    // Call field specific method on EVERY field found
+	    //
+	    // "_fill" + the camelized version of one of these:
+	    // text , button , checkbox , image , password , radio , textarea , select-one , select-multiple , search
+	    // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
+	    //
+	    // eg. _fillDatetimeLocal(value)
+	    var i;
+	    var returnValue = null;
+
+	    for (i = 0; i < domNodes.length; ++i) {
+	      domNode = domNodes[i];
+	      fillMethod = this._fillMethod(domNode);
+
+	      // Check for "onlyEmpty" flag and break the loop
+	      if (flags.onlyEmpty === true && domNode.value !== "") {
+	        _debugLogger2["default"].info("[form_filler.js] Skipped the loop because the target was not empty");
+	        break;
+	      }
+
+	      // if the value is a function, call it with the jQuery wrapped domNode
+	      // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
+	      if (typeof parsedValue === "function") {
+	        try {
+	          parsedValue = parsedValue((0, _jquery2["default"])(domNode), beforeData);
+	        } catch (e) {
+	          _debugLogger2["default"].info("[form_filler.js] Got an exception executing value function: " + parsedValue);
+	          _debugLogger2["default"].info("[form_filler.js] Original exception: " + e);
+	          _debugLogger2["default"].info("[form_filler.js] Original stack: " + e.stack);
+	          return new _form_errors.FormError(selector, value, "Error while executing value-function: " + _globalJsonf2["default"].stringify(e.message));
+	        }
+	      }
+
+	      // Fill field only if value is not null or not defined
+	      if (parsedValue !== null && typeof parsedValue !== "undefined") {
+	        // Fill field using the specialized method or default
+	        returnValue = fillMethod(domNode, parsedValue, selector) || null;
+	      }
+	    }
+
+	    // Screenshot?
+	    if (flags.screenshot !== "undefined" && flags.screenshot !== false) {
+	      // Only the BG page has the permissions to do a screenshot
+	      // so here we send it the request to do so
+	      _debugLogger2["default"].info("[form_filler.js] sending request to take a screenshot to bg.js");
+	      chrome.runtime.sendMessage({ action: "takeScreenshot", value: meta, flag: flags.screenshot });
+	    }
+
+	    return returnValue;
+	  },
+	  _fillDefault: function _fillDefault(domNode, value) {
+	    domNode.value = value;
+	  },
+	  _fillImage: function _fillImage(domNode, value) {
+	    domNode.attributes.getNamedItem("src").value = value;
+	  },
+	  _fillCheckbox: function _fillCheckbox(domNode, value) {
+	    var setValue;
+	    if (value === true || domNode.value === value) {
+	      setValue = true;
+	    }
+	    if (value === false) {
+	      setValue = false;
+	    }
+	    domNode.checked = setValue;
+	  },
+	  _fillRadio: function _fillRadio(domNode, value) {
+	    domNode.checked = domNode.value === value;
+	  },
+	  _fillSelectOne: function _fillSelectOne(domNode, value) {
+	    var i = 0;
+	    var optionNode = null;
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      if (optionNode.value === value) {
+	        optionNode.selected = value;
+	        return;
+	      }
+	    }
+	  },
+	  _fillSelectMultiple: function _fillSelectMultiple(domNode, value) {
+	    var i = 0;
+	    var optionNode = null;
+	    var someFunction = function someFunction(targetValue) {
+	      return optionNode.value === targetValue;
+	    };
+	    value = Array.isArray(value) ? value : [value];
+
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      optionNode.selected = value.some(someFunction);
+	    }
+	  },
+	  _fillDate: function _fillDate(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'date' field cannot be filled with this. See http://bit.ly/formofill-formats");
+	    }
+	  },
+	  _fillMonth: function _fillMonth(domNode, value, selector) {
+	    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month");
+	    }
+	  },
+	  _fillWeek: function _fillWeek(domNode, value, selector) {
+	    if (/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'week' field cannot be filled with tihs value. See http://bit.ly/formofill-format-week");
+	    }
+	  },
+	  _fillTime: function _fillTime(domNode, value, selector) {
+	    if (/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time");
+	    }
+	  },
+	  _fillDatetime: function _fillDatetime(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time");
+	    }
+	  },
+	  _fillDatetimeLocal: function _fillDatetimeLocal(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local");
+	    }
+	  },
+	  _fillColor: function _fillColor(domNode, value, selector) {
+	    if (/^#[0-9a-f]{6}$/i.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color");
+	    }
+	  },
+	  _typeMethod: function _typeMethod(type) {
+	    return ("_fill-" + type).replace(/(\-[a-z])/g, function ($1) {
+	      return $1.toUpperCase().replace('-', '');
+	    });
+	  },
+	  _fillMethod: function _fillMethod(domNode) {
+	    var fillMethod = this[this._typeMethod(domNode.type)];
+	    // Default is to set the value of the field if
+	    // no special function is defined for that type
+	    if (typeof fillMethod !== "function") {
+	      fillMethod = this._fillDefault;
+	    }
+	    return fillMethod;
+	  }
+	};
+
+	module.exports = FormFiller;
+
+/***/ },
+/* 7 */
+/*!********************************!*\
+  !*** ./content/form_errors.js ***!
+  \********************************/
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var FormError = function FormError(selector, value, message) {
+	  this.selector = selector;
+	  this.value = value;
+	  this.message = message;
+	};
+
+	var FormErrors = function FormErrors(rule) {
+	  this._errors = [];
+	  this.rule = rule;
+	};
+
+	FormErrors.prototype.add = function (selector, value, message) {
+	  var formError = new FormError(selector, value, message);
+	  this._errors.push(formError);
+	  return this;
+	};
+
+	FormErrors.prototype.get = function () {
+	  return this._errors;
+	};
+
+	module.exports = {
+	  FormErrors: FormErrors,
+	  FormError: FormError
+	};
+
+/***/ },
+/* 8 */
+/*!************************!*\
+  !*** ./global/libs.js ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _rules = __webpack_require__(/*! ./rules */ 16);
+
+	var _rules2 = _interopRequireDefault(_rules);
+
+	var _contentForm_filler = __webpack_require__(/*! ../content/form_filler */ 6);
+
+	var _contentForm_filler2 = _interopRequireDefault(_contentForm_filler);
+
+	// This creates a "safe" namespace for all libs
+	var Libs = {
+	  _libs: {},
+	  add: function add(libraryName, librayTopLevelFunction, forceAdd) {
+	    // Check if the method is already defined
+	    forceAdd = forceAdd || false;
+	    if ((this._libs[libraryName] || this.hasOwnProperty(libraryName)) && !forceAdd) {
+	      _debugLogger2["default"].info("[libs.js] Can not add library named '" + libraryName + "' because it already exists as a function().");
+	      return;
+	    }
+	    this[libraryName] = librayTopLevelFunction;
+	    _debugLogger2["default"].info("[libs.js] Added library as Libs." + libraryName);
+	  },
+	  "import": function _import() {
+	    return new Promise(function (resolve) {
+	      _rules2["default"].all().then(function (rules) {
+	        rules.forEach(function (rule) {
+	          if (typeof rule["export"] !== "undefined" && typeof rule.lib === "function") {
+	            // Add the rule into the scope of all library functions
+	            Libs.add(rule["export"], rule.lib, true);
+	          }
+	        });
+	      }).then(resolve("libraries imported"));
+	    });
+	  }
+	};
+
+	// helper for use in value functions
+	//
+	// "value" : Libs.h.click  => Clicks on the element specified by 'selector'
+	var valueFunctionHelper = {
+	  click: function click($domNode) {
+	    $domNode.click();
+	  },
+	  screenshot: function screenshot(saveAs) {
+	    chrome.runtime.sendMessage({ action: "takeScreenshot", value: _contentForm_filler2["default"].currentRuleMetadata, flag: saveAs });
+	  }
+	};
+	Libs.add("h", valueFunctionHelper);
+
+	// Process control functions
+	var processFunctionsHalt = function processFunctionsHalt(msg) {
+	  return function () {
+	    if (typeof lastActiveTab === "undefined") {
+	      return null;
+	    }
+
+	    if (typeof msg === "undefined") {
+	      msg = "Canceled by call to Libs.halt()";
+	    }
+
+	    // Since this is called from the b/form_utils.js
+	    // we need to send a message to the content.js
+	    chrome.tabs.sendMessage(lastActiveTab.id, { action: "showOverlay", message: msg });
+
+	    return null;
+	  };
+	};
+	Libs.add("halt", processFunctionsHalt);
+
+	// Import all saved libs
+	Libs["import"]();
+
+	module.exports = Libs;
+
+/***/ },
+/* 9 */
+/*!*********************************!*\
+  !*** ./content/context_menu.js ***!
+  \*********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj["default"] = obj; return newObj; } }
+
+	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 13);
+
+	var Extractor = _interopRequireWildcard(_extract_instrumentation);
+
+	var lastRightClickedElement = null;
+
+	var ContextMenu = {
+	  init: function init() {
+	    document.addEventListener("mousedown", function (event) {
+	      // right click
+	      if (event.button === 2 && typeof event.target.form !== "undefined") {
+	        lastRightClickedElement = event.target;
+	      }
+	    }, true);
+
+	    // When we receive the message to extract a form
+	    // from bg.js we can just extract the form from the last saved element
+	    chrome.extension.onMessage.addListener(function (message) {
+	      if (message.action === "extractLastClickedForm") {
+	        Extractor.extractRules(lastRightClickedElement.form);
+	      }
+	    });
+	  }
+	};
+
+	module.exports = ContextMenu;
+
+/***/ },
+/* 10 */
+/*!****************************!*\
+  !*** ./content/context.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*eslint no-unused-vars: 0 */
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	// This is not the same context as in background.js
+	// Currently it only allows to read storage values set by bg.js but
+	// you can set value for all value functions to access
+	var context = {
+	  storage: {
+	    get: function get(key) {
+	      var value = window.sessionStorage.getItem(key);
+	      if (typeof value !== "undefined") {
+	        return _globalJsonf2["default"].parse(value);
+	      }
+	      return value;
+	    },
+	    set: function set(key, value) {
+	      // set it in localstorage
+	      window.sessionStorage.setItem(key, _globalJsonf2["default"].stringify(value));
+	    }
+	  }
+	};
+
+	module.exports = context;
+
+/***/ },
+/* 11 */
+/*!****************************!*\
+  !*** ./content/testing.js ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// This file is for end to end testing only
+	// It is delivered with the production code but disabled
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _globalUtils = __webpack_require__(/*! ../global/utils */ 12);
+
+	var _globalUtils2 = _interopRequireDefault(_globalUtils);
+
+	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 13);
+
+	var _extract_instrumentation2 = _interopRequireDefault(_extract_instrumentation);
+
+	var installTestingCode = function installTestingCode() {
+
+	  var shouldLog = !(0, _jquery2["default"])("body").hasClass("test-no-log");
+
+	  var Testing = {
+	    setTestingVar: function setTestingVar(key, value, text) {
+	      var $info = (0, _jquery2["default"])("#form-o-fill-testing-info");
+	      var foundEl = $info.find("." + key);
+	      // When the text property is set, append that to the DOM
+	      if (foundEl.length === 0 && typeof text !== "undefined") {
+	        $info.append("<tr><td>" + text + "</td><td class='" + key + "'>" + value + "</td></tr>");
+	      } else {
+	        $info.find("." + key).html(value);
+	      }
+	    },
+	    appendTestLog: function appendTestLog(msg) {
+	      if (shouldLog) {
+	        (0, _jquery2["default"])("td.log ul").append("<li>" + msg + "</li>");
+	      }
+	    }
+	  };
+
+	  // Tell the background page that we are in testing mode
+	  chrome.runtime.sendMessage({ action: "setTestingMode", value: true }, function (bgInfo) {
+	    // The background page returns a lot of metadata about the extension
+	    // Display that in the testing page which has a special container for that.
+	    // That information is then picked up by the integration tests to reach intern URLs like
+	    // the options page
+	    _debugLogger2["default"].info("[c/testing.j] background.js has set testing mode to " + bgInfo.testingMode);
+	    Testing.setTestingVar("extension-id", bgInfo.extensionId, "Extension Id");
+	    Testing.setTestingVar("extension-options-url", "<a target='_self' href='chrome-extension://" + bgInfo.extensionId + "/html/options.html'>chrome-extension://" + bgInfo.extensionId + "/html/options.html</a>", "Options URL");
+	    Testing.setTestingVar("tab-id", bgInfo.tabId, "TabId of this page");
+	    Testing.setTestingVar("extension-version", bgInfo.extensionVersion, "Form-O-Fill Version");
+	    Testing.setTestingVar("testing-mode", bgInfo.testingMode, "Testing mode");
+	    Testing.setTestingVar("rule-count", bgInfo.ruleCount, "Number of rules");
+	    Testing.setTestingVar("lib-count", bgInfo.libCount, "Number of library functions");
+	    Testing.setTestingVar("log", "<ul></ul>", "Log");
+	  });
+
+	  // Listen to messages from background.js
+	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+	    // Set a variable in the DOM based on what is sent from bg.js
+	    if (message.action === "setTestingVar" && message.key && typeof message.value !== "undefined") {
+	      Testing.setTestingVar(message.key, message.value, message.text);
+	      sendResponse(true);
+	    }
+
+	    if (message.action === "appendTestLog" && typeof message.value !== "undefined") {
+	      Testing.appendTestLog(message.value);
+	      sendResponse(true);
+	    }
+	  });
+
+	  //
+	  // Bind some handlers to make working with the testcases
+	  // easier
+	  (0, _jquery2["default"])(document).on("click", "#form-o-fill-testing-import-submit", function () {
+	    // Attach an listener to the <button> so that the rules that should be imported can be send
+	    // to the background/testing.js page
+	    // There is a little "obfuscating" involved (see replace) to help testing.
+	    var rulesCode = (0, _jquery2["default"])("#form-o-fill-testing-import").val().replace(/([a-zA-Z])@([a-zA-Z])/g, "$1 $2");
+	    chrome.runtime.sendMessage({ action: "importRules", value: rulesCode }, function () {
+	      window.location.reload();
+	    });
+	  }).on("click", ".popup-html li.select-rule", function () {
+	    // Clicks on the simulated popup should trigger filling
+	    var domNode = this;
+	    var data = (0, _jquery2["default"])(this).data();
+	    var message = {
+	      "action": "fillWithRule",
+	      "index": data.ruleIndex,
+	      "id": data.ruleId
+	    };
+	    chrome.extension.sendMessage(message, function () {
+	      Testing.setTestingVar("rule-filled-id", message.id, "Filled form with rule #id");
+	      Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with rule #name");
+	      domNode = null;
+	    });
+	  }).on("click", ".extension-options-url", function () {
+	    // Simulate a click on the testing options link
+	    _globalUtils2["default"].openOptions();
+	  }).on("click", "a.cmd-show-extract-overlay", function () {
+	    // Execute extract form function
+	    _extract_instrumentation2["default"].showExtractOverlay();
+	  }).on("click", ".popup-html li.select-workflow", function () {
+	    // Clicks on the simulated popup should trigger workflow
+	    var domNode = this;
+	    var data = (0, _jquery2["default"])(this).data();
+	    var message = {
+	      "action": "fillWithWorkflow",
+	      "index": data.workflowIndex,
+	      "id": data.workflowId
+	    };
+	    chrome.extension.sendMessage(message, function () {
+	      Testing.setTestingVar("rule-filled-id", message.id, "Filled form with workflow #id");
+	      Testing.setTestingVar("rule-filled-name", domNode.innerHTML, "Filled form with workflow #name");
+	      domNode = null;
+	    });
+	  }).on("click", ".cmd-toggle-re-match", function () {
+	    // Click on rematch button should activate rematch mode
+	    chrome.extension.sendMessage({ action: "testToggleRematch" });
+	  });
+
+	  // Make the Testn object available in dev
+	  if (!_globalUtils2["default"].isLiveExtension()) {
+	    window.Testing = Testing;
+	  }
+	};
+
+	var Testing = {
+	  init: function init() {
+	    // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
+	    if (!_globalUtils2["default"].isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
+	      installTestingCode();
+	      _debugLogger2["default"].info("[c/testing.js] Installed testing code in content page");
+	    }
+	  }
+	};
+
+	module.exports = Testing;
+
+/***/ },
+/* 12 */
+/*!*************************!*\
+  !*** ./global/utils.js ***!
+  \*************************/
+/***/ function(module, exports) {
+
+	/*global jQuery Logger*/
+	/*eslint no-unused-vars: 0*/
+	"use strict";
+
+	var Utils = {
+	  // Will be set to false in BUILD:
+	  debug: true,
+	  version: "##VERSION##",
+	  liveExtensionId: "iebbppibdpjldhohknhgjoapijellonp",
+	  keys: {
+	    extractedRule: "form-o-fill-extracted",
+	    rules: "form-o-fill-rules",
+	    errors: "form-o-fill-errors",
+	    tabs: "form-o-fill-tabs",
+	    logs: "form-o-fill-logs",
+	    lastMatchingRules: "form-o-fill-lastmatchingrules",
+	    workflows: "form-o-fill-workflows",
+	    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
+	    runningWorkflow: "form-o-fill-runningworkflow",
+	    sessionStorage: "form-o-fill-sessionStorage",
+	    tutorialDataBackup: "form-o-fill-tutorialDataBackup",
+	    tutorialActive: "form-o-fill-tut-active",
+	    settings: "form-o-fill-settings"
+	  },
+	  defaultSettings: {
+	    alwaysShowPopup: false,
+	    jpegQuality: 60,
+	    reevalRules: false
+	  },
+	  reevalRulesInterval: 2000,
+	  reservedLibNamespaces: ["h", "halt"],
+	  vendoredLibs: {
+	    "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
+	    "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
+	  },
+	  isLiveExtension: function isLiveExtension() {
+	    return window.location.host === Utils.liveExtensionId;
+	  },
+	  onFormOFillSite: function onFormOFillSite() {
+	    /*eslint-disable no-extra-parens*/
+	    return window.location.host === "form-o-fill.github.io" || window.location.host === "localhost" && window.location.port === "4000";
+	    /*eslint-enable no-extra-parens*/
+	  },
+	  showExtractOverlay: function showExtractOverlay(whenFinishedCallback) {
+	    // Send message to content script
+	    chrome.runtime.sendMessage({ "action": "lastActiveTabId" }, function (tabId) {
+	      var message = {
+	        "action": "showExtractOverlay"
+	      };
+	      chrome.tabs.sendMessage(tabId, message);
+	      whenFinishedCallback();
+	    });
+	  },
+	  openOptions: function openOptions(parameter) {
+	    var optionsUrl = chrome.runtime.getURL("html/options.html");
+	    if (parameter) {
+	      optionsUrl += parameter;
+	    }
+	    chrome.runtime.sendMessage({ "action": "openIntern", "url": optionsUrl });
+	  },
+	  infoMsg: function infoMsg(msg) {
+	    // A function to display a nice message in the rule editor
+	    var fadeAfterMSec = 1000;
+	    var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
+	    $menuInfo.html(msg).css({ "opacity": "1" });
+	    setTimeout(function () {
+	      $menuInfo.animate({ "opacity": 0 }, 1000, function () {
+	        jQuery(this).html("");
+	      });
+	    }, fadeAfterMSec);
+	  },
+	  downloadImage: function downloadImage(base64, filename) {
+	    var a = document.createElement("a");
+	    a.download = filename;
+	    a.href = base64;
+	    document.querySelector("body").appendChild(a);
+	    a.click();
+	    document.querySelector("body").removeChild(a);
+	    // REMOVE START
+	    if (typeof Logger !== "undefined") {
+	      Logger.info("[utils.js] Downloading image '" + filename + "'");
+	    }
+	    // REMOVE END
+	  },
+	  download: function download(data, filename, mimeType) {
+	    // Creates and triggers a download from a string
+	    var blob = new Blob([data], { type: mimeType });
+	    var url = window.URL.createObjectURL(blob);
+	    var a = document.createElement("a");
+	    a.download = filename;
+	    a.href = url;
+	    document.querySelector("body").appendChild(a);
+	    a.click();
+	    window.URL.revokeObjectURL(url);
+	    document.querySelector("body").removeChild(a);
+	  },
+	  parseUrl: function parseUrl(url) {
+	    var parser = document.createElement('a');
+	    parser.href = url;
+	    return {
+	      url: url,
+	      protocol: parser.protocol,
+	      host: parser.hostname,
+	      port: parser.port,
+	      path: parser.pathname,
+	      query: parser.search,
+	      hash: parser.hash
+	    };
+	  },
+	  sortRules: function sortRules(unsortedRules) {
+	    return unsortedRules.sort(function (a, b) {
+	      if (a.name > b.name) {
+	        return 1;
+	      }
+	      if (a.name < b.name) {
+	        return -1;
+	      }
+	      return 0;
+	    });
+	  }
+	};
+
+	module.exports = Utils;
+
+/***/ },
+/* 13 */
+/*!********************************************!*\
+  !*** ./content/extract_instrumentation.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _form_extractor = __webpack_require__(/*! ./form_extractor */ 14);
+
+	var _form_extractor2 = _interopRequireDefault(_form_extractor);
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	var _globalUtils = __webpack_require__(/*! ../global/utils */ 12);
+
+	var _globalUtils2 = _interopRequireDefault(_globalUtils);
+
+	// Create HTML overlays for form masking
+	var getOverlays = function getOverlays() {
+	  var overlays = [];
+	  (0, _jquery2["default"])("form").each(function formEach(index) {
+	    var $form = (0, _jquery2["default"])(this);
+
+	    // Add an index so we can find the form later
+	    $form.attr("data-form-o-fill-id", index);
+
+	    // Dimensions
+	    var offset = $form.offset();
+	    var height = $form.height();
+	    var width = $form.width();
+
+	    // HTML
+	    var overlay = "<div data-form-o-fill-id='" + index + "' class='form-o-fill-overlay-form' style='top:" + offset.top + "px; left:" + offset.left + "px; width:" + width + "px; height:" + height + "px;'><div class='form-o-fill-overlay-text'>Form-O-Fill:<br />Click in the colored area to extract this form</div></div>";
+	    overlays.push(overlay);
+	  });
+	  return overlays.join();
+	};
+
+	var cleanupOverlays = function cleanupOverlays() {
+	  // cleanup
+	  (0, _jquery2["default"])("form").each(function formEach() {
+	    (0, _jquery2["default"])(this).removeAttr("form-o-fill-id");
+	  });
+	  (0, _jquery2["default"])(".form-o-fill-overlay-form").remove();
+	  (0, _jquery2["default"])(document).off("click", ".form-o-fill-overlay-form").off("click", "body");
+	};
+
+	var extractRules = function extractRules(targetForm) {
+	  // looks good, start extraction
+	  var ruleCode = _form_extractor2["default"].extract(targetForm);
+	  _debugLogger2["default"].info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
+
+	  // Save Rule and goto options.html
+	  Storage.save(ruleCode, _globalUtils2["default"].keys.extractedRule);
+
+	  chrome.runtime.sendMessage({ "action": "extractFinishedNotification" });
+	};
+
+	// Show the extract overlay and bind handlers
+	var showExtractOverlay = function showExtractOverlay() {
+	  // Add event listener to DOM
+	  (0, _jquery2["default"])(document).on("click", ".form-o-fill-overlay-form", function clickFofOverlay(e) {
+	    e.preventDefault();
+	    e.stopPropagation();
+
+	    // This is the form we must extract
+	    var targetForm = document.querySelector("form[data-form-o-fill-id='" + this.dataset.formOFillId + "']");
+
+	    // remove overlays etc
+	    cleanupOverlays();
+
+	    if (targetForm) {
+	      extractRules(targetForm);
+	    }
+	  }).on("click", "body", cleanupOverlays).on("keyup", function keyUp(e) {
+	    if (e.which === 27) {
+	      cleanupOverlays();
+	    }
+	  });
+
+	  // Attach overlays to DOM
+	  (0, _jquery2["default"])("body").append(getOverlays());
+	};
+
+	// This is a one-off message listener
+	chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, sender, responseCallback) {
+	  // Request to start extracting a form to rules
+	  if (message && message.action === "showExtractOverlay") {
+	    showExtractOverlay();
+	  }
+
+	  // Request to match rules against content
+	  // Done here to not send the whole HTML to bg.js
+	  if (message && message.action === "matchContent" && message.rules) {
+	    var content = document.querySelector("body").outerHTML;
+	    var matches = [];
+	    var rules = _globalJsonf2["default"].parse(message.rules);
+	    rules.forEach(function forEach(rule) {
+	      if (typeof rule.content.test === "function" && rule.content.test(content)) {
+	        matches.push(rule.id);
+	      }
+	    });
+	    _debugLogger2["default"].info("[extract_instr.js] Matched content against " + rules.length + " rules with " + matches.length + " content matches");
+	    responseCallback(_globalJsonf2["default"].stringify(matches));
+	  }
+	});
+
+	module.exports = {
+	  extractRules: extractRules,
+	  showExtractOverlay: showExtractOverlay
+	};
+
+/***/ },
+/* 14 */
+/*!***********************************!*\
+  !*** ./content/form_extractor.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* eslint no-unused-vars: 0 */
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _globalRule = __webpack_require__(/*! ../global/rule */ 15);
+
+	var _globalRule2 = _interopRequireDefault(_globalRule);
+
+	var FormExtractor = {
+	  _knownElements: null,
+	  knownElements: function knownElements() {
+	    if (this._knownElements) {
+	      return this._knownElements;
+	    }
+	    var inputs = ["text", "checkbox", "image", "password", "radio", "search", "email", "url", "tel", "number", "range", "date", "month", "week", "time", "datetime", "datetime-local", "color"];
+	    var tags = ["button", "textarea", "select"];
+	    this._knownElements = inputs.map(function (inputType) {
+	      return "input[type=" + inputType + "]";
+	    });
+	    this._knownElements = this._knownElements.concat(tags);
+	    return this._knownElements;
+	  },
+	  extract: function extract(domNodeStartExtractionHere) {
+	    var extractor = this;
+	    var $form = (0, _jquery2["default"])(domNodeStartExtractionHere);
+	    var ruleData = {
+	      "url": document.location.href,
+	      "name": "A rule for " + document.location.href,
+	      "fields": []
+	    };
+
+	    this.knownElements().forEach(function (selector) {
+	      _debugLogger2["default"].info("[form_extractor.js] Looking for '" + selector + "'");
+	      $form.find(selector).each(function () {
+	        _debugLogger2["default"].info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ") <" + this.name + ">");
+	        var value = extractor._valueFor(this);
+	        // Only include field if value !== null
+	        if (value !== null) {
+	          var field = {
+	            "selector": extractor._selectorFor(this),
+	            "value": value
+	          };
+	          ruleData.fields.push(field);
+	        }
+	      });
+	    });
+
+	    return _globalRule2["default"].create(ruleData).prettyPrint();
+	  },
+	  _selectorFor: function _selectorFor(domNode) {
+	    var method = this._method("selector", domNode);
+	    return method(domNode);
+	  },
+	  _valueFor: function _valueFor(domNode) {
+	    var method = this._method("value", domNode);
+	    return method(domNode);
+	  },
+	  _selectorDefault: function _selectorDefault(domNode) {
+	    return "input[name='" + domNode.name + "']";
+	  },
+	  _selectorButton: function _selectorButton(domNode) {
+	    return "button[name='" + domNode.name + "']";
+	  },
+	  _selectorTextarea: function _selectorTextarea(domNode) {
+	    return "textarea[name='" + domNode.name + "']";
+	  },
+	  _selectorSelectOne: function _selectorSelectOne(domNode) {
+	    return "select[name='" + domNode.name + "']";
+	  },
+	  _selectorSelectMultiple: function _selectorSelectMultiple(domNode) {
+	    return "select[name='" + domNode.name + "']";
+	  },
+	  _valueDefault: function _valueDefault(domNode) {
+	    return domNode.value;
+	  },
+	  _valueCheckbox: function _valueCheckbox(domNode) {
+	    // if checked include the checkbox in the rule
+	    return domNode.checked ? true : false;
+	  },
+	  _valueRadio: function _valueRadio(domNode) {
+	    // if checked include the radiobutton in the rule
+	    return domNode.checked ? domNode.value : null;
+	  },
+	  _valueSelectOne: function _valueSelectOne(domNode) {
+	    var optionNode = null;
+	    var i;
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      if (optionNode.selected) {
+	        return optionNode.value;
+	      }
+	    }
+	    return "";
+	  },
+	  _valueSelectMultiple: function _valueSelectMultiple(domNode) {
+	    var i = 0;
+	    var optionNode = null;
+	    var selected = [];
+
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      if (optionNode.selected) {
+	        selected.push(optionNode.value);
+	      }
+	    }
+
+	    return selected;
+	  },
+	  _method: function _method(prefix, domNode) {
+	    var valueMethod = this[this._typeMethod(prefix, domNode.type)];
+	    // Default is to set the value of the field if
+	    // no special function is defined for that type
+	    if (typeof valueMethod !== "function") {
+	      valueMethod = this["_" + prefix + "Default"];
+	    }
+	    return valueMethod;
+	  },
+	  _typeMethod: function _typeMethod(prefix, type) {
+	    return ("_" + prefix + "-" + type).replace(/(\-[a-z])/g, function ($1) {
+	      return $1.toUpperCase().replace('-', '');
+	    });
+	  }
+	};
+
+	module.exports = FormExtractor;
+
+/***/ },
+/* 15 */
+/*!************************!*\
+  !*** ./global/rule.js ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _jquery = __webpack_require__(/*! jquery */ 2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	/* A single Rule */
+	var Rule = function Rule() {
+	  this.prettyPrint = function () {
+	    var clone = _jquery2["default"].extend({}, this);
+	    delete clone.matcher;
+	    delete clone.nameClean;
+	    delete clone.urlClean;
+	    delete clone.id;
+	    delete clone.tabId;
+	    delete clone.type;
+	    delete clone.autorun;
+	    delete clone.screenshot;
+	    delete clone.onlyEmpty;
+	    delete clone.color;
+	    delete clone._escapeForRegexp;
+	    return JSON.stringify(clone, null, 2);
+	  };
+
+	  this._escapeForRegexp = function (str) {
+	    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	  };
+	};
+
+	/*eslint-disable complexity*/
+	Rule.create = function (options, tabId, ruleIndex) {
+	  delete options.matcher;
+	  delete options.nameClean;
+	  delete options.urlClean;
+	  delete options._escapeForRegexp;
+	  delete options.prettyPrint;
+	  var rule = new Rule();
+
+	  Object.keys(options).forEach(function (key) {
+	    rule[key] = options[key];
+	  });
+
+	  // RegExp in URL or string?
+	  if (typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
+	    // RegExp
+	    rule.matcher = new RegExp(rule.url);
+	  } else if (typeof rule.url !== "undefined") {
+	    // String (match full url only)
+	    rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
+	  }
+
+	  if (typeof rule.url !== "undefined") {
+	    rule.urlClean = rule.url.toString();
+	  } else {
+	    rule.urlClean = "n/a";
+	  }
+
+	  if (typeof rule.name !== "undefined") {
+	    rule.nameClean = rule.name.replace("<", "&lt;");
+	  }
+
+	  if (typeof rule.id === "undefined") {
+	    rule.id = tabId + "-" + ruleIndex;
+	  }
+
+	  if (typeof rule.autorun === "undefined") {
+	    rule.autorun = false;
+	  }
+
+	  if (typeof rule.onlyEmpty === "undefined") {
+	    rule.onlyEmpty = false;
+	  }
+
+	  rule.tabId = tabId;
+
+	  // REMOVE START
+	  if (rule["export"] && rule.lib) {
+	    _debugLogger2["default"].debug("[rule.js] created rule (with lib named '" + rule["export"] + "' )", rule);
+	  } else {
+	    _debugLogger2["default"].debug("[rule.js] created rule", rule);
+	  }
+	  // REMOVE END
+
+	  return rule;
+	};
+	/*eslint-enable complexity*/
+
+	module.exports = Rule;
+
+/***/ },
+/* 16 */
+/*!*************************!*\
+  !*** ./global/rules.js ***!
+  \*************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	// REMOVE START
+	/*eslint-disable no-undef, block-scoped-var */
+	if (true) {
+	  var Utils = __webpack_require__(/*! ./utils.js */ 12);
+	  var Storage = __webpack_require__(/*! ./storage.js */ 17);
+	  var Rule = __webpack_require__(/*! ./rule.js */ 15);
+	  /*eslint-disable camelcase*/
+	  var js_beautify = function js_beautify(code) {
+	    return code;
+	  };
+	  /*eslint-enable camelcase*/
+	}
+	/*eslint-enable no-undef, block-scoped-var */
+	// REMOVE END
+
+	/* Multiple Rules */
+	var Rules = {
+	  match: function match(target) {
+	    var rules = this;
+	    return new Promise(function (resolve) {
+	      rules.all().then(function (rulez) {
+	        var matchingRules = rulez.filter(function (rule) {
+	          return typeof rule.url !== "undefined" && target.match(rule.url);
+	        });
+	        resolve(matchingRules);
+	      });
+	    });
+	  },
+	  findByName: function findByName(target) {
+	    var rules = this;
+	    return new Promise(function (resolve) {
+	      rules.all().then(function (rulez) {
+	        var matchingRules = rulez.filter(function (rule) {
+	          return typeof rule.name !== "undefined" && target === rule.name;
+	        });
+	        resolve(matchingRules[0]);
+	      });
+	    });
+	  },
+	  load: function load(forTabId, ruleIndex) {
+	    var that = this;
+	    return new Promise(function (resolve) {
+	      Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
+	        var rules = [];
+	        if (rulesData) {
+
+	          var ruleFunction = that.text2function(rulesData.code);
+
+	          if (ruleFunction === null) {
+	            resolve(rules);
+	          }
+
+	          rules = ruleFunction.map(function (ruleJson, index) {
+	            return Rule.create(ruleJson, forTabId, index);
+	          });
+	        }
+
+	        if (typeof ruleIndex !== "undefined") {
+	          resolve(rules[ruleIndex - 1]);
+	        } else {
+	          resolve(rules);
+	        }
+	      });
+	    });
+	  },
+	  text2function: function text2function(codeText) {
+	    // remove wrapper
+	    // results in [ code ... code ]
+	    var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
+	    if (!rulesCodeMatches || !rulesCodeMatches[1]) {
+	      return false;
+	    }
+	    var ruleCode = "return " + rulesCodeMatches[1];
+	    return new Function(ruleCode)();
+	  },
+	  all: function all() {
+	    return new Promise(function (resolve) {
+	      _debugLogger2["default"].info("[rules.js] Fetching all rules");
+	      Storage.load(Utils.keys.tabs).then(function (tabSettings) {
+	        var promises = [];
+	        var rules = [];
+
+	        // Generate a Promise for all tab to be loaded
+	        tabSettings.forEach(function (tabSetting) {
+	          promises.push(Rules.load(tabSetting.id));
+	        });
+
+	        // Wait until resolved
+	        Promise.all(promises).then(function (values) {
+	          // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
+	          values.forEach(function (ruleSetForTab) {
+	            // Inner Loop: An array of rules [Rule, Rule]
+	            ruleSetForTab.forEach(function (ruleSet) {
+	              rules.push(ruleSet);
+	            });
+	          });
+	          _debugLogger2["default"].info("[rules.js] Fetched " + rules.length + " rules");
+	          resolve(rules);
+	        });
+	      });
+	    });
+	  },
+	  save: function save(ruleCode, activeTabId) {
+	    return new Promise(function (resolve) {
+	      var rulesData = {
+	        tabId: activeTabId,
+	        code: ruleCode
+	      };
+	      Storage.save(rulesData, Rules._nameForTabId(activeTabId)).then(function () {
+	        resolve(true);
+	      });
+	    });
+	  },
+	  "delete": function _delete(tabId) {
+	    Storage["delete"](this._nameForTabId(tabId));
+	  },
+	  _nameForTabId: function _nameForTabId(tabId) {
+	    return Utils.keys.rules + "-tab-" + tabId;
+	  },
+	  format: function format(rulesCodeString) {
+	    // Prettify code a little
+	    var prettyCode = js_beautify(rulesCodeString, {
+	      "indent_size": 2,
+	      "indent_char": " ",
+	      "preserve_newlines": false,
+	      "brace_style": "collapse",
+	      "space_before_conditional": true,
+	      "keep_function_indentation": true,
+	      "unescape_strings": false
+	    });
+	    if (/\}\];$/.test(prettyCode)) {
+	      prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
+	    }
+	    return prettyCode;
+	  },
+	  // Simple checks for the neccessary structure of the rules
+	  syntaxCheck: function syntaxCheck(editor) {
+	    var that = this;
+	    var errors = [];
+	    var lineCount = editor._document.getLength();
+	    var lineStart = editor._document.getLine(0);
+	    var lineEnd = editor._document.getLine(lineCount - 1);
+
+	    // Detect if the first line does not correctly containing "var rules = ["
+	    if (lineStart.match(/var\s+\w+\s*=\s*\[/) === null) {
+	      errors.push("need-var-rules");
+	    }
+
+	    // Do the rules end with ] ?
+	    if (lineEnd.match(/][;]?\s*$/) === null) {
+	      errors.push("need-var-rules");
+	    }
+
+	    // Check if there are some ACE Annotations (aka. errors) present
+	    var annotationCount = editor.session().getAnnotations().length;
+	    if (annotationCount > 0) {
+	      errors.push("annotations-present");
+	    }
+
+	    // Check used library function definitions, must not contain reserved
+	    // library namespaces
+	    var libMatches = editor.getValue().match(/export["']?\s*:\s*['"].*?['"]/g);
+	    if (libMatches !== null) {
+	      // There are library definitions
+	      var foundReservedNs = libMatches.map(function (matchStr) {
+	        return matchStr.match(/:\s*['"](.*?)['"]/)[1];
+	      }).filter(function (matchStr) {
+	        return Utils.reservedLibNamespaces.indexOf(matchStr) !== -1;
+	      });
+
+	      if (foundReservedNs.length > 0) {
+	        errors.push({ id: "libs-using-reserved-namespaces", extra: foundReservedNs });
+	      }
+	    }
+
+	    if (errors.length === 0) {
+	      // Check for before/after function structure
+	      var ruleCodeCheck = this.text2function(editor.getValue());
+
+	      ruleCodeCheck.forEach(function (ruleFunction) {
+	        if (ruleFunction.hasOwnProperty("before")) {
+	          _debugLogger2["default"].info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
+	          that.checkSurroundFunction(ruleFunction.before, errors);
+	        }
+	        if (ruleFunction.hasOwnProperty("after")) {
+	          _debugLogger2["default"].info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
+	          that.checkSurroundFunction(ruleFunction.after, errors);
+	        }
+	      });
+	    }
+	    return errors;
+	  },
+	  checkSurroundFunction: function checkSurroundFunction(ruleFunction, errors) {
+	    // before/after function can be either a function or an array of functions
+	    // Not a function or an array of functions
+	    if (typeof ruleFunction !== "function" && typeof ruleFunction.length === "undefined") {
+	      errors.push("before-function-needs-to-be-a-function-or-array");
+	    }
+
+	    // Create an array to make checking easier
+	    if (typeof ruleFunction === "function") {
+	      ruleFunction = [ruleFunction];
+	    }
+
+	    var ruleFuncErrors = {
+	      needResolveArg: false,
+	      needResolveCall: false,
+	      needFunctions: false
+	    };
+
+	    // Used an array? Check for t least one rule
+	    if (ruleFunction.length === 0) {
+	      ruleFuncErrors.needFunctions = true;
+	    }
+
+	    // If it is a function check if it uses resolve()
+	    ruleFunction.forEach(function (ruleFunc) {
+	      // Fetch the name of the first argument
+	      var resolveMatches = ruleFunc.toString().match(/function[\s]*\((.*?)[,\)]/);
+	      var resolveFunctionName = resolveMatches[1];
+
+	      if (resolveFunctionName === "") {
+	        ruleFuncErrors.needResolveArg = true;
+	      } else {
+	        // Look for usage of the first argument (presumly "resolve") in the code
+	        var regex = "\\{[\\s\\S]*" + resolveFunctionName + "[\\s\\S)]*\\}.*$";
+	        resolveMatches = ruleFunc.toString().match(regex);
+	        // No call to resolve?
+	        /*eslint-disable no-extra-parens*/
+	        if (resolveMatches === null || resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)")) {
+	          ruleFuncErrors.needResolveCall = true;
+	        }
+	        /*eslint-enable no-extra-parens*/
+	      }
+	    });
+
+	    if (ruleFuncErrors.needResolveArg) {
+	      errors.push("before-function-needs-resolve-argument");
+	    }
+	    if (ruleFuncErrors.needResolveCall) {
+	      errors.push("before-function-needs-resolve-call");
+	    }
+	    if (ruleFuncErrors.needFunctions) {
+	      errors.push("before-function-needs-functions");
+	    }
+	  },
+	  lastMatchingRules: function lastMatchingRules(rules) {
+	    return new Promise(function (resolve) {
+	      // Load or save rules
+	      if (typeof rules === "undefined") {
+	        Storage.load(Utils.keys.lastMatchingRules).then(function (serializedRules) {
+	          resolve(_globalJsonf2["default"].parse(serializedRules));
+	        });
+	      } else {
+	        Storage.save(_globalJsonf2["default"].stringify(rules), Utils.keys.lastMatchingRules).then(function () {
+	          resolve(true);
+	        });
+	      }
+	    });
+	  },
+	  //
+	  // Imports a dump created by the option pages export functionality
+	  // returns a promise that resolves when all rules/Wfs are imported
+	  importAll: function importAll(dumpString) {
+	    return new Promise(function (resolve) {
+	      var promises = [];
+	      var parsed;
+
+	      if (typeof dumpString === "object") {
+	        parsed = dumpString;
+	      } else {
+	        parsed = _globalJsonf2["default"].parse(dumpString);
+	      }
+
+	      // Data contains (in case of combined format):
+	      // parsed.workflows
+	      // parsed.rules
+	      //
+	      // In case of old (rules only) format:
+	      // parsed.tabSettings
+	      // parsed.rules
+
+	      // Old format with rules only?
+	      // Convert so it can be imported
+	      if (typeof parsed.tabSettings !== "undefined") {
+	        parsed.rules = {
+	          rules: parsed.rules,
+	          tabSettings: parsed.tabSettings
+	        };
+	        parsed.workflows = [];
+	      }
+
+	      // Save workflows (if any)
+	      if (typeof parsed.workflows !== "undefined" && parsed.workflows.length > 0) {
+	        promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
+	      }
+
+	      // Save the rules in all tabs
+	      parsed.rules.rules.forEach(function (editorTabAndRules) {
+	        promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
+	      });
+	      // save tabsetting
+	      promises.push(Storage.save(parsed.rules.tabSettings, Utils.keys.tabs));
+
+	      // resolve all saving promises
+	      Promise.all(promises).then(resolve(parsed));
+	    });
+	  },
+	  exportDataJson: function exportDataJson() {
+	    return new Promise(function (resolve) {
+	      var promises = [];
+	      Storage.load(Utils.keys.tabs).then(function (tabSettings) {
+	        tabSettings.forEach(function (setting) {
+	          promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
+	        });
+
+	        Promise.all(promises).then(function (rulesFromAllTabs) {
+	          var exportJson = {
+	            "tabSettings": tabSettings,
+	            "rules": rulesFromAllTabs
+	          };
+	          resolve(exportJson);
+	        });
+	      });
+	    });
+	  }
+	};
+
+	// REMOVE START
+	if (true) {
+	  module.exports = Rules;
+	}
+	// REMOVE END
+
+/***/ },
+/* 17 */
+/*!***************************!*\
+  !*** ./global/storage.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	var _debugLogger = __webpack_require__(/*! ../debug/logger */ 4);
+
+	var _debugLogger2 = _interopRequireDefault(_debugLogger);
+
+	var _globalUtils = __webpack_require__(/*! ../global/utils */ 12);
+
+	var _globalUtils2 = _interopRequireDefault(_globalUtils);
+
+	var _globalJsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+
+	var _globalJsonf2 = _interopRequireDefault(_globalJsonf);
+
+	/* eslint no-undef: 0, no-unused-vars: 0 */
+	var Storage = {
+	  load: function load(keyToLoadFrom) {
+	    var key = keyToLoadFrom || _globalUtils2["default"].keys.rules;
+	    return new Promise(function (resolve) {
+	      chrome.storage.local.get(key, function (persistedData) {
+	        _debugLogger2["default"].debug("[storage.js] loaded '" + key + "'", _globalJsonf2["default"].stringify(persistedData));
+	        resolve(persistedData[key]);
+	      });
+	    });
+	  },
+	  save: function save(rulesCode, keyToSaveTo) {
+	    return new Promise(function (resolve, reject) {
+	      var value = {};
+	      var key = keyToSaveTo || _globalUtils2["default"].keys.rules;
+	      value[key] = rulesCode;
+	      chrome.storage.local.set(value, function () {
+	        if (typeof chrome.runtime.lastError === "undefined") {
+	          _debugLogger2["default"].debug("[storage.js] Saved '" + key + "'", _globalJsonf2["default"].stringify(value[key]));
+	          resolve(true);
+	        } else {
+	          reject(new Error(chrome.runtime.lastError));
+	        }
+	      });
+	    });
+	  },
+	  "delete": function _delete(key) {
+	    return new Promise(function (resolve, reject) {
+	      chrome.storage.local.remove(key, function () {
+	        if (typeof chrome.runtime.lastError === "undefined") {
+	          _debugLogger2["default"].debug("[storage.js] Removed key '" + key + "'");
+	          resolve(true);
+	        } else {
+	          reject(new Error(chrome.runtime.lastError));
+	        }
+	      });
+	    });
+	  }
+	};
+
+	module.exports = Storage;
 
 /***/ }
 /******/ ]);

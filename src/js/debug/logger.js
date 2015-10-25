@@ -74,4 +74,4 @@ var Logger = {
   }
 };
 
-
+module.exports = Logger;

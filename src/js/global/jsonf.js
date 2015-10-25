@@ -51,8 +51,5 @@ var JSONF = {
     return value;
   }
 };
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = JSONF;
-}
-// REMOVE END
+
+module.exports = JSONF;

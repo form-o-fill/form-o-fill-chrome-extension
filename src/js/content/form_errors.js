@@ -18,3 +18,8 @@ FormErrors.prototype.add = function(selector, value, message) {
 FormErrors.prototype.get = function() {
   return this._errors;
 };
+
+module.exports = {
+  FormErrors: FormErrors,
+  FormError: FormError
+};

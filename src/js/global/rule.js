@@ -1,4 +1,5 @@
-/*global Logger, jQuery */
+import Logger from "../debug/logger";
+import jQuery from "jquery";
 
 /* A single Rule */
 var Rule = function() {
@@ -81,8 +82,4 @@ Rule.create = function(options, tabId, ruleIndex) {
 };
 /*eslint-enable complexity*/
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Rule;
-}
-// REMOVE END
+module.exports = Rule;

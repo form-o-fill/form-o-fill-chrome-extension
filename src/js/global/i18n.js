@@ -1,5 +1,5 @@
-/*global jQuery, Utils */
-/* eslint no-unused-vars: 0 */
+import jQuery from "jquery";
+
 //
 // Small abstraction over i18n supplied by chrome API
 //
@@ -45,8 +45,4 @@ var I18n = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = I18n;
-}
-// REMOVE END
+module.exports = I18n;

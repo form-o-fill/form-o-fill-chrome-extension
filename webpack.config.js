@@ -21,7 +21,13 @@ module.exports = {
   resolve: {
     extensions: ["", ".js", ".json"],
     alias: {
-      jquery: __dirname + "/src/vendor/jquery/jquery-2.1.4.min.js"
+      jquery: __dirname + "/src/vendor/jquery/jquery-2.1.4.min.js",
+      jsBeautifier: __dirname + "/src/vendor/js-beautifier/beautify.js",
+      chanceJs: __dirname + "/src/vendor/chance.js/chance.js",
+      momentJs: __dirname + "/src/vendor/moment-with-locales.min.js",
+      ace: __dirname + "/src/vendor/ace/ace.js",
+      html5sortable: __dirname + "/src/vendor/html5sortable/html.sortable.min.js",
+      introJs: __dirname + "/src/vendor/intro.js/intro.min.js"
     }
   }
 };

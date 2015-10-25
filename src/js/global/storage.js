@@ -1,4 +1,7 @@
-/*global Utils, Logger, JSONF */
+import Logger from "../debug/logger";
+import Utils from "../global/utils";
+import JSONF from "../global/jsonf";
+
 /* eslint no-undef: 0, no-unused-vars: 0 */
 var Storage = {
   load: function(keyToLoadFrom) {
@@ -39,8 +42,4 @@ var Storage = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Storage;
-}
-// REMOVE END
+module.exports = Storage;

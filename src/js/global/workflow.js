@@ -1,5 +1,9 @@
-/* global Storage, Utils, Logger, JSONF $ */
 /*eslint no-unused-vars:0 */
+import Logger from "../debug/logger";
+import Utils from "../global/utils";
+import JSONF from "../global/jsonf";
+import jQuery from "jquery";
+
 var Workflows = {
   load: function() {
     return new Promise(function (resolve) {
@@ -72,7 +76,7 @@ var Workflows = {
         }
 
         workflowData = workflowData.map(function cbWfDataMap(workflow) {
-          workflow.steps = $.makeArray(workflow.steps);
+          workflow.steps = jQuery.makeArray(workflow.steps);
           return workflow;
         });
 

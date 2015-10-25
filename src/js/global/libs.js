@@ -1,4 +1,7 @@
-/*global Logger Rules lastActiveTab FormFiller */
+import Logger from "../debug/logger";
+import Rules from "./rules";
+import FormFiller from "../content/form_filler";
+
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -61,3 +64,5 @@ Libs.add("halt", processFunctionsHalt);
 
 // Import all saved libs
 Libs.import();
+
+module.exports = Libs;

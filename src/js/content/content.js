@@ -1,8 +1,18 @@
-/*global FormFiller, JSONF, jQuery, Logger, Libs */
 /*eslint complexity:0 */
-import * as Overlay from "./overlay";
+import Overlay from "./overlay";
+import Logger from "../debug/logger";
+import jQuery from "jquery";
+import JSONF from "../global/jsonf";
+import FormFiller from "./form_filler";
+import Libs from "../global/libs";
+import ContextMenu from "./context_menu";
+import context from "./context";
+import Testing from "./testing";
 
 Overlay.init();
+ContextMenu.init();
+Testing.init();
+window.context = context;
 
 chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];

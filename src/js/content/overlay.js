@@ -89,14 +89,11 @@ var runtimeListener = function() {
   });
 };
 
-var init = function() {
-  runtimeListener();
-  portListener();
+var Overlay = {
+  init: function() {
+    runtimeListener();
+    portListener();
+  }
 };
 
-module.exports = {
-  overlayHtml: overlayHtml,
-  hideOverlay: hideOverlay,
-  showOverlay: showOverlay,
-  init: init
-};
+module.exports = Overlay;

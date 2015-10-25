@@ -1,5 +1,6 @@
-/*global Logger js_beautify JSONF Rule Storage Rule */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
+import Logger from "../debug/logger";
+import JSONF from "../global/jsonf";
 
 // REMOVE START
 /*eslint-disable no-undef, block-scoped-var */
