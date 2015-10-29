@@ -43,9 +43,11 @@ var valueFunctionHelper = {
 Libs.add("h", valueFunctionHelper);
 
 // Process control functions
+// Run in the context of the background page
+// thus lastActiveTab is available
 var processFunctionsHalt = function(msg) {
   return function() {
-    if(typeof lastActiveTab === "undefined") {
+    if(typeof window.lastActiveTab === "undefined") {
       return null;
     }
 
@@ -55,7 +57,7 @@ var processFunctionsHalt = function(msg) {
 
     // Since this is called from the b/form_utils.js
     // we need to send a message to the content.js
-    chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: msg});
+    chrome.tabs.sendMessage(window.lastActiveTab.id, {action: "showOverlay", message: msg});
 
     return null;
   };

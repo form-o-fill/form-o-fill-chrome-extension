@@ -2,11 +2,11 @@
 module.exports = {
   context: __dirname + "/src/js",
   entry: {
-    //background: "./background/background",
     //popup:      "./popup/popup",
-    content:    "./content/content",
     //global:     "./global/global",
     //options:    "./options/options"
+    background: "./background/background",
+    content:    "./content/content"
   },
   output: {
     path: "src/js",

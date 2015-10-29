@@ -12,7 +12,10 @@ import Testing from "./testing";
 Overlay.init();
 ContextMenu.init();
 Testing.init();
+
+// These need to be GLOBAL for function resolution to work
 window.context = context;
+window.Libs = Libs;
 
 chrome.runtime.onConnect.addListener(function (port) {
   var errors = [];
