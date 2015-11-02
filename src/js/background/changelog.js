@@ -44,3 +44,5 @@ var Changelog = {
     return null;
   }
 };
+
+module.exports = Changelog;

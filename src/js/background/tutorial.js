@@ -1,5 +1,8 @@
-/*global Rules lastActiveTab onTabReadyRules Logger Utils Storage Workflows */
-/*eslint no-undef:0 no-unused-vars:0 */
+import Rules from "../global/rules";
+import Workflows from "../global/workflows";
+import Storage from "../global/storage";
+import Logger from "../debug/logger";
+import Utils from "../global/utils";
 
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).
@@ -34,7 +37,7 @@ Tutorial.importDumpHandler = function(request) {
   // Import the dump
   Logger.info("[bg/tutorial.js] Importing rules from webpage");
   Rules.importAll(request.message).then(function() {
-    onTabReadyRules(lastActiveTab.id);
+    onTabReadyRules(window.lastActiveTab.id);
   });
 };
 
@@ -54,13 +57,12 @@ Tutorial.backupCurrentRulesHandler = function() {
 Tutorial.restoreBackedUpRulesHandler = function() {
   Storage.load(Utils.keys.tutorialDataBackup)
   .then(Rules.importAll);
-  // TODO send to options -> reload!
 };
 
 // Handler for request from the tutorial site
 /*eslint-disable complexity*/
-var tutorialMessagesListener = function tutorialMessagesListener(request, sender, responseCb) {
-  if(!Tutorial.isValidMessageSourceForTutorial(sender) || lastActiveTab === null) {
+var tutorialMessagesListener = function tutorialMessagesListener(request, sender) {
+  if(!Tutorial.isValidMessageSourceForTutorial(sender) || window.lastActiveTab === null) {
     return;
   }
 
@@ -103,4 +105,7 @@ var internalMessageListener = function(message, sender, responseCb) {
     responseCb();
   }
 };
+
 chrome.runtime.onMessage.addListener(internalMessageListener);
+
+module.exports = Tutorial;

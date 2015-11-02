@@ -1,4 +1,8 @@
 /*eslint-env node */
+var webpack = require('webpack');
+
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+
 module.exports = {
   context: __dirname + "/src/js",
   entry: {
@@ -15,7 +19,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel?presets[]=es2015&cacheDirectory" }
     ]
   },
   resolve: {
@@ -29,5 +33,6 @@ module.exports = {
       html5sortable: __dirname + "/src/vendor/html5sortable/html.sortable.min.js",
       introJs: __dirname + "/src/vendor/intro.js/intro.min.js"
     }
-  }
+  },
+  plugins: [commonsPlugin]
 };

@@ -86,3 +86,4 @@ var Workflows = {
   }
 };
 
+module.exports = Workflows;

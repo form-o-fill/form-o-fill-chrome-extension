@@ -1,5 +1,10 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
 /* eslint complexity: [2, 6] */
+import Rules from "../global/rules";
+import Utils from "../global/utils";
+import Logger from "../debug/logger";
+import JSONF from "../global/jsonf";
+import Libs from "../global/libs";
+
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -249,7 +254,7 @@ var FormUtil = {
     set: function(key, value) {
       this.base[key] = JSONF.stringify(value);
       // Also set the variable in content.js
-      chrome.tabs.sendMessage(lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
+      chrome.tabs.sendMessage(window.lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
       // Save in background.js
       window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
       return window.sessionStorage;
@@ -287,8 +292,8 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     // and the storage object
     return {
-      url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(lastActiveTab.id),
+      url: Utils.parseUrl(window.lastActiveTab.url),
+      findHtml: FormUtil.createGrabber(window.lastActiveTab.id),
       storage: FormUtil.storage
     };
   },
@@ -367,7 +372,7 @@ var FormUtil = {
         Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
         // Lets see if we got any errors thrown inside the executed before function
-        var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
+        var filteredErrors = beforeData.filter(function fnFlteredErrors(beforeFunctionData) {
           return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
         });
 
@@ -452,3 +457,5 @@ var FormUtil = {
     });
   }
 };
+
+module.exports = FormUtil;

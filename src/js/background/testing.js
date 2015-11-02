@@ -1,5 +1,9 @@
-/*global Logger Utils lastActiveTab JSONF Rules Storage Workflows */
 /*eslint no-unused-vars: 0 */
+import Logger from "../debug/logger";
+import Rules from "../global/rules";
+import Utils from "../global/utils";
+import JSONF from "../global/jsonf";
+import Workflows from "../global/workflows";
 
 var Testing = {
   setVar: function(key, value, textToDisplay) {
@@ -10,14 +14,34 @@ var Testing = {
       text: textToDisplay || null
     };
     Logger.debug("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
-    if (lastActiveTab !== null) {
-      chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
+    if (window.lastActiveTab !== null) {
+      chrome.tabs.sendMessage(window.lastActiveTab.id, message, function () {});
     }
   },
   appendTestLog: function(msg) {
-    if (lastActiveTab !== null) {
-      chrome.tabs.sendMessage(lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
+    if (window.lastActiveTab !== null) {
+      chrome.tabs.sendMessage(window.lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
     }
+  },
+  // This method takes the otherwise inaccessable popup.html
+  // and puts it into an <div> in the BG page
+  // This process renders the popup (including all JS).
+  // The popup then sends its rendered HTML to content.js
+  // This is the only method to "click" and thereby view the popup HTML without
+  // actually clicking on it.
+  // Enables end to end testing because the browserAction cannot be clicked in tests.
+  createCurrentPopupInIframe: function(tabId) {
+    chrome.browserAction.getPopup({"tabId": tabId}, function (popupUrl) {
+      var iframePopup = document.querySelector("#form-o-fill-popup-iframe");
+      if (iframePopup) {
+        iframePopup.src = popupUrl;
+      } else {
+        iframePopup = document.createElement("iframe");
+        iframePopup.id = "form-o-fill-popup-iframe";
+        iframePopup.src = popupUrl;
+        document.querySelector("body").appendChild(iframePopup);
+      }
+    });
   }
 };
 
@@ -92,24 +116,4 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   return true;
 });
 
-// This method takes the otherwise inaccessable popup.html
-// and puts it into an <div> in the BG page
-// This process renders the popup (including all JS).
-// The popup then sends its rendered HTML to content.js
-// This is the only method to "click" and thereby view the popup HTML without
-// actually clicking on it.
-// Enables end to end testing because the browserAction cannot be clicked in tests.
-var createCurrentPopupInIframe = function(tabId) {
-  chrome.browserAction.getPopup({"tabId": tabId}, function (popupUrl) {
-    var iframePopup = document.querySelector("#form-o-fill-popup-iframe");
-    if (iframePopup) {
-      iframePopup.src = popupUrl;
-    } else {
-      iframePopup = document.createElement("iframe");
-      iframePopup.id = "form-o-fill-popup-iframe";
-      iframePopup.src = popupUrl;
-      document.querySelector("body").appendChild(iframePopup);
-    }
-  });
-};
-
+module.exports = Testing;

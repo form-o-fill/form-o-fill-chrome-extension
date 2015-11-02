@@ -331,8 +331,4 @@ var Rules = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Rules;
-}
-// REMOVE END
+module.exports = Rules;

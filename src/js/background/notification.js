@@ -1,4 +1,7 @@
-/*global Testing, Utils, Changelog */
+import Testing from "./testing";
+import Utils from "../global/utils";
+import Changelog from "./changelog";
+
 /*eslint no-undef:0 */
 var Notification = {
   create: function(message, title, onClickCallback) {
@@ -39,3 +42,5 @@ var Notification = {
     }
   }
 };
+
+module.exports = Notification;
