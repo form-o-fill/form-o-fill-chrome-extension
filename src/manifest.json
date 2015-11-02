@@ -98,6 +98,6 @@
       "js/background/testing.js",
       "js/background/tutorial.js"
     ],
-    "persistent": false
+    "persistent": true
   }
 }
