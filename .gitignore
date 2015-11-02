@@ -6,3 +6,5 @@ dist/*.zip
 assets/ext-store/screenshots-psd/
 src/css/*.css
 src/css/*.css.map
+src/js/background.js
+src/js/content.js
