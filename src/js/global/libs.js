@@ -35,6 +35,38 @@ var Libs = {
       }
     });
     return detectedLibs;
+  },
+  loadLibs: function(scriptPaths) {
+    return new Promise(function (resolve, reject) {
+      if(typeof scriptPaths === "string") {
+        scriptPaths = [scriptPaths];
+      }
+
+      var anchor = document.querySelector("body");
+      var fragment = document.createDocumentFragment();
+
+      var loadedScriptCount = 0;
+      var targetScriptCount = scriptPaths.length;
+
+      scriptPaths.forEach(function(scriptPath) {
+        var script = document.createElement("script");
+        script.async = false;
+        script.src = "../" + scriptPath;
+        script.onload = function() {
+          loadedScriptCount++;
+          if (loadedScriptCount >= targetScriptCount) {
+            resolve(loadedScriptCount);
+          }
+        };
+        script.onerror = function() {
+          reject(script.src);
+        };
+
+        fragment.appendChild(script);
+      });
+
+      anchor.appendChild(fragment);
+    });
   }
 };
 
