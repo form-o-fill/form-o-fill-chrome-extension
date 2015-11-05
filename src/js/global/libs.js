@@ -1,4 +1,4 @@
-/*global Logger Rules lastActiveTab FormFiller */
+/*global Logger Rules lastActiveTab FormFiller Utils */
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -23,6 +23,18 @@ var Libs = {
         });
       }).then(resolve("libraries imported"));
     });
+  },
+  // Dectects libraries used in a rulecode string
+  // returns an array of found libraries
+  detectLibraries: function(ruleCodeString) {
+    var detectedLibs = [];
+    Object.keys(Utils.vendoredLibs).forEach(function dtctLib(vLibKey) {
+      if(ruleCodeString.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
+        // Found!
+        detectedLibs.push(vLibKey);
+      }
+    });
+    return detectedLibs;
   }
 };
 
