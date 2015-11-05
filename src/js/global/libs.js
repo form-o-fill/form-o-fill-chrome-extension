@@ -1,4 +1,5 @@
 /*global Logger Rules lastActiveTab FormFiller Utils */
+/*eslint no-loop-func:0 */
 // This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
@@ -36,10 +37,15 @@ var Libs = {
     });
     return detectedLibs;
   },
-  loadLibs: function(scriptPaths) {
+  loadLibs: function(scriptPaths, whoCallsMe) {
+    /*eslint-disable complexity */
     return new Promise(function (resolve, reject) {
       if(typeof scriptPaths === "string") {
         scriptPaths = [scriptPaths];
+      }
+
+      if(scriptPaths.length === 0) {
+        resolve(0);
       }
 
       var anchor = document.querySelector("body");
@@ -47,13 +53,37 @@ var Libs = {
 
       var loadedScriptCount = 0;
       var targetScriptCount = scriptPaths.length;
+      var scriptPath;
 
-      scriptPaths.forEach(function(scriptPath) {
+      for(var i = 0; i < targetScriptCount; i++) {
+        scriptPath = scriptPaths[i];
+
+        // If the requested lbrary is not vendored, break loop
+        if(typeof Utils.vendoredLibs[scriptPath] === "undefined") {
+          continue;
+        }
+
+        var libName = Utils.vendoredLibs[scriptPath].name;
+
+        // If a lib with that name is already present, don't load it again
+        if(typeof Libs[libName] !== "undefined") {
+          loadedScriptCount++;
+          Logger.info("[libs.js] Didn't load '" + scriptPath + "' again");
+          continue;
+        }
+
         var script = document.createElement("script");
         script.async = false;
+        script.dataset.who = whoCallsMe;
+        script.dataset.script = scriptPath;
         script.src = "../" + scriptPath;
         script.onload = function() {
+          // Add Library to Libs
+          Libs.add(libName, window[Utils.vendoredLibs[scriptPath].onWindowName]);
           loadedScriptCount++;
+          Logger.info("[libs.js] Loaded '" + scriptPath + "'");
+
+          // If all script are loaded, resolve promise
           if (loadedScriptCount >= targetScriptCount) {
             resolve(loadedScriptCount);
           }
@@ -62,11 +92,25 @@ var Libs = {
           reject(script.src);
         };
 
-        fragment.appendChild(script);
-      });
+        // Since this is all async make sure nobody has already
+        // inserted it while we worked on this script:
+        if(document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
+          fragment.appendChild(script);
+        }
+      }
 
-      anchor.appendChild(fragment);
+      // If the loop is ready and the count already matches,
+      // there was nothing to to and that's ok
+      if (loadedScriptCount >= targetScriptCount) {
+        resolve(loadedScriptCount);
+      }
+
+      // Only insert the fragment if it has something inside
+      if(fragment.childNodes.length > 0) {
+        anchor.appendChild(fragment);
+      }
     });
+    /*eslint-enable complexity */
   }
 };
 

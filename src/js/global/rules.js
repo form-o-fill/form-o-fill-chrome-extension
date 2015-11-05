@@ -1,4 +1,4 @@
-/*global Logger js_beautify JSONF Rule Storage Rule */
+/*global Logger js_beautify JSONF Rule Storage Rule Libs */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
 
 // REMOVE START
@@ -44,24 +44,27 @@ var Rules = {
     var that = this;
     return new Promise(function (resolve) {
       Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
+
         var rules = [];
         if(rulesData) {
+          var libs = Libs.detectLibraries(rulesData.code);
+          Libs.loadLibs(libs, "Rules.load").then(function() {
+            var ruleFunction = that.text2function(rulesData.code);
 
-          var ruleFunction = that.text2function(rulesData.code);
+            if(ruleFunction === null) {
+              resolve(rules);
+            }
 
-          if(ruleFunction === null) {
-            resolve(rules);
-          }
+            rules = ruleFunction.map(function (ruleJson, index) {
+              return Rule.create(ruleJson, forTabId, index);
+            });
 
-          rules = ruleFunction.map(function (ruleJson, index) {
-            return Rule.create(ruleJson, forTabId, index);
+            if(typeof ruleIndex !== "undefined") {
+              resolve(rules[ruleIndex - 1]);
+            } else {
+              resolve(rules);
+            }
           });
-        }
-
-        if(typeof ruleIndex !== "undefined") {
-          resolve(rules[ruleIndex - 1]);
-        } else {
-          resolve(rules);
         }
       });
     });
@@ -74,6 +77,7 @@ var Rules = {
       return false;
     }
     var ruleCode = "return " + rulesCodeMatches[1];
+
     return new Function(ruleCode)();
   },
   all: function() {
