@@ -42,13 +42,13 @@ var Rules = {
   },
   load: function(forTabId, ruleIndex) {
     var that = this;
-    return new Promise(function (resolve) {
-      Storage.load(that._nameForTabId(forTabId)).then(function (rulesData) {
+    return new Promise(function prRulesLoad(resolve) {
+      Storage.load(that._nameForTabId(forTabId)).then(function prRulesLoadStorage(rulesData) {
 
         var rules = [];
         if(rulesData) {
           var libs = Libs.detectLibraries(rulesData.code);
-          Libs.loadLibs(libs, "Rules.load").then(function() {
+          Libs.loadLibs(libs, "Rules.load").then(function prRulesLoadLibs() {
             var ruleFunction = that.text2function(rulesData.code);
 
             if(ruleFunction === null) {
@@ -81,19 +81,19 @@ var Rules = {
     return new Function(ruleCode)();
   },
   all: function() {
-    return new Promise(function (resolve) {
+    return new Promise(function prRulesAll(resolve) {
       Logger.info("[rules.js] Fetching all rules");
-      Storage.load(Utils.keys.tabs).then(function(tabSettings) {
+      Storage.load(Utils.keys.tabs).then(function prRulesAllStorageLoad(tabSettings) {
         var promises = [];
         var rules = [];
 
         // Generate a Promise for all tab to be loaded
-        tabSettings.forEach(function (tabSetting) {
+        tabSettings.forEach(function rulesAlltabSetting(tabSetting) {
           promises.push(Rules.load(tabSetting.id));
         });
 
         // Wait until resolved
-        Promise.all(promises).then(function (values) {
+        Promise.all(promises).then(function prRulesAllgenerateRuleSet(values) {
           // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
           values.forEach(function (ruleSetForTab) {
             // Inner Loop: An array of rules [Rule, Rule]

@@ -39,13 +39,18 @@ var Libs = {
   },
   loadLibs: function(scriptPaths, whoCallsMe) {
     /*eslint-disable complexity */
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       if(typeof scriptPaths === "string") {
         scriptPaths = [scriptPaths];
       }
 
-      if(scriptPaths.length === 0) {
+      // If there is no script to inject
+      // OR we run in the context of the content page
+      // resolve now
+      // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
+      if(scriptPaths.length === 0 || typeof chrome.extension === "undefined" ||  typeof chrome.extension.getBackgroundPage === "undefined") {
         resolve(0);
+        return;
       }
 
       var anchor = document.querySelector("body");
@@ -75,8 +80,9 @@ var Libs = {
         var script = document.createElement("script");
         script.async = false;
         script.dataset.who = whoCallsMe;
+        script.className = "injectedByFormOFill";
         script.dataset.script = scriptPath;
-        script.src = "../" + scriptPath;
+        script.src = chrome.extension.getURL(scriptPath);
         script.onload = function() {
           // Add Library to Libs
           Libs.add(libName, window[Utils.vendoredLibs[scriptPath].onWindowName]);
@@ -89,7 +95,7 @@ var Libs = {
           }
         };
         script.onerror = function() {
-          reject(script.src);
+          resolve(loadedScriptCount);
         };
 
         // Since this is all async make sure nobody has already
