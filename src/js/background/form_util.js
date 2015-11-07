@@ -162,7 +162,9 @@ var FormUtil = {
   },
   injectAndAttachToLibs: function(pathToScript, nameOnLib, nameOnWindow) {
     return new Promise(function (resolve) {
+      // First inject the library itself (eg. moment.js)
       chrome.tabs.executeScript(null, {file: pathToScript}, function () {
+        // When the library is injected, bind it to "Libs"
         chrome.tabs.executeScript({code: "Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");"}, function () {
           Logger.info("[b/form_util.js] Libs.add('" + nameOnLib + "', window." + nameOnWindow + ");");
           resolve(pathToScript);
