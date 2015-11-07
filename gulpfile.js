@@ -138,7 +138,7 @@ gulp.task('announce', function() {
 // Cleans build and dist dirs
 //
 gulp.task('clean', ["announce"], function() {
-  return gulp.src(['build/**'], {read: false})
+  return gulp.src(['build/**', 'build/*'], {read: false})
   .pipe(rm({async: false}));
 });
 
