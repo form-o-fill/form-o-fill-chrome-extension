@@ -331,6 +331,17 @@ var Rules = {
         });
       });
     });
+  },
+  unique: function(rules) {
+    var uniques = [];
+    var ids = [];
+    Object.keys(rules).forEach(function(key) {
+      if(ids.indexOf(rules[key].id) === -1) {
+        uniques.push(rules[key]);
+        ids.push(rules[key].id);
+      }
+    });
+    return uniques;
   }
 };
 
