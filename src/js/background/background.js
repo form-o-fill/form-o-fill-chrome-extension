@@ -89,7 +89,7 @@ var onTabReadyRules = function(tabId) {
           // matchingContentRulesIds = JSONF.parse(matchingContentRulesIds)
           // after fixing remove rules.unique!
           // ... select rules that match those ids
-          matchingContentRulesIds = JSONF.parse(matchingContentRulesIds)
+          matchingContentRulesIds = JSONF.parse(matchingContentRulesIds);
           if(typeof matchingContentRulesIds !== "undefined" && matchingContentRulesIds.length > 0) {
             matchingContentRules = rules.filter(function (rule) {
               return matchingContentRulesIds.indexOf(rule.id) > -1;
