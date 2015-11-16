@@ -7,7 +7,6 @@ This is a chrome extension for filling out forms in webpages.
 This extension is targeted at web developers who frequently must fill out long \<form>s while working on a website.
 The configuration is done via a rule definition file written in javascript.
 
-Wann
 Click to install:  
 [<img src="https://raw.githubusercontent.com/form-o-fill/form-o-fill-chrome-extension/master/assets/available-in-chrome-store.png">](https://chrome.google.com/webstore/detail/form-o-fill-the-programma/iebbppibdpjldhohknhgjoapijellonp)
 
