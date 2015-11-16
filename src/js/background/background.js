@@ -85,6 +85,7 @@ var onTabReadyRules = function(tabId) {
         // If we found rules that match by content ...
         if(typeof matchingContentRulesIds !== "undefined") {
           // ... select rules that match those ids
+          matchingContentRulesIds = JSONF.parse(matchingContentRulesIds);
           matchingContentRules = rules.filter(function (rule) {
             return matchingContentRulesIds.indexOf(rule.id) > -1;
           });
