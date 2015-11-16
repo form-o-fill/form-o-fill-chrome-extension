@@ -41,7 +41,7 @@
     "yargs": "^3.27.0"
   },
   "scripts": {
-    "test": "mocha --recursive test/**/*_spec.js"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
