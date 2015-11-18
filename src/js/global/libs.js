@@ -133,6 +133,14 @@ var valueFunctionHelper = {
 };
 Libs.add("h", valueFunctionHelper);
 
+// Change the text of the throbber
+var setThrobberText = function(text) {
+  // Since this is called from the background pages
+  // we need to send a message to the content.js
+  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
+};
+Libs.add("displayMessage", setThrobberText);
+
 // Process control functions
 var processFunctionsHalt = function(msg) {
   return function() {
@@ -144,14 +152,12 @@ var processFunctionsHalt = function(msg) {
       msg = "Canceled by call to Libs.halt()";
     }
 
-    // Since this is called from the b/form_utils.js
-    // we need to send a message to the content.js
-    chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: msg});
-
+    setThrobberText(msg);
     return null;
   };
 };
 Libs.add("halt", processFunctionsHalt);
+
 
 // Import all saved libs
 Libs.import();
