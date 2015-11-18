@@ -43,7 +43,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   var showOverlay = function(message) {
     hideOverlay();
     jQuery("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message, true));
-    displayTimeout = setTimeout(hideOverlay, 1500);
+    displayTimeout = setTimeout(hideOverlay, 3000);
   };
 
   port.onMessage.addListener(function (message) {
