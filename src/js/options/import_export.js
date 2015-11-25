@@ -1,9 +1,11 @@
-/*global Workflows, Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
-/*eslint no-unused-vars: 0*/
+import Rules from "../global/rules";
+import Utils from "../global/utils";
+import Workflows from "../global/workflows";
+import JSONF from "../global/jsonf";
+import jQuery from "jquery";
 
 // Export rules as a newline seperated list of strings
 var exportRulesAsJs = function() {
-  var code = "";
   Rules.exportDataJson().then(function(rules) {
     var jsExport = rules.rules.map(function (codeAndTabId, index) {
       return "//\n// Tab: " + rules.tabSettings[index].name + "\n//\n" + codeAndTabId.code.replace(/\\n/g, "\n") + "\n";
@@ -36,12 +38,12 @@ var exportAll = function() {
 
 // Show import all modal dialog
 var showImportAllModal = function() {
-  $("#modalimportall").show();
+  jQuery("#modalimportall").show();
 };
 
 // Import all rules and workflows from disc
 var importAll = function() {
-  var $warning = $("#modalimportrules .only-json");
+  var $warning = jQuery("#modalimportrules .only-json");
   $warning.hide();
   var fileToImport = document.getElementById("importall").files[0];
 
@@ -52,10 +54,10 @@ var importAll = function() {
     reader.onload = function(e) {
       var parsed = JSONF.parse(e.target.result);
       Rules.importAll(e.target.result).then(function() {
-        $("#modalimportall").hide();
+        jQuery("#modalimportall").hide();
         loadTabsSettings();
         loadRules(1);
-        $(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
+        jQuery(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
         updateTabStats();
         fillAvailableRules();
         loadWorkflows();
@@ -68,8 +70,8 @@ var importAll = function() {
 };
 
 // Handler Import / Export buttons
-$(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
-  $(".modalimport").hide();
+jQuery(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
+  jQuery(".modalimport").hide();
 })
 .on("click", ".all-button-export", exportAll)
 .on("click", ".all-button-import", showImportAllModal)

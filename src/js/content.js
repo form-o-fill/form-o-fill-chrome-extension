@@ -7,7 +7,7 @@ webpackJsonp([1],[
 
 	"use strict";
 	
-	var _overlay = __webpack_require__(/*! ./overlay */ 17);
+	var _overlay = __webpack_require__(/*! ./overlay */ 18);
 	
 	var _overlay2 = _interopRequireDefault(_overlay);
 	
@@ -15,31 +15,31 @@ webpackJsonp([1],[
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
 	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
 	
-	var _form_filler = __webpack_require__(/*! ./form_filler */ 14);
+	var _form_filler = __webpack_require__(/*! ./form_filler */ 7);
 	
 	var _form_filler2 = _interopRequireDefault(_form_filler);
 	
-	var _libs = __webpack_require__(/*! ../global/libs */ 13);
+	var _libs = __webpack_require__(/*! ../global/libs */ 6);
 	
 	var _libs2 = _interopRequireDefault(_libs);
 	
-	var _context_menu = __webpack_require__(/*! ./context_menu */ 18);
+	var _context_menu = __webpack_require__(/*! ./context_menu */ 19);
 	
 	var _context_menu2 = _interopRequireDefault(_context_menu);
 	
-	var _context = __webpack_require__(/*! ./context */ 21);
+	var _context = __webpack_require__(/*! ./context */ 22);
 	
 	var _context2 = _interopRequireDefault(_context);
 	
-	var _testing = __webpack_require__(/*! ./testing */ 22);
+	var _testing = __webpack_require__(/*! ./testing */ 23);
 	
 	var _testing2 = _interopRequireDefault(_testing);
 	
@@ -271,7 +271,8 @@ webpackJsonp([1],[
 /* 14 */,
 /* 15 */,
 /* 16 */,
-/* 17 */
+/* 17 */,
+/* 18 */
 /*!****************************!*\
   !*** ./content/overlay.js ***!
   \****************************/
@@ -279,7 +280,7 @@ webpackJsonp([1],[
 
 	"use strict";
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
@@ -387,7 +388,7 @@ webpackJsonp([1],[
 	module.exports = Overlay;
 
 /***/ },
-/* 18 */
+/* 19 */
 /*!*********************************!*\
   !*** ./content/context_menu.js ***!
   \*********************************/
@@ -395,7 +396,7 @@ webpackJsonp([1],[
 
 	"use strict";
 	
-	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 19);
+	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 20);
 	
 	var Extractor = _interopRequireWildcard(_extract_instrumentation);
 	
@@ -425,7 +426,7 @@ webpackJsonp([1],[
 	module.exports = ContextMenu;
 
 /***/ },
-/* 19 */
+/* 20 */
 /*!********************************************!*\
   !*** ./content/extract_instrumentation.js ***!
   \********************************************/
@@ -433,11 +434,11 @@ webpackJsonp([1],[
 
 	"use strict";
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _form_extractor = __webpack_require__(/*! ./form_extractor */ 20);
+	var _form_extractor = __webpack_require__(/*! ./form_extractor */ 21);
 	
 	var _form_extractor2 = _interopRequireDefault(_form_extractor);
 	
@@ -445,11 +446,11 @@ webpackJsonp([1],[
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
 	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
 	
-	var _utils = __webpack_require__(/*! ../global/utils */ 5);
+	var _utils = __webpack_require__(/*! ../global/utils */ 3);
 	
 	var _utils2 = _interopRequireDefault(_utils);
 	
@@ -551,7 +552,7 @@ webpackJsonp([1],[
 	};
 
 /***/ },
-/* 20 */
+/* 21 */
 /*!***********************************!*\
   !*** ./content/form_extractor.js ***!
   \***********************************/
@@ -563,11 +564,11 @@ webpackJsonp([1],[
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _rule = __webpack_require__(/*! ../global/rule */ 7);
+	var _rule = __webpack_require__(/*! ../global/rule */ 12);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
@@ -692,7 +693,7 @@ webpackJsonp([1],[
 	module.exports = FormExtractor;
 
 /***/ },
-/* 21 */
+/* 22 */
 /*!****************************!*\
   !*** ./content/context.js ***!
   \****************************/
@@ -700,7 +701,7 @@ webpackJsonp([1],[
 
 	"use strict";
 	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
 	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
 	
@@ -728,7 +729,7 @@ webpackJsonp([1],[
 	module.exports = context;
 
 /***/ },
-/* 22 */
+/* 23 */
 /*!****************************!*\
   !*** ./content/testing.js ***!
   \****************************/
@@ -740,15 +741,15 @@ webpackJsonp([1],[
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
-	var _utils = __webpack_require__(/*! ../global/utils */ 5);
+	var _utils = __webpack_require__(/*! ../global/utils */ 3);
 	
 	var _utils2 = _interopRequireDefault(_utils);
 	
-	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 19);
+	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 20);
 	
 	var _extract_instrumentation2 = _interopRequireDefault(_extract_instrumentation);
 	

@@ -7,8 +7,7 @@ module.exports = {
   context: __dirname + "/src/js",
   entry: {
     //popup:      "./popup/popup",
-    //global:     "./global/global",
-    //options:    "./options/options"
+    options:    "./options/options",
     background: "./background/background",
     content:    "./content/content"
   },

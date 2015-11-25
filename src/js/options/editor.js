@@ -1,4 +1,5 @@
-/*global ace*/
+import ace from "ace";
+
 var Editor = function(selector) {
   this._resizeTimeout = null;
 
@@ -131,3 +132,5 @@ Editor.prototype._resizeThrottler = function(editor) {
     }
   };
 };
+
+module.exports = Editor;

@@ -102,7 +102,7 @@
 
 	"use strict";
 	
-	var _utils = __webpack_require__(/*! ../global/utils */ 5);
+	var _utils = __webpack_require__(/*! ../global/utils */ 3);
 	
 	var Utils = _interopRequireWildcard(_utils);
 	
@@ -188,6 +188,137 @@
 /***/ },
 /* 3 */
 /*!*************************!*\
+  !*** ./global/utils.js ***!
+  \*************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	/*global jQuery Logger*/
+	/*eslint no-unused-vars: 0*/
+	var Utils = {
+	  // Will be set to false in BUILD:
+	  debug: true,
+	  version: "##VERSION##",
+	  liveExtensionId: "iebbppibdpjldhohknhgjoapijellonp",
+	  keys: {
+	    extractedRule: "form-o-fill-extracted",
+	    rules: "form-o-fill-rules",
+	    errors: "form-o-fill-errors",
+	    tabs: "form-o-fill-tabs",
+	    logs: "form-o-fill-logs",
+	    lastMatchingRules: "form-o-fill-lastmatchingrules",
+	    workflows: "form-o-fill-workflows",
+	    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
+	    runningWorkflow: "form-o-fill-runningworkflow",
+	    sessionStorage: "form-o-fill-sessionStorage",
+	    tutorialDataBackup: "form-o-fill-tutorialDataBackup",
+	    tutorialActive: "form-o-fill-tut-active",
+	    settings: "form-o-fill-settings"
+	  },
+	  defaultSettings: {
+	    alwaysShowPopup: false,
+	    jpegQuality: 60,
+	    reevalRules: false
+	  },
+	  reevalRulesInterval: 2000,
+	  reservedLibNamespaces: ["h", "halt"],
+	  vendoredLibs: {
+	    "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
+	    "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
+	  },
+	  isLiveExtension: function isLiveExtension() {
+	    return window.location.host === Utils.liveExtensionId;
+	  },
+	  onFormOFillSite: function onFormOFillSite() {
+	    /*eslint-disable no-extra-parens*/
+	    return window.location.host === "form-o-fill.github.io" || window.location.host === "localhost" && window.location.port === "4000";
+	    /*eslint-enable no-extra-parens*/
+	  },
+	  showExtractOverlay: function showExtractOverlay(whenFinishedCallback) {
+	    // Send message to content script
+	    chrome.runtime.sendMessage({ "action": "lastActiveTabId" }, function (tabId) {
+	      var message = {
+	        "action": "showExtractOverlay"
+	      };
+	      chrome.tabs.sendMessage(tabId, message);
+	      whenFinishedCallback();
+	    });
+	  },
+	  openOptions: function openOptions(parameter) {
+	    var optionsUrl = chrome.runtime.getURL("html/options.html");
+	    if (parameter) {
+	      optionsUrl += parameter;
+	    }
+	    chrome.runtime.sendMessage({ "action": "openIntern", "url": optionsUrl });
+	  },
+	  infoMsg: function infoMsg(msg) {
+	    // A function to display a nice message in the rule editor
+	    var fadeAfterMSec = 1000;
+	    var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
+	    $menuInfo.html(msg).css({ "opacity": "1" });
+	    setTimeout(function () {
+	      $menuInfo.animate({ "opacity": 0 }, 1000, function () {
+	        jQuery(this).html("");
+	      });
+	    }, fadeAfterMSec);
+	  },
+	  downloadImage: function downloadImage(base64, filename) {
+	    var a = document.createElement("a");
+	    a.download = filename;
+	    a.href = base64;
+	    document.querySelector("body").appendChild(a);
+	    a.click();
+	    document.querySelector("body").removeChild(a);
+	    // REMOVE START
+	    if (typeof Logger !== "undefined") {
+	      Logger.info("[utils.js] Downloading image '" + filename + "'");
+	    }
+	    // REMOVE END
+	  },
+	  download: function download(data, filename, mimeType) {
+	    // Creates and triggers a download from a string
+	    var blob = new Blob([data], { type: mimeType });
+	    var url = window.URL.createObjectURL(blob);
+	    var a = document.createElement("a");
+	    a.download = filename;
+	    a.href = url;
+	    document.querySelector("body").appendChild(a);
+	    a.click();
+	    window.URL.revokeObjectURL(url);
+	    document.querySelector("body").removeChild(a);
+	  },
+	  parseUrl: function parseUrl(url) {
+	    var parser = document.createElement('a');
+	    parser.href = url;
+	    return {
+	      url: url,
+	      protocol: parser.protocol,
+	      host: parser.hostname,
+	      port: parser.port,
+	      path: parser.pathname,
+	      query: parser.search,
+	      hash: parser.hash
+	    };
+	  },
+	  sortRules: function sortRules(unsortedRules) {
+	    return unsortedRules.sort(function (a, b) {
+	      if (a.name > b.name) {
+	        return 1;
+	      }
+	      if (a.name < b.name) {
+	        return -1;
+	      }
+	      return 0;
+	    });
+	  }
+	};
+	
+	module.exports = Utils;
+
+/***/ },
+/* 4 */
+/*!*************************!*\
   !*** ./global/rules.js ***!
   \*************************/
 /***/ function(module, exports, __webpack_require__) {
@@ -198,27 +329,27 @@
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
 	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
 	
-	var _libs = __webpack_require__(/*! ../global/libs */ 13);
+	var _libs = __webpack_require__(/*! ../global/libs */ 6);
 	
 	var _libs2 = _interopRequireDefault(_libs);
 	
-	var _utils = __webpack_require__(/*! ../global/utils */ 5);
+	var _utils = __webpack_require__(/*! ../global/utils */ 3);
 	
 	var _utils2 = _interopRequireDefault(_utils);
 	
-	var _rule = __webpack_require__(/*! ../global/rule */ 7);
+	var _rule = __webpack_require__(/*! ../global/rule */ 12);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _storage = __webpack_require__(/*! ../global/storage */ 6);
+	var _storage = __webpack_require__(/*! ../global/storage */ 13);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
-	var _jsBeautifier = __webpack_require__(/*! jsBeautifier */ 23);
+	var _jsBeautifier = __webpack_require__(/*! jsBeautifier */ 14);
 	
 	var _jsBeautifier2 = _interopRequireDefault(_jsBeautifier);
 	
@@ -557,7 +688,7 @@
 	module.exports = Rules;
 
 /***/ },
-/* 4 */
+/* 5 */
 /*!*************************!*\
   !*** ./global/jsonf.js ***!
   \*************************/
@@ -622,205 +753,9 @@
 	module.exports = JSONF;
 
 /***/ },
-/* 5 */
-/*!*************************!*\
-  !*** ./global/utils.js ***!
-  \*************************/
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	/*global jQuery Logger*/
-	/*eslint no-unused-vars: 0*/
-	var Utils = {
-	  // Will be set to false in BUILD:
-	  debug: true,
-	  version: "##VERSION##",
-	  liveExtensionId: "iebbppibdpjldhohknhgjoapijellonp",
-	  keys: {
-	    extractedRule: "form-o-fill-extracted",
-	    rules: "form-o-fill-rules",
-	    errors: "form-o-fill-errors",
-	    tabs: "form-o-fill-tabs",
-	    logs: "form-o-fill-logs",
-	    lastMatchingRules: "form-o-fill-lastmatchingrules",
-	    workflows: "form-o-fill-workflows",
-	    lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",
-	    runningWorkflow: "form-o-fill-runningworkflow",
-	    sessionStorage: "form-o-fill-sessionStorage",
-	    tutorialDataBackup: "form-o-fill-tutorialDataBackup",
-	    tutorialActive: "form-o-fill-tut-active",
-	    settings: "form-o-fill-settings"
-	  },
-	  defaultSettings: {
-	    alwaysShowPopup: false,
-	    jpegQuality: 60,
-	    reevalRules: false
-	  },
-	  reevalRulesInterval: 2000,
-	  reservedLibNamespaces: ["h", "halt"],
-	  vendoredLibs: {
-	    "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
-	    "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
-	  },
-	  isLiveExtension: function isLiveExtension() {
-	    return window.location.host === Utils.liveExtensionId;
-	  },
-	  onFormOFillSite: function onFormOFillSite() {
-	    /*eslint-disable no-extra-parens*/
-	    return window.location.host === "form-o-fill.github.io" || window.location.host === "localhost" && window.location.port === "4000";
-	    /*eslint-enable no-extra-parens*/
-	  },
-	  showExtractOverlay: function showExtractOverlay(whenFinishedCallback) {
-	    // Send message to content script
-	    chrome.runtime.sendMessage({ "action": "lastActiveTabId" }, function (tabId) {
-	      var message = {
-	        "action": "showExtractOverlay"
-	      };
-	      chrome.tabs.sendMessage(tabId, message);
-	      whenFinishedCallback();
-	    });
-	  },
-	  openOptions: function openOptions(parameter) {
-	    var optionsUrl = chrome.runtime.getURL("html/options.html");
-	    if (parameter) {
-	      optionsUrl += parameter;
-	    }
-	    chrome.runtime.sendMessage({ "action": "openIntern", "url": optionsUrl });
-	  },
-	  infoMsg: function infoMsg(msg) {
-	    // A function to display a nice message in the rule editor
-	    var fadeAfterMSec = 1000;
-	    var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
-	    $menuInfo.html(msg).css({ "opacity": "1" });
-	    setTimeout(function () {
-	      $menuInfo.animate({ "opacity": 0 }, 1000, function () {
-	        jQuery(this).html("");
-	      });
-	    }, fadeAfterMSec);
-	  },
-	  downloadImage: function downloadImage(base64, filename) {
-	    var a = document.createElement("a");
-	    a.download = filename;
-	    a.href = base64;
-	    document.querySelector("body").appendChild(a);
-	    a.click();
-	    document.querySelector("body").removeChild(a);
-	    // REMOVE START
-	    if (typeof Logger !== "undefined") {
-	      Logger.info("[utils.js] Downloading image '" + filename + "'");
-	    }
-	    // REMOVE END
-	  },
-	  download: function download(data, filename, mimeType) {
-	    // Creates and triggers a download from a string
-	    var blob = new Blob([data], { type: mimeType });
-	    var url = window.URL.createObjectURL(blob);
-	    var a = document.createElement("a");
-	    a.download = filename;
-	    a.href = url;
-	    document.querySelector("body").appendChild(a);
-	    a.click();
-	    window.URL.revokeObjectURL(url);
-	    document.querySelector("body").removeChild(a);
-	  },
-	  parseUrl: function parseUrl(url) {
-	    var parser = document.createElement('a');
-	    parser.href = url;
-	    return {
-	      url: url,
-	      protocol: parser.protocol,
-	      host: parser.hostname,
-	      port: parser.port,
-	      path: parser.pathname,
-	      query: parser.search,
-	      hash: parser.hash
-	    };
-	  },
-	  sortRules: function sortRules(unsortedRules) {
-	    return unsortedRules.sort(function (a, b) {
-	      if (a.name > b.name) {
-	        return 1;
-	      }
-	      if (a.name < b.name) {
-	        return -1;
-	      }
-	      return 0;
-	    });
-	  }
-	};
-	
-	module.exports = Utils;
-
-/***/ },
 /* 6 */
-/*!***************************!*\
-  !*** ./global/storage.js ***!
-  \***************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-	
-	var _logger2 = _interopRequireDefault(_logger);
-	
-	var _utils = __webpack_require__(/*! ../global/utils */ 5);
-	
-	var _utils2 = _interopRequireDefault(_utils);
-	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
-	
-	var _jsonf2 = _interopRequireDefault(_jsonf);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/* eslint no-undef: 0, no-unused-vars: 0 */
-	var Storage = {
-	  load: function load(keyToLoadFrom) {
-	    var key = keyToLoadFrom || _utils2.default.keys.rules;
-	    return new Promise(function storageLoad(resolve) {
-	      chrome.storage.local.get(key, function prStorageLoad(persistedData) {
-	        _logger2.default.debug("[storage.js] loaded '" + key + "'", _jsonf2.default.stringify(persistedData));
-	        resolve(persistedData[key]);
-	      });
-	    });
-	  },
-	  save: function save(rulesCode, keyToSaveTo) {
-	    return new Promise(function (resolve, reject) {
-	      var value = {};
-	      var key = keyToSaveTo || _utils2.default.keys.rules;
-	      value[key] = rulesCode;
-	      chrome.storage.local.set(value, function storageSave() {
-	        if (typeof chrome.runtime.lastError === "undefined") {
-	          _logger2.default.debug("[storage.js] Saved '" + key + "'", _jsonf2.default.stringify(value[key]));
-	          resolve(true);
-	        } else {
-	          reject(new Error(chrome.runtime.lastError));
-	        }
-	      });
-	    });
-	  },
-	  delete: function _delete(key) {
-	    return new Promise(function (resolve, reject) {
-	      chrome.storage.local.remove(key, function storageDelete() {
-	        if (typeof chrome.runtime.lastError === "undefined") {
-	          _logger2.default.debug("[storage.js] Removed key '" + key + "'");
-	          resolve(true);
-	        } else {
-	          reject(new Error(chrome.runtime.lastError));
-	        }
-	      });
-	    });
-	  }
-	};
-	
-	module.exports = Storage;
-
-/***/ },
-/* 7 */
 /*!************************!*\
-  !*** ./global/rule.js ***!
+  !*** ./global/libs.js ***!
   \************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -830,97 +765,424 @@
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _utils = __webpack_require__(/*! ./utils */ 3);
+	
+	var _utils2 = _interopRequireDefault(_utils);
+	
+	var _rules = __webpack_require__(/*! ./rules */ 4);
+	
+	var _rules2 = _interopRequireDefault(_rules);
+	
+	var _form_filler = __webpack_require__(/*! ../content/form_filler */ 7);
+	
+	var _form_filler2 = _interopRequireDefault(_form_filler);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// This creates a "safe" namespace for all libs
+	var Libs = {
+	  _libs: {},
+	  add: function add(libraryName, librayTopLevelFunction, forceAdd) {
+	    // Check if the method is already defined
+	    forceAdd = forceAdd || false;
+	    if ((this._libs[libraryName] || this.hasOwnProperty(libraryName)) && !forceAdd) {
+	      _logger2.default.info("[libs.js] Can not add library named '" + libraryName + "' because it already exists as a function().");
+	      return;
+	    }
+	    this[libraryName] = librayTopLevelFunction;
+	    _logger2.default.info("[libs.js] Added library as Libs." + libraryName);
+	  },
+	  import: function _import() {
+	    return new Promise(function (resolve) {
+	      _rules2.default.all().then(function (rules) {
+	        rules.forEach(function (rule) {
+	          if (typeof rule.export !== "undefined" && typeof rule.lib === "function") {
+	            // Add the rule into the scope of all library functions
+	            Libs.add(rule.export, rule.lib, true);
+	          }
+	        });
+	      }).then(resolve("libraries imported"));
+	    });
+	  },
+	  // Dectects libraries used in a rulecode string
+	  // returns an array of found libraries
+	  detectLibraries: function detectLibraries(ruleCodeString) {
+	    var detectedLibs = [];
+	    Object.keys(_utils2.default.vendoredLibs).forEach(function dtctLib(vLibKey) {
+	      if (ruleCodeString.match(_utils2.default.vendoredLibs[vLibKey].detectWith) !== null) {
+	        // Found!
+	        detectedLibs.push(vLibKey);
+	      }
+	    });
+	    return detectedLibs;
+	  },
+	  loadLibs: function loadLibs(scriptPaths, whoCallsMe) {
+	    /*eslint-disable complexity */
+	    return new Promise(function (resolve) {
+	      if (typeof scriptPaths === "string") {
+	        scriptPaths = [scriptPaths];
+	      }
+	
+	      // If there is no script to inject
+	      // OR we run in the context of the content page
+	      // resolve now
+	      // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
+	      if (scriptPaths.length === 0 || typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
+	        resolve(0);
+	        return;
+	      }
+	
+	      var anchor = document.querySelector("body");
+	      var fragment = document.createDocumentFragment();
+	
+	      var loadedScriptCount = 0;
+	      var targetScriptCount = scriptPaths.length;
+	      var scriptPath;
+	
+	      for (var i = 0; i < targetScriptCount; i++) {
+	        scriptPath = scriptPaths[i];
+	
+	        // If the requested lbrary is not vendored, break loop
+	        if (typeof _utils2.default.vendoredLibs[scriptPath] === "undefined") {
+	          continue;
+	        }
+	
+	        var libName = _utils2.default.vendoredLibs[scriptPath].name;
+	
+	        // If a lib with that name is already present, don't load it again
+	        if (typeof Libs[libName] !== "undefined") {
+	          loadedScriptCount++;
+	          _logger2.default.info("[libs.js] Didn't load '" + scriptPath + "' again");
+	          continue;
+	        }
+	
+	        var script = document.createElement("script");
+	        script.async = false;
+	        script.dataset.who = whoCallsMe;
+	        script.className = "injectedByFormOFill";
+	        script.dataset.script = scriptPath;
+	        script.src = chrome.extension.getURL(scriptPath);
+	        /*eslint-disable no-loop-func*/
+	        script.onload = function () {
+	          // Add Library to Libs
+	          Libs.add(libName, window[_utils2.default.vendoredLibs[scriptPath].onWindowName]);
+	          loadedScriptCount++;
+	          _logger2.default.info("[libs.js] Loaded '" + scriptPath + "'");
+	
+	          // If all script are loaded, resolve promise
+	          if (loadedScriptCount >= targetScriptCount) {
+	            resolve(loadedScriptCount);
+	          }
+	        };
+	        script.onerror = function () {
+	          resolve(loadedScriptCount);
+	        };
+	        /*eslint-enebale no-loop-func*/
+	
+	        // Since this is all async make sure nobody has already
+	        // inserted it while we worked on this script:
+	        if (document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
+	          fragment.appendChild(script);
+	        }
+	      }
+	
+	      // If the loop is ready and the count already matches,
+	      // there was nothing to to and that's ok
+	      if (loadedScriptCount >= targetScriptCount) {
+	        resolve(loadedScriptCount);
+	      }
+	
+	      // Only insert the fragment if it has something inside
+	      if (fragment.childNodes.length > 0) {
+	        anchor.appendChild(fragment);
+	      }
+	    });
+	    /*eslint-enable complexity */
+	  }
+	};
+	
+	// helper for use in value functions
+	//
+	// "value" : Libs.h.click  => Clicks on the element specified by 'selector'
+	var valueFunctionHelper = {
+	  click: function click($domNode) {
+	    $domNode.click();
+	  },
+	  screenshot: function screenshot(saveAs) {
+	    chrome.runtime.sendMessage({ action: "takeScreenshot", value: _form_filler2.default.currentRuleMetadata, flag: saveAs });
+	  }
+	};
+	Libs.add("h", valueFunctionHelper);
+	
+	// Change the text of the throbber
+	var setThrobberText = function setThrobberText(text) {
+	  // Since this is called from the background pages
+	  // we need to send a message to the content.js
+	  chrome.tabs.sendMessage(window.lastActiveTab.id, { action: "showOverlay", message: text });
+	};
+	Libs.add("displayMessage", setThrobberText);
+	
+	// Process control functions
+	// Run in the context of the background page
+	// thus lastActiveTab is available
+	var processFunctionsHalt = function processFunctionsHalt(msg) {
+	  return function () {
+	    if (typeof window.lastActiveTab === "undefined") {
+	      return null;
+	    }
+	
+	    if (typeof msg === "undefined") {
+	      msg = "Canceled by call to Libs.halt()";
+	    }
+	
+	    setThrobberText(msg);
+	    return null;
+	  };
+	};
+	Libs.add("halt", processFunctionsHalt);
+	
+	module.exports = Libs;
+
+/***/ },
+/* 7 */
+/*!********************************!*\
+  !*** ./content/form_filler.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _form_errors = __webpack_require__(/*! ./form_errors */ 8);
+	
+	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
+	
+	var _logger2 = _interopRequireDefault(_logger);
+	
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+	
+	var _jsonf2 = _interopRequireDefault(_jsonf);
+	
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/* A single Rule */
-	var Rule = function Rule() {
-	  this.prettyPrint = function () {
-	    var clone = _jquery2.default.extend({}, this);
-	    delete clone.matcher;
-	    delete clone.nameClean;
-	    delete clone.urlClean;
-	    delete clone.id;
-	    delete clone.tabId;
-	    delete clone.type;
-	    delete clone.autorun;
-	    delete clone.screenshot;
-	    delete clone.onlyEmpty;
-	    delete clone.color;
-	    delete clone._escapeForRegexp;
-	    return JSON.stringify(clone, null, 2);
-	  };
+	/*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
 	
-	  this._escapeForRegexp = function (str) {
-	    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-	  };
+	var FormFiller = {
+	  error: null,
+	  // This fills the field with a value
+	  fill: function fill(selector, value, beforeData, flags, meta) {
+	    var domNodes = document.querySelectorAll(selector);
+	    var domNode = null;
+	    var fillMethod = null;
+	    this.currentRuleMetadata = meta;
+	
+	    if (domNodes.length === 0) {
+	      return new _form_errors.FormError(selector, value, "Could not find field");
+	    }
+	    _logger2.default.info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
+	
+	    var parsedValue = _jsonf2.default.parse(value);
+	
+	    // Call field specific method on EVERY field found
+	    //
+	    // "_fill" + the camelized version of one of these:
+	    // text , button , checkbox , image , password , radio , textarea , select-one , select-multiple , search
+	    // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
+	    //
+	    // eg. _fillDatetimeLocal(value)
+	    var i;
+	    var returnValue = null;
+	
+	    for (i = 0; i < domNodes.length; ++i) {
+	      domNode = domNodes[i];
+	      fillMethod = this._fillMethod(domNode);
+	
+	      // Check for "onlyEmpty" flag and break the loop
+	      if (flags.onlyEmpty === true && domNode.value !== "") {
+	        _logger2.default.info("[form_filler.js] Skipped the loop because the target was not empty");
+	        break;
+	      }
+	
+	      // if the value is a function, call it with the jQuery wrapped domNode
+	      // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
+	      if (typeof parsedValue === "function") {
+	        try {
+	          parsedValue = parsedValue((0, _jquery2.default)(domNode), beforeData);
+	        } catch (e) {
+	          _logger2.default.info("[form_filler.js] Got an exception executing value function: " + parsedValue);
+	          _logger2.default.info("[form_filler.js] Original exception: " + e);
+	          _logger2.default.info("[form_filler.js] Original stack: " + e.stack);
+	          return new _form_errors.FormError(selector, value, "Error while executing value-function: " + _jsonf2.default.stringify(e.message));
+	        }
+	      }
+	
+	      // Fill field only if value is not null or not defined
+	      if (parsedValue !== null && typeof parsedValue !== "undefined") {
+	        // Fill field using the specialized method or default
+	        returnValue = fillMethod(domNode, parsedValue, selector) || null;
+	      }
+	    }
+	
+	    // Screenshot?
+	    if (flags.screenshot !== "undefined" && flags.screenshot !== false) {
+	      // Only the BG page has the permissions to do a screenshot
+	      // so here we send it the request to do so
+	      _logger2.default.info("[form_filler.js] sending request to take a screenshot to bg.js");
+	      chrome.runtime.sendMessage({ action: "takeScreenshot", value: meta, flag: flags.screenshot });
+	    }
+	
+	    return returnValue;
+	  },
+	  _fillDefault: function _fillDefault(domNode, value) {
+	    domNode.value = value;
+	  },
+	  _fillImage: function _fillImage(domNode, value) {
+	    domNode.attributes.getNamedItem("src").value = value;
+	  },
+	  _fillCheckbox: function _fillCheckbox(domNode, value) {
+	    var setValue;
+	    if (value === true || domNode.value === value) {
+	      setValue = true;
+	    }
+	    if (value === false) {
+	      setValue = false;
+	    }
+	    domNode.checked = setValue;
+	  },
+	  _fillRadio: function _fillRadio(domNode, value) {
+	    domNode.checked = domNode.value === value;
+	  },
+	  _fillSelectOne: function _fillSelectOne(domNode, value) {
+	    var i = 0;
+	    var optionNode = null;
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      if (optionNode.value === value) {
+	        optionNode.selected = value;
+	        return;
+	      }
+	    }
+	  },
+	  _fillSelectMultiple: function _fillSelectMultiple(domNode, value) {
+	    var i = 0;
+	    var optionNode = null;
+	    var someFunction = function someFunction(targetValue) {
+	      return optionNode.value === targetValue;
+	    };
+	    value = Array.isArray(value) ? value : [value];
+	
+	    for (i = 0; i < domNode.children.length; i++) {
+	      optionNode = domNode.children[i];
+	      optionNode.selected = value.some(someFunction);
+	    }
+	  },
+	  _fillDate: function _fillDate(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'date' field cannot be filled with this. See http://bit.ly/formofill-formats");
+	    }
+	  },
+	  _fillMonth: function _fillMonth(domNode, value, selector) {
+	    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month");
+	    }
+	  },
+	  _fillWeek: function _fillWeek(domNode, value, selector) {
+	    if (/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'week' field cannot be filled with tihs value. See http://bit.ly/formofill-format-week");
+	    }
+	  },
+	  _fillTime: function _fillTime(domNode, value, selector) {
+	    if (/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time");
+	    }
+	  },
+	  _fillDatetime: function _fillDatetime(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time");
+	    }
+	  },
+	  _fillDatetimeLocal: function _fillDatetimeLocal(domNode, value, selector) {
+	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local");
+	    }
+	  },
+	  _fillColor: function _fillColor(domNode, value, selector) {
+	    if (/^#[0-9a-f]{6}$/i.test(value)) {
+	      domNode.value = value;
+	    } else {
+	      return new _form_errors.FormError(selector, value, "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color");
+	    }
+	  },
+	  _typeMethod: function _typeMethod(type) {
+	    return ("_fill-" + type).replace(/(\-[a-z])/g, function ($1) {
+	      return $1.toUpperCase().replace('-', '');
+	    });
+	  },
+	  _fillMethod: function _fillMethod(domNode) {
+	    var fillMethod = this[this._typeMethod(domNode.type)];
+	    // Default is to set the value of the field if
+	    // no special function is defined for that type
+	    if (typeof fillMethod !== "function") {
+	      fillMethod = this._fillDefault;
+	    }
+	    return fillMethod;
+	  }
 	};
 	
-	/*eslint-disable complexity*/
-	Rule.create = function (options, tabId, ruleIndex) {
-	  delete options.matcher;
-	  delete options.nameClean;
-	  delete options.urlClean;
-	  delete options._escapeForRegexp;
-	  delete options.prettyPrint;
-	  var rule = new Rule();
-	
-	  Object.keys(options).forEach(function (key) {
-	    rule[key] = options[key];
-	  });
-	
-	  // RegExp in URL or string?
-	  if (typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
-	    // RegExp
-	    rule.matcher = new RegExp(rule.url);
-	  } else if (typeof rule.url !== "undefined") {
-	    // String (match full url only)
-	    rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
-	  }
-	
-	  if (typeof rule.url !== "undefined") {
-	    rule.urlClean = rule.url.toString();
-	  } else {
-	    rule.urlClean = "n/a";
-	  }
-	
-	  if (typeof rule.name !== "undefined") {
-	    rule.nameClean = rule.name.replace("<", "&lt;");
-	  }
-	
-	  if (typeof rule.id === "undefined") {
-	    rule.id = tabId + "-" + ruleIndex;
-	  }
-	
-	  if (typeof rule.autorun === "undefined") {
-	    rule.autorun = false;
-	  }
-	
-	  if (typeof rule.onlyEmpty === "undefined") {
-	    rule.onlyEmpty = false;
-	  }
-	
-	  rule.tabId = tabId;
-	
-	  // REMOVE START
-	  if (rule.export && rule.lib) {
-	    _logger2.default.debug("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
-	  } else {
-	    _logger2.default.debug("[rule.js] created rule", rule);
-	  }
-	  // REMOVE END
-	
-	  return rule;
-	};
-	/*eslint-enable complexity*/
-	
-	module.exports = Rule;
+	module.exports = FormFiller;
 
 /***/ },
 /* 8 */
+/*!********************************!*\
+  !*** ./content/form_errors.js ***!
+  \********************************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var FormError = function FormError(selector, value, message) {
+	  this.selector = selector;
+	  this.value = value;
+	  this.message = message;
+	};
+	
+	var FormErrors = function FormErrors(rule) {
+	  this._errors = [];
+	  this.rule = rule;
+	};
+	
+	FormErrors.prototype.add = function (selector, value, message) {
+	  var formError = new FormError(selector, value, message);
+	  this._errors.push(formError);
+	  return this;
+	};
+	
+	FormErrors.prototype.get = function () {
+	  return this._errors;
+	};
+	
+	module.exports = {
+	  FormErrors: FormErrors,
+	  FormError: FormError
+	};
+
+/***/ },
+/* 9 */
 /*!********************************************!*\
   !*** ../vendor/jquery/jquery-2.1.4.min.js ***!
   \********************************************/
@@ -3126,17 +3388,17 @@
 	    });
 	  }), n.fn.size = function () {
 	    return this.length;
-	  }, n.fn.andSelf = n.fn.addBack, "function" == "function" && __webpack_require__(/*! !webpack amd options */ 10) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+	  }, n.fn.andSelf = n.fn.addBack, "function" == "function" && __webpack_require__(/*! !webpack amd options */ 11) && !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 	    return n;
 	  }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));var Kb = a.jQuery,
 	      Lb = a.$;return n.noConflict = function (b) {
 	    return a.$ === n && (a.$ = Lb), b && a.jQuery === n && (a.jQuery = Kb), n;
 	  }, (typeof b === "undefined" ? "undefined" : _typeof(b)) === U && (a.jQuery = a.$ = n), n;
 	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../~/webpack/buildin/module.js */ 9)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../../~/webpack/buildin/module.js */ 10)(module)))
 
 /***/ },
-/* 9 */
+/* 10 */
 /*!***********************************!*\
   !*** (webpack)/buildin/module.js ***!
   \***********************************/
@@ -3155,7 +3417,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /*!****************************************!*\
   !*** (webpack)/buildin/amd-options.js ***!
   \****************************************/
@@ -3166,11 +3428,9 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 11 */,
-/* 12 */,
-/* 13 */
+/* 12 */
 /*!************************!*\
-  !*** ./global/libs.js ***!
+  !*** ./global/rule.js ***!
   \************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -3180,431 +3440,162 @@
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _utils = __webpack_require__(/*! ./utils */ 5);
-	
-	var _utils2 = _interopRequireDefault(_utils);
-	
-	var _rules = __webpack_require__(/*! ./rules */ 3);
-	
-	var _rules2 = _interopRequireDefault(_rules);
-	
-	var _form_filler = __webpack_require__(/*! ../content/form_filler */ 14);
-	
-	var _form_filler2 = _interopRequireDefault(_form_filler);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	// This creates a "safe" namespace for all libs
-	var Libs = {
-	  _libs: {},
-	  add: function add(libraryName, librayTopLevelFunction, forceAdd) {
-	    // Check if the method is already defined
-	    forceAdd = forceAdd || false;
-	    if ((this._libs[libraryName] || this.hasOwnProperty(libraryName)) && !forceAdd) {
-	      _logger2.default.info("[libs.js] Can not add library named '" + libraryName + "' because it already exists as a function().");
-	      return;
-	    }
-	    this[libraryName] = librayTopLevelFunction;
-	    _logger2.default.info("[libs.js] Added library as Libs." + libraryName);
-	  },
-	  import: function _import() {
-	    return new Promise(function (resolve) {
-	      _rules2.default.all().then(function (rules) {
-	        rules.forEach(function (rule) {
-	          if (typeof rule.export !== "undefined" && typeof rule.lib === "function") {
-	            // Add the rule into the scope of all library functions
-	            Libs.add(rule.export, rule.lib, true);
-	          }
-	        });
-	      }).then(resolve("libraries imported"));
-	    });
-	  },
-	  // Dectects libraries used in a rulecode string
-	  // returns an array of found libraries
-	  detectLibraries: function detectLibraries(ruleCodeString) {
-	    var detectedLibs = [];
-	    Object.keys(_utils2.default.vendoredLibs).forEach(function dtctLib(vLibKey) {
-	      if (ruleCodeString.match(_utils2.default.vendoredLibs[vLibKey].detectWith) !== null) {
-	        // Found!
-	        detectedLibs.push(vLibKey);
-	      }
-	    });
-	    return detectedLibs;
-	  },
-	  loadLibs: function loadLibs(scriptPaths, whoCallsMe) {
-	    /*eslint-disable complexity */
-	    return new Promise(function (resolve) {
-	      if (typeof scriptPaths === "string") {
-	        scriptPaths = [scriptPaths];
-	      }
-	
-	      // If there is no script to inject
-	      // OR we run in the context of the content page
-	      // resolve now
-	      // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
-	      if (scriptPaths.length === 0 || typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
-	        resolve(0);
-	        return;
-	      }
-	
-	      var anchor = document.querySelector("body");
-	      var fragment = document.createDocumentFragment();
-	
-	      var loadedScriptCount = 0;
-	      var targetScriptCount = scriptPaths.length;
-	      var scriptPath;
-	
-	      for (var i = 0; i < targetScriptCount; i++) {
-	        scriptPath = scriptPaths[i];
-	
-	        // If the requested lbrary is not vendored, break loop
-	        if (typeof _utils2.default.vendoredLibs[scriptPath] === "undefined") {
-	          continue;
-	        }
-	
-	        var libName = _utils2.default.vendoredLibs[scriptPath].name;
-	
-	        // If a lib with that name is already present, don't load it again
-	        if (typeof Libs[libName] !== "undefined") {
-	          loadedScriptCount++;
-	          _logger2.default.info("[libs.js] Didn't load '" + scriptPath + "' again");
-	          continue;
-	        }
-	
-	        var script = document.createElement("script");
-	        script.async = false;
-	        script.dataset.who = whoCallsMe;
-	        script.className = "injectedByFormOFill";
-	        script.dataset.script = scriptPath;
-	        script.src = chrome.extension.getURL(scriptPath);
-	        /*eslint-disable no-loop-func*/
-	        script.onload = function () {
-	          // Add Library to Libs
-	          Libs.add(libName, window[_utils2.default.vendoredLibs[scriptPath].onWindowName]);
-	          loadedScriptCount++;
-	          _logger2.default.info("[libs.js] Loaded '" + scriptPath + "'");
-	
-	          // If all script are loaded, resolve promise
-	          if (loadedScriptCount >= targetScriptCount) {
-	            resolve(loadedScriptCount);
-	          }
-	        };
-	        script.onerror = function () {
-	          resolve(loadedScriptCount);
-	        };
-	        /*eslint-enebale no-loop-func*/
-	
-	        // Since this is all async make sure nobody has already
-	        // inserted it while we worked on this script:
-	        if (document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
-	          fragment.appendChild(script);
-	        }
-	      }
-	
-	      // If the loop is ready and the count already matches,
-	      // there was nothing to to and that's ok
-	      if (loadedScriptCount >= targetScriptCount) {
-	        resolve(loadedScriptCount);
-	      }
-	
-	      // Only insert the fragment if it has something inside
-	      if (fragment.childNodes.length > 0) {
-	        anchor.appendChild(fragment);
-	      }
-	    });
-	    /*eslint-enable complexity */
-	  }
-	};
-	
-	// helper for use in value functions
-	//
-	// "value" : Libs.h.click  => Clicks on the element specified by 'selector'
-	var valueFunctionHelper = {
-	  click: function click($domNode) {
-	    $domNode.click();
-	  },
-	  screenshot: function screenshot(saveAs) {
-	    chrome.runtime.sendMessage({ action: "takeScreenshot", value: _form_filler2.default.currentRuleMetadata, flag: saveAs });
-	  }
-	};
-	Libs.add("h", valueFunctionHelper);
-	
-	// Change the text of the throbber
-	var setThrobberText = function setThrobberText(text) {
-	  // Since this is called from the background pages
-	  // we need to send a message to the content.js
-	  chrome.tabs.sendMessage(window.lastActiveTab.id, { action: "showOverlay", message: text });
-	};
-	Libs.add("displayMessage", setThrobberText);
-	
-	// Process control functions
-	// Run in the context of the background page
-	// thus lastActiveTab is available
-	var processFunctionsHalt = function processFunctionsHalt(msg) {
-	  return function () {
-	    if (typeof window.lastActiveTab === "undefined") {
-	      return null;
-	    }
-	
-	    if (typeof msg === "undefined") {
-	      msg = "Canceled by call to Libs.halt()";
-	    }
-	
-	    setThrobberText(msg);
-	    return null;
-	  };
-	};
-	Libs.add("halt", processFunctionsHalt);
-	
-	module.exports = Libs;
-
-/***/ },
-/* 14 */
-/*!********************************!*\
-  !*** ./content/form_filler.js ***!
-  \********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _form_errors = __webpack_require__(/*! ./form_errors */ 15);
-	
-	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-	
-	var _logger2 = _interopRequireDefault(_logger);
-	
-	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
-	
-	var _jsonf2 = _interopRequireDefault(_jsonf);
-	
-	var _jquery = __webpack_require__(/*! jquery */ 8);
+	var _jquery = __webpack_require__(/*! jquery */ 9);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
+	/* A single Rule */
+	var Rule = function Rule() {
+	  this.prettyPrint = function () {
+	    var clone = _jquery2.default.extend({}, this);
+	    delete clone.matcher;
+	    delete clone.nameClean;
+	    delete clone.urlClean;
+	    delete clone.id;
+	    delete clone.tabId;
+	    delete clone.type;
+	    delete clone.autorun;
+	    delete clone.screenshot;
+	    delete clone.onlyEmpty;
+	    delete clone.color;
+	    delete clone._escapeForRegexp;
+	    return JSON.stringify(clone, null, 2);
+	  };
 	
-	var FormFiller = {
-	  error: null,
-	  // This fills the field with a value
-	  fill: function fill(selector, value, beforeData, flags, meta) {
-	    var domNodes = document.querySelectorAll(selector);
-	    var domNode = null;
-	    var fillMethod = null;
-	    this.currentRuleMetadata = meta;
-	
-	    if (domNodes.length === 0) {
-	      return new _form_errors.FormError(selector, value, "Could not find field");
-	    }
-	    _logger2.default.info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
-	
-	    var parsedValue = _jsonf2.default.parse(value);
-	
-	    // Call field specific method on EVERY field found
-	    //
-	    // "_fill" + the camelized version of one of these:
-	    // text , button , checkbox , image , password , radio , textarea , select-one , select-multiple , search
-	    // email , url , tel , number , range , date , month , week , time , datetime , datetime-local , color
-	    //
-	    // eg. _fillDatetimeLocal(value)
-	    var i;
-	    var returnValue = null;
-	
-	    for (i = 0; i < domNodes.length; ++i) {
-	      domNode = domNodes[i];
-	      fillMethod = this._fillMethod(domNode);
-	
-	      // Check for "onlyEmpty" flag and break the loop
-	      if (flags.onlyEmpty === true && domNode.value !== "") {
-	        _logger2.default.info("[form_filler.js] Skipped the loop because the target was not empty");
-	        break;
-	      }
-	
-	      // if the value is a function, call it with the jQuery wrapped domNode
-	      // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
-	      if (typeof parsedValue === "function") {
-	        try {
-	          parsedValue = parsedValue((0, _jquery2.default)(domNode), beforeData);
-	        } catch (e) {
-	          _logger2.default.info("[form_filler.js] Got an exception executing value function: " + parsedValue);
-	          _logger2.default.info("[form_filler.js] Original exception: " + e);
-	          _logger2.default.info("[form_filler.js] Original stack: " + e.stack);
-	          return new _form_errors.FormError(selector, value, "Error while executing value-function: " + _jsonf2.default.stringify(e.message));
-	        }
-	      }
-	
-	      // Fill field only if value is not null or not defined
-	      if (parsedValue !== null && typeof parsedValue !== "undefined") {
-	        // Fill field using the specialized method or default
-	        returnValue = fillMethod(domNode, parsedValue, selector) || null;
-	      }
-	    }
-	
-	    // Screenshot?
-	    if (flags.screenshot !== "undefined" && flags.screenshot !== false) {
-	      // Only the BG page has the permissions to do a screenshot
-	      // so here we send it the request to do so
-	      _logger2.default.info("[form_filler.js] sending request to take a screenshot to bg.js");
-	      chrome.runtime.sendMessage({ action: "takeScreenshot", value: meta, flag: flags.screenshot });
-	    }
-	
-	    return returnValue;
-	  },
-	  _fillDefault: function _fillDefault(domNode, value) {
-	    domNode.value = value;
-	  },
-	  _fillImage: function _fillImage(domNode, value) {
-	    domNode.attributes.getNamedItem("src").value = value;
-	  },
-	  _fillCheckbox: function _fillCheckbox(domNode, value) {
-	    var setValue;
-	    if (value === true || domNode.value === value) {
-	      setValue = true;
-	    }
-	    if (value === false) {
-	      setValue = false;
-	    }
-	    domNode.checked = setValue;
-	  },
-	  _fillRadio: function _fillRadio(domNode, value) {
-	    domNode.checked = domNode.value === value;
-	  },
-	  _fillSelectOne: function _fillSelectOne(domNode, value) {
-	    var i = 0;
-	    var optionNode = null;
-	    for (i = 0; i < domNode.children.length; i++) {
-	      optionNode = domNode.children[i];
-	      if (optionNode.value === value) {
-	        optionNode.selected = value;
-	        return;
-	      }
-	    }
-	  },
-	  _fillSelectMultiple: function _fillSelectMultiple(domNode, value) {
-	    var i = 0;
-	    var optionNode = null;
-	    var someFunction = function someFunction(targetValue) {
-	      return optionNode.value === targetValue;
-	    };
-	    value = Array.isArray(value) ? value : [value];
-	
-	    for (i = 0; i < domNode.children.length; i++) {
-	      optionNode = domNode.children[i];
-	      optionNode.selected = value.some(someFunction);
-	    }
-	  },
-	  _fillDate: function _fillDate(domNode, value, selector) {
-	    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'date' field cannot be filled with this. See http://bit.ly/formofill-formats");
-	    }
-	  },
-	  _fillMonth: function _fillMonth(domNode, value, selector) {
-	    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month");
-	    }
-	  },
-	  _fillWeek: function _fillWeek(domNode, value, selector) {
-	    if (/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'week' field cannot be filled with tihs value. See http://bit.ly/formofill-format-week");
-	    }
-	  },
-	  _fillTime: function _fillTime(domNode, value, selector) {
-	    if (/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time");
-	    }
-	  },
-	  _fillDatetime: function _fillDatetime(domNode, value, selector) {
-	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time");
-	    }
-	  },
-	  _fillDatetimeLocal: function _fillDatetimeLocal(domNode, value, selector) {
-	    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local");
-	    }
-	  },
-	  _fillColor: function _fillColor(domNode, value, selector) {
-	    if (/^#[0-9a-f]{6}$/i.test(value)) {
-	      domNode.value = value;
-	    } else {
-	      return new _form_errors.FormError(selector, value, "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color");
-	    }
-	  },
-	  _typeMethod: function _typeMethod(type) {
-	    return ("_fill-" + type).replace(/(\-[a-z])/g, function ($1) {
-	      return $1.toUpperCase().replace('-', '');
-	    });
-	  },
-	  _fillMethod: function _fillMethod(domNode) {
-	    var fillMethod = this[this._typeMethod(domNode.type)];
-	    // Default is to set the value of the field if
-	    // no special function is defined for that type
-	    if (typeof fillMethod !== "function") {
-	      fillMethod = this._fillDefault;
-	    }
-	    return fillMethod;
-	  }
+	  this._escapeForRegexp = function (str) {
+	    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	  };
 	};
 	
-	module.exports = FormFiller;
+	/*eslint-disable complexity*/
+	Rule.create = function (options, tabId, ruleIndex) {
+	  delete options.matcher;
+	  delete options.nameClean;
+	  delete options.urlClean;
+	  delete options._escapeForRegexp;
+	  delete options.prettyPrint;
+	  var rule = new Rule();
+	
+	  Object.keys(options).forEach(function (key) {
+	    rule[key] = options[key];
+	  });
+	
+	  // RegExp in URL or string?
+	  if (typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
+	    // RegExp
+	    rule.matcher = new RegExp(rule.url);
+	  } else if (typeof rule.url !== "undefined") {
+	    // String (match full url only)
+	    rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
+	  }
+	
+	  if (typeof rule.url !== "undefined") {
+	    rule.urlClean = rule.url.toString();
+	  } else {
+	    rule.urlClean = "n/a";
+	  }
+	
+	  if (typeof rule.name !== "undefined") {
+	    rule.nameClean = rule.name.replace("<", "&lt;");
+	  }
+	
+	  if (typeof rule.id === "undefined") {
+	    rule.id = tabId + "-" + ruleIndex;
+	  }
+	
+	  if (typeof rule.autorun === "undefined") {
+	    rule.autorun = false;
+	  }
+	
+	  if (typeof rule.onlyEmpty === "undefined") {
+	    rule.onlyEmpty = false;
+	  }
+	
+	  rule.tabId = tabId;
+	
+	  // REMOVE START
+	  if (rule.export && rule.lib) {
+	    _logger2.default.debug("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
+	  } else {
+	    _logger2.default.debug("[rule.js] created rule", rule);
+	  }
+	  // REMOVE END
+	
+	  return rule;
+	};
+	/*eslint-enable complexity*/
+	
+	module.exports = Rule;
 
 /***/ },
-/* 15 */
-/*!********************************!*\
-  !*** ./content/form_errors.js ***!
-  \********************************/
-/***/ function(module, exports) {
+/* 13 */
+/*!***************************!*\
+  !*** ./global/storage.js ***!
+  \***************************/
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
-	var FormError = function FormError(selector, value, message) {
-	  this.selector = selector;
-	  this.value = value;
-	  this.message = message;
+	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
+	
+	var _logger2 = _interopRequireDefault(_logger);
+	
+	var _utils = __webpack_require__(/*! ../global/utils */ 3);
+	
+	var _utils2 = _interopRequireDefault(_utils);
+	
+	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 5);
+	
+	var _jsonf2 = _interopRequireDefault(_jsonf);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/* eslint no-undef: 0, no-unused-vars: 0 */
+	var Storage = {
+	  load: function load(keyToLoadFrom) {
+	    var key = keyToLoadFrom || _utils2.default.keys.rules;
+	    return new Promise(function storageLoad(resolve) {
+	      chrome.storage.local.get(key, function prStorageLoad(persistedData) {
+	        _logger2.default.debug("[storage.js] loaded '" + key + "'", _jsonf2.default.stringify(persistedData));
+	        resolve(persistedData[key]);
+	      });
+	    });
+	  },
+	  save: function save(rulesCode, keyToSaveTo) {
+	    return new Promise(function (resolve, reject) {
+	      var value = {};
+	      var key = keyToSaveTo || _utils2.default.keys.rules;
+	      value[key] = rulesCode;
+	      chrome.storage.local.set(value, function storageSave() {
+	        if (typeof chrome.runtime.lastError === "undefined") {
+	          _logger2.default.debug("[storage.js] Saved '" + key + "'", _jsonf2.default.stringify(value[key]));
+	          resolve(true);
+	        } else {
+	          reject(new Error(chrome.runtime.lastError));
+	        }
+	      });
+	    });
+	  },
+	  delete: function _delete(key) {
+	    return new Promise(function (resolve, reject) {
+	      chrome.storage.local.remove(key, function storageDelete() {
+	        if (typeof chrome.runtime.lastError === "undefined") {
+	          _logger2.default.debug("[storage.js] Removed key '" + key + "'");
+	          resolve(true);
+	        } else {
+	          reject(new Error(chrome.runtime.lastError));
+	        }
+	      });
+	    });
+	  }
 	};
 	
-	var FormErrors = function FormErrors(rule) {
-	  this._errors = [];
-	  this.rule = rule;
-	};
-	
-	FormErrors.prototype.add = function (selector, value, message) {
-	  var formError = new FormError(selector, value, message);
-	  this._errors.push(formError);
-	  return this;
-	};
-	
-	FormErrors.prototype.get = function () {
-	  return this._errors;
-	};
-	
-	module.exports = {
-	  FormErrors: FormErrors,
-	  FormError: FormError
-	};
+	module.exports = Storage;
 
 /***/ },
-/* 16 */,
-/* 17 */,
-/* 18 */,
-/* 19 */,
-/* 20 */,
-/* 21 */,
-/* 22 */,
-/* 23 */
+/* 14 */
 /*!*******************************************!*\
   !*** ../vendor/js-beautifier/beautify.js ***!
   \*******************************************/

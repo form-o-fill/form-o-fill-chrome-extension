@@ -1,9 +1,21 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF Libs */
+import I18n from "../global/i18n";
+import Utils from "../global/utils";
+import Rule from "../global/rule";
+import JSONF from "../global/jsonf";
+import Logger from "../global/logger";
+import Libs from "../global/libs";
+import Rules from "../global/rules";
+import Editor from "./editor";
+import Help from "./Help";
+import jQuery from "jquery";
+import ChromeBootstrap from "./chrome_bootstrap";
+
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
+Help.init();
 
 I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "tutorials"]);
 
@@ -16,14 +28,14 @@ ChromeBootstrap.init();
 // reset notices once the user starts typing
 editor.on("change", function() {
   if(noticesVisible) {
-    $("#ruleeditor .notice").hide();
+    jQuery("#ruleeditor .notice").hide();
     noticesVisible = false;
   }
 });
 
 // Current active tab id
 var currentTabId = function() {
-  var currentTab = $("#ruleeditor .tab.current");
+  var currentTab = jQuery("#ruleeditor .tab.current");
   if(currentTab.length === 1) {
     return currentTab.data("tab-id");
   }
@@ -58,9 +70,9 @@ var appendRule = function(prettyRule, responseCallback) {
 Storage.load(Utils.keys.extractedRule).then(function (extractedRule) {
   // There are extracted rules
   if (typeof extractedRule !== "undefined") {
-    var $notice = $("#ruleeditor .notice.extracted-present");
+    var $notice = jQuery("#ruleeditor .notice.extracted-present");
     $notice.show();
-    $("#ruleeditor .cmd-append-extracted").on("click", function () {
+    jQuery("#ruleeditor .cmd-append-extracted").on("click", function () {
       Logger.info("[options.js] Appending extracted rules to the end of the definition");
       appendRule(extractedRule, function() {
         $notice.hide();
@@ -75,7 +87,7 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
   if(typeof errorsStorage !== "undefined") {
     var rule = errorsStorage.rule;
     var errors = errorsStorage.errors;
-    var $notice = $("#ruleeditor .notice.form-fill-errors");
+    var $notice = jQuery("#ruleeditor .notice.form-fill-errors");
     var tableTrs = [];
     var fullMsg = false;
     errors.forEach(function (error) {
@@ -102,7 +114,7 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
     var match = rule.id.match(/^([0-9]+)/);
     if(match) {
       Logger.info("[options.js] Activating tab #" + match[1]);
-      $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
+      jQuery(".tab[data-tab-id='" + match[1] + "']").trigger("click");
     }
   }
 });
@@ -127,7 +139,7 @@ var updateTabStats = function() {
 
     // rulesStats now has a count of all rules per tab
     Object.keys(rulesStats.tabCount).forEach(function (key) {
-      $(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats.tabCount[key] + ")");
+      jQuery(".tab[data-tab-id='" + key + "'] .rule-count").html("(" + rulesStats.tabCount[key] + ")");
     });
 
     // Fill <select> rules overview
@@ -142,7 +154,7 @@ var updateTabStats = function() {
     Utils.sortRules(onlyRealRules).forEach(function (rule) {
       options.push("<option value='" + rule.id + "'>" + rule.name + "</option>");
     });
-    $("#rules-overview").html(options.join(""));
+    jQuery("#rules-overview").html(options.join(""));
   });
 };
 
@@ -158,10 +170,10 @@ var saveRules = function(tabId) {
           var extraLis = errorClass.extra.map(function (extra) {
             return "<li>" + extra + "</li>";
           });
-          $("#ruleeditor .notice." + errorClass.id + " ul").html(extraLis);
+          jQuery("#ruleeditor .notice." + errorClass.id + " ul").html(extraLis);
           errorClass = errorClass.id;
         }
-        $("#ruleeditor .notice." + errorClass).show();
+        jQuery("#ruleeditor .notice." + errorClass).show();
       });
       noticesVisible = true;
     }
@@ -204,13 +216,13 @@ var loadRules = function(tabId) {
 
 // This centers the editor on a rule selected in the quickjump menu
 var quickJumpToRule = function() {
-  var selected = $(this).find("option:selected");
+  var selected = jQuery(this).find("option:selected");
   var tabId = selected.val().split("-")[0];
   var name = selected.text();
 
   // If the target tab is not the active one, click to trigger
   if(currentTabId().toString() !== tabId) {
-    $("#ruleeditor .tab[data-tab-id=" + tabId + "]").trigger("click");
+    jQuery("#ruleeditor .tab[data-tab-id=" + tabId + "]").trigger("click");
   }
 
   var found = editor.editor().find(name, { backwards: false, skipCurrent: false }, false);
@@ -229,7 +241,7 @@ setTimeout(editor.redraw, 250);
 window.Tutorial.startOnOpen();
 
 // Button handling for "save" and "load"
-$(".editor .menu").on("click", "button.save", function() {
+jQuery(".editor .menu").on("click", "button.save", function() {
   saveRules(currentTabId());
 }).on("click", "button.reload", function() {
   loadRules(currentTabId());
@@ -239,24 +251,24 @@ $(".editor .menu").on("click", "button.save", function() {
 });
 
 // Show modal import window
-$(document).on("click", "button.import, .rl-button-import", $("#modalimportrules").show);
+jQuery(document).on("click", "button.import, .rl-button-import", jQuery("#modalimportrules").show);
 
 // Support for the quickjump <select>
-$("#rules-overview").on("change", quickJumpToRule);
+jQuery("#rules-overview").on("change", quickJumpToRule);
 
 // Event handler for notices
-$(".notice.form-fill-errors a.cmd-close-notice").on("click", function() {
+jQuery(".notice.form-fill-errors a.cmd-close-notice").on("click", function() {
   Storage.delete(Utils.keys.errors);
-  $(this).parents(".notice").hide();
+  jQuery(this).parents(".notice").hide();
 });
 
-$(".notice.extracted-present a.cmd-close-notice").on("click", function() {
+jQuery(".notice.extracted-present a.cmd-close-notice").on("click", function() {
   Storage.delete(Utils.keys.extractedRule);
-  $(this).parents(".notice").hide();
+  jQuery(this).parents(".notice").hide();
 });
 
-$(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function() {
-  $(this).parents(".notice").hide();
+jQuery(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function() {
+  jQuery(this).parents(".notice").hide();
 });
 
 // Load all tutorials and insert them in the DOM
