@@ -1,4 +1,5 @@
 import Logger from "../debug/logger";
+import Utils from "./utils";
 import Rules from "./rules";
 import FormFiller from "../content/form_filler";
 
@@ -85,6 +86,7 @@ var Libs = {
         script.className = "injectedByFormOFill";
         script.dataset.script = scriptPath;
         script.src = chrome.extension.getURL(scriptPath);
+        /*eslint-disable no-loop-func*/
         script.onload = function() {
           // Add Library to Libs
           Libs.add(libName, window[Utils.vendoredLibs[scriptPath].onWindowName]);
@@ -99,6 +101,7 @@ var Libs = {
         script.onerror = function() {
           resolve(loadedScriptCount);
         };
+        /*eslint-enebale no-loop-func*/
 
         // Since this is all async make sure nobody has already
         // inserted it while we worked on this script:
@@ -139,7 +142,7 @@ Libs.add("h", valueFunctionHelper);
 var setThrobberText = function(text) {
   // Since this is called from the background pages
   // we need to send a message to the content.js
-  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
+  chrome.tabs.sendMessage(window.lastActiveTab.id, {action: "showOverlay", message: text});
 };
 Libs.add("displayMessage", setThrobberText);
 
@@ -161,9 +164,5 @@ var processFunctionsHalt = function(msg) {
   };
 };
 Libs.add("halt", processFunctionsHalt);
-
-
-// Import all saved libs
-Libs.import();
 
 module.exports = Libs;

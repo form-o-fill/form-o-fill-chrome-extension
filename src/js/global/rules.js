@@ -1,21 +1,11 @@
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
 import Logger from "../debug/logger";
 import JSONF from "../global/jsonf";
-
-// REMOVE START
-/*eslint-disable no-undef, block-scoped-var */
-if(typeof exports === "object") {
-  var Utils = require("./utils.js");
-  var Storage = require("./storage.js");
-  var Rule = require("./rule.js");
-  /*eslint-disable camelcase*/
-  var js_beautify = function(code) {
-    return code;
-  };
-  /*eslint-enable camelcase*/
-}
-/*eslint-enable no-undef, block-scoped-var */
-// REMOVE END
+import Libs from "../global/libs";
+import Utils from "../global/utils";
+import Rule from "../global/rule";
+import Storage from "../global/storage";
+import jsBeautify from "jsBeautifier";
 
 /* Multiple Rules */
 var Rules = {
@@ -127,7 +117,7 @@ var Rules = {
   },
   format: function(rulesCodeString) {
     // Prettify code a little
-    var prettyCode = js_beautify(rulesCodeString, {
+    var prettyCode = jsBeautify(rulesCodeString, {
       "indent_size": 2,
       "indent_char": " ",
       "preserve_newlines": false,

@@ -2,6 +2,7 @@
 import Logger from "../debug/logger";
 import Utils from "../global/utils";
 import JSONF from "../global/jsonf";
+import Storage from "../global/storage";
 import jQuery from "jquery";
 
 var Workflows = {

@@ -6,96 +6,132 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _overlay = __webpack_require__(/*! ./overlay */ 17);
-
+	
 	var _overlay2 = _interopRequireDefault(_overlay);
-
+	
 	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-
+	
 	var _logger2 = _interopRequireDefault(_logger);
-
+	
 	var _jquery = __webpack_require__(/*! jquery */ 8);
-
+	
 	var _jquery2 = _interopRequireDefault(_jquery);
-
+	
 	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
-
+	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
-
+	
 	var _form_filler = __webpack_require__(/*! ./form_filler */ 14);
-
+	
 	var _form_filler2 = _interopRequireDefault(_form_filler);
-
+	
 	var _libs = __webpack_require__(/*! ../global/libs */ 13);
-
+	
 	var _libs2 = _interopRequireDefault(_libs);
-
+	
 	var _context_menu = __webpack_require__(/*! ./context_menu */ 18);
-
+	
 	var _context_menu2 = _interopRequireDefault(_context_menu);
-
+	
 	var _context = __webpack_require__(/*! ./context */ 21);
-
+	
 	var _context2 = _interopRequireDefault(_context);
-
+	
 	var _testing = __webpack_require__(/*! ./testing */ 22);
-
+	
 	var _testing2 = _interopRequireDefault(_testing);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	_overlay2.default.init(); /*eslint complexity:0 */
-
+	
 	_context_menu2.default.init();
 	_testing2.default.init();
-
+	
 	// These need to be GLOBAL for function resolution to work
 	window.context = _context2.default;
 	window.Libs = _libs2.default;
-
+	_libs2.default.import();
+	
+	// This listens for messages coming from the background page
+	// This is a long running communication channel
 	chrome.runtime.onConnect.addListener(function (port) {
 	  var errors = [];
 	  var currentError = null;
-
+	  var workingOverlayId = "form-o-fill-working-overlay";
+	
+	  var workingTimeout = null;
+	  var takingLongTimeout = null;
+	  var wontFinishTimeout = null;
+	  var displayTimeout = null;
+	
 	  _logger2.default.info("[content.js] Got a connection from " + port.name);
-
+	
 	  if (port.name !== "FormOFill") {
 	    return;
 	  }
-
+	
+	  var overlayHtml = function overlayHtml(text, isVisible) {
+	    if (typeof text === "undefined") {
+	      text = "Form-O-Fill is working, please wait!";
+	    }
+	
+	    if (typeof isVisible === "undefined") {
+	      isVisible = false;
+	    }
+	    return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
+	  };
+	
+	  // Hide overlay and cancel all timers
+	  var hideOverlay = function hideOverlay() {
+	    (0, _jquery2.default)("#" + workingOverlayId).remove();
+	    clearTimeout(workingTimeout);
+	    clearTimeout(takingLongTimeout);
+	    clearTimeout(wontFinishTimeout);
+	    clearTimeout(displayTimeout);
+	  };
+	
+	  // Shows and hides a customized overlay throbber
+	  var showOverlay = function showOverlay(message) {
+	    hideOverlay();
+	    (0, _jquery2.default)("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message, true));
+	    displayTimeout = setTimeout(hideOverlay, 3000);
+	  };
+	
 	  port.onMessage.addListener(function (message) {
 	    _logger2.default.info("[content.js] Got message via port.onMessage : " + _jsonf2.default.stringify(message) + " from bg.js");
-
+	
 	    // Request to fill one field with a value
 	    if (message.action === "fillField" && message.selector && message.value) {
 	      _logger2.default.info("[content.js] Filling " + message.selector + " with value " + _jsonf2.default.stringify(message.value) + "; flags : " + _jsonf2.default.stringify(message.flags));
-
+	
 	      // REMOVE START
 	      if (message.beforeData && message.beforeData !== null) {
 	        _logger2.default.info("[content.js] Also got beforeData = " + _jsonf2.default.stringify(message.beforeData));
 	      }
 	      // REMOVE END
-
+	
 	      currentError = _form_filler2.default.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
-
+	
 	      // Remember the error
 	      if (typeof currentError !== "undefined" && currentError !== null) {
 	        _logger2.default.info("[content.js] Got error " + _jsonf2.default.stringify(currentError));
 	        errors.push(currentError);
 	      }
-
+	
 	      // Send a message that we are done filling the form
 	      if (message.meta.lastField) {
 	        _logger2.default.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
-
+	
 	        chrome.runtime.sendMessage({
 	          "action": "fillFieldFinished",
 	          "errors": _jsonf2.default.stringify(errors)
 	        });
 	      }
 	    }
-
+	
 	    // request to return all accumulated errors
 	    if (message.action === "getErrors") {
 	      _logger2.default.info("[content.js] Returning " + errors.length + " errors to bg.js");
@@ -105,34 +141,69 @@ webpackJsonp([1],[
 	      };
 	      port.postMessage(response);
 	    }
-
+	
+	    // Show Working overlay
+	    // This should only be triggered for the default "WORKING"
+	    // overlay.
+	    // For the customized Lib.halt() message see down below
+	    if (message.action === "showOverlay" && typeof message.message === "undefined") {
+	      _logger2.default.info("[content.js] Showing working overlay");
+	      if (document.querySelectorAll("#" + workingOverlayId).length === 0) {
+	        (0, _jquery2.default)("body").append(overlayHtml());
+	      }
+	
+	      // Show working overlay after some time
+	      workingTimeout = setTimeout(function () {
+	        (0, _jquery2.default)("#" + workingOverlayId).show();
+	      }, 350);
+	
+	      // Show another overlay when things take REALLY long to finish
+	      takingLongTimeout = setTimeout(function () {
+	        (0, _jquery2.default)("#" + workingOverlayId).html("This is really taking too long.");
+	      }, 5000);
+	
+	      // Finally if everything fails, clear overlay after 12 seconds
+	      wontFinishTimeout = setTimeout(hideOverlay, 12000);
+	    }
+	
+	    // Hide the overlay
+	    if (message.action === "hideWorkingOverlay") {
+	      _logger2.default.info("[content.js] Hiding working overlay");
+	      hideOverlay();
+	    }
+	
+	    // Show a custom message
+	    if (message.action === "showMessage") {
+	      showOverlay(message.message);
+	    }
+	
 	    // reload the libraries
 	    if (message.action === "reloadLibs") {
 	      _libs2.default.import();
 	    }
-
+	
 	    // execute setupContent function
 	    if (message.action === "setupContent" && message.value) {
 	      _logger2.default.info("[content.js] Executing setupContent function", message.value);
-
+	
 	      // Parse and execute function
 	      var error = null;
-
+	
 	      try {
 	        _jsonf2.default.parse(message.value)();
 	      } catch (e) {
 	        _logger2.default.error("[content.js] error while executing setupContent function");
 	        error = e.message;
 	      }
-
+	
 	      port.postMessage({ action: "setupContentDone", value: _jsonf2.default.stringify(error) });
 	    }
-
+	
 	    // execute teardownContent function
 	    // It has jQuery available and the context object from value functions and setupContent
 	    if (message.action === "teardownContent" && message.value) {
 	      _logger2.default.info("[content.js] Executing teardownContent function", message.value);
-
+	
 	      try {
 	        _jsonf2.default.parse(message.value)();
 	      } catch (e) {
@@ -140,11 +211,11 @@ webpackJsonp([1],[
 	      }
 	    }
 	  });
-
+	
 	  // Simple one-shot callbacks
 	  chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
 	    _logger2.default.info("[content.js] Got message via runtime.onMessage : " + _jsonf2.default.stringify(message) + " from bg.j");
-
+	
 	    // This is the content grabber available as context.findHtml() in before functions
 	    if (message.action === "grabContentBySelector") {
 	      _logger2.default.info("[content.js] Grabber asked for '" + message.message + "'");
@@ -161,14 +232,22 @@ webpackJsonp([1],[
 	        }));
 	      }
 	    }
-
+	
+	    // Show a custom message
+	    // This appears twice in c/content.js because it uses a port and a one-shot
+	    // listener
+	    if (message.action === "showOverlay" && typeof message.message !== "undefined") {
+	      showOverlay(message.message);
+	      responseCb();
+	    }
+	
 	    // Save a variable set in background via storage.set in the context of the content script
 	    // This makes the storage usable in value functions
 	    if (message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
 	      _logger2.default.info("[content.js] Saving " + message.key + " = " + message.value);
 	      window.sessionStorage.setItem(message.key, message.value);
 	    }
-
+	
 	    // Must return true to signal chrome that we do some work
 	    // asynchronously (see https://developer.chrome.com/extensions/runtime#event-onMessage)
 	    return true;
@@ -199,34 +278,34 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _jquery = __webpack_require__(/*! jquery */ 8);
-
+	
 	var _jquery2 = _interopRequireDefault(_jquery);
-
+	
 	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-
+	
 	var _logger2 = _interopRequireDefault(_logger);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	var workingOverlayId = "form-o-fill-working-overlay";
 	var workingTimeout = null;
 	var takingLongTimeout = null;
 	var wontFinishTimeout = null;
 	var displayTimeout = null;
-
+	
 	var overlayHtml = function overlayHtml(text, isVisible) {
 	  if (typeof text === "undefined") {
 	    text = "Form-O-Fill is working, please wait!";
 	  }
-
+	
 	  if (typeof isVisible === "undefined") {
 	    isVisible = false;
 	  }
 	  return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
 	};
-
+	
 	// Hide overlay and cancel all timers
 	var hideOverlay = function hideOverlay() {
 	  (0, _jquery2.default)("#" + workingOverlayId).remove();
@@ -235,14 +314,14 @@ webpackJsonp([1],[
 	  clearTimeout(wontFinishTimeout);
 	  clearTimeout(displayTimeout);
 	};
-
+	
 	// Shows and hides a customized overlay throbber
 	var showOverlay = function showOverlay(message) {
 	  hideOverlay();
 	  (0, _jquery2.default)("body").find("#" + workingOverlayId).remove().end().append(overlayHtml(message, true));
 	  displayTimeout = setTimeout(hideOverlay, 1500);
 	};
-
+	
 	// This listens for messages coming from the background page
 	// This is a long running communication channel
 	var portListener = function portListener() {
@@ -257,27 +336,27 @@ webpackJsonp([1],[
 	        if (document.querySelectorAll("#" + workingOverlayId).length === 0) {
 	          (0, _jquery2.default)("body").append(overlayHtml());
 	        }
-
+	
 	        // Show working overlay after some time
 	        workingTimeout = setTimeout(function () {
 	          (0, _jquery2.default)("#" + workingOverlayId).show();
 	        }, 350);
-
+	
 	        // Show another overlay when things take REALLY long to finish
 	        takingLongTimeout = setTimeout(function () {
 	          (0, _jquery2.default)("#" + workingOverlayId).html("This is really taking too long.");
 	        }, 5000);
-
+	
 	        // Finally if everything fails, clear overlay after 12 seconds
 	        wontFinishTimeout = setTimeout(hideOverlay, 12000);
 	      }
-
+	
 	      // Hide the overlay
 	      if (message.action === "hideWorkingOverlay") {
 	        _logger2.default.info("[content.js] Hiding working overlay");
 	        hideOverlay();
 	      }
-
+	
 	      // Show a custom message
 	      if (message.action === "showMessage") {
 	        showOverlay(message.message);
@@ -285,7 +364,7 @@ webpackJsonp([1],[
 	    });
 	  });
 	};
-
+	
 	var runtimeListener = function runtimeListener() {
 	  chrome.runtime.onMessage.addListener(function (message, sender, responseCb) {
 	    // Show a custom message
@@ -297,14 +376,14 @@ webpackJsonp([1],[
 	    }
 	  });
 	};
-
+	
 	var Overlay = {
 	  init: function init() {
 	    runtimeListener();
 	    portListener();
 	  }
 	};
-
+	
 	module.exports = Overlay;
 
 /***/ },
@@ -315,15 +394,15 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 19);
-
+	
 	var Extractor = _interopRequireWildcard(_extract_instrumentation);
-
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
+	
 	var lastRightClickedElement = null;
-
+	
 	var ContextMenu = {
 	  init: function init() {
 	    document.addEventListener("mousedown", function (event) {
@@ -332,7 +411,7 @@ webpackJsonp([1],[
 	        lastRightClickedElement = event.target;
 	      }
 	    }, true);
-
+	
 	    // When we receive the message to extract a form
 	    // from bg.js we can just extract the form from the last saved element
 	    chrome.extension.onMessage.addListener(function (message) {
@@ -342,7 +421,7 @@ webpackJsonp([1],[
 	    });
 	  }
 	};
-
+	
 	module.exports = ContextMenu;
 
 /***/ },
@@ -353,50 +432,50 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _jquery = __webpack_require__(/*! jquery */ 8);
-
+	
 	var _jquery2 = _interopRequireDefault(_jquery);
-
+	
 	var _form_extractor = __webpack_require__(/*! ./form_extractor */ 20);
-
+	
 	var _form_extractor2 = _interopRequireDefault(_form_extractor);
-
+	
 	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-
+	
 	var _logger2 = _interopRequireDefault(_logger);
-
+	
 	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
-
+	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
-
+	
 	var _utils = __webpack_require__(/*! ../global/utils */ 5);
-
+	
 	var _utils2 = _interopRequireDefault(_utils);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	// Create HTML overlays for form masking
 	var getOverlays = function getOverlays() {
 	  var overlays = [];
 	  (0, _jquery2.default)("form").each(function formEach(index) {
 	    var $form = (0, _jquery2.default)(this);
-
+	
 	    // Add an index so we can find the form later
 	    $form.attr("data-form-o-fill-id", index);
-
+	
 	    // Dimensions
 	    var offset = $form.offset();
 	    var height = $form.height();
 	    var width = $form.width();
-
+	
 	    // HTML
 	    var overlay = "<div data-form-o-fill-id='" + index + "' class='form-o-fill-overlay-form' style='top:" + offset.top + "px; left:" + offset.left + "px; width:" + width + "px; height:" + height + "px;'><div class='form-o-fill-overlay-text'>Form-O-Fill:<br />Click in the colored area to extract this form</div></div>";
 	    overlays.push(overlay);
 	  });
 	  return overlays.join();
 	};
-
+	
 	var cleanupOverlays = function cleanupOverlays() {
 	  // cleanup
 	  (0, _jquery2.default)("form").each(function formEach() {
@@ -405,31 +484,31 @@ webpackJsonp([1],[
 	  (0, _jquery2.default)(".form-o-fill-overlay-form").remove();
 	  (0, _jquery2.default)(document).off("click", ".form-o-fill-overlay-form").off("click", "body");
 	};
-
+	
 	var extractRules = function extractRules(targetForm) {
 	  // looks good, start extraction
 	  var ruleCode = _form_extractor2.default.extract(targetForm);
 	  _logger2.default.info("[extract_instr.js] Extracted: " + JSON.stringify(ruleCode));
-
+	
 	  // Save Rule and goto options.html
 	  Storage.save(ruleCode, _utils2.default.keys.extractedRule);
-
+	
 	  chrome.runtime.sendMessage({ "action": "extractFinishedNotification" });
 	};
-
+	
 	// Show the extract overlay and bind handlers
 	var showExtractOverlay = function showExtractOverlay() {
 	  // Add event listener to DOM
 	  (0, _jquery2.default)(document).on("click", ".form-o-fill-overlay-form", function clickFofOverlay(e) {
 	    e.preventDefault();
 	    e.stopPropagation();
-
+	
 	    // This is the form we must extract
 	    var targetForm = document.querySelector("form[data-form-o-fill-id='" + this.dataset.formOFillId + "']");
-
+	
 	    // remove overlays etc
 	    cleanupOverlays();
-
+	
 	    if (targetForm) {
 	      extractRules(targetForm);
 	    }
@@ -438,18 +517,18 @@ webpackJsonp([1],[
 	      cleanupOverlays();
 	    }
 	  });
-
+	
 	  // Attach overlays to DOM
 	  (0, _jquery2.default)("body").append(getOverlays());
 	};
-
+	
 	// This is a one-off message listener
 	chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, sender, responseCallback) {
 	  // Request to start extracting a form to rules
 	  if (message && message.action === "showExtractOverlay") {
 	    showExtractOverlay();
 	  }
-
+	
 	  // Request to match rules against content
 	  // Done here to not send the whole HTML to bg.js
 	  if (message && message.action === "matchContent" && message.rules) {
@@ -465,7 +544,7 @@ webpackJsonp([1],[
 	    responseCallback(_jsonf2.default.stringify(matches));
 	  }
 	});
-
+	
 	module.exports = {
 	  extractRules: extractRules,
 	  showExtractOverlay: showExtractOverlay
@@ -479,21 +558,21 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-
+	
 	var _logger2 = _interopRequireDefault(_logger);
-
+	
 	var _jquery = __webpack_require__(/*! jquery */ 8);
-
+	
 	var _jquery2 = _interopRequireDefault(_jquery);
-
+	
 	var _rule = __webpack_require__(/*! ../global/rule */ 7);
-
+	
 	var _rule2 = _interopRequireDefault(_rule);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	var FormExtractor = {
 	  _knownElements: null,
 	  knownElements: function knownElements() {
@@ -516,7 +595,7 @@ webpackJsonp([1],[
 	      "name": "A rule for " + document.location.href,
 	      "fields": []
 	    };
-
+	
 	    this.knownElements().forEach(function (selector) {
 	      _logger2.default.info("[form_extractor.js] Looking for '" + selector + "'");
 	      $form.find(selector).each(function () {
@@ -532,7 +611,7 @@ webpackJsonp([1],[
 	        }
 	      });
 	    });
-
+	
 	    return _rule2.default.create(ruleData).prettyPrint();
 	  },
 	  _selectorFor: function _selectorFor(domNode) {
@@ -584,14 +663,14 @@ webpackJsonp([1],[
 	    var i = 0;
 	    var optionNode = null;
 	    var selected = [];
-
+	
 	    for (i = 0; i < domNode.children.length; i++) {
 	      optionNode = domNode.children[i];
 	      if (optionNode.selected) {
 	        selected.push(optionNode.value);
 	      }
 	    }
-
+	
 	    return selected;
 	  },
 	  _method: function _method(prefix, domNode) {
@@ -609,7 +688,7 @@ webpackJsonp([1],[
 	    });
 	  }
 	}; /* eslint no-unused-vars: 0 */
-
+	
 	module.exports = FormExtractor;
 
 /***/ },
@@ -620,13 +699,13 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _jsonf = __webpack_require__(/*! ../global/jsonf */ 4);
-
+	
 	var _jsonf2 = _interopRequireDefault(_jsonf);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	// This is not the same context as in background.js
 	// Currently it only allows to read storage values set by bg.js but
 	// you can set value for all value functions to access
@@ -645,7 +724,7 @@ webpackJsonp([1],[
 	    }
 	  }
 	}; /*eslint no-unused-vars: 0 */
-
+	
 	module.exports = context;
 
 /***/ },
@@ -656,32 +735,32 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-
+	
 	var _logger = __webpack_require__(/*! ../debug/logger */ 2);
-
+	
 	var _logger2 = _interopRequireDefault(_logger);
-
+	
 	var _jquery = __webpack_require__(/*! jquery */ 8);
-
+	
 	var _jquery2 = _interopRequireDefault(_jquery);
-
+	
 	var _utils = __webpack_require__(/*! ../global/utils */ 5);
-
+	
 	var _utils2 = _interopRequireDefault(_utils);
-
+	
 	var _extract_instrumentation = __webpack_require__(/*! ./extract_instrumentation */ 19);
-
+	
 	var _extract_instrumentation2 = _interopRequireDefault(_extract_instrumentation);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	// This file is for end to end testing only
 	// It is delivered with the production code but disabled
-
+	
 	var installTestingCode = function installTestingCode() {
-
+	
 	  var shouldLog = !(0, _jquery2.default)("body").hasClass("test-no-log");
-
+	
 	  var Testing = {
 	    setTestingVar: function setTestingVar(key, value, text) {
 	      var $info = (0, _jquery2.default)("#form-o-fill-testing-info");
@@ -699,7 +778,7 @@ webpackJsonp([1],[
 	      }
 	    }
 	  };
-
+	
 	  // Tell the background page that we are in testing mode
 	  chrome.runtime.sendMessage({ action: "setTestingMode", value: true }, function (bgInfo) {
 	    // The background page returns a lot of metadata about the extension
@@ -716,7 +795,7 @@ webpackJsonp([1],[
 	    Testing.setTestingVar("lib-count", bgInfo.libCount, "Number of library functions");
 	    Testing.setTestingVar("log", "<ul></ul>", "Log");
 	  });
-
+	
 	  // Listen to messages from background.js
 	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	    // Set a variable in the DOM based on what is sent from bg.js
@@ -724,13 +803,13 @@ webpackJsonp([1],[
 	      Testing.setTestingVar(message.key, message.value, message.text);
 	      sendResponse(true);
 	    }
-
+	
 	    if (message.action === "appendTestLog" && typeof message.value !== "undefined") {
 	      Testing.appendTestLog(message.value);
 	      sendResponse(true);
 	    }
 	  });
-
+	
 	  //
 	  // Bind some handlers to make working with the testcases
 	  // easier
@@ -780,13 +859,13 @@ webpackJsonp([1],[
 	    // Click on rematch button should activate rematch mode
 	    chrome.extension.sendMessage({ action: "testToggleRematch" });
 	  });
-
+	
 	  // Make the Testn object available in dev
 	  if (!_utils2.default.isLiveExtension()) {
 	    window.Testing = Testing;
 	  }
 	};
-
+	
 	var Testing = {
 	  init: function init() {
 	    // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
@@ -796,8 +875,9 @@ webpackJsonp([1],[
 	    }
 	  }
 	};
-
+	
 	module.exports = Testing;
 
 /***/ }
 ]);
+//# sourceMappingURL=content.map

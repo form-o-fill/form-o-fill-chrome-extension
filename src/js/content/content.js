@@ -16,6 +16,7 @@ Testing.init();
 // These need to be GLOBAL for function resolution to work
 window.context = context;
 window.Libs = Libs;
+Libs.import();
 
 // This listens for messages coming from the background page
 // This is a long running communication channel

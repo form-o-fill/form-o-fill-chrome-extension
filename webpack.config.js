@@ -15,8 +15,10 @@ module.exports = {
   output: {
     path: "src/js",
     filename: "[name].js",
-    pathinfo: true
+    pathinfo: true,
+    sourceMapFilename: "[name].map"
   },
+  devtool: "#source-map",
   module: {
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: "babel?presets[]=es2015&cacheDirectory" }

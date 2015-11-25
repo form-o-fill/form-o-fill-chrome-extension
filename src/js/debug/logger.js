@@ -1,4 +1,5 @@
-/*global Utils Testing */
+import * as Utils from "../global/utils";
+
 /* eslint no-unused-vars: 0 */
 var Logger = {
   out: function (level, msg, obj) {

@@ -8,6 +8,7 @@ import Utils from "../global/utils";
 import Logger from "../debug/logger";
 import Libs from "../global/libs";
 import ContextMenu from "./context_menu";
+import Storage from "../global/storage";
 
 ContextMenu.init();
 
