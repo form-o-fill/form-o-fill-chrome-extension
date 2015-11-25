@@ -91,19 +91,24 @@ var onTabReadyRules = function(tabId) {
       // rules based on the regex and the pages content
       var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
       chrome.tabs.sendMessage(tabId, message, function (matchingContentRulesIds) {
-        var matchingContentRules;
+        var matchingContentRules = [];
 
         // If we found rules that match by content ...
         if(typeof matchingContentRulesIds !== "undefined") {
+          //TODO: since matchingContentRulesIds is a string we should JSPNF.parse it
+          // this mystically fails :( don't know why yet. (FS, 2015-11-16)
+          // matchingContentRulesIds = JSONF.parse(matchingContentRulesIds)
+          // after fixing remove rules.unique!
           // ... select rules that match those ids
-          matchingContentRules = rules.filter(function (rule) {
-            return matchingContentRulesIds.indexOf(rule.id) > -1;
-          });
+          matchingContentRulesIds = JSONF.parse(matchingContentRulesIds);
+          if(typeof matchingContentRulesIds !== "undefined" && matchingContentRulesIds.length > 0) {
+            matchingContentRules = rules.filter(function (rule) {
+              return matchingContentRulesIds.indexOf(rule.id) > -1;
+            });
 
-          // Add the rules to the rule that matches by url
-          lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
-        } else {
-          matchingContentRules = [];
+            // Add the rules to the rule that matches by url
+            lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
+          }
         }
         Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
 
@@ -112,7 +117,7 @@ var onTabReadyRules = function(tabId) {
           Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
 
           // Concatenate matched rules by CONTENT and URL
-          lastMatchingRules = lastMatchingRules.concat(matchingRules);
+          lastMatchingRules = Rules.unique(lastMatchingRules.concat(matchingRules));
 
           // Save rules to localStorage for popup to load
           Rules.lastMatchingRules(lastMatchingRules);

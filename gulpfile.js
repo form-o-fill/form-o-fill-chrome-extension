@@ -54,6 +54,7 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 //     These contain the optimized files for the final build
 // 10. Replace ##VERSION## with the correct version string from the manifest
 // 11. Replaces the local reference URL to the tutorial site with the live one
+// 12. In dev mode the extension should persist and should not be unloaded
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
@@ -104,6 +105,10 @@ var replaceOpts = {
     {
       match: /href="http:\/\/localhost:4000\//g,
       replacement: "href=\"http://form-o-fill.github.io/"
+    },
+    {
+      match: /"persistent": true/,
+      replacement: "\"persistent\": false"
     }
 
   ]
@@ -133,7 +138,7 @@ gulp.task('announce', function() {
 // Cleans build and dist dirs
 //
 gulp.task('clean', ["announce"], function() {
-  return gulp.src(['build/**'], {read: false})
+  return gulp.src(['build/**', 'build/*'], {read: false})
   .pipe(rm({async: false}));
 });
 
@@ -141,7 +146,7 @@ gulp.task('clean', ["announce"], function() {
 // ESLINT the javascript (BEFORE uglifier ran over them)
 //
 gulp.task('lint', function () {
-  return gulp.src(['src/js/**/*.js'])
+  return gulp.src(['src/js/**/*.js', '!src/js/background.js', '!src/js/content.js'])
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failOnError());
@@ -179,7 +184,7 @@ gulp.task('globalJs', ['clean'], function () {
     "src/js/global/rules.js",
     "src/js/global/i18n.js",
     "src/js/global/libs.js",
-    "src/js/global/workflow.js"
+    "src/js/global/workflows.js"
   ])
   .pipe(replace(replaceOpts))
   .pipe(concat('global.js'))

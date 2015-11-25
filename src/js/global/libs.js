@@ -26,6 +26,99 @@ var Libs = {
         });
       }).then(resolve("libraries imported"));
     });
+  },
+  // Dectects libraries used in a rulecode string
+  // returns an array of found libraries
+  detectLibraries: function(ruleCodeString) {
+    var detectedLibs = [];
+    Object.keys(Utils.vendoredLibs).forEach(function dtctLib(vLibKey) {
+      if(ruleCodeString.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
+        // Found!
+        detectedLibs.push(vLibKey);
+      }
+    });
+    return detectedLibs;
+  },
+  loadLibs: function(scriptPaths, whoCallsMe) {
+    /*eslint-disable complexity */
+    return new Promise(function (resolve) {
+      if(typeof scriptPaths === "string") {
+        scriptPaths = [scriptPaths];
+      }
+
+      // If there is no script to inject
+      // OR we run in the context of the content page
+      // resolve now
+      // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
+      if(scriptPaths.length === 0 || typeof chrome.extension === "undefined" ||  typeof chrome.extension.getBackgroundPage === "undefined") {
+        resolve(0);
+        return;
+      }
+
+      var anchor = document.querySelector("body");
+      var fragment = document.createDocumentFragment();
+
+      var loadedScriptCount = 0;
+      var targetScriptCount = scriptPaths.length;
+      var scriptPath;
+
+      for(var i = 0; i < targetScriptCount; i++) {
+        scriptPath = scriptPaths[i];
+
+        // If the requested lbrary is not vendored, break loop
+        if(typeof Utils.vendoredLibs[scriptPath] === "undefined") {
+          continue;
+        }
+
+        var libName = Utils.vendoredLibs[scriptPath].name;
+
+        // If a lib with that name is already present, don't load it again
+        if(typeof Libs[libName] !== "undefined") {
+          loadedScriptCount++;
+          Logger.info("[libs.js] Didn't load '" + scriptPath + "' again");
+          continue;
+        }
+
+        var script = document.createElement("script");
+        script.async = false;
+        script.dataset.who = whoCallsMe;
+        script.className = "injectedByFormOFill";
+        script.dataset.script = scriptPath;
+        script.src = chrome.extension.getURL(scriptPath);
+        script.onload = function() {
+          // Add Library to Libs
+          Libs.add(libName, window[Utils.vendoredLibs[scriptPath].onWindowName]);
+          loadedScriptCount++;
+          Logger.info("[libs.js] Loaded '" + scriptPath + "'");
+
+          // If all script are loaded, resolve promise
+          if (loadedScriptCount >= targetScriptCount) {
+            resolve(loadedScriptCount);
+          }
+        };
+        script.onerror = function() {
+          resolve(loadedScriptCount);
+        };
+
+        // Since this is all async make sure nobody has already
+        // inserted it while we worked on this script:
+        if(document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
+          fragment.appendChild(script);
+        }
+      }
+
+      // If the loop is ready and the count already matches,
+      // there was nothing to to and that's ok
+      if (loadedScriptCount >= targetScriptCount) {
+        resolve(loadedScriptCount);
+      }
+
+      // Only insert the fragment if it has something inside
+      if(fragment.childNodes.length > 0) {
+        anchor.appendChild(fragment);
+      }
+    });
+    /*eslint-enable complexity */
   }
 };
 
@@ -42,6 +135,14 @@ var valueFunctionHelper = {
 };
 Libs.add("h", valueFunctionHelper);
 
+// Change the text of the throbber
+var setThrobberText = function(text) {
+  // Since this is called from the background pages
+  // we need to send a message to the content.js
+  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
+};
+Libs.add("displayMessage", setThrobberText);
+
 // Process control functions
 // Run in the context of the background page
 // thus lastActiveTab is available
@@ -55,14 +156,12 @@ var processFunctionsHalt = function(msg) {
       msg = "Canceled by call to Libs.halt()";
     }
 
-    // Since this is called from the b/form_utils.js
-    // we need to send a message to the content.js
-    chrome.tabs.sendMessage(window.lastActiveTab.id, {action: "showOverlay", message: msg});
-
+    setThrobberText(msg);
     return null;
   };
 };
 Libs.add("halt", processFunctionsHalt);
+
 
 // Import all saved libs
 Libs.import();

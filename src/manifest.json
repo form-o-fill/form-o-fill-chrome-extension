@@ -56,15 +56,11 @@
   "background": {
     "scriptsBuild": [
       "vendor/jquery/jquery-2.1.4.min.js", 
-      "vendor/chance.js/chance.js" ,
-      "vendor/moment.js/moment-with-locales.min.js",
       "js/global.js",
       "js/background.js"
     ],
     "scripts": [
       "vendor/jquery/jquery-2.1.4.min.js", 
-      "vendor/chance.js/chance.js" ,
-      "vendor/moment.js/moment-with-locales.min.js",
       "js/debug/logger.js", 
       "js/global/jsonf.js", 
       "js/global/utils.js", 
@@ -82,6 +78,6 @@
       "js/background/testing.js",
       "js/background/tutorial.js"
     ],
-    "persistent": false
+    "persistent": true
   }
 }

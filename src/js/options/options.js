@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF Libs */
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -148,33 +148,37 @@ var updateTabStats = function() {
 
 // Save the rules
 var saveRules = function(tabId) {
-  var errors = Rules.syntaxCheck(editor);
-  if(errors.length > 0) {
-    errors.forEach(function (errorClass) {
-      if(typeof errorClass === "object") {
-        var extraLis = errorClass.extra.map(function (extra) {
-          return "<li>" + extra + "</li>";
-        });
-        $("#ruleeditor .notice." + errorClass.id + " ul").html(extraLis);
-        errorClass = errorClass.id;
-      }
-      $("#ruleeditor .notice." + errorClass).show();
-    });
-    noticesVisible = true;
-  }
+  // Detect used libs and inject them into options
+  var libs = Libs.detectLibraries(editor.getValue());
+  Libs.loadLibs(libs, "saveRules").then(function() {
+    var errors = Rules.syntaxCheck(editor);
+    if(errors.length > 0) {
+      errors.forEach(function (errorClass) {
+        if(typeof errorClass === "object") {
+          var extraLis = errorClass.extra.map(function (extra) {
+            return "<li>" + extra + "</li>";
+          });
+          $("#ruleeditor .notice." + errorClass.id + " ul").html(extraLis);
+          errorClass = errorClass.id;
+        }
+        $("#ruleeditor .notice." + errorClass).show();
+      });
+      noticesVisible = true;
+    }
 
-  if(editor.cleanUp()) {
-    Rules.save(editor.getValue(), tabId).then(function () {
-      Utils.infoMsg("Rules saved");
-      updateTabStats();
-      // If the editor contained something that looks like a library function
-      // reimport the libs in the background page
-      // because they COULD have been changed
-      if(editor.getValue().indexOf("export") > -1) {
-        chrome.runtime.sendMessage({action: "reloadLibs"});
-      }
-    });
-  }
+    if(editor.cleanUp()) {
+      Rules.save(editor.getValue(), tabId).then(function () {
+        Utils.infoMsg("Rules saved");
+        updateTabStats();
+        // If the editor contained something that looks like a library function
+        // reimport the libs in the background page
+        // because they COULD have been changed
+        if(editor.getValue().indexOf("export") > -1) {
+          chrome.runtime.sendMessage({action: "reloadLibs"});
+        }
+      });
+    }
+  });
 };
 
 // Load the rules
@@ -186,9 +190,15 @@ var loadRules = function(tabId) {
     } else {
       ruleJson = ruleData.code;
     }
-    editor.setValue(ruleJson, -1);
-    editor.editor().clearSelection();
-    Utils.infoMsg("Rules loaded from disc");
+
+    // Detect used libs and inject them into options
+    var libs = Libs.detectLibraries(ruleJson);
+    Libs.loadLibs(libs, "loadRules").then(function() {
+      editor.setValue(ruleJson, -1);
+      editor.editor().clearSelection();
+      Utils.infoMsg("Rules loaded from disc");
+      updateTabStats();
+    });
   });
 };
 
@@ -209,7 +219,6 @@ var quickJumpToRule = function() {
 
 // Load data from tab and prefill editor
 loadRules(currentTabId());
-updateTabStats();
 
 // Try to make ACE behave :)
 editor.resize();
