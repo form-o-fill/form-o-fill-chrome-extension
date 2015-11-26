@@ -2,6 +2,8 @@
 var webpack = require('webpack');
 
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+var uglify = new webpack.optimize.UglifyJsPlugin();
+var dedupe = new webpack.optimize.DedupePlugin();
 
 module.exports = {
   context: __dirname + "/src/js",
@@ -24,7 +26,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ["", ".js", ".json"],
+    extensions: [".js", ".json"],
     alias: {
       jquery: __dirname + "/src/vendor/jquery/jquery-2.1.4.min.js",
       jsBeautifier: __dirname + "/src/vendor/js-beautifier/beautify.js",
@@ -35,5 +37,5 @@ module.exports = {
       introJs: __dirname + "/src/vendor/intro.js/intro.min.js"
     }
   },
-  plugins: [commonsPlugin]
+  plugins: [commonsPlugin, uglify, dedupe]
 };
