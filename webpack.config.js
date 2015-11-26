@@ -9,7 +9,7 @@ module.exports = {
   context: __dirname + "/src/js",
   entry: {
     //popup:      "./popup/popup",
-    options:    "./options/options",
+    //options:    "./options/options",
     background: "./background/background",
     content:    "./content/content"
   },
@@ -22,11 +22,22 @@ module.exports = {
   devtool: "#source-map",
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel?presets[]=es2015&cacheDirectory" }
+      {
+        test: /\.js$/,
+        include: /src\/js\/.*\/.*.js$/,
+        loader: "babel",
+        query: {
+          presets: ["es2015"],
+          cacheDirectory: true,
+          ignore: [
+            "vendor"
+          ]
+        }
+      }
     ]
   },
   resolve: {
-    extensions: [".js", ".json"],
+    extensions: ["", ".js", ".json"],
     alias: {
       jquery: __dirname + "/src/vendor/jquery/jquery-2.1.4.min.js",
       jsBeautifier: __dirname + "/src/vendor/js-beautifier/beautify.js",
@@ -37,5 +48,5 @@ module.exports = {
       introJs: __dirname + "/src/vendor/intro.js/intro.min.js"
     }
   },
-  plugins: [commonsPlugin, uglify, dedupe]
+  plugins: [commonsPlugin]
 };

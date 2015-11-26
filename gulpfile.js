@@ -20,6 +20,7 @@ var webdriver = require('gulp-webdriver');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
+var webpack = require('webpack');
 
 // this can be used to debug gulp runs
 // .pipe(debug({verbose: true}))
@@ -293,13 +294,6 @@ gulp.task('sass', function () {
 });
 
 //
-// Watch and live compile SASS -> CSS
-//
-gulp.task('sass:watch', function () {
-  gulp.watch('src/sass/**/*.scss', ['sass']);
-});
-
-//
 // Build a distribution
 //
 gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'sass', 'optimizeCss', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
@@ -318,13 +312,22 @@ gulp.task('test', function () {
   });
 });
 
-//
-// Run tests through watching
-//
-gulp.task('test:watch', function () {
-  gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
+gulp.task("webpack", function(done) {
+  webpack(require("./webpack.config.js"), function(err, stats) {
+    if(err) {
+      throw new gulpUtil.PluginError("webpack", err);
+    }
+    gulpUtil.log("[webpack]", stats.toString({colors: true, hash: false, timings: false}));
+    done();
+  });
 });
 
+// Watch for changes
+gulp.task("watch", function() {
+  gulp.watch(['test/**/*.js'], runTests);
+  gulp.watch('src/sass/**/*.scss', ['sass']);
+  gulp.watch(["webpack.config.js", "src/js/*/*.js"], ["webpack"]);
+});
 //
 // Starts a simple webserver hosting the integration test files
 //

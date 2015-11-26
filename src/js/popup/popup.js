@@ -1,4 +1,5 @@
 /*global Utils, Logger, Rules, Workflows, Storage */
+
 var Popup = {
   currentUrl: null,
   init: function() {
