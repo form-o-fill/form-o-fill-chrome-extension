@@ -8,3 +8,4 @@ src/css/*.css
 src/css/*.css.map
 src/js/background.js
 src/js/content.js
+*.map
