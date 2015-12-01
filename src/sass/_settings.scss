@@ -29,7 +29,14 @@
 
   input[type=url] {
     margin-left: 15px;
-    padding: 4px;
+    padding: 6px;
     width: 400px;
+  }
+
+  button.save:before {
+    font-family: "formofill";
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
   }
 }
