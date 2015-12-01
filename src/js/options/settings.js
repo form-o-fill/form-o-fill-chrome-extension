@@ -47,7 +47,8 @@ Settings.prototype.saveSettings = function(overwrites) {
   var currentSettings = {
     alwaysShowPopup: document.querySelector("#settings-always-show-popup").checked,
     jpegQuality: document.querySelector("#settings-screenshot-quality").value,
-    reevalRules: document.querySelector("#settings-reeval-rules").checked
+    reevalRules: document.querySelector("#settings-reeval-rules").checked,
+    importActive: document.querySelector("#settings-activate-import-source-url").checked
   };
 
   // Allow overwriting of atributes
@@ -81,6 +82,7 @@ Settings.prototype.bindHandlers = function() {
 Settings.prototype.applySettings = function(options) {
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
+  document.querySelector("#settings-activate-import-source-url").checked = options.importActive;
   document.querySelector("#settings-screenshot-quality").value = options.jpegQuality;
   document.querySelector(".settings-screenshot-quality-percent").innerHTML = options.jpegQuality;
 };

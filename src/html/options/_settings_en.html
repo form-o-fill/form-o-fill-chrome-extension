@@ -39,6 +39,17 @@
 
     <div class="text">
       <label>
+        <input type="checkbox" name="activate-import-source-url" id="settings-activate-import-source-url">
+        <span>Activate URL import</span>
+        <div class="comment">
+          This will import the rules from the URL given below.
+        </div>
+      </label>
+      <input type="url" name="import-source-url" id="settings-import-source-url" placeholder="http://my.url.com/rules.js" />
+    </div>
+
+    <div class="text">
+      <label>
         <input type="range" name="screenshot-quality" id="settings-screenshot-quality" min="30" max="100" step="10" value="60">
         <span>JPEG image quality (<span class="settings-screenshot-quality-percent">60</span>%)</span>
         <div class="comment">
@@ -46,5 +57,6 @@
         </div>
       </label>
     </div>
+
   </div>
 </div>

@@ -23,7 +23,8 @@ var Utils = {
   defaultSettings: {
     alwaysShowPopup: false,
     jpegQuality: 60,
-    reevalRules: false
+    reevalRules: false,
+    importActive: false
   },
   reevalRulesInterval: 2000,
   reservedLibNamespaces: ["h", "halt"],

@@ -22,4 +22,14 @@
   span {
     color: #666;
   }
+
+  .text, .checkbox {
+    margin-bottom: 10px;
+  }
+
+  input[type=url] {
+    margin-left: 15px;
+    padding: 4px;
+    width: 400px;
+  }
 }
