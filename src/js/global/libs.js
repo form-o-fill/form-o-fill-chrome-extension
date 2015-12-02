@@ -48,7 +48,7 @@ var Libs = {
       // OR we run in the context of the content page
       // resolve now
       // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
-      if(scriptPaths.length === 0 || typeof chrome.extension === "undefined" ||  typeof chrome.extension.getBackgroundPage === "undefined") {
+      if(scriptPaths.length === 0 || !Utils.isBgPage()) {
         resolve(0);
         return;
       }
@@ -63,17 +63,27 @@ var Libs = {
       for(var i = 0; i < targetScriptCount; i++) {
         scriptPath = scriptPaths[i];
 
-        // If the requested lbrary is not vendored, break loop
-        if(typeof Utils.vendoredLibs[scriptPath] === "undefined") {
-          continue;
-        }
-
-        var libName = Utils.vendoredLibs[scriptPath].name;
+        var vLib = Utils.vendoredLibs[scriptPath];
+        var libName = vLib.name;
 
         // If a lib with that name is already present, don't load it again
         if(typeof Libs[libName] !== "undefined") {
           loadedScriptCount++;
           Logger.info("[libs.js] Didn't load '" + scriptPath + "' again");
+          continue;
+        }
+
+        // If the requested lbrary is not vendored, break loop
+        if(typeof vLib === "undefined") {
+          Logger.info("[libs.js] Didn't load '" + scriptPath + "' since it is not vendored (see utils.js)");
+          loadedScriptCount++;
+          continue;
+        }
+
+        // If the library is present on window (somehow) just add it to Libs (again)
+        if(typeof window[vLib.onWindowName] !== "undefined" && typeof Libs[libName] === "undefined") {
+          Libs.add(libName, window[vLib.onWindowName]);
+          loadedScriptCount++;
           continue;
         }
 
@@ -85,7 +95,7 @@ var Libs = {
         script.src = chrome.extension.getURL(scriptPath);
         script.onload = function() {
           // Add Library to Libs
-          Libs.add(libName, window[Utils.vendoredLibs[scriptPath].onWindowName]);
+          Libs.add(libName, window[vLib.onWindowName]);
           loadedScriptCount++;
           Logger.info("[libs.js] Loaded '" + scriptPath + "'");
 
@@ -120,6 +130,18 @@ var Libs = {
   }
 };
 
+// Change the text of the throbber
+var setThrobberText = function(text) {
+  if(lastActiveTab === null) {
+    return null;
+  }
+
+  // Since this is called from the background pages
+  // we need to send a message to the content.js
+  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
+};
+Libs.add("displayMessage", setThrobberText);
+
 // helper for use in value functions
 //
 // "value" : Libs.h.click  => Clicks on the element specified by 'selector'
@@ -129,17 +151,23 @@ var valueFunctionHelper = {
   },
   screenshot: function(saveAs) {
     chrome.runtime.sendMessage({action: "takeScreenshot", value: FormFiller.currentRuleMetadata, flag: saveAs});
+  },
+  copyValue: function(selector) {
+    if(!Utils.isBgPage()) {
+      var $source = document.querySelector(selector);
+      if($source === null) {
+        // element not found
+        setThrobberText("Libs.h.copyValue didn't find source element with selector '" + selector + "'.");
+        return null;
+      }
+
+      // element found
+      return $source.value;
+    }
   }
 };
 Libs.add("h", valueFunctionHelper);
 
-// Change the text of the throbber
-var setThrobberText = function(text) {
-  // Since this is called from the background pages
-  // we need to send a message to the content.js
-  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
-};
-Libs.add("displayMessage", setThrobberText);
 
 // Process control functions
 var processFunctionsHalt = function(msg) {

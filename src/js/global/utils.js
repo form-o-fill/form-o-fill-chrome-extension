@@ -116,6 +116,12 @@ var Utils = {
       }
       return 0;
     });
+  },
+  isBgPage: function() {
+    if(typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
+      return false;
+    }
+    return true;
   }
 };
 
