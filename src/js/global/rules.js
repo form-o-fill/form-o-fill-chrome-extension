@@ -342,6 +342,13 @@ var Rules = {
       }
     });
     return uniques;
+  },
+  validateImport: function(importData) {
+    return typeof importData === "object"
+      && typeof importData.workflows === "object"
+      && typeof importData.rules === "object"
+      && typeof importData.rules.rules === "object"
+      && typeof importData.rules.tabSettings === "object";
   }
 };
 

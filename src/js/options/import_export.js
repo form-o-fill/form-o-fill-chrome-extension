@@ -39,6 +39,17 @@ var showImportAllModal = function() {
   $("#modalimportall").show();
 };
 
+// reloads rules shows notification etc for imports
+var finishImport = function(parsed) {
+  $("#modalimportall").hide();
+  loadTabsSettings();
+  loadRules(1);
+  $(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
+  updateTabStats();
+  fillAvailableRules();
+  loadWorkflows();
+};
+
 // Import all rules and workflows from disc
 var importAll = function() {
   var $warning = $("#modalimportrules .only-json");
@@ -52,13 +63,7 @@ var importAll = function() {
     reader.onload = function(e) {
       var parsed = JSONF.parse(e.target.result);
       Rules.importAll(e.target.result).then(function() {
-        $("#modalimportall").hide();
-        loadTabsSettings();
-        loadRules(1);
-        $(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
-        updateTabStats();
-        fillAvailableRules();
-        loadWorkflows();
+        finishImport(parsed);
       });
     };
 
