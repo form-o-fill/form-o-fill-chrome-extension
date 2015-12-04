@@ -3,6 +3,7 @@
 var Workflows = {
   load: function() {
     return new Promise(function (resolve) {
+      //TODO: fetch shadow too! (FS, 2015-12-04)
       Storage.load(Utils.keys.workflows).then(function prWfLoad(workflows) {
         if(typeof workflows === "undefined") {
           resolve([]);

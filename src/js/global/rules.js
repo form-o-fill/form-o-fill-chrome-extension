@@ -82,7 +82,8 @@ var Rules = {
   },
   all: function() {
     return new Promise(function prRulesAll(resolve) {
-      Logger.info("[rules.js] Fetching all rules");
+      Logger.info("[rules.js] Fetching all rules + shadow");
+      //TODO: fetch shadow too! (FS, 2015-12-04)
       Storage.load(Utils.keys.tabs).then(function prRulesAllStorageLoad(tabSettings) {
         var promises = [];
         var rules = [];
