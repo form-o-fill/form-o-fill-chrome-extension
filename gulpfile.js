@@ -146,7 +146,7 @@ gulp.task('clean', ["announce"], function() {
 // ESLINT the javascript (BEFORE uglifier ran over them)
 //
 gulp.task('lint', function () {
-  return gulp.src(['src/js/**/*.js', '!src/js/background.js', '!src/js/content.js'])
+  return gulp.src(['src/js/*/*.js'])
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failOnError());
