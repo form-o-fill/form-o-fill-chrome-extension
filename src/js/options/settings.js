@@ -105,7 +105,9 @@ Settings.prototype.validateAndImport = function() {
       .done(function(dataAsString) {
         settings.importFetchSuccess(dataAsString, url);
       })
-      .fail(settings.importFetchFail);
+      .fail(function(jqXhr, textStatus) {
+        settings.importFetchFail(url, jqXhr, textStatus);
+      });
   } else {
     jQuery(".settings-error-url").show();
   }
@@ -141,12 +143,20 @@ Settings.prototype.importFetchSuccess = function(dataAsString, url) {
     });
 
   } else {
-    //TODO: report error in data format (FS, 2015-12-02)
+    jQuery(".import-remote-fail-format").show();
   }
 };
 
-Settings.prototype.importFetchFail = function(jqXhr, textStatus, errorThrown) {
-  // //TODO: report ERROR (FS, 2015-12-02)
+// When the import failed XHR wise
+Settings.prototype.importFetchFail = function(url, jqXhr, textStatus) {
+  jQuery(".import-remote-fail-fetch")
+  .find(".imp-fail-fetch-msg")
+  .text("status: " + jqXhr.status + ", textStatus: " + textStatus)
+  .end()
+  .find(".imp-fail-fetch-url")
+  .attr("href", url)
+  .end()
+  .show();
 };
 
 Settings.prototype.applySettings = function(options) {
