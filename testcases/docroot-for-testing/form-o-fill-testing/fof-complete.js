@@ -1,5 +1,12 @@
 {
-  "workflows": [],
+  "workflows": [
+    {
+      "flags": {},
+      "id": 1,
+      "name": "A workflow",
+      "steps": []
+    }
+  ],
   "rules": {
     "tabSettings": [
       {
