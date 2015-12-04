@@ -19,8 +19,7 @@ var Utils = {
     tutorialDataBackup: "form-o-fill-tutorialDataBackup",
     tutorialActive: "form-o-fill-tut-active",
     settings: "form-o-fill-settings",
-    shadowWorkflows: "form-o-fill-shadow-workflows",
-    shadowRules: "form-o-fill-shadow-rules"
+    shadowStorage: "form-o-fill-shadow-storage"
   },
   defaultSettings: {
     alwaysShowPopup: false,
