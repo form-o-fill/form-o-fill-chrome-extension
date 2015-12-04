@@ -102,19 +102,44 @@ Settings.prototype.validateAndImport = function() {
   if(/^https?:\/\/.*\.js(on)?$/i.test(url)) {
     // Valid URL
     jQuery.ajax({url: url, dataType: "text"})
-      .done(settings.importFetchSuccess)
+      .done(function(dataAsString) {
+        settings.importFetchSuccess(dataAsString, url);
+      })
       .fail(settings.importFetchFail);
   } else {
     jQuery(".settings-error-url").show();
   }
 };
 
-Settings.prototype.importFetchSuccess = function(dataAsString) {
+Settings.prototype.importFetchSuccess = function(dataAsString, url) {
   var toImport = JSONF.parse(dataAsString);
   if(Rules.validateImport(toImport)) {
+
+    var counts = {
+      workflows: 0,
+      rules: 0
+    };
+    if(typeof toImport.workflows !== "undefined" && typeof toImport.workflows.length !== "undefined") {
+      counts.workflows = toImport.workflows.length;
+    }
+    counts.rules = toImport.rules.rules.length;
+
     // Valid format
-    //TODO: import into hidden tab! (FS, 2015-12-02)
-    Rules.importAll(toImport).then(ImportExport.finishImport(toImport));
+    ImportExport.importRemoteRules(toImport).then(function() {
+      jQuery(".notice.import-remote-ready")
+      .find(".imp-wfs-count")
+      .text(counts.workflows)
+      .end()
+      .find(".imp-rules-count")
+      .text(counts.rules)
+      .end()
+      .find(".imp-rules-url")
+      .text(url)
+      .attr("href", url)
+      .end()
+      .show();
+    });
+
   } else {
     //TODO: report error in data format (FS, 2015-12-02)
   }

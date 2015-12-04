@@ -68,6 +68,27 @@ var ImportExport = {
       reader.readAsText(fileToImport);
     }
   },
+  importRemoteRules: function(importStruct) {
+    // Imports the given rules into a shadow storage that is used in addition
+    // to the normal visible rules when searching for matching rules
+
+    var promises = [];
+
+    // Save workflows (if any)
+    if(typeof importStruct.workflows !== "undefined" && typeof importStruct.workflows.length !== "undefined") {
+      promises.push(Storage.save(importStruct.workflows, Utils.keys.shadowWorkflows));
+    }
+
+    // Save the rules in all tabs
+    var rules = importStruct.rules.rules.map(function (editorTabAndRules) {
+      return editorTabAndRules.code;
+    });
+
+    promises.push(Storage.save(rules, Utils.keys.shadowRules));
+
+    // resolve all saving promises
+    return Promise.all(promises);
+  },
   bindHandlers: function() {
     // Handler Import / Export buttons
     $(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
