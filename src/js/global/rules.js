@@ -299,7 +299,7 @@ var Rules = {
       }
 
       // Save workflows (if any)
-      if(typeof parsed.workflows !== "undefined" && parsed.workflows.length > 0) {
+      if(typeof parsed.workflows !== "undefined" && typeof parsed.workflows.length !== "undefined") {
         promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
       }
 
