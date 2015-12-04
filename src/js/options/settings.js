@@ -1,4 +1,4 @@
-/*global jQuery Rules JSONF finishImport*/
+/*global jQuery Rules JSONF ImportExport*/
 var Settings = function() {
 };
 
@@ -114,7 +114,7 @@ Settings.prototype.importFetchSuccess = function(dataAsString) {
   if(Rules.validateImport(toImport)) {
     // Valid format
     //TODO: import into hidden tab! (FS, 2015-12-02)
-    Rules.importAll(toImport).then(finishImport(toImport));
+    Rules.importAll(toImport).then(ImportExport.finishImport(toImport));
   } else {
     //TODO: report error in data format (FS, 2015-12-02)
   }
