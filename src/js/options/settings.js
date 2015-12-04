@@ -63,6 +63,8 @@ Settings.prototype.saveSettings = function(overwrites) {
   this.getBg(function(bgWindow) {
     bgWindow.setSettings(currentSettings);
   });
+
+  jQuery(".notice").hide();
 };
 
 Settings.prototype.bindHandlers = function() {
@@ -93,7 +95,8 @@ Settings.prototype.bindHandlers = function() {
 Settings.prototype.validateAndImport = function() {
   var url = document.querySelector("#settings-import-source-url").value;
   var settings = this;
-  //TODO: save settings (FS, 2015-12-02)
+
+  settings.saveSettings();
 
   // Simple base test for URL validity
   if(/^https?:\/\/.*\.js(on)?$/i.test(url)) {
@@ -102,8 +105,7 @@ Settings.prototype.validateAndImport = function() {
       .done(settings.importFetchSuccess)
       .fail(settings.importFetchFail);
   } else {
-    // No valid url
-    //TODO: report ERROR (FS, 2015-12-02)
+    jQuery(".settings-error-url").show();
   }
 };
 
