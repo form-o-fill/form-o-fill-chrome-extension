@@ -1,9 +1,8 @@
 /*global Workflows, Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
 /*eslint no-unused-vars: 0*/
-
 var ImportExport = {
   // Export rules as a newline seperated list of strings
-  xportRulesAsJs: function() {
+  exportRulesAsJs: function() {
     var code = "";
     Rules.exportDataJson().then(function(rules) {
       var jsExport = rules.rules.map(function (codeAndTabId, index) {
