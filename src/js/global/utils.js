@@ -25,8 +25,10 @@ var Utils = {
     alwaysShowPopup: false,
     jpegQuality: 60,
     reevalRules: false,
-    importActive: false
+    importActive: false,
+    importUrl: ""
   },
+  tabIdForShadow: 900,
   reevalRulesInterval: 2000,
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {

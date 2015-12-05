@@ -145,6 +145,7 @@ var Popup = {
       li.textContent = rule.name;
       li.classList.add("select-rule");
       li.classList.add("icon-bucket");
+      li.classList.add(rule.shadow ? "from-shadow" : "from-tabs");
       li.dataset.ruleUrl = rule.url;
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;

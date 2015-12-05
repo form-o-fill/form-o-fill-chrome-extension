@@ -12,8 +12,10 @@ var Rule = function() {
     delete clone.type;
     delete clone.autorun;
     delete clone.screenshot;
+    //TODO: check to see if onlyEmpty should be included (FS, 2015-12-04)
     delete clone.onlyEmpty;
     delete clone.color;
+    delete clone.shadow;
     delete clone._escapeForRegexp;
     return JSON.stringify(clone, null, 2);
   };
@@ -65,6 +67,10 @@ Rule.create = function(options, tabId, ruleIndex) {
 
   if(typeof rule.onlyEmpty === "undefined") {
     rule.onlyEmpty = false;
+  }
+
+  if(typeof rule.shadow === "undefined") {
+    rule.shadow = false;
   }
 
   rule.tabId = tabId;

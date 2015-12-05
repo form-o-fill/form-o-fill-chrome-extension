@@ -78,6 +78,10 @@ li.select-workflow {
   color: #192E98;
 }
 
+.select-rule.from-shadow:before {
+	content: "\e900";
+}
+
 a, a:visited, a:hover, a:active {
   outline: none;
   color: #2c2c2c;
@@ -129,8 +133,4 @@ h3 .cmd-show-extract-overlay {
   left: 0;
   margin-left: 10px;
   float: left;
-}
-
-.actions .to-options {
-  /* margin-right: 11px; */
 }

@@ -80,13 +80,35 @@ var Rules = {
 
     return new Function(ruleCode)();
   },
+  getRulesFromShadow: function(shadowStorage) {
+    var rules = [];
+    var ruleObjects;
+    if(typeof shadowStorage !== "undefined" && typeof shadowStorage.rules !== "undefined" && shadowStorage.rules.length > 0) {
+      // rules contains an array of strings that contain an array of rules
+      shadowStorage.rules.forEach(function(rulesCode) {
+        // String of rules -> array of object
+        ruleObjects = Rules.text2function(rulesCode);
+        // convert array of ruleObjects to array of Rule instances
+        ruleObjects.forEach(function(ruleObject, index) {
+          ruleObject.shadow = true;
+          rules.push(Rule.create(ruleObject, Utils.tabIdForShadow, index));
+        });
+      });
+    }
+    Logger.info("[rules.js] Fetched " + rules.length + " rules from shadow");
+    return rules;
+  },
   all: function() {
+    var rulesInst = this;
     return new Promise(function prRulesAll(resolve) {
       Logger.info("[rules.js] Fetching all rules + shadow");
-      //TODO: fetch shadow too! (FS, 2015-12-04)
-      Storage.load(Utils.keys.tabs).then(function prRulesAllStorageLoad(tabSettings) {
+
+      Promise.all([Storage.load(Utils.keys.tabs), Storage.load(Utils.keys.shadowStorage)]).then(function prRulesAllStorageLoad(tabSettingsAndShadow) {
         var promises = [];
         var rules = [];
+
+        var tabSettings = tabSettingsAndShadow[0];
+        var shadowStorage = tabSettingsAndShadow[1];
 
         // Generate a Promise for all tab to be loaded
         tabSettings.forEach(function rulesAlltabSetting(tabSetting) {
@@ -96,13 +118,18 @@ var Rules = {
         // Wait until resolved
         Promise.all(promises).then(function prRulesAllgenerateRuleSet(values) {
           // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
+          // or if Li
           values.forEach(function (ruleSetForTab) {
             // Inner Loop: An array of rules [Rule, Rule]
             ruleSetForTab.forEach(function (ruleSet) {
               rules.push(ruleSet);
             });
           });
-          Logger.info("[rules.js] Fetched " + rules.length + " rules");
+
+          // Add ruled from shadow storage to rules found in normal tabs
+          rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
+
+          Logger.info("[rules.js] Fetched " + rules.length + " rules from normal and shadow storage");
           resolve(rules);
         });
       });
