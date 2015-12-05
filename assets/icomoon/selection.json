@@ -25,7 +25,8 @@
 				"name": "list"
 			},
 			"setIdx": 0,
-			"iconIdx": 150
+			"setId": 1,
+			"iconIdx": 0
 		},
 		{
 			"icon": {
@@ -47,8 +48,9 @@
 				"name": "bucket",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 0
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 1
 		},
 		{
 			"icon": {
@@ -73,8 +75,9 @@
 				"name": "minus",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 1
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 2
 		},
 		{
 			"icon": {
@@ -98,8 +101,9 @@
 				"name": "plus",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 2
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 3
 		},
 		{
 			"icon": {
@@ -125,8 +129,9 @@
 				"name": "cross",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 3
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 4
 		},
 		{
 			"icon": {
@@ -150,8 +155,9 @@
 				"name": "warning",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 4
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 5
 		},
 		{
 			"icon": {
@@ -176,8 +182,9 @@
 				"name": "cycle",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 5
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 6
 		},
 		{
 			"icon": {
@@ -201,8 +208,9 @@
 				"name": "upload",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 6
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 7
 		},
 		{
 			"icon": {
@@ -227,8 +235,9 @@
 				"name": "download",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 7
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 8
 		},
 		{
 			"icon": {
@@ -253,8 +262,9 @@
 				"name": "disk",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 8
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 9
 		},
 		{
 			"icon": {
@@ -280,8 +290,9 @@
 				"name": "install",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 9
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 10
 		},
 		{
 			"icon": {
@@ -304,8 +315,33 @@
 				"name": "flow-cascade",
 				"ligatures": ""
 			},
-			"setIdx": 1,
-			"iconIdx": 10
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 11
+		},
+		{
+			"icon": {
+				"paths": [
+					"M1024 579.584c0 132.301-109.773 239.616-245.094 239.616h-593.715c-102.298 0-185.19-81.101-185.19-181.094 0-99.891 82.893-180.992 185.19-180.992 7.475 0 14.746 0.614 21.965 1.382-1.894-12.595-2.918-25.498-2.918-38.707 0-146.995 121.907-266.189 272.384-266.189 123.238 0 227.277 79.974 260.915 189.798 13.466-2.202 27.238-3.379 41.421-3.379 135.27 0 245.043 107.162 245.043 239.565z"
+				],
+				"attrs": [],
+				"isMulticolor": false,
+				"grid": 20,
+				"tags": [
+					"cloud"
+				]
+			},
+			"attrs": [],
+			"properties": {
+				"order": 15,
+				"id": 185,
+				"prevSize": 20,
+				"code": 59648,
+				"name": "cloud"
+			},
+			"setIdx": 0,
+			"setId": 1,
+			"iconIdx": 12
 		}
 	],
 	"height": 1024,
@@ -326,7 +362,8 @@
 				"emSize": 1024,
 				"baseline": 6.25,
 				"whitespace": 50
-			}
+			},
+			"embed": false
 		},
 		"imagePref": {
 			"prefix": "icon-",
