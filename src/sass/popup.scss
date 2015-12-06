@@ -78,8 +78,8 @@ li.select-workflow {
   color: #192E98;
 }
 
-.select-rule.from-shadow:before {
-	content: "\e900";
+.select-rule.from-shadow:after {
+	content: " (\e900)";
 }
 
 a, a:visited, a:hover, a:active {
