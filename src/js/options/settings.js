@@ -96,6 +96,7 @@ Settings.prototype.validateAndImport = function() {
   var url = document.querySelector("#settings-import-source-url").value;
   var settings = this;
 
+  document.querySelector("#settings-activate-import-source-url").checked = true;
   settings.saveSettings();
 
   // Simple base test for URL validity
