@@ -110,6 +110,8 @@ Settings.prototype.validateAndImport = function() {
         settings.importFetchFail(url, jqXhr, textStatus);
       });
   } else {
+    document.querySelector("#settings-activate-import-source-url").checked = false;
+    settings.saveSettings();
     jQuery(".settings-error-url").show();
   }
 };
@@ -144,12 +146,16 @@ Settings.prototype.importFetchSuccess = function(dataAsString, url) {
     });
 
   } else {
+    document.querySelector("#settings-activate-import-source-url").checked = false;
+    this.saveSettings();
     jQuery(".import-remote-fail-format").show();
   }
 };
 
 // When the import failed XHR wise
 Settings.prototype.importFetchFail = function(url, jqXhr, textStatus) {
+  document.querySelector("#settings-activate-import-source-url").checked = false;
+  this.saveSettings();
   jQuery(".import-remote-fail-fetch")
   .find(".imp-fail-fetch-msg")
   .text("status: " + jqXhr.status + ", textStatus: " + textStatus)
