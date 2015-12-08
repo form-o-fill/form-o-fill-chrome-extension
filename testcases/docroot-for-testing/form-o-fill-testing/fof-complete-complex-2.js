@@ -1,5 +1,14 @@
 {
-  "workflows": [],
+  "workflows": [
+    {
+      "flags": {},
+      "id": 1,
+      "name": "remote URL workflow",
+      "steps": [
+        "Complex - 2 - remote URL"
+      ]
+    }
+  ],
   "rules": {
     "tabSettings": [
       {
