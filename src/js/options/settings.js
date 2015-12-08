@@ -1,4 +1,4 @@
-/*global jQuery Rules JSONF ImportExport*/
+/*global jQuery Rules JSONF ImportExport Utils */
 var Settings = function() {
 };
 
@@ -60,6 +60,11 @@ Settings.prototype.saveSettings = function(overwrites) {
     });
   }
 
+  // remove shadow storage when saving with checkbox disabled
+  if(currentSettings.importActive !== true) {
+    Storage.delete(Utils.keys.shadowStorage);
+  }
+
   this.getBg(function(bgWindow) {
     bgWindow.setSettings(currentSettings);
   });
@@ -85,7 +90,8 @@ Settings.prototype.bindHandlers = function() {
 
   // Bind to validate button
   document.querySelector("#settings").addEventListener("click", function(evt) {
-    if(evt.target && evt.target.classList.contains("validate-import-source-url")) {
+    if( evt.target && evt.target.classList.contains("validate-import-source-url") ||
+       (evt.target.id === "settings-activate-import-source-url" && evt.target.checked)) {
       settings.validateAndImport();
     }
   });
