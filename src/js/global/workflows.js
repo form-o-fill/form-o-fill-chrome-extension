@@ -1,13 +1,19 @@
 /* global Storage, Utils, Logger, JSONF $ */
 /*eslint no-unused-vars:0 */
 var Workflows = {
-  load: function() {
+  all: function() {
     return new Promise(function (resolve) {
-      //TODO: fetch shadow too! (FS, 2015-12-04)
-      Storage.load(Utils.keys.workflows).then(function prWfLoad(workflows) {
-        if(typeof workflows === "undefined") {
+      Promise.all([Storage.load(Utils.keys.workflows), Storage.load(Utils.keys.shadowStorage)]).then(function prWfLoad(workflowsAndShadow) {
+        if(typeof workflowsAndShadow === "undefined") {
           resolve([]);
         } else {
+          var workflows = workflowsAndShadow[0];
+          if (typeof workflowsAndShadow[1] !== "undefined" && typeof workflowsAndShadow[1].workflows !== "undefined") {
+            workflows = workflows.concat(workflowsAndShadow[1].workflows.map(function(workflow) {
+              workflow.shadow = true;
+              return workflow;
+            }));
+          }
           resolve(workflows);
         }
       });
@@ -15,7 +21,7 @@ var Workflows = {
   },
   findById: function(id) {
     return new Promise(function (resolve) {
-      Workflows.load().then(function prFindById(wfs) {
+      Workflows.all().then(function prFindById(wfs) {
         resolve(wfs.filter(function (wf) {
           /*eslint-disable eqeqeq*/
           return wf.id == id;
@@ -45,7 +51,7 @@ var Workflows = {
         return rule.name;
       });
 
-      Workflows.load().then(function prMatchesForRules(workflows) {
+      Workflows.all().then(function prMatchesForRules(workflows) {
         var matchingWorkflows = workflows.filter(function cbWfFilter(workflow) {
           return matchingRuleNames.indexOf(workflow.steps[0]) === 0;
         });

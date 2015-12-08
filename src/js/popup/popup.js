@@ -169,6 +169,7 @@ var Popup = {
       li.textContent = workflow.name + " (" + workflow.steps.length + " steps)";
       li.classList.add("select-workflow");
       li.classList.add("icon-cascade");
+      li.classList.add(workflow.shadow ? "from-shadow" : "from-tabs");
       li.dataset.workflowId = workflow.id;
       li.dataset.workflowIndex = index;
       li.dataset.workflowName = workflow.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();

@@ -152,11 +152,16 @@ var loadWorkflowById = function(wfId) {
 
 // Load all present workflows and fill select field
 var loadWorkflows = function(selectedWfId) {
-  Workflows.load().then(function loadWf(rawWorkflows) {
+  Workflows.all().then(function loadWf(rawWorkflows) {
     // When no workflows are defined, exit early
     if(typeof rawWorkflows === "undefined") {
       return;
     }
+
+    // remove remote URL imported workflows
+    rawWorkflows = rawWorkflows.filter(function(workflow) {
+      return typeof workflow.shadow === "undefined" || workflow.shadow === false;
+    });
 
     workflows = rawWorkflows;
 
@@ -236,7 +241,7 @@ var saveWorkflow = function() {
 // Check for workflow errors
 var checkForErrors = function() {
 
-  Promise.all([Workflows.load(), Rules.all()]).then(function (wfsAndAllRules) {
+  Promise.all([Workflows.all(), Rules.all()]).then(function (wfsAndAllRules) {
     // When no workflows are defined, exit early
     if(typeof wfsAndAllRules[0] === "undefined") {
       return;

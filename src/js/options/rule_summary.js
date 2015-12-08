@@ -58,7 +58,7 @@ var ruleSummaryRefreshByRule = function(rule) {
     return typeof fieldDef.import !== "undefined";
   });
 
-  Workflows.load().then(function(arrayOfWfs) {
+  Workflows.all().then(function(arrayOfWfs) {
     var foundTheRule = arrayOfWfs.some(function(aWorkflow) {
       return jQuery.makeArray(aWorkflow.steps).some(function(ruleName) {
         return ruleName === rule.name;
