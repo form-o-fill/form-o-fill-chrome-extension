@@ -1,125 +1,135 @@
-#help p {
-  line-height: 18px;
-}
+#help {
 
-#help .topics a {
-  display: inline-block;
-  padding:  10px;
-  background-color: #eee;
-  margin-left: 10px;
-  margin-top: 10px;
-  text-decoration: none;
-  color: #111;
-}
+  p {
+    line-height: 18px;
+  }
 
-#help .topics a:first-child {
-  margin-left: 0;
-}
+  .topics a {
+    display: inline-block;
+    padding:  10px;
+    background-color: #eee;
+    margin-left: 10px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #111;
+  }
 
-#help .topics a.current {
-  background-color: #ccc;
-}
+  .topics a:first-child {
+    margin-left: 0;
+  }
 
-#help .topics a:hover {
-  background-color: #ccc;
-}
+  .topics a.current {
+    background-color: #ccc;
+  }
 
-#help .topic {
-  border-bottom: 1px solid #ccc;
-  padding: 10px 0;
-  line-height: 15px;
-}
+  .topics a:hover {
+    background-color: #ccc;
+  }
 
-#help .topic h3 {
-  font-size: 2em;
-}
+  .topic {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    line-height: 15px;
+  }
 
-#help .topic > a[name] {
-  margin-top: 60px;
-  display: block;
-}
+  .topic h3 {
+    font-size: 2em;
+  }
 
-#help .topic li .li-block {
-  display: block;
-  margin-left: 16px;
-}
+  .topic > a[name] {
+    margin-top: 60px;
+    display: block;
+  }
 
-#help .topic li {
-  text-indent: -14px;
-  margin-left: 14px;
-  margin-bottom: 5px;
-}
+  .topic li .li-block {
+    display: block;
+    margin-left: 16px;
+  }
 
-#help .topic li:before {
-  font-family: formofill;
-  content: "\e600";
-  margin-right: 6px;
-}
+  .topic li {
+    text-indent: -14px;
+    margin-left: 14px;
+    margin-bottom: 5px;
+  }
 
-#help .topic img {
-  vertical-align: middle;
-  padding: 5px;
-  border: 1px solid #eee;
-  border-radius: 3px;
-}
+  .topic li:before {
+    font-family: formofill;
+    content: "\e600";
+    margin-right: 6px;
+  }
 
-#help .warning:before {
-  font-family: "formofill";
-  vertical-align: middle;
-  content: "\e602";
-  color: rgb(197, 25, 25);
-}
+  .topic img {
+    vertical-align: middle;
+    padding: 5px;
+    border: 1px solid #eee;
+    border-radius: 3px;
+  }
 
-#help code {
-  background-color: #eee;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding: 2px;
-}
+  .warning:before {
+    font-family: "formofill";
+    vertical-align: middle;
+    content: "\e602";
+    color: rgb(197, 25, 25);
+  }
 
-#help .block-of-code {
-  overflow: hidden;
-  line-height: 18px;
-  margin-bottom: 1px;
-}
+  code {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 2px;
+  }
 
-#help .explaining {
-  padding: 2px;
-  float: left;
-  width: 33%;
-  background-color: #eee;
-  font-size: 12px;
-  margin-right: 10px;
-  min-height: 24px;
-}
+  .block-of-code {
+    overflow: hidden;
+    line-height: 18px;
+    margin-bottom: 1px;
+  }
 
-#help .code {
-  padding: 5px;
-  float: right;
-  font-family: monospace;
-  width: 64%;
-}
+  .explaining {
+    padding: 2px;
+    float: left;
+    width: 33%;
+    background-color: #eee;
+    font-size: 12px;
+    margin-right: 10px;
+    min-height: 24px;
+  }
 
-#help-importexport button {
-  width: 200px;
-  text-align: left;
-}
-#help-importexport .block {
-  float: left;
-  margin-left: 10px;
-}
+  .code {
+    padding: 5px;
+    float: right;
+    font-family: monospace;
+    width: 64%;
+  }
 
-#help-importexport .block h3, #help-importexport .block .icon {
-  color: #888;
-}
+  #help-importexport button {
+    width: 200px;
+    text-align: left;
+  }
+  #help-importexport .block {
+    float: left;
+    margin-left: 10px;
+  }
 
-#help-importexport .row {
-  overflow: hidden;
-  margin-bottom: 40px;
-}
+  #help-importexport .block h3, #help-importexport .block .icon {
+    color: #888;
+  }
 
-#help .topic > a[name].anchor {
-  margin: 0;
-  height: 0;
+  #help-importexport .row {
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .topic > a[name].anchor {
+    margin: 0;
+    height: 0;
+  }
+
+  button.save:before {
+    font-family: "formofill";
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
 }
 

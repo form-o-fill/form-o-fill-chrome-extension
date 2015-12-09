@@ -18,6 +18,7 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
       "help-sharedrules",
       "help-workflows",
       "help-setupcontent",
-      "help-automaticrematch"], "help-content");
+      "help-automaticrematch",
+      "help-settingsremoterules"], "help-content");
   }
 });

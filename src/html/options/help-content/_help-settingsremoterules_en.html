@@ -1,0 +1,23 @@
+<a name="help-settingsremoterules"></a>
+<h3>Using rules and workflows setup by others</h3>
+<p>
+  If you want to use Form-O-Fill but do not want to write your own rules you can use rules written by others (eg. colleagues).<br/>
+  These are called remote rules.<br />
+  The only condition is that these rules must be available via http or https.<br />
+  This is how you activate remote rules:
+</p>
+<p>
+  <em>Step 1:&nbsp;</em> Have someone build the rules and workflows that you need locally inside Form-O-Fill.<br />
+  <em>Step 2:&nbsp;</em> <a href="#importexport">Export</a> those rules a .js file<br />
+  <em>Step 3:&nbsp;</em> Put them on a server and make them accessible via http or https<br />
+  <em>Step 4:&nbsp;</em> Take the URL to the .js file and put it in the setting for <a href="#settings">"Activate remote rules import"</a><br />
+  <em>Step 5:&nbsp;</em> Press <button class="save">Validate and import</button> and Form-O-Fill will report success or failure.
+</p>
+<p>
+  Form-O-Fill will keep these rules in a separate storage and will auto-update those rules every ##Utils.alarmIntervalInMinutes## minutes.<br />
+</p>
+<p>
+  Those rules will then also be used when searching for rules and workflow matches.<br />
+  You can see which rules are remote rules by looking for a cloud icon in the rules popup:<br />
+</p>
+<img src="../../images/help/remote-rules-popup.png" />
