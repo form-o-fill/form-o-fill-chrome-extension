@@ -418,11 +418,13 @@ var initializeTabSettings = function() {
   });
 };
 
+// Triggered when update of remote rules was successful
 var remoteRulesImportSuccess = function(resolved) {
   Logger.info("[bg.js] Updating remote rules SUCCEEDED");
   RemoteImport.save(resolved.data);
 };
 
+// Triggered when update of remote rules was failed
 var remoteRulesImportFail = function() {
   Logger.warn("[bg.js] Updating remote rules FAILED");
   Notification.create(chrome.i18n.getMessage("notification_remote_import_failed"), null, function () {
@@ -430,16 +432,20 @@ var remoteRulesImportFail = function() {
   });
 };
 
+// Update remote rules if options are set correctly
+var executeRemoteImport = function() {
+  if(typeof optionSettings !== "undefined" && optionSettings.importActive === true && optionSettings.importUrl.indexOf("http") > -1) {
+    RemoteImport.import(optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
+  }
+};
+
 // This is triggered when the set interval (eg. every 15 minutes) has expired
 var alarmListener = function(alarm) {
   if(alarm.name !== Utils.alarmName) {
     return;
   }
-
-  if(optionSettings.importActive === true && optionSettings.importUrl.indexOf("http") > -1) {
-    Logger.info("[bg.js] Alarm triggered. Updating remote rules.");
-    RemoteImport.import(optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
-  }
+  Logger.info("[bg.js] Alarm triggered. Updating remote rules.");
+  executeRemoteImport();
 };
 
 // REMOVE START
@@ -471,6 +477,9 @@ chrome.runtime.onMessage.addListener(function (message) {
 
 // Fires when the extension is install or updated
 chrome.runtime.onInstalled.addListener(function (details) {
+
+  Logger.info("[bg.js] chrome.runtime.inInstalled triggered");
+
   // Called on very first install
   if (details.reason === "install") {
     Notification.create(chrome.i18n.getMessage("first_install_notification"), null, function () {
@@ -498,11 +507,15 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
 // When the extension is activated:
 chrome.runtime.onStartup.addListener(function() {
+  Logger.info("[bg.js] chrome.runtime.onStartup triggered");
   loadSettings();
 
-  // This till trigger a re-import of the remote rules set in settings
+  // This will trigger a re-import of the remote rules set in settings
   Alarm.create();
+
+  // re-import remote rules
+  executeRemoteImport();
 });
 
-// Listen to alarms (import remote url)
+// Listen to alarms (import remote rules)
 chrome.alarms.onAlarm.addListener(alarmListener);

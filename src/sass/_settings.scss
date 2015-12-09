@@ -25,6 +25,8 @@
 
   .text, .checkbox {
     margin-bottom: 10px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 10px;
   }
 
   input[type=url] {
