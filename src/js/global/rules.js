@@ -65,6 +65,8 @@ var Rules = {
               resolve(rules);
             }
           });
+        } else {
+          resolve(null);
         }
       });
     });
@@ -100,7 +102,7 @@ var Rules = {
   },
   all: function() {
     var rulesInst = this;
-    return new Promise(function prRulesAll(resolve) {
+    return new Promise(function prRulesAll(resolve, reject) {
       Logger.info("[rules.js] Fetching all rules + shadow");
 
       Promise.all([Storage.load(Utils.keys.tabs), Storage.load(Utils.keys.shadowStorage)]).then(function prRulesAllStorageLoad(tabSettingsAndShadow) {
@@ -110,6 +112,10 @@ var Rules = {
         var tabSettings = tabSettingsAndShadow[0];
         var shadowStorage = tabSettingsAndShadow[1];
 
+        if(typeof tabSettings === "undefined") {
+          reject();
+        }
+
         // Generate a Promise for all tab to be loaded
         tabSettings.forEach(function rulesAlltabSetting(tabSetting) {
           promises.push(Rules.load(tabSetting.id));
@@ -118,8 +124,10 @@ var Rules = {
         // Wait until resolved
         Promise.all(promises).then(function prRulesAllgenerateRuleSet(values) {
           // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
-          // or if Li
-          values.forEach(function (ruleSetForTab) {
+          values.filter(function(ruleSetForTab) {
+            // null can happen on very first install
+            return ruleSetForTab !== null;
+          }).forEach(function (ruleSetForTab) {
             // Inner Loop: An array of rules [Rule, Rule]
             ruleSetForTab.forEach(function (ruleSet) {
               rules.push(ruleSet);
@@ -127,7 +135,7 @@ var Rules = {
           });
 
           // Add ruled from shadow storage to rules found in normal tabs
-          if(typeof optionSettings !== "undefined" && optionSettings.importActive === true) {
+          if(shadowStorage !== "undefined" && typeof optionSettings !== "undefined" && optionSettings.importActive === true) {
             rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
           }
 

@@ -71,6 +71,15 @@ var onTabReadyRules = function(tabId) {
     // This is a little bit complicated.
     // I wish the chromium API would implement Promises for all that.
     Rules.all().then(function (rules) {
+
+      // This happens only on the very first install:
+      if(rules.length === 0) {
+        // No rules present!
+        chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+        refreshMatchCounter(0);
+        return;
+      }
+
       // First filter all rules that have content matchers
       var relevantRules = rules.filter(function (rule) {
         return typeof rule.content !== "undefined";
@@ -414,6 +423,9 @@ var initializeTabSettings = function() {
         "id": 1,
         "name": chrome.i18n.getMessage("tabs_default_name")
       }], Utils.keys.tabs);
+
+      // Initialize rules
+      Rules.save("var rules = [];", 1);
     }
   });
 };
