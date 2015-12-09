@@ -403,6 +403,12 @@ gulp.task('integration:run', [ "webserver:start" ], function () {
   }}));
 });
 
+// Watch for changes
+gulp.task("watch", function() {
+  gulp.watch(['test/**/*.js'], runTests);
+  gulp.watch('src/sass/**/*.scss', ['sass']);
+});
+
 //
 // DEFAULT
 // running "gulp" will execute this
