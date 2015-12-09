@@ -4,7 +4,7 @@ var lastMatchingRules = [];
 var lastActiveTab = null;
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
-var optionSettings = null;
+var optionSettings = window.undefined;
 var recheckInterval = null;
 
 var defaultBadgeBgColor = [0, 136, 255, 200];
@@ -387,6 +387,37 @@ var setSettings = function(settings, value) {
 };
 /*eslint-enable no-unused-vars */
 
+// Loads settings from storage
+var loadSettings = function() {
+  // Load the settings and default them if not saved before
+  Storage.load(Utils.keys.settings).then(function(settings) {
+    Logger.info("[bg.js] loading settings : " + JSONF.stringify(settings));
+    if(typeof settings === "undefined") {
+      settings = Utils.defaultSettings;
+    }
+    optionSettings = settings;
+
+    // Turn rematch on/off
+    setCyclicRulesRecheck(optionSettings.reevalRules);
+  });
+};
+
+// Checks to see if tabSettings are initialized
+// If not creates a default tabSetting
+var initializeTabSettings = function() {
+  // Check if tabs are saved or we start from scratch
+  Storage.load(Utils.keys.tabs).then(function (tabSettings) {
+    // No tab settings found, create one
+    if(typeof tabSettings === "undefined") {
+      Logger.info("[bg.js] Creating default tab setting");
+      Storage.save([{
+        "id": 1,
+        "name": chrome.i18n.getMessage("tabs_default_name")
+      }], Utils.keys.tabs);
+    }
+  });
+};
+
 // REMOVE START
 // Debug Messages from content.js
 chrome.runtime.onConnect.addListener(function (port) {
@@ -416,8 +447,6 @@ chrome.runtime.onMessage.addListener(function (message) {
 
 // Fires when the extension is install or updated
 chrome.runtime.onInstalled.addListener(function (details) {
-  Logger.info("[bg.js] runtime.onInstalled fired");
-
   // Called on very first install
   if (details.reason === "install") {
     Notification.create(chrome.i18n.getMessage("first_install_notification"), null, function () {
@@ -425,17 +454,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
     });
   }
 
-  // Check if tabs are saved or we start from scratch
-  Storage.load(Utils.keys.tabs).then(function (tabSettings) {
-    // No tab settings found, create one
-    if(typeof tabSettings === "undefined") {
-      Logger.info("[bg.js] Creating default tab setting");
-      Storage.save([{
-        "id": 1,
-        "name": chrome.i18n.getMessage("tabs_default_name")
-      }], Utils.keys.tabs);
-    }
-  });
+  // Initialize tab settings
+  initializeTabSettings();
 
   // remove log entries
   Logger.delete();
@@ -444,19 +464,12 @@ chrome.runtime.onInstalled.addListener(function (details) {
   if(Utils.version.indexOf(".") > -1) {
     Notification.forVersion(Utils.version);
   }
+
+  // load and set settings. Uses defaults if non present.
+  loadSettings();
 });
 
-//
-// WHEN THIS FILE IS LOADED:
-//
-
-// Load the settings and defulat them if not saved before
-Storage.load(Utils.keys.settings).then(function(settings) {
-  Logger.info("[bg.js] loading settings : " + JSONF.stringify(settings));
-  if(typeof settings === "undefined") {
-    settings = Utils.defaultSettings;
-  }
-  optionSettings = settings;
-  setCyclicRulesRecheck(optionSettings.reevalRules);
+// When the extension is activated:
+chrome.runtime.onStartup.addListener(function() {
+  loadSettings();
 });
-

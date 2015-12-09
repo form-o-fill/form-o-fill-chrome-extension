@@ -22,6 +22,21 @@ Settings.prototype.loadSettings = function() {
   settings.getBg(function(bgWindow) {
     settings.applySettings(bgWindow.optionSettings);
   });
+  settings.updateLastImportDate();
+};
+
+// Updates the last import date from shadow storage
+Settings.prototype.updateLastImportDate = function() {
+  Storage.load(Utils.keys.shadowStorage).then(function(shadowStorage) {
+    var importDate = "never";
+    if(typeof shadowStorage !== "undefined") {
+      importDate = shadowStorage.lastUpdate;
+      if(typeof importDate !== "undefined") {
+        importDate = new Date(importDate).toLocaleString();
+      }
+    }
+    document.querySelector("#import-source-url-date").innerText = importDate;
+  });
 };
 
 Settings.prototype.showInfo = function(msg) {
@@ -68,6 +83,8 @@ Settings.prototype.saveSettings = function(overwrites) {
   this.getBg(function(bgWindow) {
     bgWindow.setSettings(currentSettings);
   });
+
+  this.updateLastImportDate();
 
   jQuery(".notice").hide();
 };
@@ -123,6 +140,7 @@ Settings.prototype.validateAndImport = function() {
 };
 
 Settings.prototype.importFetchSuccess = function(dataAsString, url) {
+  var settings = this;
   var toImport = JSONF.parse(dataAsString);
   if(Rules.validateImport(toImport)) {
 
@@ -149,6 +167,8 @@ Settings.prototype.importFetchSuccess = function(dataAsString, url) {
       .attr("href", url)
       .end()
       .show();
+
+      settings.updateLastImportDate();
     });
 
   } else {

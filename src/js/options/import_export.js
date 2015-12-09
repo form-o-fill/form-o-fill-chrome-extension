@@ -1,4 +1,4 @@
-/*global Workflows, Logger, Storage, $, Utils, JSONF, Rules, loadRules, currentTabId, loadTabsSettings, updateTabStats, fillAvailableRules, loadWorkflows*/
+/*global Workflows Logger Storage $ Utils JSONF Rules loadRules currentTabId loadTabsSettings updateTabStats fillAvailableRules loadWorkflows*/
 /*eslint no-unused-vars: 0*/
 var ImportExport = {
   // Export rules as a newline seperated list of strings
@@ -73,7 +73,8 @@ var ImportExport = {
 
     var data = {
       workflows: [],
-      rules: []
+      rules: [],
+      lastUpdate: null
     };
 
     // Save workflows (if any)
@@ -85,6 +86,8 @@ var ImportExport = {
     data.rules = importStruct.rules.rules.map(function (editorTabAndRules) {
       return editorTabAndRules.code;
     });
+
+    data.lastUpdate = Date.now();
 
     return Storage.save(data, Utils.keys.shadowStorage);
   },
