@@ -89,6 +89,7 @@
       "js/global/i18n.js",
       "js/global/libs.js", 
       "js/global/workflows.js", 
+      "js/background/remote_import.js",
       "js/background/form_util.js",
       "js/background/changelog.js",
       "js/background/notification.js",

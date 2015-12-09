@@ -1,4 +1,4 @@
-/*global jQuery Rules JSONF ImportExport Utils */
+/*global jQuery ImportExport Utils */
 var Settings = function() {
 };
 
@@ -107,8 +107,10 @@ Settings.prototype.bindHandlers = function() {
 
   // Bind to validate button
   document.querySelector("#settings").addEventListener("click", function(evt) {
-    if( evt.target && evt.target.classList.contains("validate-import-source-url") ||
-       (evt.target.id === "settings-activate-import-source-url" && evt.target.checked)) {
+    // Trigger when import button is clicked or the checkbox is checked (from unchecked state)
+    //TODO: Bug -> Import works, change url slightly -> must press btn two times ?! (FS, 2015-12-09)
+    if( evt.target && (evt.target.classList.contains("validate-import-source-url") ||
+       (evt.target.id === "settings-activate-import-source-url" && evt.target.checked))) {
       settings.validateAndImport();
     }
   });
@@ -125,13 +127,9 @@ Settings.prototype.validateAndImport = function() {
   // Simple base test for URL validity
   if(/^https?:\/\/.*\.js(on)?$/i.test(url)) {
     // Valid URL
-    jQuery.ajax({url: url, dataType: "text"})
-      .done(function(dataAsString) {
-        settings.importFetchSuccess(dataAsString, url);
-      })
-      .fail(function(jqXhr, textStatus) {
-        settings.importFetchFail(url, jqXhr, textStatus);
-      });
+    settings.getBg(function(bgWindow) {
+      bgWindow.RemoteImport.import(url).then(settings.importFetchSuccess.bind(settings)).catch(settings.importFetchFail.bind(settings));
+    });
   } else {
     document.querySelector("#settings-activate-import-source-url").checked = false;
     settings.saveSettings();
@@ -139,57 +137,56 @@ Settings.prototype.validateAndImport = function() {
   }
 };
 
-Settings.prototype.importFetchSuccess = function(dataAsString, url) {
+Settings.prototype.importFetchSuccess = function(resolved) {
   var settings = this;
-  var toImport = JSONF.parse(dataAsString);
-  if(Rules.validateImport(toImport)) {
+  var toImport = resolved.data;
+  var counts = {
+    workflows: 0,
+    rules: 0
+  };
 
-    var counts = {
-      workflows: 0,
-      rules: 0
-    };
-    if(typeof toImport.workflows !== "undefined" && typeof toImport.workflows.length !== "undefined") {
-      counts.workflows = toImport.workflows.length;
-    }
-    counts.rules = toImport.rules.rules.length;
-
-    // Valid format
-    ImportExport.importRemoteRules(toImport).then(function() {
-      jQuery(".notice.import-remote-ready")
-      .find(".imp-wfs-count")
-      .text(counts.workflows)
-      .end()
-      .find(".imp-rules-count")
-      .text(counts.rules)
-      .end()
-      .find(".imp-rules-url")
-      .text(url)
-      .attr("href", url)
-      .end()
-      .show();
-
-      settings.updateLastImportDate();
-    });
-
-  } else {
-    document.querySelector("#settings-activate-import-source-url").checked = false;
-    this.saveSettings();
-    jQuery(".import-remote-fail-format").show();
+  if(typeof toImport.workflows !== "undefined" && typeof toImport.workflows.length !== "undefined") {
+    counts.workflows = toImport.workflows.length;
   }
+
+  counts.rules = toImport.rules.rules.length;
+
+  // Valid format
+  ImportExport.importRemoteRules(toImport).then(function() {
+    jQuery(".notice.import-remote-ready")
+    .find(".imp-wfs-count")
+    .text(counts.workflows)
+    .end()
+    .find(".imp-rules-count")
+    .text(counts.rules)
+    .end()
+    .find(".imp-rules-url")
+    .text(resolved.url)
+    .attr("href", resolved.url)
+    .end()
+    .show();
+
+    settings.updateLastImportDate();
+  });
 };
 
 // When the import failed XHR wise
-Settings.prototype.importFetchFail = function(url, jqXhr, textStatus) {
+Settings.prototype.importFetchFail = function(rejected) {
   document.querySelector("#settings-activate-import-source-url").checked = false;
   this.saveSettings();
-  jQuery(".import-remote-fail-fetch")
-  .find(".imp-fail-fetch-msg")
-  .text("status: " + jqXhr.status + ", textStatus: " + textStatus)
-  .end()
-  .find(".imp-fail-fetch-url")
-  .attr("href", url)
-  .end()
-  .show();
+
+  if(rejected.textStatus === "FORMAT") {
+    jQuery(".import-remote-fail-format").show();
+  } else {
+    jQuery(".import-remote-fail-fetch")
+    .find(".imp-fail-fetch-msg")
+    .text("status: " + rejected.status + ", textStatus: " + rejected.textStatus)
+    .end()
+    .find(".imp-fail-fetch-url")
+    .attr("href", rejected.url)
+    .end()
+    .show();
+  }
 };
 
 Settings.prototype.applySettings = function(options) {
