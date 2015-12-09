@@ -1,4 +1,4 @@
-/*global jQuery ImportExport Utils */
+/*global jQuery Utils */
 var Settings = function() {
 };
 
@@ -152,21 +152,23 @@ Settings.prototype.importFetchSuccess = function(resolved) {
   counts.rules = toImport.rules.rules.length;
 
   // Valid format
-  ImportExport.importRemoteRules(toImport).then(function() {
-    jQuery(".notice.import-remote-ready")
-    .find(".imp-wfs-count")
-    .text(counts.workflows)
-    .end()
-    .find(".imp-rules-count")
-    .text(counts.rules)
-    .end()
-    .find(".imp-rules-url")
-    .text(resolved.url)
-    .attr("href", resolved.url)
-    .end()
-    .show();
+  settings.getBg(function(bgWindow) {
+    bgWindow.RemoteImport.save(toImport).then(function() {
+      jQuery(".notice.import-remote-ready")
+      .find(".imp-wfs-count")
+      .text(counts.workflows)
+      .end()
+      .find(".imp-rules-count")
+      .text(counts.rules)
+      .end()
+      .find(".imp-rules-url")
+      .text(resolved.url)
+      .attr("href", resolved.url)
+      .end()
+      .show();
 
-    settings.updateLastImportDate();
+      settings.updateLastImportDate();
+    });
   });
 };
 
