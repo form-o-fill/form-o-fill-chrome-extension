@@ -18,6 +18,7 @@
     "storage",
     "contextMenus",
     "notifications",
+    "alarms",
     "http://*/",
     "https://*/",
     "<all_urls>"

@@ -33,6 +33,8 @@ var manifest = require('./src/manifest');
 // The final .zip filename that gets uploaded to https://chrome.google.com/webstore/developer/dashboard
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
 
+var Utils = require('./src/js/global/utils');
+
 //
 // Replacements config for gulp-replace
 //
@@ -110,9 +112,18 @@ var replaceOpts = {
       match: /"persistent": true/,
       replacement: "\"persistent\": false"
     }
-
   ]
 };
+
+Object.keys(Utils).forEach(function(key) {
+  var val = Utils[key];
+  if(typeof val === "string" || typeof val === "number") {
+    replaceOpts.patterns.push({
+      match: new RegExp("##Utils\." + key + "##"),
+      replacement: val
+    });
+  }
+});
 
 // Helper to run all tests thru mocha
 var runTests = function() {
@@ -146,7 +157,7 @@ gulp.task('clean', ["announce"], function() {
 // ESLINT the javascript (BEFORE uglifier ran over them)
 //
 gulp.task('lint', function () {
-  return gulp.src(['src/js/*/*.js'])
+  return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/content.js'])
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failOnError());

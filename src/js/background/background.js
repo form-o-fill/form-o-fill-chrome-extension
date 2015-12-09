@@ -472,4 +472,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
 // When the extension is activated:
 chrome.runtime.onStartup.addListener(function() {
   loadSettings();
+
+  // Create an "alarm" which will be called every 15 minutes or so
+  // https://developer.chrome.com/extensions/alarms
+  // This till trigger a re-import of the remote rules set in settings
+  chrome.alarms.create(Utils.alarmName, { delayInMinutes: Utils.alarmIntervalInMinutes, periodInMinutes: Utils.alarmIntervalInMinutes});
 });
