@@ -4,6 +4,9 @@ var Popup = {
   init: function() {
     var popup = this;
 
+    // Update with "No matches"
+    popup.updateHtml([], []);
+
     // Load last matching Rules and workflows
     Promise.all([Rules.lastMatchingRules(), Workflows.loadMatches()]).then(function popupInit(data) {
       popup.updateHtml(data[0], data[1]);
