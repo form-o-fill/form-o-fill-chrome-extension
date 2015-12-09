@@ -1,4 +1,4 @@
-/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs*/
+/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm*/
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 var lastMatchingRules = [];
 var lastActiveTab = null;
@@ -418,6 +418,30 @@ var initializeTabSettings = function() {
   });
 };
 
+var remoteRulesImportSuccess = function(resolved) {
+  Logger.info("[bg.js] Updating remote rules SUCCEEDED");
+  RemoteImport.save(resolved.data);
+};
+
+var remoteRulesImportFail = function() {
+  Logger.warn("[bg.js] Updating remote rules FAILED");
+  Notification.create(chrome.i18n.getMessage("notification_remote_import_failed"), null, function () {
+    Utils.openOptions("#settings");
+  });
+};
+
+// This is triggered when the set interval (eg. every 15 minutes) has expired
+var alarmListener = function(alarm) {
+  if(alarm.name !== Utils.alarmName) {
+    return;
+  }
+
+  if(optionSettings.importActive === true && optionSettings.importUrl.indexOf("http") > -1) {
+    Logger.info("[bg.js] Alarm triggered. Updating remote rules.");
+    RemoteImport.import(optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
+  }
+};
+
 // REMOVE START
 // Debug Messages from content.js
 chrome.runtime.onConnect.addListener(function (port) {
@@ -467,14 +491,18 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
   // load and set settings. Uses defaults if non present.
   loadSettings();
+
+  // This till trigger a re-import of the remote rules set in settings
+  Alarm.create();
 });
 
 // When the extension is activated:
 chrome.runtime.onStartup.addListener(function() {
   loadSettings();
 
-  // Create an "alarm" which will be called every 15 minutes or so
-  // https://developer.chrome.com/extensions/alarms
   // This till trigger a re-import of the remote rules set in settings
-  chrome.alarms.create(Utils.alarmName, { delayInMinutes: Utils.alarmIntervalInMinutes, periodInMinutes: Utils.alarmIntervalInMinutes});
+  Alarm.create();
 });
+
+// Listen to alarms (import remote url)
+chrome.alarms.onAlarm.addListener(alarmListener);

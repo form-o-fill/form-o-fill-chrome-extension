@@ -38,5 +38,8 @@
   },
   "notification_import_without_rule": {
     "message": "Found an 'import' statement without matching rule. Click here to see more info."
+  },
+  "notification_remote_import_failed": {
+    "message": "Updating the rules set as 'URL import' failed. Please retry manually from the settings panel."
   }
 }

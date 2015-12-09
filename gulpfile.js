@@ -111,6 +111,10 @@ var replaceOpts = {
     {
       match: /"persistent": true/,
       replacement: "\"persistent\": false"
+    },
+    {
+      match: /alarmIntervalInMinutes\s*:\s*1/,
+      replacement: "alarmIntervalInMinutes: 15"
     }
   ]
 };
