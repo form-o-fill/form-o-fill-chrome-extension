@@ -43,7 +43,7 @@ var RemoteImport = {
   notifySuccess: function(success, url) {
     url = url ? url : "wrong format";
     var txt = "Importing remote rules " + (success ? "succeeded" : "failed") + "!\nURL: " + url;
-    Notification.create(txt, "Remote import!", function() {
+    Notification.create(txt, "Remote rules import!", function() {
       Utils.openOptions("#settings");
     });
   },
