@@ -131,7 +131,7 @@ var onTabReadyRules = function(tabId) {
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)
-            if (totalMatchesCount !== 1 || optionSettings.alwaysShowPopup) {
+            if (totalMatchesCount !== 1 || (typeof optionSettings !== "undefined" && optionSettings.alwaysShowPopup)) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
               if (!Utils.isLiveExtension()) {
                 createCurrentPopupInIframe(tab.id);

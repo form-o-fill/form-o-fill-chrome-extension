@@ -52,9 +52,12 @@ var Workflows = {
       });
 
       Workflows.all().then(function prMatchesForRules(workflows) {
-        var matchingWorkflows = workflows.filter(function cbWfFilter(workflow) {
-          return matchingRuleNames.indexOf(workflow.steps[0]) === 0;
-        });
+        var matchingWorkflows = [];
+        if(typeof workflows !== "undefined") {
+          matchingWorkflows = workflows.filter(function cbWfFilter(workflow) {
+            return matchingRuleNames.indexOf(workflow.steps[0]) === 0;
+          });
+        }
         resolve(matchingWorkflows);
       });
     });
