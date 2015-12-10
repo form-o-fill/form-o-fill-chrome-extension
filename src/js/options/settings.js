@@ -11,8 +11,15 @@ Settings.prototype.init = function() {
 Settings.prototype.listen = function() {
   var settings = this;
   chrome.runtime.onMessage.addListener(function(request) {
+
+    // Force reload settings from storage (called from bg.js)
     if(request.action === "reloadSettings") {
       settings.loadSettings();
+    }
+
+    // Save the settings (called from bg.js)
+    if(request.action === "saveSettings" && typeof request.message !== "undefined") {
+      settings.saveSettings(request.message);
     }
   });
 };
@@ -53,6 +60,7 @@ Settings.prototype.showInfo = function(msg) {
   }
 };
 
+// Get background page (window)
 Settings.prototype.getBg = function(cb) {
   chrome.runtime.getBackgroundPage(function(bgWindow) {
     cb(bgWindow);

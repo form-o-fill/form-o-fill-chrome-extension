@@ -447,6 +447,7 @@ var remoteRulesImportFail = function() {
 // Update remote rules if options are set correctly
 var executeRemoteImport = function() {
   if(typeof optionSettings !== "undefined" && optionSettings.importActive === true && optionSettings.importUrl.indexOf("http") > -1) {
+    Logger.info("[bg.js] Alarm triggered update of remote rules");
     RemoteImport.import(optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
   }
 };
@@ -456,7 +457,7 @@ var alarmListener = function(alarm) {
   if(alarm.name !== Utils.alarmName) {
     return;
   }
-  Logger.info("[bg.js] Alarm triggered. Updating remote rules.");
+  Logger.info("[bg.js] Alarm triggered");
   executeRemoteImport();
 };
 

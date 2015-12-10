@@ -54,10 +54,18 @@ var RemoteImport = {
         var matches = sender.url.match(/i=(.*\.js)/);
         if(typeof matches[1] !== "undefined") {
           var url = decodeURIComponent(matches[1]);
+          // Import rules from URL
           RemoteImport.import(url).then(function(resolved) {
+            // Save to shadow storage
             RemoteImport.save(resolved.data);
+
+            // Now change settings and activate import
             optionSettings.importActive = true;
             optionSettings.importUrl = url;
+
+            // send to settings.js:
+            chrome.runtime.sendMessage({action: "saveSettings", message: optionSettings});
+
             RemoteImport.notifySuccess(true, url);
           }).catch(function() {
             RemoteImport.notifySuccess(false, url);
