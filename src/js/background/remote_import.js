@@ -1,8 +1,7 @@
-/* global jQuery JSONF Rules Utils */
+/* global jQuery JSONF Rules Utils optionSettings */
 var RemoteImport = {
   import: function(url) {
     return new Promise(function (resolve, reject) {
-      //TODO: use fetch here (polyfill: https://github.com/github/fetch) (FS, 2015-12-09)
       jQuery.ajax({url: url, dataType: "text"})
         .done(function(dataAsString) {
           var toImport = JSONF.parse(dataAsString);
@@ -40,6 +39,34 @@ var RemoteImport = {
     data.lastUpdate = Date.now();
 
     return Storage.save(data, Utils.keys.shadowStorage);
+  },
+  notifySuccess: function(success, url) {
+    url = url ? url : "wrong format";
+    var txt = "Importing remote rules " + (success ? "succeeded" : "failed") + "!\nURL: " + url;
+    Notification.create(txt, "Remote import!", function() {
+      Utils.openOptions("#settings");
+    });
+  },
+  listen: function() {
+    chrome.runtime.onMessageExternal.addListener(function(request, sender) {
+      if(/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
+        // Extract the i=parameter
+        var matches = sender.url.match(/i=(.*\.js)/);
+        if(typeof matches[1] !== "undefined") {
+          var url = decodeURIComponent(matches[1]);
+          RemoteImport.import(url).then(function(resolved) {
+            RemoteImport.save(resolved.data);
+            optionSettings.importActive = true;
+            optionSettings.importUrl = url;
+            RemoteImport.notifySuccess(true, url);
+          }).catch(function() {
+            RemoteImport.notifySuccess(false, url);
+          });
+        }
+      } else {
+        RemoteImport.notifySuccess(false, null);
+      }
+    });
   }
 };
 

@@ -31,7 +31,9 @@
   "externally_connectable": {
     "matches": [
       "*://form-o-fill.github.io/tutorial/*", 
-      "http://localhost:4000/tutorial/*"
+      "http://localhost:4000/tutorial/*",
+      "*://form-o-fill.github.io/import-remote-rules/*", 
+      "http://localhost:4000/import-remote-rules/*"
     ]
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
