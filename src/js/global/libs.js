@@ -139,7 +139,6 @@ var setThrobberText = function(text) {
   // we need to send a message to the content.js
   chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
 };
-Libs.add("displayMessage", setThrobberText);
 
 // This is a function "dummy"
 // It represents code to copy the content of one
@@ -166,6 +165,7 @@ var _copyValueFunction = function() {
 // "value" : Libs.h.click  => Clicks on the element specified by 'selector'
 //           Libs.h.screenshot("save_as_filename") => Save a screenshot of visible area as [filename]
 //           Libs.h.copyValue("#selector") => copies the *value* ofthe chosen field
+//           Libs.h.displayMessage("Some text") => shows a message to the user
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
@@ -188,7 +188,8 @@ var valueFunctionHelper = {
     /*eslint-disable no-new-func*/
     return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?\n/,"").replace(/}$/,""));
     /*eslint-enable no-new-func*/
-  }
+  },
+  displayMessage: setThrobberText
 };
 Libs.add("h", valueFunctionHelper);
 

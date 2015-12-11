@@ -174,11 +174,11 @@
   <div class="explaining">
     You can display a custom message to the user when your before function is working.<br />
     If your preparations take a long time then it might be a good idea to notify the user.<br />
-    Use <code>Libs.displayMessage</code> for that.
+    Use <code>Libs.h.displayMessage</code> for that.
   </div>
   <div class="code">
     before: function(resolve, context) { <br />
-    &nbsp;&nbsp;Libs.displayMessage("Working very hard. Go drink a coffee.");<br />
+    &nbsp;&nbsp;Libs.h.displayMessage("Working very hard. Go drink a coffee.");<br />
     &nbsp;&nbsp;... do some costly stuff ...<br />
     }
   </div>
