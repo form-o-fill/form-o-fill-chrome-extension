@@ -204,7 +204,7 @@ gulp.task('globalJs', ['clean'], function () {
   .pipe(replace(replaceOpts))
   .pipe(concat('global.js'))
   .pipe(stripdebug())
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
@@ -212,11 +212,21 @@ gulp.task('globalJs', ['clean'], function () {
 // Build background.js
 //
 gulp.task('backgroundJs', ['clean'], function () {
-  return gulp.src("src/js/background/*.js")
+  return gulp.src([
+    "src/js/background/alarm.js",
+    "src/js/background/changelog.js",
+    "src/js/background/context_menu.js",
+    "src/js/background/remote_import.js",
+    "src/js/background/form_util.js",
+    "src/js/background/notification.js",
+    "src/js/background/background.js",
+    "src/js/background/testing.js",
+    "src/js/background/tutorial.js"
+  ])
   .pipe(replace(replaceOpts))
   .pipe(concat('background.js'))
   .pipe(stripdebug())
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
