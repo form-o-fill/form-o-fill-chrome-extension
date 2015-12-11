@@ -1,6 +1,5 @@
 /*global Logger Rules lastActiveTab FormFiller Utils */
 /*eslint no-loop-func:0 */
-// This creates a "safe" namespace for all libs
 var Libs = {
   _libs: {},
   add: function(libraryName, librayTopLevelFunction, forceAdd) {
@@ -27,7 +26,7 @@ var Libs = {
   },
   // Dectects libraries used in a rulecode string
   // returns an array of found libraries
-  detectLibraries: function(ruleCodeString) {
+  detectVendoredLibraries: function(ruleCodeString) {
     var detectedLibs = [];
     Object.keys(Utils.vendoredLibs).forEach(function dtctLib(vLibKey) {
       if(ruleCodeString.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
@@ -142,9 +141,31 @@ var setThrobberText = function(text) {
 };
 Libs.add("displayMessage", setThrobberText);
 
+// This is a function "dummy"
+// It represents code to copy the content of one
+// DOM node to another
+// The SELECTOR will be replaced and re-compiled later
+// see Libs.h.copyValue
+var _copyValueFunction = function() {
+  if(!Utils.isBgPage()) {
+    var $source = document.querySelector("##SELECTOR##");
+    if($source === null) {
+      // element not found
+      setThrobberText("Libs.h.copyValue didn't find source element with selector '##SELECTOR##'.");
+      return null;
+    }
+
+    // element found
+    return $source.value;
+  }
+  return null;
+};
+
 // helper for use in value functions
 //
 // "value" : Libs.h.click  => Clicks on the element specified by 'selector'
+//           Libs.h.screenshot("save_as_filename") => Save a screenshot of visible area as [filename]
+//           Libs.h.copyValue("#selector") => copies the *value* ofthe chosen field
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
@@ -153,17 +174,20 @@ var valueFunctionHelper = {
     chrome.runtime.sendMessage({action: "takeScreenshot", value: FormFiller.currentRuleMetadata, flag: saveAs});
   },
   copyValue: function(selector) {
-    if(!Utils.isBgPage()) {
-      var $source = document.querySelector(selector);
-      if($source === null) {
-        // element not found
-        setThrobberText("Libs.h.copyValue didn't find source element with selector '" + selector + "'.");
-        return null;
-      }
-
-      // element found
-      return $source.value;
-    }
+    selector = selector.replace(/"/g, "");
+    // This needs explaining:
+    // Since FoF looks for a function to execute (the typical value function) and Libs.h.copyValue("selector") must return one
+    // we need to dynamically create a function here since the 'selector' parameter gets lost while serializing.
+    // This creates a new function where SELECTOR is replaced by that variable so there is no parameter at all.
+    //
+    // return new Function(_copyValueFunction <-- Take the body of the dummy function
+    // .toString()                            <-- As a string
+    // .replace(/##SELECTOR##/g, selector)    <-- Replace the selector placeholder with it's real value
+    // .replace(/^.*?\n/,"")                  <-- Strip the anonymous function declaration in the first line
+    // .replace(/}$/,""));                    <-- Strip the last closing bracket
+    /*eslint-disable no-new-func*/
+    return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?\n/,"").replace(/}$/,""));
+    /*eslint-enable no-new-func*/
   }
 };
 Libs.add("h", valueFunctionHelper);

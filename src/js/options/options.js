@@ -149,7 +149,7 @@ var updateTabStats = function() {
 // Save the rules
 var saveRules = function(tabId) {
   // Detect used libs and inject them into options
-  var libs = Libs.detectLibraries(editor.getValue());
+  var libs = Libs.detectVendoredLibraries(editor.getValue());
   Libs.loadLibs(libs, "saveRules").then(function() {
     var errors = Rules.syntaxCheck(editor);
     if(errors.length > 0) {
@@ -192,7 +192,7 @@ var loadRules = function(tabId) {
     }
 
     // Detect used libs and inject them into options
-    var libs = Libs.detectLibraries(ruleJson);
+    var libs = Libs.detectVendoredLibraries(ruleJson);
     Libs.loadLibs(libs, "loadRules").then(function() {
       editor.setValue(ruleJson, -1);
       editor.editor().clearSelection();

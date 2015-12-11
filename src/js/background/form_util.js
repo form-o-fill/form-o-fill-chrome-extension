@@ -326,7 +326,7 @@ var FormUtil = {
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // Detect vendored libraries in before functions and import them into Libs
-    Libs.detectLibraries(JSONF.stringify(rule.before)).forEach(function (libPath) {
+    Libs.detectVendoredLibraries(JSONF.stringify(rule.before)).forEach(function (libPath) {
       Logger.info("[b/form_util.js] Assigning " + libPath + " as it is used in the before function");
       Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
     });
@@ -382,7 +382,7 @@ var FormUtil = {
       }
 
       // Detect vendored libraries
-      var usedLibs = Libs.detectLibraries(JSONF.stringify(rule.fields));
+      var usedLibs = Libs.detectVendoredLibraries(JSONF.stringify(rule.fields));
 
       // generate promises for importing those libraries
       var morePromises = FormUtil.generateLibsPromises(usedLibs);

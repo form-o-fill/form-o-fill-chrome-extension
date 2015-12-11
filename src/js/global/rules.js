@@ -47,7 +47,7 @@ var Rules = {
 
         var rules = [];
         if(rulesData) {
-          var libs = Libs.detectLibraries(rulesData.code);
+          var libs = Libs.detectVendoredLibraries(rulesData.code);
           Libs.loadLibs(libs, "Rules.load").then(function prRulesLoadLibs() {
             var ruleFunction = that.text2function(rulesData.code);
 

@@ -30,7 +30,7 @@ var Utils = {
   },
   tabIdForShadow: 900,
   reevalRulesInterval: 2000,
-  reservedLibNamespaces: ["h", "halt"],
+  reservedLibNamespaces: ["h", "halt", "displayMessage"],
   vendoredLibs: {
     "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
     "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
