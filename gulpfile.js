@@ -1,7 +1,5 @@
 /*eslint-env node */
 
-// npm install --save-dev gulp gulp-sourcemaps gulp-sass gulp-webdriver gulp-util chalk gulp-replace-task gulp-cleanhtml gulp-strip-debug gulp-concat gulp-uglify gulp-rm gulp-zip gulp-eslint through2 gulp-minify-css chai gulp-spawn-mocha sinon sinon-chai jsdom
-
 var chalk = require('chalk');
 var cleanhtml = require('gulp-cleanhtml');
 var concat = require('gulp-concat');
@@ -33,6 +31,7 @@ var manifest = require('./src/manifest');
 // The final .zip filename that gets uploaded to https://chrome.google.com/webstore/developer/dashboard
 var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + manifest.version + ".zip";
 
+// Load Utils for ##Utils.*## replacements
 var Utils = require('./src/js/global/utils');
 
 //
