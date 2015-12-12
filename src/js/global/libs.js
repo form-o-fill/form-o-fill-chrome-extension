@@ -1,12 +1,11 @@
 /*global Logger Rules lastActiveTab FormFiller Utils */
 /*eslint no-loop-func:0 */
 var Libs = {
-  _libs: {},
   add: function(libraryName, librayTopLevelFunction, forceAdd) {
     // Check if the method is already defined
     forceAdd = forceAdd || false;
-    if((this._libs[libraryName] || this.hasOwnProperty(libraryName)) && !forceAdd) {
-      Logger.info("[libs.js] Can not add library named '" + libraryName + "' because it already exists as a function().");
+    if(this.hasOwnProperty(libraryName) && !forceAdd) {
+      Logger.info("[libs.js] Did not add '" + libraryName + "' to Libs, because it already exists as a function().");
       return;
     }
     this[libraryName] = librayTopLevelFunction;
@@ -45,7 +44,7 @@ var Libs = {
 
       // If there is no script to inject
       // OR we run in the context of the content page
-      // resolve now
+      // resolve now.
       // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
       if(scriptPaths.length === 0 || !Utils.isBgPage()) {
         resolve(0);
@@ -126,31 +125,30 @@ var Libs = {
       }
     });
     /*eslint-enable complexity */
-  }
-};
+  },
+  setThrobberText: function(text) {
+    // Change the text of the throbber
+    if(lastActiveTab === null) {
+      return null;
+    }
 
-// Change the text of the throbber
-var setThrobberText = function(text) {
-  if(lastActiveTab === null) {
-    return null;
+    // Since this is called from the background pages
+    // we need to send a message to the content.js
+    chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
   }
-
-  // Since this is called from the background pages
-  // we need to send a message to the content.js
-  chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
 };
 
 // This is a function "dummy"
 // It represents code to copy the content of one
-// DOM node to another
-// The SELECTOR will be replaced and re-compiled later
+// DOM node to another.
+// The SELECTOR will be replaced and re-compiled later.
 // see Libs.h.copyValue
 var _copyValueFunction = function() {
   if(!Utils.isBgPage()) {
     var $source = document.querySelector("##SELECTOR##");
     if($source === null) {
       // element not found
-      setThrobberText("Libs.h.copyValue didn't find source element with selector '##SELECTOR##'.");
+      Libs.setThrobberText("Libs.h.copyValue didn't find source element with selector '##SELECTOR##'.");
       return null;
     }
 
@@ -160,7 +158,7 @@ var _copyValueFunction = function() {
   return null;
 };
 
-// helper for use in value functions
+// Helper for use in value functions
 //
 // "value" : Libs.h.click  => Clicks on the element specified by 'selector'
 //           Libs.h.screenshot("save_as_filename") => Save a screenshot of visible area as [filename]
@@ -189,10 +187,9 @@ var valueFunctionHelper = {
     return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?\n/,"").replace(/}$/,""));
     /*eslint-enable no-new-func*/
   },
-  displayMessage: setThrobberText
+  displayMessage: Libs.setThrobberText
 };
 Libs.add("h", valueFunctionHelper);
-
 
 // Process control functions
 var processFunctionsHalt = function(msg) {
@@ -205,12 +202,11 @@ var processFunctionsHalt = function(msg) {
       msg = "Canceled by call to Libs.halt()";
     }
 
-    setThrobberText(msg);
+    Libs.setThrobberText(msg);
     return null;
   };
 };
 Libs.add("halt", processFunctionsHalt);
-
 
 // Import all saved libs
 Libs.import();
