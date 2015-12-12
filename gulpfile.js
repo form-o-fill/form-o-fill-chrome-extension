@@ -1,5 +1,4 @@
 /*eslint-env node */
-
 var chalk = require('chalk');
 var cleanhtml = require('gulp-cleanhtml');
 var concat = require('gulp-concat');
@@ -119,6 +118,9 @@ var replaceOpts = {
   ]
 };
 
+//
+// Replace all occurences of ##Utils.someKey## by it's value
+//
 Object.keys(Utils).forEach(function(key) {
   var val = Utils[key];
   if(typeof val === "string" || typeof val === "number") {
@@ -129,7 +131,9 @@ Object.keys(Utils).forEach(function(key) {
   }
 });
 
+//
 // Helper to run all tests thru mocha
+//
 var runTests = function() {
   return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
     R: 'dot',
@@ -139,7 +143,7 @@ var runTests = function() {
 };
 
 //
-// Output which version to build where to
+// Output which version to build and to where
 //
 gulp.task('announce', function() {
   gulpUtil.log(
@@ -158,10 +162,10 @@ gulp.task('clean', ["announce"], function() {
 });
 
 //
-// ESLINT the javascript (BEFORE uglifier ran over them)
+// ESLINT the javascript (BEFORE uglifier ran over it)
 //
 gulp.task('lint', function () {
-  return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/content.js'])
+  return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/content.js', '!src/js/popup.js', '!src/js/options.js'])
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failOnError());
@@ -171,7 +175,6 @@ gulp.task('lint', function () {
 // Optimize CSS
 //
 gulp.task('optimizeCss', ['clean'], function () {
-
   // Optimize main options.css
   gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
   .pipe(replace(replaceOpts))
@@ -188,7 +191,7 @@ gulp.task('optimizeCss', ['clean'], function () {
 
 //
 // Build global.js
-// Sadly until I use require.js here the order is important :(
+// Sadly until I use webpack here the order is important :(
 //
 gulp.task('globalJs', ['clean'], function () {
   return gulp.src([
@@ -210,6 +213,7 @@ gulp.task('globalJs', ['clean'], function () {
 
 //
 // Build background.js
+// Order dependent :( -> will use webpack some day
 //
 gulp.task('backgroundJs', ['clean'], function () {
   return gulp.src([
@@ -244,6 +248,7 @@ gulp.task('contentJs', ['clean'], function () {
 
 //
 // Build options.js
+// Order dependent :( -> will use webpack some day
 //
 gulp.task('optionsJs', ['clean'], function () {
   return gulp.src([
