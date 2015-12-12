@@ -1,28 +1,11 @@
 /*eslint-env node */
 var chalk = require('chalk');
-var cleanhtml = require('gulp-cleanhtml');
-var concat = require('gulp-concat');
-var eslint = require('gulp-eslint');
 var gulp = require('gulp');
-var gulpUtil = require('gulp-util');
-var minifyCSS = require('gulp-minify-css');
-var mocha = require('gulp-spawn-mocha');
-var replace = require('gulp-replace-task');
-var rm = require('gulp-rm');
-var stripdebug = require('gulp-strip-debug');
-var uglify = require('gulp-uglify');
-var zip = require('gulp-zip');
 var argv = require('yargs').argv;
-var webdriver = require('gulp-webdriver');
-var connect = require('gulp-connect');
-var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
+var plugins = require('gulp-load-plugins')();
 
-// this can be used to debug gulp runs
+// this can be used to debug gulp runs:
 // .pipe(debug({verbose: true}))
-/*eslint-disable no-unused-vars */
-var debug = require('gulp-debug');
-/*eslint-enable no-unused-vars */
 
 // Load the manifest as JSON
 var manifest = require('./src/manifest');
@@ -33,94 +16,10 @@ var distFilename = manifest.name.replace(/[ ]/g, "_").toLowerCase() + "-v-" + ma
 // Load Utils for ##Utils.*## replacements
 var Utils = require('./src/js/global/utils');
 
-//
-// Replacements config for gulp-replace
-//
-// 1.  Sets debug: false (in utils.js)
-// 2.  Removes Logger statements
-// 3.  Remove everything in .js files between "// REMOVE START" and "REMOVE END"
-//     These blocks contain development code that gets optimized away
-// 4.  Remove everything in .html files between "<!-- REMOVE START" and "REMOVE END -->"
-//     These blocks contain development code that gets optimized away
-// 5.  Activate blocks between "<!-- BUILD START" and "BUILD END -->"
-//     These contain the optimized files for the final build
-// 6.  Remove the "js:" array from the manifest
-//     These blocks contain development code that gets optimized away
-// 7.  Remove the "scripts:" array from the manifest
-//     These blocks contain development code that gets optimized away
-// 8.  Rename the "jsBuild" part in the manifest to be the "js" part
-//     These contain the optimized files for the final build
-// 9.  Rename the "scriptsBuild" part in the manifest to be the "scripts" part
-//     These contain the optimized files for the final build
-// 10. Replace ##VERSION## with the correct version string from the manifest
-// 11. Replaces the local reference URL to the tutorial site with the live one
-// 12. In dev mode the extension should persist and should not be unloaded
-// 13. Replace the dev alarm of one minute with the production version of 15 minutes
-var replaceOpts = {
-  preserveOrder: true,
-  patterns: [
-    {
-      match: /debug\s*:\s*true,/g,
-      replacement: "debug: false,"
-    },
-    {
-      match: /.*Logger.*/g,
-      replacement: ""
-    },
-    {
-      match: /^.*\/\/ REMOVE START[\s\S]*?\/\/ REMOVE END.*$/gm,
-      replacement: ""
-    },
-    {
-      match: /<!-- REMOVE START[\s\S]*?REMOVE END -->/gm,
-      replacement: ""
-    },
-    {
-      match: /<!-- BUILD START/g,
-      replacement: ""
-    },
-    {
-      match: /BUILD END -->/g,
-      replacement: ""
-    },
-    {
-      match: /^.*"js":[\s\S]*?\],.*$/gm,
-      replacement: ""
-    },
-    {
-      match: /^.*"scripts"[\s\S]*?\],.*$/gm,
-      replacement: ""
-    },
-    {
-      match: /"jsBuild"/g,
-      replacement: "\"js\""
-    },
-    {
-      match: /"scriptsBuild"/g,
-      replacement: "\"scripts\""
-    },
-    {
-      match: /##VERSION##/g,
-      replacement: manifest.version
-    },
-    {
-      match: /href="http:\/\/localhost:4000\//g,
-      replacement: "href=\"http://form-o-fill.github.io/"
-    },
-    {
-      match: /"persistent": true/,
-      replacement: "\"persistent\": false"
-    },
-    {
-      match: /alarmIntervalInMinutes\s*:\s*1/,
-      replacement: "alarmIntervalInMinutes: 15"
-    }
-  ]
-};
+// Load replacement variables
+var replaceOpts = require("./buildReplacements");
 
-//
 // Replace all occurences of ##Utils.someKey## by it's value
-//
 Object.keys(Utils).forEach(function(key) {
   var val = Utils[key];
   if(typeof val === "string" || typeof val === "number") {
@@ -135,7 +34,7 @@ Object.keys(Utils).forEach(function(key) {
 // Helper to run all tests thru mocha
 //
 var runTests = function() {
-  return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(mocha({
+  return gulp.src(['test/**/*_spec.js'], {read: false}).pipe(plugins.spawnMocha({
     R: 'dot',
     c: true,
     debug: true
@@ -146,7 +45,7 @@ var runTests = function() {
 // Output which version to build and to where
 //
 gulp.task('announce', function() {
-  gulpUtil.log(
+  plugins.util.log(
     'Building version', chalk.cyan(manifest.version),
     'of', chalk.cyan(manifest.name),
     'as', chalk.cyan("dist/" + distFilename)
@@ -158,7 +57,7 @@ gulp.task('announce', function() {
 //
 gulp.task('clean', ["announce"], function() {
   return gulp.src(['build/**', 'build/*'], {read: false})
-  .pipe(rm({async: false}));
+  .pipe(plugins.rm({async: false}));
 });
 
 //
@@ -166,9 +65,9 @@ gulp.task('clean', ["announce"], function() {
 //
 gulp.task('lint', function () {
   return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/content.js', '!src/js/popup.js', '!src/js/options.js'])
-  .pipe(eslint())
-  .pipe(eslint.format())
-  .pipe(eslint.failOnError());
+  .pipe(plugins.eslint())
+  .pipe(plugins.eslint.format())
+  .pipe(plugins.eslint.failOnError());
 });
 
 //
@@ -177,15 +76,15 @@ gulp.task('lint', function () {
 gulp.task('optimizeCss', ['clean'], function () {
   // Optimize main options.css
   gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
-  .pipe(replace(replaceOpts))
-  .pipe(concat('options.css'))
-  .pipe(minifyCSS())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.concat('options.css'))
+  .pipe(plugins.minifyCss())
   .pipe(gulp.dest('build/css/'));
 
   // optimize content and popup css
   return gulp.src(['src/css/content.css', 'src/css/popup.css'])
-  .pipe(minifyCSS())
-  .pipe(replace(replaceOpts))
+  .pipe(plugins.minifyCss())
+  .pipe(plugins.replaceTask(replaceOpts))
   .pipe(gulp.dest('build/css'));
 });
 
@@ -204,10 +103,10 @@ gulp.task('globalJs', ['clean'], function () {
     "src/js/global/libs.js",
     "src/js/global/workflows.js"
   ])
-  .pipe(replace(replaceOpts))
-  .pipe(concat('global.js'))
-  .pipe(stripdebug())
-  //.pipe(uglify())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.concat('global.js'))
+  .pipe(plugins.stripDebug())
+  .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
@@ -227,10 +126,10 @@ gulp.task('backgroundJs', ['clean'], function () {
     "src/js/background/testing.js",
     "src/js/background/tutorial.js"
   ])
-  .pipe(replace(replaceOpts))
-  .pipe(concat('background.js'))
-  .pipe(stripdebug())
-  //.pipe(uglify())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.concat('background.js'))
+  .pipe(plugins.stripDebug())
+  .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
@@ -239,10 +138,10 @@ gulp.task('backgroundJs', ['clean'], function () {
 //
 gulp.task('contentJs', ['clean'], function () {
   return gulp.src("src/js/content/*.js")
-  .pipe(replace(replaceOpts))
-  .pipe(concat('content.js'))
-  .pipe(stripdebug())
-  .pipe(uglify())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.concat('content.js'))
+  .pipe(plugins.stripDebug())
+  .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
@@ -263,10 +162,10 @@ gulp.task('optionsJs', ['clean'], function () {
     "src/js/options/settings.js",
     "src/js/options/rule_summary.js"
   ])
-  .pipe(replace(replaceOpts))
-  .pipe(concat('options.js'))
-  .pipe(stripdebug())
-  .pipe(uglify())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.concat('options.js'))
+  .pipe(plugins.stripDebug())
+  .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js/'));
 });
 
@@ -275,9 +174,9 @@ gulp.task('optionsJs', ['clean'], function () {
 //
 gulp.task('popupJs', ['clean'], function () {
   return gulp.src("src/js/popup/popup.js")
-  .pipe(replace(replaceOpts))
-  .pipe(stripdebug())
-  .pipe(uglify())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.stripDebug())
+  .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js'));
 });
 
@@ -296,8 +195,8 @@ gulp.task('copyUnchanged', ['clean'], function() {
 //
 gulp.task('copyHtml', ['copyUnchanged'], function() {
   return gulp.src(['src/html/**/*.html', '!src/html/options/_logs_*.html'], { nonegate: false })
-  .pipe(replace(replaceOpts))
-  .pipe(cleanhtml())
+  .pipe(plugins.replaceTask(replaceOpts))
+  .pipe(plugins.cleanhtml())
   .pipe(gulp.dest('build/html'));
 });
 
@@ -306,7 +205,7 @@ gulp.task('copyHtml', ['copyUnchanged'], function() {
 //
 gulp.task('mangleManifest', [ 'clean' ], function() {
   return gulp.src('src/manifest.json')
-  .pipe(replace(replaceOpts))
+  .pipe(plugins.replaceTask(replaceOpts))
   .pipe(gulp.dest('build'));
 });
 
@@ -316,9 +215,9 @@ gulp.task('mangleManifest', [ 'clean' ], function() {
 // running 'build'
 gulp.task('sass', function () {
   gulp.src('src/sass/*.scss')
-    .pipe(sourcemaps.init())
-    .pipe(sass({outputStyle: "expanded"}).on('error', sass.logError))
-    .pipe(sourcemaps.write('.'))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.sass({outputStyle: "expanded"}).on('error', plugins.sass.logError))
+    .pipe(plugins.sourcemaps.write('.'))
     .pipe(gulp.dest('src/css'));
 });
 
@@ -334,7 +233,7 @@ gulp.task('sass:watch', function () {
 //
 gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'sass', 'optimizeCss', 'globalJs', 'backgroundJs', 'contentJs', 'optionsJs', 'popupJs', 'mangleManifest'], function() {
   gulp.src(['build/**'])
-  .pipe(zip(distFilename))
+  .pipe(plugins.zip(distFilename))
   .pipe(gulp.dest('dist'));
 });
 
@@ -342,7 +241,7 @@ gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'sass', 'op
 // Run tests
 //
 gulp.task('test', function () {
-  gulpUtil.log('Running tests');
+  plugins.util.log('Running tests');
   return runTests().on('error', function (e) {
     throw e;
   });
@@ -359,7 +258,7 @@ gulp.task('test:watch', function () {
 // Starts a simple webserver hosting the integration test files
 //
 gulp.task('webserver:start', function() {
-  connect.server({
+  plugins.connect.server({
     root: "testcases/docroot-for-testing",
     livereload: false,
     port: 9292
@@ -369,10 +268,10 @@ gulp.task('webserver:start', function() {
 //
 // Kills the server (for integration tests)
 //
-gulp.task('webserver:stop', connect.serverClose);
+gulp.task('webserver:stop', plugins.connect.serverClose);
 
 gulp.task("integration", [ "webserver:start", "integration:run" ], function() {
-  connect.serverClose();
+  plugins.connect.serverClose();
 });
 
 // Integration testing (end-to-end)
@@ -413,7 +312,7 @@ gulp.task('integration:run', [ "webserver:start" ], function () {
   }
 
   return gulp.src(specs, {read: false})
-  .pipe(webdriver({desiredCapabilities: {
+  .pipe(plugins.webdriver({desiredCapabilities: {
     browserName: "chrome"
   }}));
 });
