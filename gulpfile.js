@@ -56,6 +56,7 @@ var Utils = require('./src/js/global/utils');
 // 10. Replace ##VERSION## with the correct version string from the manifest
 // 11. Replaces the local reference URL to the tutorial site with the live one
 // 12. In dev mode the extension should persist and should not be unloaded
+// 13. Replace the dev alarm of one minute with the production version of 15 minutes
 var replaceOpts = {
   preserveOrder: true,
   patterns: [
