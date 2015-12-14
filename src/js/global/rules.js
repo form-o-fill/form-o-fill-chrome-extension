@@ -85,15 +85,17 @@ var Rules = {
   getRulesFromShadow: function(shadowStorage) {
     var rules = [];
     var ruleObjects;
+    var index = 0;
     if(typeof shadowStorage !== "undefined" && typeof shadowStorage.rules !== "undefined" && shadowStorage.rules.length > 0) {
       // rules contains an array of strings that contain an array of rules
       shadowStorage.rules.forEach(function(rulesCode) {
         // String of rules -> array of object
         ruleObjects = Rules.text2function(rulesCode);
         // convert array of ruleObjects to array of Rule instances
-        ruleObjects.forEach(function(ruleObject, index) {
+        ruleObjects.forEach(function(ruleObject) {
           ruleObject.shadow = true;
           rules.push(Rule.create(ruleObject, Utils.tabIdForShadow, index));
+          index++;
         });
       });
     }
