@@ -533,4 +533,10 @@ chrome.runtime.onStartup.addListener(function() {
 
 // Listen to alarms (import remote rules)
 chrome.alarms.onAlarm.addListener(alarmListener);
-RemoteImport.listen();
+
+// install listener for remote rules improt requests
+RemoteImport.listenToExternal();
+
+// install listener for messages from cotennt page whil filling forms
+FormUtil.listenForContentMessages();
+

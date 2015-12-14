@@ -47,7 +47,7 @@ var RemoteImport = {
       Utils.openOptions("#settings");
     });
   },
-  listen: function() {
+  listenToExternal: function() {
     chrome.runtime.onMessageExternal.addListener(function(request, sender) {
       if(/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
         // Extract the i=parameter

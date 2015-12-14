@@ -344,6 +344,9 @@ var FormUtil = {
 
     return beforeData;
   },
+  getPort: function() {
+    return chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
 
@@ -358,7 +361,7 @@ var FormUtil = {
       Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
       return;
     }
-    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+    var port = this.getPort();
 
     // Now we can display the WORKING throbber!
     port.postMessage({"action": "showOverlay"});
@@ -382,7 +385,7 @@ var FormUtil = {
       // Resolve all promises
       // call either the instantaneously resolving Promise (default) or
       // the array of before functions defined in the rule.
-      //TODO: move to sep functions (FS, 2015-10-07)
+      // TODO: move to sep functions (FS, 2015-10-07)
       Promise.all(beforePromises).then(function beforeFunctionsPromise(beforeData) {
         // If the first beforeData is a function and executes to null thebn
         // the rules and workflows that are running should be *canceled*
@@ -425,27 +428,30 @@ var FormUtil = {
         FormUtil.reportErrors(sentErrors, rule, port);
       }
     });
-
+  },
+  listenForContentMessages: function() {
     // Listen for messages from content.js
-    chrome.runtime.onMessage.addListener(function (message) {
-      // Message that the form filling is done
-      if(message.action === "fillFieldFinished") {
+    chrome.runtime.onMessage.addListener(this.handleContentMessages);
+  },
+  handleContentMessages: function(message) {
+    // Message that the form filling is done
+    if(message.action === "fillFieldFinished" && typeof FormUtil.lastRule !== "undefined") {
+      var rule = FormUtil.lastRule;
 
-        // If the rule has a teardownContent functions execute it
-        // This is sent to content.js and run in the context of the content page
-        if(typeof rule.teardownContent === "function") {
-          port.postMessage({ action: "teardownContent", value: JSONF.stringify(rule.teardownContent)});
-        }
-
-        // If the rule has a "after" function, execute it
-        // It has access to the same context object used in the before function
-        // The signature is the same as with before functions
-        if(typeof rule.after === "function") {
-          Promise.all(FormUtil.generateFunctionsPromises("after", rule, FormUtil.createContext())).then(function() {
-            Logger.info("[b/form_util.js] Executed after function: " + JSONF.stringify(rule.after));
-          });
-        }
+      // If the rule has a teardownContent functions execute it
+      // This is sent to content.js and runs in the context of the content page
+      if(typeof rule.teardownContent === "function") {
+        FormUtil.getPort().postMessage({ action: "teardownContent", value: JSONF.stringify(rule.teardownContent)});
       }
-    });
+
+      // If the rule has a "after" function, execute it
+      // It has access to the same context object used in the before function
+      // The signature is the same as with before functions
+      if(typeof rule.after === "function") {
+        Promise.all(FormUtil.generateFunctionsPromises("after", rule, FormUtil.createContext())).then(function() {
+          Logger.info("[b/form_util.js] Executed after function: " + JSONF.stringify(rule.after));
+        });
+      }
+    }
   }
 };
