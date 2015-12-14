@@ -6,6 +6,8 @@ describe("the popup HTML", function() {
   describe("when rules match", function() {
     it("contains selectable <li> elements", function(done){
       Tests.visit("13-simple")
+      .click("#form-o-fill-testing-import-submit")
+      .pause(500)
       .getTagName(".popup-html li.select-rule", function (err, tagNames) {
         expect(tagNames.length).to.eql(10);
       })
@@ -28,6 +30,8 @@ describe("the popup HTML", function() {
 
     it("contains a link to extract a rules", function (done){
       Tests.visit("06-no-matching-rules")
+      .click("#form-o-fill-testing-import-submit")
+      .pause(500)
       .getText(".popup-html h3", function (err, text) {
         expect(text).to.match(/Found no matching rules./);
       })

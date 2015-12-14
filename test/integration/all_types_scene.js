@@ -15,7 +15,7 @@ describe("filling different types of fields", function() {
     .getAttribute("input[type=image]", "src", function (err, src) { expect(src).to.eql("http://localhost:9292/form-o-fill-testing/animage.png"); })
     .getValue("input[type=password]", function (err, value) { expect(value).to.eql("input[type=password]"); })
     .getValue("input[type=search]", function (err, value) { expect(value).to.eql("input[type=search]"); })
-    .getValue("input[type=email]", function (err, value) { expect(value).to.eql("someone@example.com"); })
+    .getValue("input[type=email]", function (err, value) { expect(value).to.eql("someone example.com"); })
     .getValue("input[type=url]", function (err, value) { expect(value).to.eql("http://form-o-fill.github.io"); })
     .getValue("input[type=tel]", function (err, value) { expect(value).to.eql("491234567890"); })
     .getValue("input[type=range]", function (err, value) { expect(value).to.eql("100"); })

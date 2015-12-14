@@ -8,6 +8,8 @@ describe("the form filling", function() {
     var ruleName = ruleToImport.replace(/ /g, "-").toLowerCase();
 
     Tests.visit("13-simple")
+    .click("#form-o-fill-testing-import-submit")
+    .pause(500)
     .click("li.select-rule[data-rule-name='" + ruleName + "']")
     .pause(500)
     .getValue("#target", function (err, text) {
@@ -17,12 +19,13 @@ describe("the form filling", function() {
   };
 
   describe("simple rule matching", function() {
-    it("works when requesting JSON via jQuery", function (done) {
-      importAndExecute("Requesting External JSON", "value by json.json via jQuery.getJSON", done);
-    });
 
     it("works for a rule that is matched by content", function (done) {
       importAndExecute("Matching by content", "found by content", done);
+    });
+
+    it("works when requesting JSON via jQuery", function (done) {
+      importAndExecute("Requesting external JSON", "value by json.json via jQuery.getJSON", done);
     });
 
     it("works for a rule that is matched by url", function (done) {

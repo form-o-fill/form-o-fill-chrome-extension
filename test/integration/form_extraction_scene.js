@@ -32,16 +32,15 @@ describe("the form extraction", function() {
     .click("div.form-o-fill-overlay-form")
     .pause(global.pause)
     .click(".extension-options-url a")
-    .pause(global.pause)
+    .pause(4000)
     .click("a.cmd-append-extracted")
-    .pause(global.pause)
+    .pause(4000)
     .execute(function () {
       return editor.getValue();
     }, function (err, ret) {
       var fail = function(expected, actual) {
         expect(JSON.stringify(expected)).to.eql(JSON.stringify(actual));
       };
-
       var rule = JSON.parse(ret.value);
 
       fail("A rule for http://localhost:9292/form-o-fill-testing/form-extraction.html#", rule.name);
