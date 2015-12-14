@@ -75,9 +75,11 @@ var onTabReadyRules = function(tabId) {
       // This happens only on the very first install:
       if(rules.length === 0) {
         // No rules present!
-        chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
-        refreshMatchCounter(0);
-        return;
+        Promise.all([Rules.lastMatchingRules([]), Workflows.saveMatches([])]).then(function() {
+          chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+          refreshMatchCounter(0);
+          return;
+        });
       }
 
       // First filter all rules that have content matchers
