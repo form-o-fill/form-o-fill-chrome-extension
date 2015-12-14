@@ -1,5 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
-/* eslint complexity: [2, 6], max-nested-callbacks: 4 */
+/* eslint complexity: [2, 6]  */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -172,12 +172,13 @@ var FormUtil = {
       });
     });
   },
-  generateLibsPromises: function(libs) {
+  generateLibsPromisesForContentPage: function(rule) {
+    // Detect vendored libraries
+    var libs = Libs.detectVendoredLibraries(JSONF.stringify(rule.fields));
+
     // Inject the libs into the page
     // Build an array starting with an instant resolving promise
-    var prUsedLibs = [ new Promise(function (resolve) {
-      resolve();
-    }) ];
+    var prUsedLibs = [ Promise.resolve() ];
 
     // There are libraries present
     // so add them to the stack
@@ -308,10 +309,43 @@ var FormUtil = {
       FormUtil.saveErrors(errors, rule);
     });
   },
+  resolveImportsAndPostToContent: function(rule, beforeData, port) {
+    // Check for rules to import (shared rules)
+    FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
+      // Fill that rule
+      // TODO: use a promise here and only getErrors when resolved (FS, 2015-10-07)
+      FormUtil.sendFieldsToContent(aRule, beforeData, port);
+
+      // Get errors. Receiver is in content.js
+      Logger.info("[b/form_util.js] Posted to content.js: 'getErrors'");
+      port.postMessage({"action": "getErrors"});
+    });
+  },
+  processBeforeData: function(rule, beforeData) {
+    // beforeData is null when there is no before function defined in the rule definition
+    if(beforeData !== null) {
+      Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+
+      // Lets see if we got any errors thrown inside the executed before function
+      var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
+        return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
+      });
+
+      if (filteredErrors.length > 0) {
+        FormUtil.handleApplyErrors(filteredErrors, rule);
+      }
+    }
+
+    // If there was only one rule
+    // reduce data array to one element
+    if(beforeData.length === 1) {
+      beforeData = beforeData[0];
+    }
+
+    return beforeData;
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
-    var beforeData;
-    var errors = [];
 
     // Whatever the reason. Sometimes the rule is undefined when this is called
     if(typeof rule === "undefined") {
@@ -349,9 +383,7 @@ var FormUtil = {
       // call either the instantaneously resolving Promise (default) or
       // the array of before functions defined in the rule.
       //TODO: move to sep functions (FS, 2015-10-07)
-      Promise.all(beforePromises).then(function beforeFunctionsPromise(data) {
-        beforeData = data;
-
+      Promise.all(beforePromises).then(function beforeFunctionsPromise(beforeData) {
         // If the first beforeData is a function and executes to null thebn
         // the rules and workflows that are running should be *canceled*
         if(typeof beforeData[0] === "function" && beforeData[0]() === null) {
@@ -364,51 +396,21 @@ var FormUtil = {
           return null;
         }
 
-        // beforeData is null when there is no before function defined in the rule definition
-        if(beforeData !== null) {
-          Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+        // Handle before data errors
+        beforeData = FormUtil.processBeforeData(rule, beforeData);
 
-          // Lets see if we got any errors thrown inside the executed before function
-          var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
-            return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
-          });
-
-          if (filteredErrors.length > 0) {
-            FormUtil.handleApplyErrors(errors, rule);
-          }
-        }
-
-        // If there was only one rule
-        // reduce data array to one element
-        if(beforeData.length === 1) {
-          beforeData = beforeData[0];
-        }
-
-        // Detect vendored libraries
-        var usedLibs = Libs.detectVendoredLibraries(JSONF.stringify(rule.fields));
-
-        // generate promises for importing those libraries
-        var morePromises = FormUtil.generateLibsPromises(usedLibs);
+        // generate promises for importing those libraries into the content page context
+        var contentLibImportAndSetupContentPrs = FormUtil.generateLibsPromisesForContentPage(rule);
 
         // setupContent function defined? Add those to the promises
         if(typeof rule.setupContent === "function") {
-          morePromises.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
+          contentLibImportAndSetupContentPrs.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
         }
 
         // Resolve all promises
-        // lib import + setupContent
-        Promise.all(morePromises).then(function prUsedLibsAll() {
-          // Check for rules to import (shared rules)
-          FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
-
-            // NOW! Fill that rule
-            //TODO: use a promise here and only getErrors when resolved (FS, 2015-10-07)
-            FormUtil.sendFieldsToContent(aRule, beforeData, port);
-
-            // Get errors. Receiver is in content.js
-            Logger.info("[b/form_util.js] Posted to content.js: 'getErrors'");
-            port.postMessage({"action": "getErrors"});
-          });
+        // lib import for content page context + setupContent
+        Promise.all(contentLibImportAndSetupContentPrs).then(function() {
+          FormUtil.resolveImportsAndPostToContent(rule, beforeData, port);
         });
 
       }).catch(function error(msg) {
