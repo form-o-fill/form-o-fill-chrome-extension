@@ -29,7 +29,7 @@ var ruleSummaryFind = function(term, startInRow, backward) {
       }
     }
   } else {
-    for(i = startInRow; i <= src.length; i++) {
+    for(i = startInRow; i < src.length; i++) {
       if(src[i].match(term)) {
         return src[i];
       }
