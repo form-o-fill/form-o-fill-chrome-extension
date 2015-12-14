@@ -1,5 +1,5 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
-/* eslint complexity: [2, 6] */
+/* eslint complexity: [2, 6], max-nested-callbacks: 4 */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -298,6 +298,16 @@ var FormUtil = {
       });
     });
   },
+  handleApplyErrors: function(errors, rule) {
+    // Produce error objects compatible to those used for form filling errors
+    errors = errors.map(function filteredErrorsMap(errorObj) {
+      return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
+    });
+
+    Notification.create("An error occured while executing a before function. Click here to view it.", null, function notificationCreate() {
+      FormUtil.saveErrors(errors, rule);
+    });
+  },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;
     var beforeData;
@@ -321,9 +331,6 @@ var FormUtil = {
 
     // reload LIBS just in case
     FormUtil.sendLibsReloadToContent(port);
-    Libs.import();
-
-    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
     // Detect vendored libraries in before functions and import them into Libs
     Libs.detectVendoredLibraries(JSONF.stringify(rule.before)).forEach(function (libPath) {
@@ -331,85 +338,82 @@ var FormUtil = {
       Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
     });
 
-    // Promises for before functions:
-    var promises = this.generateFunctionsPromises("before", rule, FormUtil.createContext());
+    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
 
-    // Resolve all promises
-    // call either the instantaneously resolving Promise (default) or
-    // the array of before functions defined in the rule.
-    //TODO: move to sep functions (FS, 2015-10-07)
-    Promise.all(promises).then(function beforeFunctionsPromise(data) {
-      beforeData = data;
-
-      // If the first beforeData is a function and executes to null then
-      // the rules and workflows that are running should be *canceled*
-      if(typeof beforeData[0] === "function" && beforeData[0]() === null) {
-        // Cancel workflows
-        Storage.delete(Utils.keys.runningWorkflow);
-
-        // The halting message is shown via Libs.halt("the message");
-        // So nothing to do here
-        // return null to stop precessing
-        return null;
-      }
-
-      // beforeData is null when there is no before function defined in the rule definition
-      if(beforeData !== null) {
-        Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
-
-        // Lets see if we got any errors thrown inside the executed before function
-        var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
-          return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
-        });
-
-        if (filteredErrors.length > 0) {
-          // Produce error objects compatible to those used for form filling errors
-          //TODO: extract creation of errors (FS, 2015-10-07)
-          errors = filteredErrors.map(function filteredErrorsMap(errorObj) {
-            return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
-          });
-
-          Notification.create("An error occured while executing a before function. Click here to view it.", null, function notificationCreate() {
-            FormUtil.saveErrors(errors, rule);
-          });
-        }
-      }
-
-      // If there was only one rule
-      // reduce data array to one element
-      if(beforeData.length === 1) {
-        beforeData = beforeData[0];
-      }
-
-      // Detect vendored libraries
-      var usedLibs = Libs.detectVendoredLibraries(JSONF.stringify(rule.fields));
-
-      // generate promises for importing those libraries
-      var morePromises = FormUtil.generateLibsPromises(usedLibs);
-
-      // setupContent function defined? Add those to the promises
-      if(typeof rule.setupContent === "function") {
-        morePromises.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
-      }
+    // First import all neccessary defined libs
+    Libs.import().then(function() {
+      // Promises for before functions:
+      var beforePromises = FormUtil.generateFunctionsPromises("before", rule, FormUtil.createContext());
 
       // Resolve all promises
-      // lib import + setupContent
-      Promise.all(morePromises).then(function prUsedLibsAll() {
-        // Check for rules to import (shared rules)
-        FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
+      // call either the instantaneously resolving Promise (default) or
+      // the array of before functions defined in the rule.
+      //TODO: move to sep functions (FS, 2015-10-07)
+      Promise.all(beforePromises).then(function beforeFunctionsPromise(data) {
+        beforeData = data;
 
-          // NOW! Fill that rule
-          //TODO: use a promise here and only getErrors when resolved (FS, 2015-10-07)
-          FormUtil.sendFieldsToContent(aRule, beforeData, port);
+        // If the first beforeData is a function and executes to null thebn
+        // the rules and workflows that are running should be *canceled*
+        if(typeof beforeData[0] === "function" && beforeData[0]() === null) {
+          // Cancel workflows
+          Storage.delete(Utils.keys.runningWorkflow);
 
-          // Get errors. Receiver is in content.js
-          Logger.info("[b/form_util.js] Posted to content.js: 'getErrors'");
-          port.postMessage({"action": "getErrors"});
+          // The halting message is shown via Libs.halt("the message");
+          // So nothing to do here
+          // return null to stop precessing
+          return null;
+        }
+
+        // beforeData is null when there is no before function defined in the rule definition
+        if(beforeData !== null) {
+          Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
+
+          // Lets see if we got any errors thrown inside the executed before function
+          var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
+            return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
+          });
+
+          if (filteredErrors.length > 0) {
+            FormUtil.handleApplyErrors(errors, rule);
+          }
+        }
+
+        // If there was only one rule
+        // reduce data array to one element
+        if(beforeData.length === 1) {
+          beforeData = beforeData[0];
+        }
+
+        // Detect vendored libraries
+        var usedLibs = Libs.detectVendoredLibraries(JSONF.stringify(rule.fields));
+
+        // generate promises for importing those libraries
+        var morePromises = FormUtil.generateLibsPromises(usedLibs);
+
+        // setupContent function defined? Add those to the promises
+        if(typeof rule.setupContent === "function") {
+          morePromises.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
+        }
+
+        // Resolve all promises
+        // lib import + setupContent
+        Promise.all(morePromises).then(function prUsedLibsAll() {
+          // Check for rules to import (shared rules)
+          FormUtil.resolveImports(rule).then(function resolveImports(aRule) {
+
+            // NOW! Fill that rule
+            //TODO: use a promise here and only getErrors when resolved (FS, 2015-10-07)
+            FormUtil.sendFieldsToContent(aRule, beforeData, port);
+
+            // Get errors. Receiver is in content.js
+            Logger.info("[b/form_util.js] Posted to content.js: 'getErrors'");
+            port.postMessage({"action": "getErrors"});
+          });
         });
-      });
 
-    }).catch(function error(msg) {
-      console.error(msg);
+      }).catch(function error(msg) {
+        console.error(msg);
+      });
     });
 
     port.onMessage.addListener(function portOnMessageListener(msg) {
