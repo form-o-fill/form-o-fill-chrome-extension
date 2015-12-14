@@ -25,7 +25,9 @@ var Libs = {
             Libs.add(rule.export, rule.lib, true);
           }
         });
-      }).then(resolve("libraries imported"));
+        Logger.info("[libs.js] Current libraries : " + Object.keys(Libs).toString());
+        resolve(true);
+      });
     });
   },
   // Dectects libraries used in a rulecode string
