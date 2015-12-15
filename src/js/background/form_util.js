@@ -90,9 +90,8 @@ var FormUtil = {
       Utils.openOptions();
     });
   },
-  displayMessage: function displayMsg(msg, lastActiveTab) {
-    var port = chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
-    port.postMessage({action: "showMessage", message: msg});
+  displayMessage: function displayMsg(msg) {
+    this.getPort().postMessage({action: "showMessage", message: msg});
   },
   sendLibsReloadToContent: function(port) {
     port.postMessage({"action": "reloadLibs"});

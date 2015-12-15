@@ -165,7 +165,7 @@ var onTabReadyWorkflow = function() {
 
       // End of workflow reached
       if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
-        FormUtil.displayMessage("Workflow finished!", lastActiveTab);
+        FormUtil.displayMessage("Workflow finished!");
         Storage.delete(Utils.keys.runningWorkflow);
 
         // Search for matching rules and workflows
@@ -184,7 +184,7 @@ var onTabReadyWorkflow = function() {
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if(typeof rule === "undefined") {
           // report not found rule in options, cancel workflow
-          FormUtil.displayMessage("Workflow error: rule not found!", lastActiveTab);
+          FormUtil.displayMessage("Workflow error: rule not found!");
           Storage.delete(Utils.keys.runningWorkflow);
 
           // Search for matching rules and workflows
@@ -199,7 +199,7 @@ var onTabReadyWorkflow = function() {
           }
 
           // Fill with this rule
-          FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length, lastActiveTab);
+          FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length);
           FormUtil.applyRule(rule, lastActiveTab);
 
           // Save workflow state so we can continue even after a page reload
