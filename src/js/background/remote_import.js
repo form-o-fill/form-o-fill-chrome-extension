@@ -49,30 +49,32 @@ var RemoteImport = {
   },
   listenToExternal: function() {
     chrome.runtime.onMessageExternal.addListener(function(request, sender) {
-      if(/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
-        // Extract the i=parameter
-        var matches = sender.url.match(/i=(.*\.js)/);
-        if(typeof matches[1] !== "undefined") {
-          var url = decodeURIComponent(matches[1]);
-          // Import rules from URL
-          RemoteImport.import(url).then(function(resolved) {
-            // Save to shadow storage
-            RemoteImport.save(resolved.data);
+      if(request.action === "importRemoteRules") {
+        if(/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
+          // Extract the i=parameter
+          var matches = sender.url.match(/i=(.*\.js)/);
+          if(typeof matches[1] !== "undefined") {
+            var url = decodeURIComponent(matches[1]);
+            // Import rules from URL
+            RemoteImport.import(url).then(function(resolved) {
+              // Save to shadow storage
+              RemoteImport.save(resolved.data);
 
-            // Now change settings and activate import
-            optionSettings.importActive = true;
-            optionSettings.importUrl = url;
+              // Now change settings and activate import
+              optionSettings.importActive = true;
+              optionSettings.importUrl = url;
 
-            // send to settings.js:
-            chrome.runtime.sendMessage({action: "saveSettings", message: optionSettings});
+              // send to settings.js:
+              chrome.runtime.sendMessage({action: "saveSettings", message: optionSettings});
 
-            RemoteImport.notifySuccess(true, url);
-          }).catch(function() {
-            RemoteImport.notifySuccess(false, url);
-          });
+              RemoteImport.notifySuccess(true, url);
+            }).catch(function() {
+              RemoteImport.notifySuccess(false, url);
+            });
+          }
+        } else {
+          RemoteImport.notifySuccess(false, null);
         }
-      } else {
-        RemoteImport.notifySuccess(false, null);
       }
     });
   }
