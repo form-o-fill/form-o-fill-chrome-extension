@@ -35,6 +35,11 @@ var Changelog = {
       title: "FoF updated: setupContent + auto. rematch",
       message: "prepare function for content! automatic rematch for SPAs!",
       target: "#changelog"
+    },
+    "2.6.0": {
+      title: "FoF updated: remote rules import",
+      message: "Import remote rules from any URL. Share your rules with your colleagues.",
+      target: "#help-settingsremoterules"
     }
   },
   findForVersion: function(version) {
