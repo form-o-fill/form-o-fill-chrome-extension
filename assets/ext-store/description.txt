@@ -25,6 +25,14 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 2.6.0
+- Added on demand loading of moment.js and chance.js in background page. Reduces memory consumption.
+- Added Libs.h.displayMessage("some text"). Use it to display custom messages while the rule is running.
+- Added remote rules. You can import rules via http/https. Includes auto-update.
+- Added one-click import URLs for remote rules import. Try http://form-o-fill.github.io/import-remote-rules
+- Added Libs.h.copyValue("#some-selector") to copy a value from another field.
+- Fixed bug regarding duplicate event listener attachment.
+
 ★ Version 2.5.0
 - Added 'after' function as a complement to the 'before' function.
 - Added setupContent and teardownContent. Work like before/after only executed inside the content page.
