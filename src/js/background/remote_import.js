@@ -46,7 +46,7 @@ var RemoteImport = {
     if(!success) {
       msg = chrome.i18n.getMessage("import_remote_rules_failed", [ url ]);
     }
-    Notification.create(msg, "Remote rules import!", function() {
+    Notification.create(msg, chrome.i18n.getMessage("import_remote_rules_title"), function() {
       Utils.openOptions("#settings");
     });
   },

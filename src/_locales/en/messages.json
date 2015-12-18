@@ -89,6 +89,9 @@
       }
     }
   },
+  "import_remote_rules_title": {
+    "message": "Import remote rules"
+  },
   "content_fof_is_working": {
     "message": "Form-O-Fill is working, please wait!"
   },
