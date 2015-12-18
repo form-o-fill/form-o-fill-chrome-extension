@@ -21,7 +21,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   var overlayHtml = function(text, isVisible) {
     if(typeof text === "undefined") {
-      text = "Form-O-Fill is working, please wait!";
+      text = chrome.i18n.getMessage("content_fof_is_working");
     }
 
     if(typeof isVisible === "undefined") {
@@ -105,7 +105,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
       // Show another overlay when things take REALLY long to finish
       takingLongTimeout = setTimeout(function () {
-        jQuery("#" + workingOverlayId).html("This is really taking too long.");
+        jQuery("#" + workingOverlayId).html(chrome.i18n.getMessage("content_fof_is_working_2"));
       }, 5000);
 
       // Finally if everything fails, clear overlay after 12 seconds

@@ -13,7 +13,7 @@ var ImportExport = {
       var now = new Date();
       var fileName = "fof-rules-js-export-" + now.toISOString() + ".js";
 
-      Utils.infoMsg("Completed export as '" + fileName + "'");
+      Utils.infoMsg(chrome.i18n.getMessage("imex_export_complete", [ fileName ]));
       Utils.download(jsExport, fileName, "application/json");
     });
   },
@@ -28,7 +28,7 @@ var ImportExport = {
       var now = new Date();
       var fileName = "fof-complete-export-" + now.toISOString() + ".js";
 
-      Utils.infoMsg("Completed export as '" + fileName + "'");
+      Utils.infoMsg(chrome.i18n.getMessage("imex_export_complete", [ fileName ]));
       Utils.download(JSONF.stringify(exportJson), fileName, "application/json");
     });
   },

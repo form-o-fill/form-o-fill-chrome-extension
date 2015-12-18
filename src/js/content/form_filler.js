@@ -10,7 +10,7 @@ var FormFiller = {
     this.currentRuleMetadata = meta;
 
     if (domNodes.length === 0) {
-      return new FormError(selector, value, "Could not find field");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_not_found"));
     }
     Logger.info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
 
@@ -45,7 +45,7 @@ var FormFiller = {
           Logger.info("[form_filler.js] Got an exception executing value function: " + parsedValue);
           Logger.info("[form_filler.js] Original exception: " + e);
           Logger.info("[form_filler.js] Original stack: " + e.stack);
-          return new FormError(selector, value, "Error while executing value-function: " + JSONF.stringify(e.message));
+          return new FormError(selector, value, chrome.i18n.getMessage("fill_error_value_function", [ JSONF.stringify(e.message) ]));
         }
       }
 
@@ -113,49 +113,49 @@ var FormFiller = {
     if(/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'date' field cannot be filled with this. See http://bit.ly/formofill-formats");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_date"));
     }
   },
   _fillMonth: function(domNode, value, selector) {
     if(/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_month"));
     }
   },
   _fillWeek: function(domNode, value, selector) {
     if(/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'week' field cannot be filled with tihs value. See http://bit.ly/formofill-format-week");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_week"));
     }
   },
   _fillTime: function(domNode, value, selector) {
     if(/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_time"));
     }
   },
   _fillDatetime: function(domNode, value, selector) {
     if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_datetime"));
     }
   },
   _fillDatetimeLocal: function(domNode, value, selector) {
     if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_datetime_local"));
     }
   },
   _fillColor: function(domNode, value, selector) {
     if(/^#[0-9a-f]{6}$/i.test(value)) {
       domNode.value = value;
     } else {
-      return new FormError(selector, value, "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color");
+      return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_color"));
     }
   },
   _typeMethod: function(type) {

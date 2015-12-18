@@ -35,7 +35,7 @@ var saveTabsSetting = function() {
     jQuery(this).removeClass("edit");
     jQuery(".tab.current input").attr("disabled", true);
     jQuery(".tab a.edit").removeClass("edit").addClass("cmd-tabs-close");
-    Utils.infoMsg("Tab setting saved");
+    Utils.infoMsg(chrome.i18n.getMessage("opt_tabs_saved"));
     jQuery(document).trigger("fof:tabs:saved");
   });
 };
@@ -143,7 +143,7 @@ jQuery(function () {
   jQuery(".tabs").on("click", "a.cmd-tabs-open", function (e) {
     if (jQuery(".tab").length === maxTabs) {
       Logger.info("[tabs.js] Max tab count reached");
-      Utils.infoMsg("Maximum of open tabs reached");
+      Utils.infoMsg(chrome.i18n.getMessage("opt_max_tabs_reached"));
       return;
     }
     Logger.info("[tabs.js] Opening a new tab");

@@ -165,7 +165,7 @@ var onTabReadyWorkflow = function() {
 
       // End of workflow reached
       if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
-        FormUtil.displayMessage("Workflow finished!");
+        FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), lastActiveTab);
         Storage.delete(Utils.keys.runningWorkflow);
 
         // Search for matching rules and workflows
@@ -184,7 +184,7 @@ var onTabReadyWorkflow = function() {
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if(typeof rule === "undefined") {
           // report not found rule in options, cancel workflow
-          FormUtil.displayMessage("Workflow error: rule not found!");
+          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_error"), lastActiveTab);
           Storage.delete(Utils.keys.runningWorkflow);
 
           // Search for matching rules and workflows
@@ -199,7 +199,7 @@ var onTabReadyWorkflow = function() {
           }
 
           // Fill with this rule
-          FormUtil.displayMessage("Workflow step " + (runningWorkflow.currentStep + 1) + "/" + runningWorkflow.steps.length);
+          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_step", [runningWorkflow.currentStep + 1, runningWorkflow.steps.length]), lastActiveTab);
           FormUtil.applyRule(rule, lastActiveTab);
 
           // Save workflow state so we can continue even after a page reload
@@ -347,7 +347,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // Display a notification to the user that the extract has finished
   if(message.action === "extractFinishedNotification") {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
-    Notification.create("Extracted your form. Click here to check the options panel for more info.", null, Utils.openOptions);
+    Notification.create(chrome.i18n.getMessage("notification_form_extraction_done"), null, Utils.openOptions);
   }
 
   // Return the last active tab id

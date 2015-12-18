@@ -14,7 +14,7 @@ var emptyWorkflow = {
 
 // generate a step html
 var stepHtml = function(text, hasError) {
-  return '<li class="' + (hasError ? "has-error" : "") + '" data-step-name="' + text + '">' + text + '<button class="wf-delete-step">remove step</button>' + (hasError ? "<span class='has-error'>Missing rule with this name!</span>" : "") + '</li>';
+  return '<li class="' + (hasError ? "has-error" : "") + '" data-step-name="' + text + '">' + text + '<button class="wf-delete-step">' + chrome.i18n.getMessage("opt_wf_step_remove_button") + '</button>' + (hasError ? "<span class='has-error'>" + chrome.i18n.getMessage("opt_wf_missing_rule") + "</span>" : "") + '</li>';
 };
 
 // generate a rule
@@ -177,7 +177,7 @@ var loadWorkflows = function(selectedWfId) {
     var selected = null;
 
     if(rawWorkflows.length === 0) {
-      optionHtml.push("<option data-workflow-id='0' class='wf-no-created'>no workflow defined</option>");
+      optionHtml.push("<option data-workflow-id='0' class='wf-no-created'>" + chrome.i18n.getMessage("opt_wf_no_wf_defined") + "</option>");
       jQuery("#workfloweditor").hide();
     } else {
       optionHtml = optionHtml.concat(rawWorkflows.map(function optionHtmlMap(wfData) {
@@ -234,7 +234,7 @@ var saveWorkflow = function() {
   jQuery("#workfloweditor").data("workflowId", currentWfId);
   loadWorkflows(currentWfId);
 
-  Utils.infoMsg("Workflow #" + workflow.id + " saved");
+  Utils.infoMsg(chrome.i18n.getMessage("opt_wf_saved", [ workflow.id ]));
   unsavedChanges(false);
 };
 
@@ -312,12 +312,12 @@ var deleteWorkflow = function() {
 
   Workflows.save(workflows).then(loadWorkflows(changeWfTo));
 
-  Utils.infoMsg("Workflow #" + currentWfId + " deleted");
+  Utils.infoMsg(chrome.i18n.getMessage("opt_wf_deleted", [ currentWfId ]));
 };
 
 // Sometimes workflows get stuck
 var cancelWorkflow = function() {
-  Utils.infoMsg("Killed running Workflows");
+  Utils.infoMsg(chrome.i18n.getMessage("opt_wf_killed"));
   Storage.delete(Utils.keys.runningWorkflow);
 };
 
@@ -340,7 +340,7 @@ jQuery(function() {
 
   // 'remove step' buttons
   jQuery(document).on("click", ".wf-delete-step", function wfDeleteStep() {
-    Utils.infoMsg("Rule removed");
+    Utils.infoMsg(chrome.i18n.getMessage("opt_wf_rule_removed"));
     jQuery(this).parent().remove();
   });
 

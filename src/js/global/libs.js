@@ -150,7 +150,7 @@ var _copyValueFunction = function() {
     var $source = document.querySelector("##SELECTOR##");
     if($source === null) {
       // element not found
-      Libs.setThrobberText("Libs.h.copyValue didn't find source element with selector '##SELECTOR##'.");
+      Libs.setThrobberText(chrome.i18n.getMessage("lib_h_copyvalue_field_not_found", [ "##SELECTOR##" ]));
       return null;
     }
 
@@ -201,7 +201,7 @@ var processFunctionsHalt = function(msg) {
     }
 
     if(typeof msg === "undefined") {
-      msg = "Canceled by call to Libs.halt()";
+      msg = chrome.i18n.getMessage("lib_halt_canceled");
     }
 
     Libs.setThrobberText(msg);

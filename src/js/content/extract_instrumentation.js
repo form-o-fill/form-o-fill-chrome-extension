@@ -15,7 +15,7 @@ var getOverlays = function getOverlays() {
     var width = $form.width();
 
     // HTML
-    var overlay = "<div data-form-o-fill-id='" + index + "' class='form-o-fill-overlay-form' style='top:" + offset.top + "px; left:" + offset.left + "px; width:" + width + "px; height:" + height + "px;'><div class='form-o-fill-overlay-text'>Form-O-Fill:<br />Click in the colored area to extract this form</div></div>";
+    var overlay = "<div data-form-o-fill-id='" + index + "' class='form-o-fill-overlay-form' style='top:" + offset.top + "px; left:" + offset.left + "px; width:" + width + "px; height:" + height + "px;'><div class='form-o-fill-overlay-text'>Form-O-Fill:<br />" + chrome.i18n.getMessage("extract_click_here") + "</div></div>";
     overlays.push(overlay);
   });
   return overlays.join();

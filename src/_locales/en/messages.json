@@ -41,5 +41,167 @@
   },
   "notification_remote_import_failed": {
     "message": "Updating the rules set as 'URL import' failed. Please retry manually from the settings panel."
+  },
+  "bg_workflow_finished": {
+    "message": "Workflow finished!"
+  },
+  "bg_workflow_error": {
+    "message": "Workflow error: rule not found!"
+  },
+  "bg_workflow_step": {
+    "message": "Workflow step $CURRENT_STEP$/$TOTAL_STEPS$",
+    "placeholders": {
+      "current_step": {
+        "content": "$1"
+      },
+      "total_steps": {
+        "content": "$2"
+      }
+    }
+  },
+  "notification_form_extraction_done": {
+    "message": "Extracted your form. Click here to check the options panel for more info."
+  },
+  "bg_error_while_filling": {
+    "message": "There were $ERROR_COUNT$ errors while filling this form. Click here to view them.",
+    "placeholders": {
+      "error_count": {
+        "content": "$1"
+      }
+    }
+  },
+  "bg_error_in_before": {
+    "message": "An error occured while executing a before function. Click here to view it."
+  },
+  "import_remote_rules_succeeded": {
+    "message": "Importing remote rules succeeded!\nURL: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_remote_rules_failed": {
+    "message": "Importing remote rules failed!\nURL: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "content_fof_is_working": {
+    "message": "Form-O-Fill is working, please wait!"
+  },
+  "content_fof_is_working_2": {
+    "message": "This is really taking too long."
+  },
+  "extract_click_here": {
+    "message": "Click in the colored area to extract this form"
+  },
+  "fill_field_not_found": {
+    "message": "Could not find field"
+  },
+  "fill_error_value_function": {
+    "message": "Error while executing value-function: $MESSAGE$",
+    "placeholders": {
+      "message": {
+        "content": "$1"
+      }
+    }
+  },
+  "fill_field_error_date": {
+    "message": "'date' field cannot be filled with this. See http://bit.ly/formofill-formats"
+  },
+  "fill_field_error_month": {
+    "message": "'month' field cannot be filled with this value. See http://bit.ly/formofill-format-month"
+  },
+  "fill_field_error_week": {
+    "message": "'week' field cannot be filled with this value. See http://bit.ly/formofill-format-week"
+  },
+  "fill_field_error_time": {
+    "message": "'time' field cannot be filled with this value. See http://bit.ly/formofill-format-time"
+  },
+  "fill_field_error_datetime": {
+    "message": "'datetime' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time"
+  },
+  "fill_field_error_datetime_local": {
+    "message": "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local"
+  },
+  "fill_field_error_color": {
+    "message": "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color" 
+  },
+  "lib_h_copyvalue_field_not_found": {
+    "message": "Libs.h.copyValue didn't find source element with selector '$SELECTOR$'.",
+    "placeholders": {
+      "selector": {
+        "content": "$1"
+      }
+    }
+  },
+  "lib_halt_canceled": {
+    "message": "Canceled by call to Libs.halt()"
+  },
+  "imex_export_complete": {
+    "message": "Completed export as $FILENAME$",
+    "placeholders": {
+      "filename": {
+        "content": "$1"
+      }
+    }
+  },
+  "opt_rule_added": {
+    "message": "Rule added on line $LINENR$",
+    "placeholders": {
+      "linenr": {
+        "content": "$1"
+      }
+    }
+  },
+  "opt_quickjump_rule": {
+    "message": "- quickjump to rule -"
+  },
+  "opt_rules_loaded_from_dics": {
+    "message": "Rules loaded from disc"
+  },
+  "opt_rules_formatted": {
+    "message": "Rules formatted but not saved"
+  },
+  "opt_tabs_saved": {
+    "message": "Tab setting saved"
+  },
+  "opt_max_tabs_reached": {
+    "message": "Maximum of open tabs reached"
+  },
+  "opt_wf_step_remove_button": {
+    "message": "remove step"
+  },
+  "opt_wf_missing_rule": {
+    "message": "Missing rule with this name!"
+  },
+  "opt_wf_no_wf_defined": {
+    "message": "no workflow defined"
+  },
+  "opt_wf_saved": {
+    "message": "Workflow #$WFNR$ saved",
+    "placeholders": {
+      "wfnr": {
+        "content": "$1"
+      }
+    }
+  },
+  "opt_wf_deleted": {
+    "message": "Workflow #$WFNR$ deleted",
+    "placeholders": {
+      "wfnr": {
+        "content": "$1"
+      }
+    }
+  },
+  "opt_wf_killed": {
+    "message": "Killed running workflow"
+  },
+  "opt_wf_rule_removed": {
+    "message": "Rule removed"
   }
+
 }

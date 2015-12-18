@@ -1,5 +1,4 @@
 /* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
-/* eslint complexity: [2, 6]  */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -153,7 +152,7 @@ var FormUtil = {
   reportErrors: function(theErrors, rule, port) {
     Logger.warn("[b/form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
     if(theErrors.length > 0) {
-      Notification.create("There were " + theErrors.length + " errors while filling this form. Click here to view them.", null, function notificationCreated() {
+      Notification.create(chrome.i18n.getMessage("bg_error_while_filling", [theErrors.length]), null, function notificationCreated() {
         FormUtil.saveErrors(theErrors, rule);
       });
     }
@@ -304,7 +303,7 @@ var FormUtil = {
       return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
     });
 
-    Notification.create("An error occured while executing a before function. Click here to view it.", null, function notificationCreate() {
+    Notification.create(chrome.i18n.getMessage("bg_error_in_before"), null, function notificationCreate() {
       FormUtil.saveErrors(errors, rule);
     });
   },

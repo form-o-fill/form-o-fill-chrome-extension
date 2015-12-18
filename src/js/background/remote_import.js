@@ -42,8 +42,11 @@ var RemoteImport = {
   },
   notifySuccess: function(success, url) {
     url = url ? url : "wrong format";
-    var txt = "Importing remote rules " + (success ? "succeeded" : "failed") + "!\nURL: " + url;
-    Notification.create(txt, "Remote rules import!", function() {
+    var msg = chrome.i18n.getMessage("import_remote_rules_succeeded", [ url ]);
+    if(!success) {
+      msg = chrome.i18n.getMessage("import_remote_rules_failed", [ url ]);
+    }
+    Notification.create(msg, "Remote rules import!", function() {
       Utils.openOptions("#settings");
     });
   },
@@ -80,7 +83,7 @@ var RemoteImport = {
   }
 };
 
-// REMOVE START
+// REMOVE STAR
 if(typeof exports === "object") {
   module.exports = RemoteImport;
 }

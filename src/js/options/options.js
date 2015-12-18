@@ -49,7 +49,7 @@ var appendRule = function(prettyRule, responseCallback) {
     // Prettify code a little
     editor.editor().scrollToRow(editor.document().getLength());
     editor.resize();
-    Utils.infoMsg("Rule added on line " + (editor.document().getLength() - 1));
+    Utils.infoMsg(chrome.i18n.getMessage("opt_rule_added", [ (editor.document().getLength() - 1) ]));
     responseCallback();
   });
 };
@@ -131,7 +131,7 @@ var updateTabStats = function() {
     });
 
     // Fill <select> rules overview
-    var options = ["<option value=''>- quickjump to rule -</option>"];
+    var options = ["<option value=''>" + chrome.i18n.getMessage("opt_quickjump_rule") + "</option>"];
 
     // Remove rules without names (eg. libs)
     var onlyRealRules = rulesStats.rules.filter(function (rule) {
@@ -196,7 +196,7 @@ var loadRules = function(tabId) {
     Libs.loadLibs(libs, "loadRules").then(function() {
       editor.setValue(ruleJson, -1);
       editor.editor().clearSelection();
-      Utils.infoMsg("Rules loaded from disc");
+      Utils.infoMsg(chrome.i18n.getMessage("opt_rules_loaded_from_dics"));
       updateTabStats();
     });
   });
@@ -235,7 +235,7 @@ $(".editor .menu").on("click", "button.save", function() {
   loadRules(currentTabId());
 }).on("click", "button.format", function() {
   editor.format(Rules);
-  Utils.infoMsg("Rules formatted but not saved");
+  Utils.infoMsg(chrome.i18n.getMessage("opt_rules_formatted"));
 });
 
 // Show modal import window
