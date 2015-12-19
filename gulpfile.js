@@ -2,6 +2,7 @@
 var chalk = require('chalk');
 var gulp = require('gulp');
 var argv = require('yargs').argv;
+var webpack = require('webpack');
 var plugins = require('gulp-load-plugins')();
 
 // this can be used to debug gulp runs:
@@ -247,11 +248,14 @@ gulp.task('test', function () {
   });
 });
 
-//
-// Run tests through watching
-//
-gulp.task('test:watch', function () {
-  gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
+gulp.task("webpack", function(done) {
+  webpack(require("./webpack.config.js"), function(err, stats) {
+    if(err) {
+      throw new plugins.util.PluginError("webpack", err);
+    }
+    plugins.util.log("[webpack]", stats.toString({colors: true, hash: false, timings: false}));
+    done();
+  });
 });
 
 //
@@ -319,8 +323,9 @@ gulp.task('integration:run', [ "webserver:start" ], function () {
 
 // Watch for changes
 gulp.task("watch", function() {
-  gulp.watch(['test/**/*.js'], runTests);
+  gulp.watch(['src/js/**/*.js', 'test/**/*.js'], runTests);
   gulp.watch('src/sass/**/*.scss', ['sass']);
+  gulp.watch(["webpack.config.js", "src/js/*/*.js"], ["webpack"]);
 });
 
 //
