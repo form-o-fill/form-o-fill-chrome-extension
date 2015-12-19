@@ -1,3 +1,5 @@
+import * as Utils from "../global/utils";
+
 class Logger {
   static out(level, msg, obj) {
     // Port to background.js
@@ -81,4 +83,3 @@ class Logger {
 }
 
 module.exports = Logger;
-

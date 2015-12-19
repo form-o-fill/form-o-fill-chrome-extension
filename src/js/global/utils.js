@@ -1,5 +1,5 @@
 import * as jQuery from "jQuery";
-import * as Logger from "./logger";
+import * as Logger from "../debug/logger";
 
 const Utils = {
   // Will be set to false in BUILD:

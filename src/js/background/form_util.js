@@ -1,4 +1,7 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, Libs */
+
+import * as state from "../global/state";
+
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -239,7 +242,7 @@ var FormUtil = {
     set: function(key, value) {
       this.base[key] = JSONF.stringify(value);
       // Also set the variable in content.js
-      chrome.tabs.sendMessage(lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
+      chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
       // Save in background.js
       window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
       return window.sessionStorage;
@@ -277,8 +280,8 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     // and the storage object
     return {
-      url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(lastActiveTab.id),
+      url: Utils.parseUrl(state.lastActiveTab.url),
+      findHtml: FormUtil.createGrabber(state.lastActiveTab.id),
       storage: FormUtil.storage
     };
   },
@@ -325,7 +328,7 @@ var FormUtil = {
       Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
       // Lets see if we got any errors thrown inside the executed before function
-      var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
+      var filteredErrors = beforeData.filter(function filterErrors(beforeFunctionData) {
         return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
       });
 
@@ -343,9 +346,9 @@ var FormUtil = {
     return beforeData;
   },
   getPort: function() {
-    return chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+    return chrome.tabs.connect(state.lastActiveTab.id, {name: "FormOFill"});
   },
-  applyRule: function applyRule(rule, lastActiveTab) {
+  applyRule: function applyRule(rule) {
     this.lastRule = rule;
 
     // Whatever the reason. Sometimes the rule is undefined when this is called
@@ -355,7 +358,7 @@ var FormUtil = {
     }
 
     // Open long standing connection to the tab containing the form to be worked on
-    if(typeof lastActiveTab === "undefined") {
+    if(typeof state.lastActiveTab === "undefined") {
       Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
       return;
     }
@@ -373,7 +376,7 @@ var FormUtil = {
       Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
     });
 
-    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + lastActiveTab.id);
+    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + state.lastActiveTab.id);
 
     // First import all neccessary defined libs
     Libs.import().then(function() {

@@ -1,7 +1,10 @@
-/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm*/
+/*global Rules Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport */
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
+import * as state from "../global/state";
+import * as Logger from "../debug/logger";
+import * as Alarm from "./alarm";
+
 var lastMatchingRules = [];
-var lastActiveTab = null;
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
 var optionSettings = window.undefined;
@@ -10,10 +13,6 @@ var recheckInterval = null;
 var defaultBadgeBgColor = [0, 136, 255, 200];
 var intervalBadgeBgColor = [43, 206, 7, 255];
 var useBadgeBgColor = defaultBadgeBgColor;
-
-/*eslint-disable no-unused-vars*/
-var testingMode = false;
-/*eslint-enable no-unused-vars*/
 
 // set the browser action badge
 var setBadge = function(txt, tabId) {
@@ -65,7 +64,7 @@ var onTabReadyRules = function(tabId) {
       return;
     }
 
-    lastActiveTab = tab;
+    state.lastActiveTab = tab;
     Logger.info("[bg.js] Setting active tab", tab);
 
     // This is a little bit complicated.
@@ -142,7 +141,7 @@ var onTabReadyRules = function(tabId) {
               // If the rule is marked as "autorun", execute the rule if only
               // one was found
               Logger.info("[bj.js] Rule is set to autorun");
-              FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
+              FormUtil.applyRule(lastMatchingRules[0]);
             }
           });
         });
@@ -158,19 +157,19 @@ var onTabReadyWorkflow = function() {
   return new Promise(function (resolve) {
     Storage.load(Utils.keys.runningWorkflow).then(function prOnTabReadyWf(runningWorkflow) {
       // No running workflow?
-      if(typeof runningWorkflow === "undefined" || !lastActiveTab) {
+      if(typeof runningWorkflow === "undefined" || !state.lastActiveTab) {
         resolve({status: "not_running", runRule: true});
         return;
       }
 
       // End of workflow reached
       if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
-        FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), lastActiveTab);
+        FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
         Storage.delete(Utils.keys.runningWorkflow);
 
         // Search for matching rules and workflows
         // to fill the icon again
-        runWorkflowOrRule(lastActiveTab.id);
+        runWorkflowOrRule(state.lastActiveTab.id);
 
         resolve({status: "finished", runRule: false});
         return;
@@ -179,16 +178,16 @@ var onTabReadyWorkflow = function() {
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
       Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
-      setBadge("#" + (runningWorkflow.currentStep + 1), lastActiveTab.id);
+      setBadge("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if(typeof rule === "undefined") {
           // report not found rule in options, cancel workflow
-          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_error"), lastActiveTab);
+          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_error"), state.lastActiveTab);
           Storage.delete(Utils.keys.runningWorkflow);
 
           // Search for matching rules and workflows
-          runWorkflowOrRule(lastActiveTab.id);
+          runWorkflowOrRule(state.lastActiveTab.id);
 
           resolve({status: "rule_not_found", runRule: false});
         } else {
@@ -199,8 +198,8 @@ var onTabReadyWorkflow = function() {
           }
 
           // Fill with this rule
-          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_step", [runningWorkflow.currentStep + 1, runningWorkflow.steps.length]), lastActiveTab);
-          FormUtil.applyRule(rule, lastActiveTab);
+          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_step", [runningWorkflow.currentStep + 1, runningWorkflow.steps.length]), state.lastActiveTab);
+          FormUtil.applyRule(rule);
 
           // Save workflow state so we can continue even after a page reload
           Storage.save({
@@ -273,8 +272,8 @@ var setCyclicRulesRecheck = function(shouldCheck) {
 
   if(shouldCheck) {
     recheckInterval = setInterval(function() {
-      if(lastActiveTab !== null) {
-        runWorkflowOrRule(lastActiveTab.id);
+      if(state.lastActiveTab !== null) {
+        runWorkflowOrRule(state.lastActiveTab.id);
       }
     }, Utils.reevalRulesInterval);
     Logger.info("[bg.js] Activate interval for rule rechecking");
@@ -282,8 +281,8 @@ var setCyclicRulesRecheck = function(shouldCheck) {
   }
 
   // Set BG color now even if not rematching has been done
-  if(lastActiveTab !== null) {
-    chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": lastActiveTab.id});
+  if(state.lastActiveTab !== null) {
+    chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": state.lastActiveTab.id});
   }
 };
 
@@ -302,7 +301,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
 // This event will only fire if NO POPUP is set
 // This is the case when only one rule matches
 chrome.browserAction.onClicked.addListener(function (){
-  FormUtil.applyRule(lastMatchingRules[0], lastActiveTab);
+  FormUtil.applyRule(lastMatchingRules[0]);
 });
 
 // Listen for messages from other background/popup scripts
@@ -319,7 +318,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     var rules = lastMatchingRules.filter(function (rule) {
       return rule.id === message.id;
     });
-    FormUtil.applyRule(rules[0], lastActiveTab);
+    FormUtil.applyRule(rules[0]);
     sendResponse(true);
   }
 
@@ -351,9 +350,9 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   }
 
   // Return the last active tab id
-  if(message.action === "lastActiveTabId" && lastActiveTab !== null) {
-    Logger.info("[bg.js] received 'lastActiveTabId'. Sending tabId " + lastActiveTab.id);
-    sendResponse(lastActiveTab.id);
+  if(message.action === "lastActiveTabId" && state.lastActiveTab !== null) {
+    Logger.info("[bg.js] received 'lastActiveTabId'. Sending tabId " + state.lastActiveTab.id);
+    sendResponse(state.lastActiveTab.id);
   }
 
   // received from options.js to reload Libs
@@ -486,8 +485,8 @@ chrome.runtime.onMessage.addListener(function (message) {
   // The content page (form_filler.js) requests a screenshot to be taken
   // the message.flag can be the filename or true/false
   if(message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
-    Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + lastActiveTab.windowId);
-    takeScreenshot(lastActiveTab.windowId, message.value, message.flag);
+    Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
+    takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
 });
 
@@ -518,7 +517,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   loadSettings();
 
   // This till trigger a re-import of the remote rules set in settings
-  Alarm.create();
+  Alarm.install();
 });
 
 // When the extension is activated:
@@ -527,7 +526,7 @@ chrome.runtime.onStartup.addListener(function() {
   loadSettings();
 
   // This will trigger a re-import of the remote rules set in settings
-  Alarm.create();
+  Alarm.install();
 
   // re-import remote rules
   executeRemoteImport();
