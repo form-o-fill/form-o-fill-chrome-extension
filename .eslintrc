@@ -1,20 +1,14 @@
 # vim: ft=yaml
-# eslint config file
-#
-# http://eslint.org/docs/rules/
-#
-# replaces jshint/jscs
-#
-# 201404: converted from jshint (FS)
 ---
+  parser: "babel-eslint"
   env:
     browser: true
+    es6: true
+  ecmaFeatures:
+    modules: true
   globals:
     module: true
     chrome: true
-    Promise: true
-    console: true
-    exports: true
   rules:
     # Rules comming from jshint:
     no-bitwise: 2 # Prohibit bitwise operators (&, |, ^, etc.).
