@@ -1,6 +1,7 @@
-/*global jQuery Logger*/
-/*eslint no-unused-vars: 0*/
-var Utils = {
+import * as jQuery from "jQuery";
+import * as Logger from "./logger";
+
+const Utils = {
   // Will be set to false in BUILD:
   debug: true,
   version: "##VERSION##",
@@ -130,8 +131,4 @@ var Utils = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Utils;
-}
-// REMOVE END
+module.exports = Utils;
