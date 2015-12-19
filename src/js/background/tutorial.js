@@ -1,5 +1,6 @@
-/*global Rules lastActiveTab onTabReadyRules Logger Utils Storage Workflows */
+/*global Rules onTabReadyRules Logger Utils Storage Workflows */
 /*eslint no-undef:0 no-unused-vars:0 */
+import * as state from "../global/state";
 
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).
@@ -34,7 +35,7 @@ Tutorial.importDumpHandler = function(request) {
   // Import the dump
   Logger.info("[bg/tutorial.js] Importing rules from webpage");
   Rules.importAll(request.message).then(function() {
-    onTabReadyRules(lastActiveTab.id);
+    onTabReadyRules(state.lastActiveTab.id);
   });
 };
 
@@ -60,7 +61,7 @@ Tutorial.restoreBackedUpRulesHandler = function() {
 // Handler for request from the tutorial site
 /*eslint-disable complexity*/
 var tutorialMessagesListener = function tutorialMessagesListener(request, sender, responseCb) {
-  if(!Tutorial.isValidMessageSourceForTutorial(sender) || lastActiveTab === null) {
+  if(!Tutorial.isValidMessageSourceForTutorial(sender) || state.lastActiveTab === null) {
     return;
   }
 
