@@ -1,7 +1,8 @@
-/*global Logger, jQuery */
+import * as jQuery from "jQuery";
+import * as Logger from "../debug/logger";
 
 /* A single Rule */
-var Rule = function() {
+let Rule = function() {
   this.prettyPrint = function() {
     var clone = jQuery.extend({}, this);
     delete clone.matcher;
@@ -87,8 +88,4 @@ Rule.create = function(options, tabId, ruleIndex) {
 };
 /*eslint-enable complexity*/
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Rule;
-}
-// REMOVE END
+module.exports = Rule;

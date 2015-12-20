@@ -1,6 +1,8 @@
-/* global Storage, Utils, Logger, JSONF $ */
-/*eslint no-unused-vars:0 */
-var Workflows = {
+import * as Utils from "./utils";
+import * as JSONF from "./jsonf";
+import * as Logger from "../debug/logger";
+
+const Workflows = {
   all: function() {
     return new Promise(function (resolve) {
       Promise.all([Storage.load(Utils.keys.workflows), Storage.load(Utils.keys.shadowStorage)]).then(function prWfLoad(workflowsAndShadow) {
@@ -82,7 +84,7 @@ var Workflows = {
         }
 
         workflowData = workflowData.map(function cbWfDataMap(workflow) {
-          workflow.steps = $.makeArray(workflow.steps);
+          workflow.steps = Array.from(workflow.steps);
           return workflow;
         });
 
@@ -92,3 +94,4 @@ var Workflows = {
   }
 };
 
+module.exports = Workflows;

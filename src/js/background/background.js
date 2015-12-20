@@ -1,13 +1,22 @@
-/*global Rules Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport */
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
 import * as state from "../global/state";
 import * as Logger from "../debug/logger";
 import * as Alarm from "./alarm";
+import * as Utils from "../global/utils";
+import * as Workflows from "../global/workflows";
+import * as ContextMenu from "./context_menu";
+import * as JSONF from "../global/jsonf";
+import * as Storage from "../global/storage";
+import * as Rules from "../global/rules";
+import * as Libs from "../global/libs";
+import * as RemoteImport from "./remote_import";
+import * as Testing from "./testing";
+import * as Notification from "./notification";
+import * as FormUtil from "./form_util";
 
 var lastMatchingRules = [];
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
-var optionSettings = window.undefined;
 var recheckInterval = null;
 
 var defaultBadgeBgColor = [0, 136, 255, 200];
@@ -40,7 +49,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
   /*eslint-enable max-nested-callbacks*/
   Testing.setVar("matching-rules-count", matchingRules.length, "Matching rule #");
   Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
-  Testing.setVar("settings", JSONF.stringify(optionSettings), "Current settings");
+  Testing.setVar("settings", JSONF.stringify(state.optionSettings), "Current settings");
 
   // If there is only one match we need something in the testpage to click on
   if(matchingRules.length + lastMatchingWorkflows.length === 1) {
@@ -132,10 +141,10 @@ var onTabReadyRules = function(tabId) {
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form (see below)
-            if (totalMatchesCount !== 1 || (typeof optionSettings !== "undefined" && optionSettings.alwaysShowPopup)) {
+            if (totalMatchesCount !== 1 || (typeof state.optionSettings !== "undefined" && state.optionSettings.alwaysShowPopup)) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
               if (!Utils.isLiveExtension()) {
-                createCurrentPopupInIframe(tab.id);
+                Testing.createCurrentPopupInIframe(tab.id);
               }
             } else if (lastMatchingRules[0].autorun === true) {
               // If the rule is marked as "autorun", execute the rule if only
@@ -240,7 +249,7 @@ var generateFilename = function(metadata) {
 // Takes screenshot of a window
 // and downloads it to disk
 var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
-  var quality = parseInt(optionSettings.jpegQuality, 10) || 60;
+  var quality = parseInt(state.optionSettings.jpegQuality, 10) || 60;
   var fName;
 
   // force download of the image
@@ -368,8 +377,8 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
   // Toggle rematch mode on/off
   if(message.action === "testToggleRematch") {
-    optionSettings.reevalRules = !optionSettings.reevalRules;
-    setCyclicRulesRecheck(optionSettings.reevalRules);
+    state.optionSettings.reevalRules = !state.optionSettings.reevalRules;
+    setCyclicRulesRecheck(state.optionSettings.reevalRules);
   }
 });
 
@@ -378,20 +387,20 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 var setSettings = function(settings, value) {
   // First form key => value
   if(typeof value !== "undefined") {
-    optionSettings[settings] = value;
+    state.optionSettings[settings] = value;
   } else {
     // Second form: set all
-    optionSettings = settings;
+    state.optionSettings = settings;
   }
 
   // Save settings
-  Storage.save(optionSettings, Utils.keys.settings);
+  Storage.save(state.optionSettings, Utils.keys.settings);
 
   // Set cyclic refresh if neccessary
-  setCyclicRulesRecheck(optionSettings.reevalRules);
+  setCyclicRulesRecheck(state.optionSettings.reevalRules);
 
-  Testing.setVar("settings", JSONF.stringify(optionSettings), "Current settings");
-  Logger.info("[bg.js] Settings set to " + JSONF.stringify(optionSettings));
+  Testing.setVar("settings", JSONF.stringify(state.optionSettings), "Current settings");
+  Logger.info("[bg.js] Settings set to " + JSONF.stringify(state.optionSettings));
 
   // Tell options page to reload the settings
   chrome.runtime.sendMessage({action: "reloadSettings"});
@@ -406,10 +415,10 @@ var loadSettings = function() {
     if(typeof settings === "undefined") {
       settings = Utils.defaultSettings;
     }
-    optionSettings = settings;
+    state.optionSettings = settings;
 
     // Turn rematch on/off
-    setCyclicRulesRecheck(optionSettings.reevalRules);
+    setCyclicRulesRecheck(state.optionSettings.reevalRules);
   });
 };
 
@@ -448,9 +457,9 @@ var remoteRulesImportFail = function() {
 
 // Update remote rules if options are set correctly
 var executeRemoteImport = function() {
-  if(typeof optionSettings !== "undefined" && optionSettings.importActive === true && optionSettings.importUrl.indexOf("http") > -1) {
+  if(typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true && state.optionSettings.importUrl.indexOf("http") > -1) {
     Logger.info("[bg.js] Alarm triggered update of remote rules");
-    RemoteImport.import(optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
+    RemoteImport.import(state.optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
   }
 };
 
@@ -518,6 +527,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
 
   // This till trigger a re-import of the remote rules set in settings
   Alarm.install();
+
+  // Install ContextMenu
+  ContextMenu.install();
 });
 
 // When the extension is activated:

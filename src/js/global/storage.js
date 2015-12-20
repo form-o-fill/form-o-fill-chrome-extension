@@ -1,6 +1,8 @@
-/*global Utils, Logger, JSONF */
-/* eslint no-undef: 0, no-unused-vars: 0 */
-var Storage = {
+import * as Utils from "./utils";
+import * as JSONF from "./jsonf";
+import * as Logger from "../debug/logger";
+
+const Storage = {
   load: function(keyToLoadFrom) {
     var key = keyToLoadFrom || Utils.keys.rules;
     return new Promise(function storageLoad(resolve) {
@@ -39,8 +41,4 @@ var Storage = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Storage;
-}
-// REMOVE END
+module.exports = Storage;

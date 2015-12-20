@@ -1,5 +1,4 @@
-/*eslint no-unused-vars: 0 */
-var Changelog = {
+const Changelog = {
   changes: {
     "2.0.0": {
       title: "2.0.0 : Workflows have arrived!",
@@ -49,3 +48,5 @@ var Changelog = {
     return null;
   }
 };
+
+module.exports = Changelog;

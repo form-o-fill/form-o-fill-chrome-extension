@@ -1,5 +1,7 @@
-/*global Testing, Utils, Changelog */
-/*eslint no-undef:0 */
+import * as Changelog from "./changelog";
+import * as Utils from "../global/utils";
+import * as Testing from "./testing";
+
 var Notification = {
   create: function(message, title, onClickCallback) {
     var formNotificationId = null;

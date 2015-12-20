@@ -1,23 +1,15 @@
-/*global Logger js_beautify JSONF Rule Storage Rule Libs optionSettings */
-/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
-
-// REMOVE START
-/*eslint-disable no-undef, block-scoped-var */
-if(typeof exports === "object") {
-  var Utils = require("./utils.js");
-  var Storage = require("./storage.js");
-  var Rule = require("./rule.js");
-  /*eslint-disable camelcase*/
-  var js_beautify = function(code) {
-    return code;
-  };
-  /*eslint-enable camelcase*/
-}
-/*eslint-enable no-undef, block-scoped-var */
-// REMOVE END
+/*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
+import * as Logger from "../debug/logger";
+import * as JSONF from "./jsonf";
+import * as Storage from "../global/storage";
+import * as Utils from "./utils";
+import * as jsBeautify from "jsBeautify";
+import * as Rule from "./rule";
+import * as state from "./state";
+import * as Libs from "./libs";
 
 /* Multiple Rules */
-var Rules = {
+const Rules = {
   match: function(target) {
     var rules = this;
     return new Promise(function (resolve) {
@@ -137,7 +129,7 @@ var Rules = {
           });
 
           // Add ruled from shadow storage to rules found in normal tabs
-          if(shadowStorage !== "undefined" && typeof optionSettings !== "undefined" && optionSettings.importActive === true) {
+          if(shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
             rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
           }
 
@@ -166,7 +158,7 @@ var Rules = {
   },
   format: function(rulesCodeString) {
     // Prettify code a little
-    var prettyCode = js_beautify(rulesCodeString, {
+    var prettyCode = jsBeautify(rulesCodeString, {
       "indent_size": 2,
       "indent_char": " ",
       "preserve_newlines": false,
@@ -392,8 +384,4 @@ var Rules = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = Rules;
-}
-// REMOVE END
+module.exports = Rules;

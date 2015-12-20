@@ -1,5 +1,7 @@
-/*global Logger Rules FormFiller Utils */
-import * as state from "../global/state";
+import * as state from "./state";
+import * as Logger from "../debug/logger";
+import * as Utils from "./utils";
+import * as Rules from "./rules";
 
 /*eslint no-loop-func:0 */
 var Libs = {
@@ -173,7 +175,7 @@ var valueFunctionHelper = {
     $domNode.click();
   },
   screenshot: function(saveAs) {
-    chrome.runtime.sendMessage({action: "takeScreenshot", value: FormFiller.currentRuleMetadata, flag: saveAs});
+    chrome.runtime.sendMessage({action: "takeScreenshot", value: state.currentRuleMetadata, flag: saveAs});
   },
   copyValue: function(selector) {
     selector = selector.replace(/"/g, "");

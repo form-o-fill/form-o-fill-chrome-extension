@@ -1,9 +1,7 @@
-/*global jQuery, Utils */
-/* eslint no-unused-vars: 0 */
-//
+import * as jQuery from "jQuery";
+
 // Small abstraction over i18n supplied by chrome API
-//
-var I18n = {
+const I18n = {
   supportedLanguages: function() {
     return ["en"];
   },
@@ -38,6 +36,7 @@ var I18n = {
     });
   },
   _getAndInsert: function(path, appendDomSelector) {
+    //TODO: don't use jQuery -> native! (FS, 2015-12-20)
     jQuery.get(chrome.runtime.getURL(path.join("/")), function (html) {
       jQuery(appendDomSelector).html(html);
       jQuery(document).trigger("i18n-loaded", [ path.join("/") ]);

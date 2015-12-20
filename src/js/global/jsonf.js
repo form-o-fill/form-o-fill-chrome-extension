@@ -1,5 +1,5 @@
-/*eslint no-new-func:0, complexity: 0*/
-var JSONF = {
+/*eslint no-new-func:0 complexity: 0*/
+const JSONF = {
   _undef: "**JSONF-UNDEFINED**",
   stringify: function(object) {
     return JSON.stringify(object, this._serializer, 2);
@@ -51,8 +51,5 @@ var JSONF = {
     return value;
   }
 };
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = JSONF;
-}
-// REMOVE END
+
+module.exports = JSONF;

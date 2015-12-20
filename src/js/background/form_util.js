@@ -1,8 +1,13 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, Libs */
-
 import * as state from "../global/state";
+import * as Utils from "../global/utils";
+import * as Logger from "../debug/logger";
+import * as JSONF from "../global/jsonf";
+import * as Storage from "../global/storage";
+import * as Notification from "./notification";
+import * as Rules from "../global/rules";
+import * as Libs from "../global/libs";
 
-var FormUtil = {
+const FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
     return func.toString().replace(/ /g, "&nbsp;").split("\n").join("<br />");
@@ -456,3 +461,5 @@ var FormUtil = {
     }
   }
 };
+
+module.exports = FormUtil;

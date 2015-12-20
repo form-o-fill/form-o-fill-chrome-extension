@@ -1,4 +1,9 @@
-/* global jQuery JSONF Rules Utils optionSettings */
+import * as state from "../global/state";
+import * as jQuery from "jQuery";
+import * as JSONF from "../global/jsonf";
+import * as Utils from "../global/utils";
+import * as Rules from "../global/rules";
+
 var RemoteImport = {
   import: function(url) {
     return new Promise(function (resolve, reject) {
@@ -64,11 +69,11 @@ var RemoteImport = {
               RemoteImport.save(resolved.data);
 
               // Now change settings and activate import
-              optionSettings.importActive = true;
-              optionSettings.importUrl = url;
+              state.optionSettings.importActive = true;
+              state.optionSettings.importUrl = url;
 
               // send to settings.js:
-              chrome.runtime.sendMessage({action: "saveSettings", message: optionSettings});
+              chrome.runtime.sendMessage({action: "saveSettings", message: state.optionSettings});
 
               RemoteImport.notifySuccess(true, url);
             }).catch(function() {
@@ -83,8 +88,4 @@ var RemoteImport = {
   }
 };
 
-// REMOVE STAR
-if(typeof exports === "object") {
-  module.exports = RemoteImport;
-}
-// REMOVE END
+module.exports = RemoteImport;
