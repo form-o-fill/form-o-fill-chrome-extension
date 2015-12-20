@@ -9,6 +9,9 @@ var didBackup = false;
 
 var Tutorial = Tutorial || {};
 
+Tutorial.install = function() {
+};
+
 Tutorial.isValidMessageSourceForTutorial = function (msgSender) {
   if(/tutorial\/tour-[0-9-]+\.html.*$/.test(msgSender.url) || /^chrome-extension:.*options\.html$/.test(msgSender.url)) {
     return true;
@@ -105,3 +108,5 @@ var internalMessageListener = function(message, sender, responseCb) {
   }
 };
 chrome.runtime.onMessage.addListener(internalMessageListener);
+
+module.exports = Tutorial;

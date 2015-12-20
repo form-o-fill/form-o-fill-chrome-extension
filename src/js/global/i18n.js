@@ -44,8 +44,4 @@ const I18n = {
   }
 };
 
-// REMOVE START
-if(typeof exports === "object") {
-  module.exports = I18n;
-}
-// REMOVE END
+module.exports = I18n;

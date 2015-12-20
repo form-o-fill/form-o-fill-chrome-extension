@@ -9,7 +9,7 @@ import * as state from "./state";
 import * as Libs from "./libs";
 
 /* Multiple Rules */
-const Rules = {
+var Rules = {
   match: function(target) {
     var rules = this;
     return new Promise(function (resolve) {

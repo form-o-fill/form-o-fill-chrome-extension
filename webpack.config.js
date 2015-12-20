@@ -1,7 +1,10 @@
 /*eslint-env node */
 var webpack = require('webpack');
 
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
+var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
+  name: 'common',
+  minChunks: 2
+});
 
 //var uglify = new webpack.optimize.UglifyJsPlugin();
 //var dedupe = new webpack.optimize.DedupePlugin();
@@ -9,8 +12,8 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 module.exports = {
   context: __dirname + "/src/js",
   entry: {
-    //popup:      "./popup/popup",
-    //options:    "./options/options",
+    popup:      "./popup/popup",
+    options:    "./options/options",
     background: "./background/background",
     content:    "./content/content"
   },
@@ -32,7 +35,8 @@ module.exports = {
           cacheDirectory: true,
           ignore: [
             "vendor"
-          ]
+          ],
+          plugins: []
         }
       }
     ]

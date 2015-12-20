@@ -1,8 +1,8 @@
 import * as Utils from "../global/utils";
 import * as Logger from "../debug/logger";
 
-class Alarm {
-  static install() {
+var Alarm = {
+  install: function() {
     // Create an "alarm" which will be called every 15 minutes in prod and every other minute in dev
     // https://developer.chrome.com/extensions/alarms
     chrome.alarms.clear(Utils.alarmName);
@@ -14,6 +14,6 @@ class Alarm {
       { delayInMinutes: Utils.alarmIntervalInMinutes, periodInMinutes: Utils.alarmIntervalInMinutes}
     );
   }
-}
+};
 
 module.exports = Alarm;

@@ -75,32 +75,10 @@
   ],
   "options_page": "html/options.html",
   "background": {
-    "scriptsBuild": [
-      "vendor/jquery/jquery-2.1.4.min.js", 
-      "js/global.js",
-      "js/background.js"
-    ],
-    "scripts": [
-      "vendor/jquery/jquery-2.1.4.min.js", 
-      "js/debug/logger.js", 
-      "js/global/jsonf.js", 
-      "js/global/utils.js", 
-      "js/global/storage.js", 
-      "js/global/rule.js",
-      "js/global/rules.js",
-      "js/global/i18n.js",
-      "js/global/libs.js", 
-      "js/global/workflows.js", 
-      "js/background/remote_import.js",
-      "js/background/alarm.js",
-      "js/background/form_util.js",
-      "js/background/changelog.js",
-      "js/background/notification.js",
-      "js/background/background.js",
-      "js/background/context_menu.js",
-      "js/background/testing.js",
-      "js/background/tutorial.js"
-    ],
+  "scripts": [
+    "js/common.js",
+    "js/background.js"
+  ],
     "persistent": true
   }
 }

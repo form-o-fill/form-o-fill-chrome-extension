@@ -13,6 +13,7 @@ import * as RemoteImport from "./remote_import";
 import * as Testing from "./testing";
 import * as Notification from "./notification";
 import * as FormUtil from "./form_util";
+import * as Tutorial from "./tutorial";
 
 var lastMatchingRules = [];
 var totalMatchesCount = 0;
@@ -501,8 +502,9 @@ chrome.runtime.onMessage.addListener(function (message) {
 
 // Fires when the extension is install or updated
 chrome.runtime.onInstalled.addListener(function (details) {
-
-  Logger.info("[bg.js] chrome.runtime.inInstalled triggered");
+  // remove log entries
+  Logger.delete();
+  Logger.info("[bg.js] chrome.runtime.onInstalled triggered");
 
   // Called on very first install
   if (details.reason === "install") {
@@ -514,8 +516,6 @@ chrome.runtime.onInstalled.addListener(function (details) {
   // Initialize tab settings
   initializeTabSettings();
 
-  // remove log entries
-  Logger.delete();
 
   // Check if there are notifications to display
   if(Utils.version.indexOf(".") > -1) {
@@ -542,14 +542,20 @@ chrome.runtime.onStartup.addListener(function() {
 
   // re-import remote rules
   executeRemoteImport();
+
+  // Listen to alarms (import remote rules)
+  chrome.alarms.onAlarm.addListener(alarmListener);
+
+  // install listener for remote rules improt requests
+  RemoteImport.listenToExternal();
+
+  // install listener for messages from cotennt page whil filling forms
+  FormUtil.listenForContentMessages();
+
+  // Install tutorials
+  Tutorial.install();
+
+  // Import all saved libs
+  Libs.import();
 });
-
-// Listen to alarms (import remote rules)
-chrome.alarms.onAlarm.addListener(alarmListener);
-
-// install listener for remote rules improt requests
-RemoteImport.listenToExternal();
-
-// install listener for messages from cotennt page whil filling forms
-FormUtil.listenForContentMessages();
 

@@ -3,14 +3,12 @@
  * The documentation for using the chrome.contextMenus is simple aweful and wrong in some places.
  * You MUST supply an "id" field or the contextmenu will not be shown. Its NOT optional as the doc says.
  */
-class ContextMenuHandler {
-
-  static install() {
+const ContextMenuHandler = {
+  install: function() {
     this.createMenu();
     chrome.contextMenus.onClicked.addListener(this.handleClick);
-  }
-
-  static handleClick(menuItem) {
+  },
+  handleClick: function(menuItem) {
     if(menuItem.menuItemId === "ctxMain") {
       var message = {
         "action": "extractLastClickedForm"
@@ -22,15 +20,14 @@ class ContextMenuHandler {
         chrome.tabs.sendMessage(tabs[0].id, message);
       });
     }
-  }
-
-  static createMenu() {
+  },
+  createMenu: function() {
     chrome.contextMenus.create({
       "title": "Form-O-Fill: Save Form",
       "contexts": ["editable", "page", "frame"],
       "id": "ctxMain"
     });
   }
-}
+};
 
 module.exports = ContextMenuHandler;

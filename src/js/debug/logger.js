@@ -1,7 +1,7 @@
 import * as Utils from "../global/utils";
 
-class Logger {
-  static out(level, msg, obj) {
+var Logger = {
+  out: function (level, msg, obj) {
     // Port to background.js
     var port = chrome.runtime.connect();
     port.postMessage({
@@ -21,29 +21,23 @@ class Logger {
       return;
     }
     console[level]("[*FOF*]%s", msg);
-  }
-
-  static info(msg, obj) {
+  },
+  info: function(msg, obj) {
     this.out("info", msg, obj);
-  }
-
-  static debug(msg, obj) {
+  },
+  debug: function(msg, obj) {
     this.out("debug", msg, obj);
-  }
-
-  static warn(msg, obj) {
+  },
+  warn: function(msg, obj) {
     this.out("warn", msg, obj);
-  }
-
-  static error(msg, obj) {
+  },
+  error: function(msg, obj) {
     this.out("error", msg, obj);
-  }
-
-  static delete() {
+  },
+  delete: function() {
     chrome.storage.local.remove(Utils.keys.logs);
-  }
-
-  static load() {
+  },
+  load: function() {
     return new Promise(function (resolve) {
       chrome.storage.local.get(Utils.keys.logs, function (storage) {
         if(typeof storage[Utils.keys.logs] === "undefined") {
@@ -53,15 +47,13 @@ class Logger {
         resolve(storage[Utils.keys.logs]);
       });
     });
-  }
-
-  static _dateOptions() {
+  },
+  _dateOptions: function() {
     return {year: "numeric", month: "numeric", day: "numeric",
            hour: "numeric", minute: "numeric", second: "numeric",
            hour12: false};
-  }
-
-  static store(msg) {
+  },
+  store: function(msg) {
     this.load().then(function (entries) {
       var parts = msg.match(/\[(.*?)\](.*)/);
 
@@ -80,6 +72,6 @@ class Logger {
       chrome.storage.local.set(a);
     });
   }
-}
+};
 
 module.exports = Logger;

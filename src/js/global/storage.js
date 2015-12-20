@@ -2,7 +2,7 @@ import * as Utils from "./utils";
 import * as JSONF from "./jsonf";
 import * as Logger from "../debug/logger";
 
-const Storage = {
+var Storage = {
   load: function(keyToLoadFrom) {
     var key = keyToLoadFrom || Utils.keys.rules;
     return new Promise(function storageLoad(resolve) {

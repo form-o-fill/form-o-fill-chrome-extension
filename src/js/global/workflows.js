@@ -1,6 +1,7 @@
 import * as Utils from "./utils";
 import * as JSONF from "./jsonf";
 import * as Logger from "../debug/logger";
+import * as Storage from "./storage";
 
 const Workflows = {
   all: function() {

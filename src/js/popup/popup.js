@@ -1,5 +1,9 @@
-/*global Utils, Logger, Rules, Workflows, Storage */
-var Popup = {
+import * as Rules from "../global/rules";
+import * as Workflows from "../global/workflows";
+import * as Logger from "../debug/logger";
+import * as Utils from "../global/utils";
+
+const Popup = {
   currentUrl: null,
   init: function() {
     var popup = this;
