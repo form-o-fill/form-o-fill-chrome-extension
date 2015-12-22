@@ -1,4 +1,4 @@
-/*global Logger js_beautify JSONF Rule Storage Rule Libs optionSettings */
+/*global Logger js_beautify JSONF Rule Storage Rule Libs state */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
 
 // REMOVE START
@@ -137,7 +137,7 @@ var Rules = {
           });
 
           // Add ruled from shadow storage to rules found in normal tabs
-          if(shadowStorage !== "undefined" && typeof optionSettings !== "undefined" && optionSettings.importActive === true) {
+          if(shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
             rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
           }
 

@@ -1,4 +1,4 @@
-/*global Logger Rules lastActiveTab FormFiller Utils */
+/*global Logger Rules Utils state */
 /*eslint no-loop-func:0 */
 var Libs = {
   add: function(libraryName, librayTopLevelFunction, forceAdd) {
@@ -130,13 +130,13 @@ var Libs = {
   },
   setThrobberText: function(text) {
     // Change the text of the throbber
-    if(lastActiveTab === null) {
+    if(state.lastActiveTab === null) {
       return null;
     }
 
     // Since this is called from the background pages
     // we need to send a message to the content.js
-    chrome.tabs.sendMessage(lastActiveTab.id, {action: "showOverlay", message: text});
+    chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "showOverlay", message: text});
   }
 };
 
@@ -171,7 +171,7 @@ var valueFunctionHelper = {
     $domNode.click();
   },
   screenshot: function(saveAs) {
-    chrome.runtime.sendMessage({action: "takeScreenshot", value: FormFiller.currentRuleMetadata, flag: saveAs});
+    chrome.runtime.sendMessage({action: "takeScreenshot", value: state.currentRuleMetadata, flag: saveAs});
   },
   copyValue: function(selector) {
     selector = selector.replace(/"/g, "");
@@ -196,7 +196,7 @@ Libs.add("h", valueFunctionHelper);
 // Process control functions
 var processFunctionsHalt = function(msg) {
   return function() {
-    if(typeof lastActiveTab === "undefined") {
+    if(typeof state.lastActiveTab === "undefined") {
       return null;
     }
 

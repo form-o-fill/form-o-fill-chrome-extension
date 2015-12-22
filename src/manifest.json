@@ -52,6 +52,7 @@
       "js": [ 
         "vendor/jquery/jquery-2.1.4.min.js", 
         "js/debug/logger.js", 
+        "js/global/state.js", 
         "js/global/utils.js", 
         "js/global/jsonf.js", 
         "js/global/rule.js", 
@@ -83,6 +84,7 @@
     "scripts": [
       "vendor/jquery/jquery-2.1.4.min.js", 
       "js/debug/logger.js", 
+      "js/global/state.js", 
       "js/global/jsonf.js", 
       "js/global/utils.js", 
       "js/global/storage.js", 

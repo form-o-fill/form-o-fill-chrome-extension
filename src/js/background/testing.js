@@ -1,4 +1,4 @@
-/*global Logger Utils lastActiveTab JSONF Rules Storage Workflows */
+/*global Logger Utils JSONF Rules Storage Workflows state */
 /*eslint no-unused-vars: 0 */
 
 var Testing = {
@@ -10,13 +10,13 @@ var Testing = {
       text: textToDisplay || null
     };
     Logger.debug("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
-    if (lastActiveTab !== null) {
-      chrome.tabs.sendMessage(lastActiveTab.id, message, function () {});
+    if (state.lastActiveTab !== null) {
+      chrome.tabs.sendMessage(state.lastActiveTab.id, message, function () {});
     }
   },
   appendTestLog: function(msg) {
-    if (lastActiveTab !== null) {
-      chrome.tabs.sendMessage(lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
+    if (state.lastActiveTab !== null) {
+      chrome.tabs.sendMessage(state.lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
     }
   }
 };
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Sends extension infos back to content/testing.js
   if (message.action === "setTestingMode") {
     /*eslint-disable no-undef, block-scoped-var*/
-    testingMode = message.value;
+    state.testingMode = message.value;
     /*eslint-enable no-undef, block-scoped-var*/
 
     // useful info to display in the testing page

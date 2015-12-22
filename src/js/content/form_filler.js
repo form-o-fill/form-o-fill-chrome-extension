@@ -1,4 +1,4 @@
-/*global FormError, jQuery, JSONF, Logger, Utils */
+/*global FormError jQuery JSONF Logger Utils state */
 /*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
 var FormFiller = {
   error: null,
@@ -7,7 +7,7 @@ var FormFiller = {
     var domNodes = document.querySelectorAll(selector);
     var domNode = null;
     var fillMethod = null;
-    this.currentRuleMetadata = meta;
+    state.currentRuleMetadata = meta;
 
     if (domNodes.length === 0) {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_not_found"));

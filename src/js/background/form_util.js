@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, lastActiveTab, Libs */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, state Libs */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -239,7 +239,7 @@ var FormUtil = {
     set: function(key, value) {
       this.base[key] = JSONF.stringify(value);
       // Also set the variable in content.js
-      chrome.tabs.sendMessage(lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
+      chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
       // Save in background.js
       window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
       return window.sessionStorage;
@@ -277,8 +277,8 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     // and the storage object
     return {
-      url: Utils.parseUrl(lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(lastActiveTab.id),
+      url: Utils.parseUrl(state.lastActiveTab.url),
+      findHtml: FormUtil.createGrabber(state.lastActiveTab.id),
       storage: FormUtil.storage
     };
   },
@@ -343,7 +343,7 @@ var FormUtil = {
     return beforeData;
   },
   getPort: function() {
-    return chrome.tabs.connect(lastActiveTab.id, {name: "FormOFill"});
+    return chrome.tabs.connect(state.lastActiveTab.id, {name: "FormOFill"});
   },
   applyRule: function applyRule(rule, lastActiveTab) {
     this.lastRule = rule;

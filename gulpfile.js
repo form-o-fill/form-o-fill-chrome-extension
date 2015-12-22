@@ -95,6 +95,7 @@ gulp.task('optimizeCss', ['clean'], function () {
 gulp.task('globalJs', ['clean'], function () {
   return gulp.src([
     "src/js/global/utils.js",
+    "src/js/global/state.js",
     "src/js/global/jsonf.js",
     "src/js/global/storage.js",
     "src/js/global/rule.js",

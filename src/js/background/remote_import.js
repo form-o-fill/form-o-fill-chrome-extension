@@ -1,4 +1,4 @@
-/* global jQuery JSONF Rules Utils optionSettings */
+/* global jQuery JSONF Rules Utils state */
 var RemoteImport = {
   import: function(url) {
     return new Promise(function (resolve, reject) {
@@ -64,11 +64,11 @@ var RemoteImport = {
               RemoteImport.save(resolved.data);
 
               // Now change settings and activate import
-              optionSettings.importActive = true;
-              optionSettings.importUrl = url;
+              state.optionSettings.importActive = true;
+              state.optionSettings.importUrl = url;
 
               // send to settings.js:
-              chrome.runtime.sendMessage({action: "saveSettings", message: optionSettings});
+              chrome.runtime.sendMessage({action: "saveSettings", message: state.optionSettings});
 
               RemoteImport.notifySuccess(true, url);
             }).catch(function() {

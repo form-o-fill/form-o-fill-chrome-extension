@@ -13,7 +13,7 @@ var Popup = {
     });
 
     chrome.runtime.getBackgroundPage(function(bgWindow) {
-      popup.updateToggle(bgWindow.optionSettings.reevalRules);
+      popup.updateToggle(bgWindow.state.optionSettings.reevalRules);
     });
 
     // For chrome < 42: set the link
