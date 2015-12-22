@@ -1,6 +1,5 @@
 /*global Rules onTabReadyRules Logger Utils Storage Workflows */
 /*eslint no-undef:0 no-unused-vars:0 */
-import * as state from "../global/state";
 
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).

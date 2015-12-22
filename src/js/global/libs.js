@@ -1,8 +1,6 @@
-import * as state from "./state";
 import * as Utils from "./utils";
 import * as Rules from "./rules";
 import * as Logger from "../debug/logger";
-
 
 var setThrobberText = function(text) {
   // Change the text of the throbber

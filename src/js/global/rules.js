@@ -5,7 +5,6 @@ import * as Storage from "../global/storage";
 import * as Utils from "./utils";
 import * as jsBeautify from "jsBeautify";
 import * as Rule from "./rule";
-import * as state from "./state";
 import * as Libs from "./libs";
 
 /* Multiple Rules */

@@ -6,6 +6,10 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
   minChunks: 2
 });
 
+var provide = new webpack.ProvidePlugin({
+  state: "state"
+});
+
 //var uglify = new webpack.optimize.UglifyJsPlugin();
 //var dedupe = new webpack.optimize.DedupePlugin();
 
@@ -50,8 +54,9 @@ module.exports = {
       momentJs: __dirname + "/src/vendor/moment-with-locales.js",
       ace: __dirname + "/src/vendor/ace/ace.js",
       html5sortable: __dirname + "/src/vendor/html5sortable/html.sortable.js",
-      introJs: __dirname + "/src/vendor/intro.js/intro.js"
+      introJs: __dirname + "/src/vendor/intro.js/intro.js",
+      state: __dirname + "/src/js/global/state.js"
     }
   },
-  plugins: [commonsPlugin]
+  plugins: [commonsPlugin, provide]
 };

@@ -1,4 +1,3 @@
-import * as state from "../global/state";
 import * as jQuery from "jQuery";
 import * as JSONF from "../global/jsonf";
 import * as Utils from "../global/utils";

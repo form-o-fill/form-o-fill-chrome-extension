@@ -1,4 +1,3 @@
-import * as state from "../global/state";
 import * as Logger from "../debug/logger";
 import * as Rules from "../global/rules";
 import * as Utils from "../global/utils";
