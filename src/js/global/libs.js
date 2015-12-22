@@ -211,11 +211,10 @@ var Libs = {
       }
     });
     /*eslint-enable complexity */
-  },
-  install: function() {
-    Libs.add("h", valueFunctionHelper);
-    Libs.add("halt", processFunctionsHalt);
   }
 };
+
+Libs.add("h", valueFunctionHelper);
+Libs.add("halt", processFunctionsHalt);
 
 module.exports = Libs;

@@ -1,4 +1,8 @@
-/*global Logger jQuery Utils showExtractOverlay */
+import * as Logger from "../debug/logger";
+import * as jQuery from "jQuery";
+import * as Utils from "../global/utils";
+import * as ExtractInstrumentation from "./extract_instrumentation";
+
 // This file is for end to end testing only
 // It is delivered with the production code but disabled
 var installTestingCode = function() {
@@ -84,7 +88,7 @@ var installTestingCode = function() {
     Utils.openOptions();
   }).on("click", "a.cmd-show-extract-overlay", function () {
     // Execute extract form function
-    showExtractOverlay();
+    ExtractInstrumentation.showExtractOverlay();
   }).on("click", ".popup-html li.select-workflow", function() {
     // Clicks on the simulated popup should trigger workflow
     var domNode = this;
@@ -110,8 +114,12 @@ var installTestingCode = function() {
   }
 };
 
-// Enable only if we are running inside a special testing URL and are not bound to the live extension ID
-if(!Utils.isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
-  installTestingCode();
-  Logger.info("[c/testing.js] Installed testing code in content page");
-}
+var install = function() {
+  // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
+  if(!Utils.isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
+    installTestingCode();
+    Logger.info("[c/testing.js] Installed testing code in content page");
+  }
+};
+
+module.exports = install;

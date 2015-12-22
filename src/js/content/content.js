@@ -1,5 +1,11 @@
-/*global FormFiller, JSONF, jQuery, Logger, Libs */
 /*eslint complexity:0 */
+import * as Libs from "../global/libs";
+import * as Logger from "../debug/logger";
+import * as jQuery from "jQuery";
+import * as JSONF from "../global/jsonf";
+import * as ContextMenu from "./context_menu";
+import * as Testing from "./testing";
+import * as FormFiller from "./form_filler";
 
 // This listens for messages coming from the background page
 // This is a long running communication channel
@@ -199,5 +205,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     return true;
   });
 
+  ContextMenu.install();
+  Testing.install();
 });
 

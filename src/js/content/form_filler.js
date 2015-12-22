@@ -1,6 +1,10 @@
-/*global FormError, jQuery, JSONF, Logger, Utils */
 /*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
 import * as state from "../global/state";
+import { FormError, FormErrors } from "./form_errors";
+import * as jQuery from "jQuery";
+import * as JSONF from "../global/jsonf";
+import * as Logger from "../debug/logger";
+import * as Utils from "../global/utils";
 
 var FormFiller = {
   error: null,
@@ -177,3 +181,4 @@ var FormFiller = {
   }
 };
 
+module.exports = FormFiller;

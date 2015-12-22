@@ -1,5 +1,6 @@
-/*global JSONF */
 /*eslint no-unused-vars: 0 */
+import * as JSONF from "../global/jsonf";
+
 // This is not the same context as in background.js
 // Currently it only allows to read storage values set by bg.js but
 // you can set value for all value functions to access
@@ -18,3 +19,5 @@ var context = {
     }
   }
 };
+
+module.exports = context;

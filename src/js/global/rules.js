@@ -72,7 +72,7 @@ var Rules = {
     }
     var ruleCode = "return " + rulesCodeMatches[1];
 
-    return new Function(ruleCode)();
+    return new Function('Libs', ruleCode)(Libs);
   },
   getRulesFromShadow: function(shadowStorage) {
     var rules = [];
