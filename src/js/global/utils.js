@@ -11,7 +11,6 @@ const Utils = {
     rules: "form-o-fill-rules",
     errors: "form-o-fill-errors",
     tabs: "form-o-fill-tabs",
-    logs: "form-o-fill-logs",
     lastMatchingRules: "form-o-fill-lastmatchingrules",
     workflows: "form-o-fill-workflows",
     lastMatchingWorkflows: "form-o-fill-lastmatchingworkflows",

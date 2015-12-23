@@ -94,6 +94,8 @@ var Rules = {
     Logger.info("[rules.js] Fetched " + rules.length + " rules from shadow");
     return rules;
   },
+  // Loads all rules from normal and shadow (remote url) storage
+  // and resolves to an array of Rule instances
   all: function() {
     var rulesInst = this;
     return new Promise(function prRulesAll(resolve, reject) {

@@ -1,6 +1,5 @@
 import state from "./state";
 import Utils from "./utils";
-import Rules from "./rules";
 import Logger from "../debug/logger";
 
 var setThrobberText = function(text) {
@@ -94,9 +93,9 @@ var Libs = {
     this[libraryName] = librayTopLevelFunction;
     Logger.info("[libs.js] Added library as Libs." + libraryName);
   },
-  import: function() {
+  importFromRules: function(prListOfRuleInstances) {
     return new Promise(function (resolve) {
-      Rules.all().then(function (rules) {
+      prListOfRuleInstances.then(function (rules) {
         rules.forEach(function (rule) {
           if (typeof rule.export !== "undefined" && typeof rule.lib === "function") {
             // Add the rule into the scope of all library functions
