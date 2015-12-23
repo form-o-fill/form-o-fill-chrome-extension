@@ -1,5 +1,5 @@
 /*global FormExtractor*/
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 import * as Storage from "../global/storage";
 import * as Logger from "../debug/logger";
 import * as Utils from "../global/utils";

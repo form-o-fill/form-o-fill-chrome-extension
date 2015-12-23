@@ -1,4 +1,4 @@
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 
 // Small abstraction over i18n supplied by chrome API
 const I18n = {

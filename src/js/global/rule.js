@@ -1,4 +1,4 @@
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 import * as Logger from "../debug/logger";
 
 /* A single Rule */

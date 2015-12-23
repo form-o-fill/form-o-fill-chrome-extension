@@ -47,7 +47,9 @@ module.exports = {
           plugins: []
         }
       }
-    ]
+    ],
+    // todo: should use https://github.com/ajaxorg/ace-builds/tree/master/src-noconflict
+    noParse: [ /ace/ ]
   },
   resolve: {
     extensions: ["", ".js", ".json"],
@@ -56,7 +58,6 @@ module.exports = {
       jsBeautify: __dirname + "/src/vendor/js-beautifier/beautify.js",
       chanceJs: __dirname + "/src/vendor/chance.js/chance.js",
       momentJs: __dirname + "/src/vendor/moment-with-locales.js",
-      ace: __dirname + "/src/vendor/ace/ace.js",
       html5sortable: __dirname + "/src/vendor/html5sortable/html.sortable.js",
       introJs: __dirname + "/src/vendor/intro.js/intro.js",
       state: __dirname + "/src/js/global/state.js"

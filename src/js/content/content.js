@@ -1,10 +1,10 @@
 /*eslint complexity:0 */
 import * as Libs from "../global/libs";
 import * as Logger from "../debug/logger";
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 import * as JSONF from "../global/jsonf";
 import * as ContextMenu from "./context_menu";
-import * as Testing from "./testing";
+import installTestingCode from "./testing";
 import * as FormFiller from "./form_filler";
 import * as Rules from "../global/rules";
 
@@ -207,6 +207,6 @@ chrome.runtime.onConnect.addListener(function (port) {
   });
 
   ContextMenu.install();
-  Testing.install();
+  installTestingCode();
 });
 

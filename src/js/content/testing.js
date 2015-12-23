@@ -1,5 +1,5 @@
 import * as Logger from "../debug/logger";
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 import * as Utils from "../global/utils";
 import * as ExtractInstrumentation from "./extract_instrumentation";
 

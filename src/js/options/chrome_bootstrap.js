@@ -1,5 +1,5 @@
-/*global jQuery */
-/*eslint no-unused-vars: 0*/
+import jQuery from "jQuery";
+
 var ChromeBootstrap = {
   init: function() {
     // Menu functionality for chrome-bootstrap
@@ -65,3 +65,5 @@ var ChromeBootstrap = {
     }
   }
 };
+
+module.exports = ChromeBootstrap;

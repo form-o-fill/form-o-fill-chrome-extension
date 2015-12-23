@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: 0 */
-import * as jQuery from "jQuery";
+import jQuery from "jQuery";
 import * as Logger from "../ebug/logger";
 import * as Rule from "../global/rule";
 
