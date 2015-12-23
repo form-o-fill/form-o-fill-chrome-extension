@@ -1,8 +1,8 @@
-import * as state from "../global/state";
-import * as jQuery from "jQuery";
-import * as JSONF from "../global/jsonf";
-import * as Utils from "../global/utils";
-import * as Rules from "../global/rules";
+import state from "../global/state";
+import jQuery from "jQuery";
+import JSONF from "../global/jsonf";
+import Utils from "../global/utils";
+import Rules from "../global/rules";
 
 var RemoteImport = {
   import: function(url) {

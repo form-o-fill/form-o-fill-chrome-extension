@@ -1,12 +1,12 @@
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
-import * as state from "./state";
-import * as Logger from "../debug/logger";
-import * as JSONF from "./jsonf";
-import * as Storage from "../global/storage";
-import * as Utils from "./utils";
-import * as jsBeautify from "jsBeautify";
-import * as Rule from "./rule";
-import * as Libs from "./libs";
+import state from "./state";
+import Logger from "../debug/logger";
+import JSONF from "./jsonf";
+import Storage from "../global/storage";
+import Utils from "./utils";
+import jsBeautify from "jsBeautify";
+import Rule from "./rule";
+import Libs from "./libs";
 
 /* Multiple Rules */
 var Rules = {

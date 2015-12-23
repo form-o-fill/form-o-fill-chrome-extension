@@ -1,9 +1,9 @@
-import * as state from "../global/state";
-import * as Logger from "../debug/logger";
-import * as Rules from "../global/rules";
-import * as Utils from "../global/utils";
-import * as JSONF from "../global/jsonf";
-import * as Workflows from "../global/workflows";
+import state from "../global/state";
+import Logger from "../debug/logger";
+import Rules from "../global/rules";
+import Utils from "../global/utils";
+import JSONF from "../global/jsonf";
+import Workflows from "../global/workflows";
 
 var Testing = {
   setVar: function(key, value, textToDisplay) {

@@ -1,5 +1,5 @@
 /* eslint complexity:0, max-nested-callbacks: [1,5] */
-import * as state from "../global/state";
+import state from "../global/state";
 import * as Logger from "../debug/logger";
 import * as Alarm from "./alarm";
 import * as Utils from "../global/utils";

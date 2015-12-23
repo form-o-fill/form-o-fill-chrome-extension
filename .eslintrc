@@ -9,7 +9,6 @@
   globals:
     module: true
     chrome: true
-    state: true
   rules:
     # Rules comming from jshint:
     no-bitwise: 2 # Prohibit bitwise operators (&, |, ^, etc.).

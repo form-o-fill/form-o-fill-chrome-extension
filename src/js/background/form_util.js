@@ -1,11 +1,11 @@
-import * as state from "../global/state";
-import * as Utils from "../global/utils";
-import * as Logger from "../debug/logger";
-import * as JSONF from "../global/jsonf";
-import * as Storage from "../global/storage";
-import * as Notification from "./notification";
-import * as Rules from "../global/rules";
-import * as Libs from "../global/libs";
+import state from "../global/state";
+import Utils from "../global/utils";
+import Logger from "../debug/logger";
+import JSONF from "../global/jsonf";
+import Storage from "../global/storage";
+import Notification from "./notification";
+import Rules from "../global/rules";
+import Libs from "../global/libs";
 
 var FormUtil = {
   lastRule: null,
