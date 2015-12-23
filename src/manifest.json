@@ -55,10 +55,10 @@
   ],
   "options_page": "html/options.html",
   "background": {
-  "scripts": [
-    "js/common.js",
-    "js/background.js"
-  ],
+    "scripts": [
+      "js/common.js",
+      "js/background.js"
+    ],
     "persistent": true
   }
 }

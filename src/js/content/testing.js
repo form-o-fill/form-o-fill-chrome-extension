@@ -33,12 +33,12 @@ var installTestingCode = function() {
     // Display that in the testing page which has a special container for that.
     // That information is then picked up by the integration tests to reach intern URLs like
     // the options page
-    Logger.info("[c/testing.j] background.js has set testing mode to " + bgInfo.testingMode);
+    Logger.info("[c/testing.j] background.js has set testing mode to " + bgInfo.state.getTestingMode());
     Testing.setTestingVar("extension-id", bgInfo.extensionId, "Extension Id");
     Testing.setTestingVar("extension-options-url", "<a target='_self' href='chrome-extension://" + bgInfo.extensionId + "/html/options.html'>chrome-extension://" + bgInfo.extensionId + "/html/options.html</a>", "Options URL");
     Testing.setTestingVar("tab-id", bgInfo.tabId, "TabId of this page");
     Testing.setTestingVar("extension-version", bgInfo.extensionVersion, "Form-O-Fill Version");
-    Testing.setTestingVar("testing-mode", bgInfo.testingMode, "Testing mode");
+    Testing.setTestingVar("testing-mode", bgInfo.state.getTestingMode(), "Testing mode");
     Testing.setTestingVar("rule-count", bgInfo.ruleCount, "Number of rules");
     Testing.setTestingVar("lib-count", bgInfo.libCount, "Number of library functions");
     Testing.setTestingVar("log", "<ul></ul>", "Log");

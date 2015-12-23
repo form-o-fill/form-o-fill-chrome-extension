@@ -27,7 +27,7 @@ Settings.prototype.listen = function() {
 Settings.prototype.loadSettings = function() {
   var settings = this;
   settings.getBg(function(bgWindow) {
-    settings.applySettings(bgWindow.optionSettings);
+    settings.applySettings(bgWindow.state.getOptionSettings());
   });
   settings.updateLastImportDate();
 };

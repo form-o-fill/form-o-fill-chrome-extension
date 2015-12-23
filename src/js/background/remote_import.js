@@ -1,3 +1,4 @@
+import * as state from "../global/state";
 import * as jQuery from "jQuery";
 import * as JSONF from "../global/jsonf";
 import * as Utils from "../global/utils";
@@ -68,11 +69,11 @@ var RemoteImport = {
               RemoteImport.save(resolved.data);
 
               // Now change settings and activate import
-              state.optionSettings.importActive = true;
-              state.optionSettings.importUrl = url;
+              state.setOption("importActive",  true);
+              state.setOption("importUrl", url);
 
               // send to settings.js:
-              chrome.runtime.sendMessage({action: "saveSettings", message: state.optionSettings});
+              chrome.runtime.sendMessage({action: "saveSettings", message: state.getOptionSettings()});
 
               RemoteImport.notifySuccess(true, url);
             }).catch(function() {

@@ -1,3 +1,4 @@
+import * as state from "../global/state";
 import * as Utils from "../global/utils";
 import * as Logger from "../debug/logger";
 import * as JSONF from "../global/jsonf";
@@ -246,7 +247,7 @@ var FormUtil = {
     set: function(key, value) {
       this.base[key] = JSONF.stringify(value);
       // Also set the variable in content.js
-      chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "storageSet", key: key, value: this.base[key]});
+      chrome.tabs.sendMessage(state.getLastActiveTabId(), {action: "storageSet", key: key, value: this.base[key]});
       // Save in background.js
       window.sessionStorage.setItem(Utils.keys.sessionStorage, this.base);
       return window.sessionStorage;
@@ -284,8 +285,8 @@ var FormUtil = {
     // It also contains the grabber which can find content inside the current webpage
     // and the storage object
     return {
-      url: Utils.parseUrl(state.lastActiveTab.url),
-      findHtml: FormUtil.createGrabber(state.lastActiveTab.id),
+      url: Utils.parseUrl(state.getLastActiveTab().url),
+      findHtml: FormUtil.createGrabber(state.getLastActiveTabId()),
       storage: FormUtil.storage
     };
   },
@@ -350,7 +351,7 @@ var FormUtil = {
     return beforeData;
   },
   getPort: function() {
-    return chrome.tabs.connect(state.lastActiveTab.id, {name: "FormOFill"});
+    return chrome.tabs.connect(state.getLastActiveTabId(), {name: "FormOFill"});
   },
   applyRule: function applyRule(rule) {
     this.lastRule = rule;
@@ -362,7 +363,7 @@ var FormUtil = {
     }
 
     // Open long standing connection to the tab containing the form to be worked on
-    if(typeof state.lastActiveTab === "undefined") {
+    if(typeof state.getLastActiveTab() === "undefined") {
       Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
       return;
     }
@@ -380,7 +381,7 @@ var FormUtil = {
       Libs.add(Utils.vendoredLibs[libPath].name, window[Utils.vendoredLibs[libPath].onWindowName]);
     });
 
-    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + state.lastActiveTab.id);
+    Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + state.getLastActiveTabId());
 
     // First import all neccessary defined libs
     Libs.import().then(function() {

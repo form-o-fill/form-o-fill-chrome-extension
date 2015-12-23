@@ -1,4 +1,5 @@
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0*/
+import * as state from "./state";
 import * as Logger from "../debug/logger";
 import * as JSONF from "./jsonf";
 import * as Storage from "../global/storage";
@@ -128,7 +129,7 @@ var Rules = {
           });
 
           // Add ruled from shadow storage to rules found in normal tabs
-          if(shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
+          if(shadowStorage !== "undefined" && typeof state.getOptionSettings() !== "undefined" && state.getOptionSettings().importActive === true) {
             rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
           }
 

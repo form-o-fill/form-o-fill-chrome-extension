@@ -1,4 +1,5 @@
 /*eslint complexity:0, no-unused-vars: 0, max-params: [2, 5]*/
+import * as state from "../global/state";
 import { FormError, FormErrors } from "./form_errors";
 import * as jQuery from "jQuery";
 import * as JSONF from "../global/jsonf";
@@ -13,7 +14,7 @@ var FormFiller = {
     var domNode = null;
     var fillMethod = null;
 
-    state.currentRuleMetadata = meta; //STATE
+    state.setCurrentRuleMetadata(meta);
 
     if (domNodes.length === 0) {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_not_found"));

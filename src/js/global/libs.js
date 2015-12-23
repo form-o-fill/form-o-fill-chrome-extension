@@ -1,16 +1,17 @@
+import * as state from "./state";
 import * as Utils from "./utils";
 import * as Rules from "./rules";
 import * as Logger from "../debug/logger";
 
 var setThrobberText = function(text) {
   // Change the text of the throbber
-  if(state.lastActiveTab === null) {
+  if(state.getLastActiveTab() === null) {
     return null;
   }
 
   // Since this is called from the background pages
   // we need to send a message to the content.js
-  chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "showOverlay", message: text});
+  chrome.tabs.sendMessage(state.getLastActiveTabId(), {action: "showOverlay", message: text});
 };
 
 // This is a function "dummy"
@@ -44,7 +45,7 @@ var valueFunctionHelper = {
     $domNode.click();
   },
   screenshot: function(saveAs) {
-    chrome.runtime.sendMessage({action: "takeScreenshot", value: state.currentRuleMetadata, flag: saveAs});
+    chrome.runtime.sendMessage({action: "takeScreenshot", value: state.getCurrentRuleMetadata(), flag: saveAs});
   },
   copyValue: function(selector) {
     selector = selector.replace(/"/g, "");
@@ -68,7 +69,7 @@ var valueFunctionHelper = {
 // Process control functions
 var processFunctionsHalt = function(msg) {
   return function() {
-    if(typeof state.lastActiveTab === "undefined") {
+    if(typeof state.getLastActiveTab() === "undefined") {
       return null;
     }
 

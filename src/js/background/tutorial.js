@@ -37,7 +37,7 @@ Tutorial.importDumpHandler = function(request) {
   // Import the dump
   Logger.info("[bg/tutorial.js] Importing rules from webpage");
   Rules.importAll(request.message).then(function() {
-    onTabReadyRules(state.lastActiveTab.id);
+    onTabReadyRules(state.getLastActiveTabId());
   });
 };
 
@@ -63,7 +63,7 @@ Tutorial.restoreBackedUpRulesHandler = function() {
 // Handler for request from the tutorial site
 /*eslint-disable complexity*/
 var tutorialMessagesListener = function tutorialMessagesListener(request, sender, responseCb) {
-  if(!Tutorial.isValidMessageSourceForTutorial(sender) || state.lastActiveTab === null) {
+  if(!Tutorial.isValidMessageSourceForTutorial(sender) || state.getLastActiveTab() === null) {
     return;
   }
 

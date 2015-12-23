@@ -1,3 +1,4 @@
+import * as state from "../global/state";
 import * as Logger from "../debug/logger";
 import * as Rules from "../global/rules";
 import * as Utils from "../global/utils";
@@ -13,13 +14,13 @@ var Testing = {
       text: textToDisplay || null
     };
     Logger.debug("[b/testing.js] Sending (" + (textToDisplay || "") + ") " + key + " = " + value + " to c/testing.js");
-    if (state.lastActiveTab !== null) {
-      chrome.tabs.sendMessage(state.lastActiveTab.id, message, function () {});
+    if (state.getLastActiveTab() !== null) {
+      chrome.tabs.sendMessage(state.getLastActiveTabId(), message, function () {});
     }
   },
   appendTestLog: function(msg) {
-    if (state.lastActiveTab !== null) {
-      chrome.tabs.sendMessage(state.lastActiveTab.id, { action: "appendTestLog", value: msg}, function () {});
+    if (state.getLastActiveTab() !== null) {
+      chrome.tabs.sendMessage(state.getLastActiveTabId(), { action: "appendTestLog", value: msg}, function () {});
     }
   },
   // This method takes the otherwise inaccessable popup.html
@@ -50,9 +51,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   // Activate testing mode
   // Sends extension infos back to content/testing.js
   if (message.action === "setTestingMode") {
-    /*eslint-disable no-undef, block-scoped-var*/
-    testingMode = message.value;
-    /*eslint-enable no-undef, block-scoped-var*/
+    state.setTestingMode(message.value);
 
     // useful info to display in the testing page
     Rules.all().then(function (rules) {
