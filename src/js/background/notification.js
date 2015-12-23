@@ -41,3 +41,5 @@ var Notification = {
     }
   }
 };
+
+module.exports = Notification;

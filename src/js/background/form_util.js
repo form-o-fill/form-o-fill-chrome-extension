@@ -384,7 +384,8 @@ var FormUtil = {
     Logger.info("[form_utils.js] Applying rule " + JSONF.stringify(this.lastRule.name) + " (" + JSONF.stringify(this.lastRule.fields) + ") to tab " + state.getLastActiveTabId());
 
     // First import all neccessary defined libs
-    Libs.import().then(function() {
+    // TODO: Libs.importFromRules([Promise.resolve(rule)]) enough? (FS, 2015-12-23)
+    Libs.importFromRules(Rules.all()).then(function() {
       // Promises for before functions:
       var beforePromises = FormUtil.generateFunctionsPromises("before", rule, FormUtil.createContext());
 

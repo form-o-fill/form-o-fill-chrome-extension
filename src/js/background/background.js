@@ -373,7 +373,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     // This is only useful for library functions used in before functions since those are
     // evaluated in the context of the background page
     Logger.info("[bg.js] received reloadLibs from content.js");
-    Libs.import();
+    Libs.importFromRules(Rules.all());
   }
 
   // Toggle rematch mode on/off
@@ -556,6 +556,6 @@ chrome.runtime.onStartup.addListener(function() {
   Tutorial.install();
 
   // Import all saved libs
-  Libs.import();
+  Libs.importFromRules(Rules.all());
 });
 

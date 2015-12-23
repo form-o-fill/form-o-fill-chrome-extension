@@ -6,6 +6,7 @@ import * as JSONF from "../global/jsonf";
 import * as ContextMenu from "./context_menu";
 import * as Testing from "./testing";
 import * as FormFiller from "./form_filler";
+import * as Rules from "../global/rules";
 
 // This listens for messages coming from the background page
 // This is a long running communication channel
@@ -131,7 +132,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     // reload the libraries
     if(message.action === "reloadLibs") {
-      Libs.import();
+      Libs.importFromRules(Rules.all());
     }
 
     // execute setupContent function
