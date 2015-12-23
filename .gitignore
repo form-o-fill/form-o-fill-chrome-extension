@@ -10,3 +10,4 @@ src/js/background.js
 src/js/content.js
 *.map
 src/js/*.js
+dependency-graph.png

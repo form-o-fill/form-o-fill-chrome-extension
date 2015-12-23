@@ -1,5 +1,6 @@
 /*eslint-env node */
 var webpack = require('webpack');
+var circularDependencies = require("./detect_deps.js");
 
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
   name: 'common',
@@ -9,6 +10,9 @@ var commonsPlugin = new webpack.optimize.CommonsChunkPlugin({
 var provide = new webpack.ProvidePlugin({
   state: "state"
 });
+
+// Detect circular dependencies and exit!s
+circularDependencies.detect();
 
 //var uglify = new webpack.optimize.UglifyJsPlugin();
 //var dedupe = new webpack.optimize.DedupePlugin();
