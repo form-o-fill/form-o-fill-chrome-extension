@@ -78,12 +78,12 @@ gulp.task('optimizeCss', ['clean'], function () {
   gulp.src(["src/vendor/intro.js/introjs.min.css", "src/css/*.css", "!src/css/content.css", "!src/css/popup.css"], { nonegate: false })
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(plugins.concat('options.css'))
-  .pipe(plugins.minifyCss())
+  .pipe(plugins.cssnano())
   .pipe(gulp.dest('build/css/'));
 
   // optimize content and popup css
   return gulp.src(['src/css/content.css', 'src/css/popup.css'])
-  .pipe(plugins.minifyCss())
+  .pipe(plugins.cssnano())
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(gulp.dest('build/css'));
 });
