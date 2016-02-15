@@ -16,17 +16,17 @@
     "chai-as-promised": "^5.2.0",
     "chalk": "^1.0.0",
     "clean-css": "^3.4.9",
-    "eslint": "^1.10.3",
+    "eslint": "^2.1.0",
     "event-stream": "^3.3.1",
-    "glob": "^6.0.4",
+    "glob": "^7.0.0",
     "gulp": "^3.8.11",
     "gulp-cleanhtml": "^1.0.0",
     "gulp-concat": "^2.4.1",
     "gulp-connect": "^2.3.1",
-    "gulp-debug": "^2.0.1",
-    "gulp-eslint": "^1.1.1",
-    "gulp-load-plugins": "^1.2.0",
     "gulp-cssnano": "^2.1.1",
+    "gulp-debug": "^2.0.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-load-plugins": "^1.2.0",
     "gulp-replace-task": "^0.11.0",
     "gulp-rm": "^1.0.0",
     "gulp-sass": "^2.1.1",
@@ -44,8 +44,8 @@
     "sinon": "^1.17.3",
     "sinon-chai": "^2.6.0",
     "through2": "^2.0.0",
-    "webdriverio": "^3.4.0",
-    "yargs": "^3.32.0"
+    "webdriverio": "^4.0.3",
+    "yargs": "^4.1.0"
   },
   "scripts": {
     "test": "gulp test"
