@@ -5,7 +5,7 @@
 	font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"]:before, [class*=" icon-"]:before {
 	font-family: 'formofill';
 	speak: none;
 	font-style: normal;
