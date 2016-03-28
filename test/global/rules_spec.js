@@ -44,7 +44,7 @@ describe("Rules", function() {
 
     it("returns an empty array when rulesData is null", sinon.test(function(){
       stubStorage(null);
-      return expect(Rules.load(1)).to.eventually.eql([]);
+      return expect(Rules.load(1)).to.eventually.eql(null);
     }));
 
     it("returns an array of Rule instances", sinon.test(function(){
