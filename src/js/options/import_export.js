@@ -67,6 +67,40 @@ var ImportExport = {
       reader.readAsText(fileToImport);
     }
   },
+  exportRulesEncrypted: function() {
+    //TODO: extract multiple functions here! (FS, 2016-04-22)
+    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
+      var exportJson = {
+        workflows: workflowsAndRules[0],
+        rules: workflowsAndRules[1]
+      };
+
+      var pwd = $("#export-encrypted-pwd1").val();
+      var crypt = new Crypto(pwd);
+      var encryptedData = crypt.encrypt(JSONF.stringify(exportJson));
+      pwd = null;
+
+      exportJson = {
+        encrypted: encryptedData
+      };
+
+      var now = new Date();
+      var fileName = "fof-complete-export-encrypted-" + now.toISOString() + ".js";
+
+      Utils.infoMsg(chrome.i18n.getMessage("imex_export_complete", [ fileName ]));
+      Utils.download(JSONF.stringify(exportJson), fileName, "application/json");
+    });
+  },
+  comparePwd: function() {
+    var $button = $(".all-button-export-crypt");
+    if ($button.is(":disabled") && $("#export-encrypted-pwd1").val() === $("#export-encrypted-pwd2").val()) {
+      $button.removeAttr("disabled");
+    }
+
+    if (!$button.is(":disabled") && $("#export-encrypted-pwd1").val() !== $("#export-encrypted-pwd2").val()) {
+      $button.attr("disabled", "disabled");
+    }
+  },
   bindHandlers: function() {
     // Handler Import / Export buttons
     $(document).on("click", ".modalimport .close-button, .modalimport .cmd-cancel", function() {
@@ -75,7 +109,9 @@ var ImportExport = {
     .on("click", ".all-button-export", ImportExport.exportAll)
     .on("click", ".all-button-import", ImportExport.showImportAllModal)
     .on("click", ".cmd-import-all-data", ImportExport.importAll)
-    .on("click", ".all-button-export-js", ImportExport.exportRulesAsJs);
+    .on("click", ".all-button-export-js", ImportExport.exportRulesAsJs)
+    .on("keyup", "#export-encrypted-pwd1, #export-encrypted-pwd2", ImportExport.comparePwd)
+    .on("click", ".all-button-export-crypt", ImportExport.exportRulesEncrypted);
   }
 };
 

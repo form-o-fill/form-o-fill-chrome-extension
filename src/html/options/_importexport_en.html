@@ -2,7 +2,6 @@
   <h1>Import / Export workflows and rules</h1>
 </header>
 <div class="content" id="help-importexport">
-
   <div id="notices">
     <div class="notice import-ready">
       Imported&nbsp;<span class="imp-wfs-count"></span>&nbsp;workflow(s) and&nbsp;<span class="imp-rules-count"></span>&nbsp;rule(s).
@@ -11,8 +10,8 @@
 
   <div class="row">
     <h3>Import / Export all data</h3>
-    <button class="icon all-button-import">Import Rules &amp; Workflows</button>
-    <button class="icon all-button-export">Export Rules &amp; Workflows</button>
+    <button class="icon all-button-import">Import rules &amp; workflows</button>
+    <button class="icon all-button-export">Export rules &amp; workflows</button>
   </div>
 
   <p class="row">
@@ -24,5 +23,27 @@
     you can use the exported rules &amp; workflows file as a source for the <a class="activate-menu" href="#settings">remote import feature</a>.
   </p>
 
+  <hr />
 
+  <div class="row">
+    <h3>Export all data in encrypted format</h3>
+    <p>
+      You can export the rules and workflows in an encrypted format (<a href="https://crypto.stanford.edu/sjcl/" target="_blank">AES encrypted</a>).
+    </p>
+    <p>
+      To do that enter the encryption password here:
+    </p>
+  </div>
 </div>
+
+<div class="row">
+  <label>Password:</label>
+  <input type="password" name="export-encrypted-pwd1" id="export-encrypted-pwd1">
+ </div>
+
+<div class="row">
+  <label>Repeat:</label>
+  <input type="password" name="export-encrypted-pwd2" id="export-encrypted-pwd2">
+</div>
+
+<button class="icon all-button-export-crypt" disabled>Export encrypted rules &amp; workflows</button>

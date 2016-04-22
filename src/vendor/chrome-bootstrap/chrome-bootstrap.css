@@ -501,6 +501,7 @@
   min-width: 4em;
 }
 .chrome-bootstrap input[type='text'],
+.chrome-bootstrap input[type='password'],
 .chrome-bootstrap input[type='search'] {
   border: 1px solid #BFBFBF;
   border-radius: 2px;
