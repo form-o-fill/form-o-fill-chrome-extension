@@ -76,7 +76,7 @@ var Rules = {
     // results in [ code ... code ]
     var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
     if (!rulesCodeMatches || !rulesCodeMatches[1]) {
-      return false;
+      return [];
     }
     var ruleCode = "return " + rulesCodeMatches[1];
 
