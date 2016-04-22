@@ -1,6 +1,7 @@
 /*global Workflows Logger Storage $ Utils JSONF Rules loadRules currentTabId loadTabsSettings updateTabStats fillAvailableRules loadWorkflows*/
 /*eslint no-unused-vars: 0*/
 var ImportExport = {
+  tmpEncrypted: null,
   // Export rules as a newline seperated list of strings
   exportRulesAsJs: function() {
     var code = "";
@@ -38,13 +39,22 @@ var ImportExport = {
   },
   // reloads rules shows notification etc for imports
   finishImport: function(parsed) {
-    $("#modalimportall").hide();
+    $(".modalimport").hide();
     loadTabsSettings();
     loadRules(1);
     $(".notice.import-ready").find(".imp-wfs-count").html(parsed.workflows.length).end().find(".imp-rules-count").html(parsed.rules.rules.length).end().show();
     updateTabStats();
     fillAvailableRules();
     loadWorkflows();
+  },
+  // Import encrypted rules & workflows
+  importEncryptedModal: function(encryptedString) {
+    ImportExport.tmpEncrypted = encryptedString;
+
+    $("#modalimportall").hide();
+
+    // Show password dialog
+    $("#modalimportallencrypted").show();
   },
   // Import all rules and workflows from disc
   importAll: function() {
@@ -57,14 +67,38 @@ var ImportExport = {
     } else {
       var reader = new FileReader();
       reader.onload = function(e) {
+        // parse the result
         var parsed = JSONF.parse(e.target.result);
-        Rules.importAll(e.target.result).then(function() {
-          ImportExport.finishImport(parsed);
-        });
+
+        // Encrypted?
+        if (typeof parsed.encrypted !== "undefined") {
+          ImportExport.importEncryptedModal(parsed.encrypted);
+        } else {
+          // Import the parsed rules
+          Rules.importAll(e.target.result).then(function() {
+            ImportExport.finishImport(parsed);
+          });
+        }
       };
 
       // Read file. This calls "onload" above
       reader.readAsText(fileToImport);
+    }
+  },
+  importAllEncrypted: function() {
+    var crypt = new Crypto($("#importallpassword").val());
+    var decrypted = crypt.decrypt(ImportExport.tmpEncrypted);
+
+    if (decrypted === null) {
+      // Error while importing
+      // Show error.
+      $(".decryption-error").show();
+    } else {
+      // Import the parsed rules
+      var parsed = JSONF.parse(decrypted);
+      Rules.importAll(parsed).then(function() {
+        ImportExport.finishImport(parsed);
+      });
     }
   },
   exportRulesEncrypted: function() {
@@ -109,6 +143,7 @@ var ImportExport = {
     .on("click", ".all-button-export", ImportExport.exportAll)
     .on("click", ".all-button-import", ImportExport.showImportAllModal)
     .on("click", ".cmd-import-all-data", ImportExport.importAll)
+    .on("click", ".cmd-import-all-encrypted-data", ImportExport.importAllEncrypted)
     .on("click", ".all-button-export-js", ImportExport.exportRulesAsJs)
     .on("keyup", "#export-encrypted-pwd1, #export-encrypted-pwd2", ImportExport.comparePwd)
     .on("click", ".all-button-export-crypt", ImportExport.exportRulesEncrypted);
