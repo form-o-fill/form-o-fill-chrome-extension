@@ -43,7 +43,7 @@ var Changelog = {
     }
   },
   findForVersion: function(version) {
-    if(typeof this.changes[version] !== "undefined") {
+    if (typeof this.changes[version] !== "undefined") {
       return this.changes[version];
     }
     return null;

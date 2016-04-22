@@ -4,7 +4,7 @@ var Libs = {
   add: function(libraryName, librayTopLevelFunction, forceAdd) {
     // Check if the method is already defined
     forceAdd = forceAdd || false;
-    if(this.hasOwnProperty(libraryName) && !forceAdd) {
+    if (this.hasOwnProperty(libraryName) && !forceAdd) {
       Logger.info("[libs.js] Did not add '" + libraryName + "' to Libs, because it already exists as a function().");
       return;
     }
@@ -30,7 +30,7 @@ var Libs = {
   detectVendoredLibraries: function(ruleCodeString) {
     var detectedLibs = [];
     Object.keys(Utils.vendoredLibs).forEach(function dtctLib(vLibKey) {
-      if(ruleCodeString.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
+      if (ruleCodeString.match(Utils.vendoredLibs[vLibKey].detectWith) !== null) {
         // Found!
         detectedLibs.push(vLibKey);
       }
@@ -40,7 +40,7 @@ var Libs = {
   loadLibs: function(scriptPaths, whoCallsMe) {
     /*eslint-disable complexity */
     return new Promise(function (resolve) {
-      if(typeof scriptPaths === "string") {
+      if (typeof scriptPaths === "string") {
         scriptPaths = [scriptPaths];
       }
 
@@ -48,7 +48,7 @@ var Libs = {
       // OR we run in the context of the content page
       // resolve now.
       // The content page gets its libraries by using the chrome API (see background/form_util.js#injectAndAttachToLibs)
-      if(scriptPaths.length === 0 || !Utils.isBgPage()) {
+      if (scriptPaths.length === 0 || !Utils.isBgPage()) {
         resolve(0);
         return;
       }
@@ -60,28 +60,28 @@ var Libs = {
       var targetScriptCount = scriptPaths.length;
       var scriptPath;
 
-      for(var i = 0; i < targetScriptCount; i++) {
+      for (var i = 0; i < targetScriptCount; i++) {
         scriptPath = scriptPaths[i];
 
         var vLib = Utils.vendoredLibs[scriptPath];
         var libName = vLib.name;
 
         // If a lib with that name is already present, don't load it again
-        if(typeof Libs[libName] !== "undefined") {
+        if (typeof Libs[libName] !== "undefined") {
           loadedScriptCount++;
           Logger.info("[libs.js] Didn't load '" + scriptPath + "' again");
           continue;
         }
 
         // If the requested lbrary is not vendored, break loop
-        if(typeof vLib === "undefined") {
+        if (typeof vLib === "undefined") {
           Logger.info("[libs.js] Didn't load '" + scriptPath + "' since it is not vendored (see utils.js)");
           loadedScriptCount++;
           continue;
         }
 
         // If the library is present on window (somehow) just add it to Libs (again)
-        if(typeof window[vLib.onWindowName] !== "undefined" && typeof Libs[libName] === "undefined") {
+        if (typeof window[vLib.onWindowName] !== "undefined" && typeof Libs[libName] === "undefined") {
           Libs.add(libName, window[vLib.onWindowName]);
           loadedScriptCount++;
           continue;
@@ -110,7 +110,7 @@ var Libs = {
 
         // Since this is all async make sure nobody has already
         // inserted it while we worked on this script:
-        if(document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
+        if (document.querySelectorAll("script[data-script='" + scriptPath + "']").length === 0) {
           fragment.appendChild(script);
         }
       }
@@ -122,7 +122,7 @@ var Libs = {
       }
 
       // Only insert the fragment if it has something inside
-      if(fragment.childNodes.length > 0) {
+      if (fragment.childNodes.length > 0) {
         anchor.appendChild(fragment);
       }
     });
@@ -130,13 +130,14 @@ var Libs = {
   },
   setThrobberText: function(text) {
     // Change the text of the throbber
-    if(state.lastActiveTab === null) {
+    if (state.lastActiveTab === null) {
       return null;
     }
 
     // Since this is called from the background pages
     // we need to send a message to the content.js
     chrome.tabs.sendMessage(state.lastActiveTab.id, {action: "showOverlay", message: text});
+    return null;
   }
 };
 
@@ -146,9 +147,9 @@ var Libs = {
 // The SELECTOR will be replaced and re-compiled later.
 // see Libs.h.copyValue
 var _copyValueFunction = function() {
-  if(!Utils.isBgPage()) {
+  if (!Utils.isBgPage()) {
     var $source = document.querySelector("##SELECTOR##");
-    if($source === null) {
+    if ($source === null) {
       // element not found
       Libs.setThrobberText(chrome.i18n.getMessage("lib_h_copyvalue_field_not_found", [ "##SELECTOR##" ]));
       return null;
@@ -196,11 +197,11 @@ Libs.add("h", valueFunctionHelper);
 // Process control functions
 var processFunctionsHalt = function(msg) {
   return function() {
-    if(typeof state.lastActiveTab === "undefined") {
+    if (typeof state.lastActiveTab === "undefined") {
       return null;
     }
 
-    if(typeof msg === "undefined") {
+    if (typeof msg === "undefined") {
       msg = chrome.i18n.getMessage("lib_halt_canceled");
     }
 

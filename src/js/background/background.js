@@ -38,7 +38,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
   Testing.setVar("settings", JSONF.stringify(state.optionSettings), "Current settings");
 
   // If there is only one match we need something in the testpage to click on
-  if(matchingRules.length + lastMatchingWorkflows.length === 1) {
+  if (matchingRules.length + lastMatchingWorkflows.length === 1) {
     Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + matchingRules[0].name + "</li>", "Popup HTML (one match)");
   }
 };
@@ -67,7 +67,7 @@ var onTabReadyRules = function(tabId) {
     Rules.all().then(function (rules) {
 
       // This happens only on the very first install:
-      if(rules.length === 0) {
+      if (rules.length === 0) {
         // No rules present!
         Promise.all([Rules.lastMatchingRules([]), Workflows.saveMatches([])]).then(function() {
           chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
@@ -88,10 +88,10 @@ var onTabReadyRules = function(tabId) {
         var matchingContentRules = [];
 
         // If we found rules that match by content ...
-        if(typeof matchingContentRulesIds !== "undefined") {
+        if (typeof matchingContentRulesIds !== "undefined") {
           // ... select rules that match those ids
           matchingContentRulesIds = JSONF.parse(matchingContentRulesIds);
-          if(typeof matchingContentRulesIds !== "undefined" && matchingContentRulesIds.length > 0) {
+          if (typeof matchingContentRulesIds !== "undefined" && matchingContentRulesIds.length > 0) {
             matchingContentRules = rules.filter(function (rule) {
               return matchingContentRulesIds.indexOf(rule.id) > -1;
             });
@@ -121,7 +121,7 @@ var onTabReadyRules = function(tabId) {
             refreshMatchCounter(tab, totalMatchesCount);
 
             // TESTING
-            if(!Utils.isLiveExtension()) {
+            if (!Utils.isLiveExtension()) {
               reportMatchingRulesForTesting(lastMatchingRules, matchingWfs);
             }
 
@@ -152,13 +152,13 @@ var onTabReadyWorkflow = function() {
   return new Promise(function (resolve) {
     Storage.load(Utils.keys.runningWorkflow).then(function prOnTabReadyWf(runningWorkflow) {
       // No running workflow?
-      if(typeof runningWorkflow === "undefined" || !state.lastActiveTab) {
+      if (typeof runningWorkflow === "undefined" || !state.lastActiveTab) {
         resolve({status: "not_running", runRule: true});
         return;
       }
 
       // End of workflow reached
-      if(runningWorkflow.currentStep >= runningWorkflow.steps.length) {
+      if (runningWorkflow.currentStep >= runningWorkflow.steps.length) {
         FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
         Storage.delete(Utils.keys.runningWorkflow);
 
@@ -176,7 +176,7 @@ var onTabReadyWorkflow = function() {
       setBadge("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
-        if(typeof rule === "undefined") {
+        if (typeof rule === "undefined") {
           // report not found rule in options, cancel workflow
           FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_error"), state.lastActiveTab);
           Storage.delete(Utils.keys.runningWorkflow);
@@ -187,7 +187,7 @@ var onTabReadyWorkflow = function() {
           resolve({status: "rule_not_found", runRule: false});
         } else {
           // Should a screenshot be taken?
-          if(runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
+          if (runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
             Logger.info("[background.js] setting rule.screenshot = true because Wf config said so");
             rule.screenshot = true;
           }
@@ -220,7 +220,7 @@ runWorkflowOrRule = function (tabId) {
   return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
     // If a workflow step has been run, don't run rules
     // otherwise do run
-    if(workflowStatus.runRule) {
+    if (workflowStatus.runRule) {
       onTabReadyRules(tabId);
     }
   });
@@ -239,10 +239,10 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
   var fName;
 
   // force download of the image
-  if(typeof potentialFilename === "string") {
+  if (typeof potentialFilename === "string") {
     // use user defined name
     fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
-  } else if(ruleMetadata) {
+  } else if (ruleMetadata) {
     // use generated name
     fName = generateFilename(ruleMetadata);
   } else {
@@ -258,16 +258,16 @@ var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
 // the user has "reeval-rules" checked in settings.
 // It executes the rules matching every two seconds
 var setCyclicRulesRecheck = function(shouldCheck) {
-  if(recheckInterval) {
+  if (recheckInterval) {
     clearInterval(recheckInterval);
     recheckInterval = null; // Collect it
     Logger.info("[bg.js] Deactivate interval for rule rechecking");
     useBadgeBgColor = defaultBadgeBgColor;
   }
 
-  if(shouldCheck) {
+  if (shouldCheck) {
     recheckInterval = setInterval(function() {
-      if(state.lastActiveTab !== null) {
+      if (state.lastActiveTab !== null) {
         runWorkflowOrRule(state.lastActiveTab.id);
       }
     }, Utils.reevalRulesInterval);
@@ -276,7 +276,7 @@ var setCyclicRulesRecheck = function(shouldCheck) {
   }
 
   // Set BG color now even if not rematching has been done
-  if(state.lastActiveTab !== null) {
+  if (state.lastActiveTab !== null) {
     chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": state.lastActiveTab.id});
   }
 };
@@ -288,7 +288,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
-  if(changeInfo.status && changeInfo.status === "complete") {
+  if (changeInfo.status && changeInfo.status === "complete") {
     runWorkflowOrRule(tabId);
   }
 });
@@ -333,25 +333,25 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
   // Open an intern URL (aka. options).
   // Callable by content script that otherwise isn't allowed to open intern urls.
-  if(message.action === "openIntern" && message.url) {
+  if (message.action === "openIntern" && message.url) {
     Logger.info("[bg.js] received 'openIntern' with url '" + message.url + "'");
     chrome.tabs.create({ "active": true, "url": message.url });
   }
 
   // Display a notification to the user that the extract has finished
-  if(message.action === "extractFinishedNotification") {
+  if (message.action === "extractFinishedNotification") {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
     Notification.create(chrome.i18n.getMessage("notification_form_extraction_done"), null, Utils.openOptions);
   }
 
   // Return the last active tab id
-  if(message.action === "lastActiveTabId" && state.lastActiveTab !== null) {
+  if (message.action === "lastActiveTabId" && state.lastActiveTab !== null) {
     Logger.info("[bg.js] received 'lastActiveTabId'. Sending tabId " + state.lastActiveTab.id);
     sendResponse(state.lastActiveTab.id);
   }
 
   // received from options.js to reload Libs
-  if(message.action === "reloadLibs") {
+  if (message.action === "reloadLibs") {
     // Why reload libs? If the user changes a tab containing a library definition
     // we must update it before the user executes a rule
     // Otherwise the new function won't be found
@@ -362,7 +362,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   }
 
   // Toggle rematch mode on/off
-  if(message.action === "testToggleRematch") {
+  if (message.action === "testToggleRematch") {
     state.optionSettings.reevalRules = !state.optionSettings.reevalRules;
     setCyclicRulesRecheck(state.optionSettings.reevalRules);
   }
@@ -372,7 +372,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 /*eslint-disable no-unused-vars */
 var setSettings = function(settings, value) {
   // First form key => value
-  if(typeof value !== "undefined") {
+  if (typeof value !== "undefined") {
     state.optionSettings[settings] = value;
   } else {
     // Second form: set all
@@ -398,7 +398,7 @@ var loadSettings = function() {
   // Load the settings and default them if not saved before
   Storage.load(Utils.keys.settings).then(function(settings) {
     Logger.info("[bg.js] loading settings : " + JSONF.stringify(settings));
-    if(typeof settings === "undefined") {
+    if (typeof settings === "undefined") {
       settings = Utils.defaultSettings;
     }
     state.optionSettings = settings;
@@ -414,7 +414,7 @@ var initializeTabSettings = function() {
   // Check if tabs are saved or we start from scratch
   Storage.load(Utils.keys.tabs).then(function (tabSettings) {
     // No tab settings found, create one
-    if(typeof tabSettings === "undefined") {
+    if (typeof tabSettings === "undefined") {
       Logger.info("[bg.js] Creating default tab setting");
       Storage.save([{
         "id": 1,
@@ -443,7 +443,7 @@ var remoteRulesImportFail = function() {
 
 // Update remote rules if options are set correctly
 var executeRemoteImport = function() {
-  if(typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true && state.optionSettings.importUrl.indexOf("http") > -1) {
+  if (typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true && state.optionSettings.importUrl.indexOf("http") > -1) {
     Logger.info("[bg.js] Alarm triggered update of remote rules");
     RemoteImport.import(state.optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
   }
@@ -451,7 +451,7 @@ var executeRemoteImport = function() {
 
 // This is triggered when the set interval (eg. every 15 minutes) has expired
 var alarmListener = function(alarm) {
-  if(alarm.name !== Utils.alarmName) {
+  if (alarm.name !== Utils.alarmName) {
     return;
   }
   Logger.info("[bg.js] Alarm triggered");
@@ -462,7 +462,7 @@ var alarmListener = function(alarm) {
 // Debug Messages from content.js
 chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function(message) {
-    if(message.action === "log" && message.message) {
+    if (message.action === "log" && message.message) {
       Logger.store(message.message);
     }
   });
@@ -472,14 +472,14 @@ chrome.runtime.onConnect.addListener(function (port) {
 // Listen for messages from content.js
 chrome.runtime.onMessage.addListener(function (message) {
   // REMOVE START
-  if(message.action === "log" && message.message) {
+  if (message.action === "log" && message.message) {
     Logger.store(message.message);
   }
   // REMOVE END
 
   // The content page (form_filler.js) requests a screenshot to be taken
   // the message.flag can be the filename or true/false
-  if(message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
+  if (message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
     takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
@@ -504,7 +504,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   Logger.delete();
 
   // Check if there are notifications to display
-  if(Utils.version.indexOf(".") > -1) {
+  if (Utils.version.indexOf(".") > -1) {
     Notification.forVersion(Utils.version);
   }
 

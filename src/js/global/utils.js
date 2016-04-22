@@ -57,7 +57,7 @@ var Utils = {
   },
   openOptions: function(parameter) {
     var optionsUrl = chrome.runtime.getURL("html/options.html");
-    if(parameter) {
+    if (parameter) {
       optionsUrl += parameter;
     }
     chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
@@ -123,7 +123,7 @@ var Utils = {
     });
   },
   isBgPage: function() {
-    if(typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
+    if (typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
       return false;
     }
     return true;
@@ -131,7 +131,7 @@ var Utils = {
 };
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = Utils;
 }
 // REMOVE END

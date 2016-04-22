@@ -1,10 +1,10 @@
 /*global jQuery */
-/*eslint no-unused-vars: 0*/
+/*eslint complexity: 0*/
 var ChromeBootstrap = {
   init: function() {
     // Menu functionality for chrome-bootstrap
     jQuery('.menu').on("click", "a", function(ev) {
-      if(this.classList.contains("no-click")) {
+      if (this.classList.contains("no-click")) {
         ev.preventDefault();
         return false;
       }
@@ -23,6 +23,7 @@ var ChromeBootstrap = {
       $parent.parent()[0].className = "menu " + anchor.substr(1);
 
       jQuery('body')[0].scrollTop = 0;
+      return true;
     });
 
     // Activate navigationitem via hashtag
@@ -35,18 +36,28 @@ var ChromeBootstrap = {
     jQuery(document).on("click", "a.activate-menu", ChromeBootstrap.relocate);
 
     jQuery(".menu a").on("click", function() {
-      if(this.classList.contains("no-click")) {
+      if (this.classList.contains("no-click")) {
         return false;
       }
 
       jQuery(".notice").hide();
+      return true;
     });
   },
   relocate: function(target) {
     var hash = window.location.hash;
 
+    // passed as a parameter
     if (typeof target === "string") {
       hash = target;
+    }
+
+    // User hash clicked on a link wit hcalss=activate-menu and only a #hash link
+    if (typeof this.href !== "undefined") {
+      var link = this.href.match(/#(.*)$/);
+      if (link !== null) {
+        hash = link[0];
+      }
     }
 
     if (hash) {

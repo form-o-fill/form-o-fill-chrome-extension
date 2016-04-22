@@ -31,7 +31,7 @@ var FormUtil = {
       // resolve found shared rules
       Promise.all(importableRulesPromises).then(function importableRulesPromises2(arrayOfRules) {
         var lookup = {};
-        if(arrayOfRules.length > 0) {
+        if (arrayOfRules.length > 0) {
           Logger.info("[b/form_util.js] Found importable rules:", arrayOfRules);
         }
 
@@ -40,7 +40,7 @@ var FormUtil = {
           return element.ruleToImport === null;
         });
 
-        if(missingImports.length > 0) {
+        if (missingImports.length > 0) {
           Notification.create(chrome.i18n.getMessage("notification_import_without_rule"), null, function importWithoutRule() {
             var errors = missingImports.map(function (element) {
               return { fullMessage: "Missing rule is named '" + element.ruleThatImports + "'" };
@@ -63,12 +63,12 @@ var FormUtil = {
 
         // If there are no lookup entries
         // we can return here
-        if(Object.keys(lookup).length > 0) {
+        if (Object.keys(lookup).length > 0) {
           // Walk through all fields and replace imports with the field definitions
           // from the shared rule
           rule.fields.forEach(function resolveImportsFields(field, fieldIndex) {
             // replace a field with "import" with the corresponding rule
-            if(typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
+            if (typeof field.import !== "undefined" && typeof lookup[field.import] !== "undefined") {
               // Insert the rules at the "import" spot
               rule.fields.splice.apply(rule.fields, [fieldIndex, 1].concat(lookup[field.import]));
             }
@@ -119,7 +119,7 @@ var FormUtil = {
     aRule.fields.forEach(function ruleFieldsForEach(field, fieldIndex) {
       // If the rule has screenshot : true and this is the last executing field definition
       // take a screenshot via the fields screenshot flag
-      if(screenshotFlagFromRule && fieldIndex === aRule.fields.length - 1) {
+      if (screenshotFlagFromRule && fieldIndex === aRule.fields.length - 1) {
         Logger.info("[b/form_util.js] Flagging field #" + fieldIndex + " with screenshot = true (rule: " + aRule.nameClean + ")");
         field.screenshot = true;
       }
@@ -151,7 +151,7 @@ var FormUtil = {
   },
   reportErrors: function(theErrors, rule, port) {
     Logger.warn("[b/form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
-    if(theErrors.length > 0) {
+    if (theErrors.length > 0) {
       Notification.create(chrome.i18n.getMessage("bg_error_while_filling", [theErrors.length]), null, function notificationCreated() {
         FormUtil.saveErrors(theErrors, rule);
       });
@@ -180,7 +180,7 @@ var FormUtil = {
 
     // There are libraries present
     // so add them to the stack
-    if(libs.length > 0) {
+    if (libs.length > 0) {
       // Generate a promise for every used lib
       libs.forEach(function (libPath) {
         prUsedLibs.push(FormUtil.injectAndAttachToLibs(libPath, Utils.vendoredLibs[libPath].name, Utils.vendoredLibs[libPath].onWindowName));
@@ -231,7 +231,7 @@ var FormUtil = {
     // callbacks or promises
     base: window.sessionStorage.getItem(Utils.keys.sessionStorage) || {},
     get: function(key) {
-      if(typeof this.base[key] === "undefined") {
+      if (typeof this.base[key] === "undefined") {
         return this.base[key];
       }
       return JSONF.parse(this.base[key]);
@@ -257,10 +257,10 @@ var FormUtil = {
     }];
 
     // Is there a 'before' or 'after' block with an function or an array of functions?
-    if(typeof rule[beforeOrAfter] === "function") {
+    if (typeof rule[beforeOrAfter] === "function") {
       // A single before function
       prepFunctions = [ FormUtil.wrapInPromise(rule[beforeOrAfter], context) ];
-    } else if(typeof rule[beforeOrAfter] === "object" && typeof rule[beforeOrAfter].length !== "undefined") {
+    } else if (typeof rule[beforeOrAfter] === "object" && typeof rule[beforeOrAfter].length !== "undefined") {
       // Assume an array of functions
       prepFunctions = rule[beforeOrAfter].map(function beforeFuncMap(func) {
         return FormUtil.wrapInPromise(func, context);
@@ -291,7 +291,7 @@ var FormUtil = {
       port.onMessage.addListener(function(message) {
         // The content.js will post a complete message when the setupContent function has been
         // executed
-        if(message.action === "setupContentDone") {
+        if (message.action === "setupContentDone") {
           resolve();
         }
       });
@@ -321,7 +321,7 @@ var FormUtil = {
   },
   processBeforeData: function(rule, beforeData) {
     // beforeData is null when there is no before function defined in the rule definition
-    if(beforeData !== null) {
+    if (beforeData !== null) {
       Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
       // Lets see if we got any errors thrown inside the executed before function
@@ -336,7 +336,7 @@ var FormUtil = {
 
     // If there was only one rule
     // reduce data array to one element
-    if(beforeData.length === 1) {
+    if (beforeData.length === 1) {
       beforeData = beforeData[0];
     }
 
@@ -349,13 +349,13 @@ var FormUtil = {
     this.lastRule = rule;
 
     // Whatever the reason. Sometimes the rule is undefined when this is called
-    if(typeof rule === "undefined") {
+    if (typeof rule === "undefined") {
       Logger.info("[form_util.js] this.lastRule is undefined. Canceling application of rule.");
       return;
     }
 
     // Open long standing connection to the tab containing the form to be worked on
-    if(typeof lastActiveTab === "undefined") {
+    if (typeof lastActiveTab === "undefined") {
       Logger.info("[form_util.js] lastActivetab has gone away. Exiting.");
       return;
     }
@@ -387,7 +387,7 @@ var FormUtil = {
       Promise.all(beforePromises).then(function beforeFunctionsPromise(beforeData) {
         // If the first beforeData is a function and executes to null thebn
         // the rules and workflows that are running should be *canceled*
-        if(typeof beforeData[0] === "function" && beforeData[0]() === null) {
+        if (typeof beforeData[0] === "function" && beforeData[0]() === null) {
           // Cancel workflows
           Storage.delete(Utils.keys.runningWorkflow);
 
@@ -404,7 +404,7 @@ var FormUtil = {
         var contentLibImportAndSetupContentPrs = FormUtil.generateLibsPromisesForContentPage(rule);
 
         // setupContent function defined? Add those to the promises
-        if(typeof rule.setupContent === "function") {
+        if (typeof rule.setupContent === "function") {
           contentLibImportAndSetupContentPrs.push(FormUtil.generateSetupContentPromise(rule.setupContent, port));
         }
 
@@ -414,6 +414,7 @@ var FormUtil = {
           FormUtil.resolveImportsAndPostToContent(rule, beforeData, port);
         });
 
+        return undefined;
       }).catch(function error(msg) {
         console.error(msg);
       });
@@ -421,7 +422,7 @@ var FormUtil = {
 
     port.onMessage.addListener(function portOnMessageListener(msg) {
       // Make errors from content scripts available here
-      if(msg.action === "getErrors") {
+      if (msg.action === "getErrors") {
         var sentErrors = JSONF.parse(msg.errors);
         FormUtil.reportErrors(sentErrors, rule, port);
       }
@@ -433,19 +434,19 @@ var FormUtil = {
   },
   handleContentMessages: function(message) {
     // Message that the form filling is done
-    if(message.action === "fillFieldFinished" && typeof FormUtil.lastRule !== "undefined") {
+    if (message.action === "fillFieldFinished" && typeof FormUtil.lastRule !== "undefined") {
       var rule = FormUtil.lastRule;
 
       // If the rule has a teardownContent functions execute it
       // This is sent to content.js and runs in the context of the content page
-      if(typeof rule.teardownContent === "function") {
+      if (typeof rule.teardownContent === "function") {
         FormUtil.getPort().postMessage({ action: "teardownContent", value: JSONF.stringify(rule.teardownContent)});
       }
 
       // If the rule has a "after" function, execute it
       // It has access to the same context object used in the before function
       // The signature is the same as with before functions
-      if(typeof rule.after === "function") {
+      if (typeof rule.after === "function") {
         Promise.all(FormUtil.generateFunctionsPromises("after", rule, FormUtil.createContext())).then(function() {
           Logger.info("[b/form_util.js] Executed after function: " + JSONF.stringify(rule.after));
         });

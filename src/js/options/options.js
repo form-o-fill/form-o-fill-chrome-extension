@@ -7,7 +7,7 @@ var noticesVisible = false;
 
 I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "tutorials"]);
 
-if(Utils.debug) {
+if (Utils.debug) {
   I18n.loadPages(["logs"]);
 }
 
@@ -15,7 +15,7 @@ ChromeBootstrap.init();
 
 // reset notices once the user starts typing
 editor.on("change", function() {
-  if(noticesVisible) {
+  if (noticesVisible) {
     $("#ruleeditor .notice").hide();
     noticesVisible = false;
   }
@@ -24,7 +24,7 @@ editor.on("change", function() {
 // Current active tab id
 var currentTabId = function() {
   var currentTab = $("#ruleeditor .tab.current");
-  if(currentTab.length === 1) {
+  if (currentTab.length === 1) {
     return currentTab.data("tab-id");
   }
   return 1;
@@ -72,7 +72,7 @@ Storage.load(Utils.keys.extractedRule).then(function (extractedRule) {
 
 // Check for rule filling errors
 Storage.load(Utils.keys.errors).then(function (errorsStorage) {
-  if(typeof errorsStorage !== "undefined") {
+  if (typeof errorsStorage !== "undefined") {
     var rule = errorsStorage.rule;
     var errors = errorsStorage.errors;
     var $notice = $("#ruleeditor .notice.form-fill-errors");
@@ -80,7 +80,7 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
     var fullMsg = false;
     errors.forEach(function (error) {
       Logger.info("[options.js] Got error " + JSONF.stringify(error) + " for rule " + JSONF.stringify(rule));
-      if(typeof error.fullMessage !== "undefined") {
+      if (typeof error.fullMessage !== "undefined") {
         // One line output
         tableTrs.push("<tr><td>" + error.fullMessage + "</td></tr>");
         fullMsg = true;
@@ -90,7 +90,7 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
       }
     });
     $notice.find("table").append(tableTrs.join("\n"));
-    if(fullMsg) {
+    if (fullMsg) {
       $notice.find("#form-filling-errors-thead").remove();
     }
     $notice.find(".rule-name").html(rule.nameClean);
@@ -100,7 +100,7 @@ Storage.load(Utils.keys.errors).then(function (errorsStorage) {
 
     // Activate the tab with the rule
     var match = rule.id.match(/^([0-9]+)/);
-    if(match) {
+    if (match) {
       Logger.info("[options.js] Activating tab #" + match[1]);
       $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
     }
@@ -152,9 +152,9 @@ var saveRules = function(tabId) {
   var libs = Libs.detectVendoredLibraries(editor.getValue());
   Libs.loadLibs(libs, "saveRules").then(function() {
     var errors = Rules.syntaxCheck(editor);
-    if(errors.length > 0) {
+    if (errors.length > 0) {
       errors.forEach(function (errorClass) {
-        if(typeof errorClass === "object") {
+        if (typeof errorClass === "object") {
           var extraLis = errorClass.extra.map(function (extra) {
             return "<li>" + extra + "</li>";
           });
@@ -166,14 +166,14 @@ var saveRules = function(tabId) {
       noticesVisible = true;
     }
 
-    if(editor.cleanUp()) {
+    if (editor.cleanUp()) {
       Rules.save(editor.getValue(), tabId).then(function () {
         Utils.infoMsg("Rules saved");
         updateTabStats();
         // If the editor contained something that looks like a library function
         // reimport the libs in the background page
         // because they COULD have been changed
-        if(editor.getValue().indexOf("export") > -1) {
+        if (editor.getValue().indexOf("export") > -1) {
           chrome.runtime.sendMessage({action: "reloadLibs"});
         }
       });
@@ -185,7 +185,7 @@ var saveRules = function(tabId) {
 var loadRules = function(tabId) {
   Storage.load(Utils.keys.rules + "-tab-" + tabId).then(function (ruleData) {
     var ruleJson = null;
-    if(typeof ruleData === "undefined" || typeof ruleData.code === "undefined") {
+    if (typeof ruleData === "undefined" || typeof ruleData.code === "undefined") {
       ruleJson = "";
     } else {
       ruleJson = ruleData.code;
@@ -209,7 +209,7 @@ var quickJumpToRule = function() {
   var name = selected.text();
 
   // If the target tab is not the active one, click to trigger
-  if(currentTabId().toString() !== tabId) {
+  if (currentTabId().toString() !== tabId) {
     $("#ruleeditor .tab[data-tab-id=" + tabId + "]").trigger("click");
   }
 

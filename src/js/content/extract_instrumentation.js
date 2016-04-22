@@ -54,12 +54,12 @@ var showExtractOverlay = function showExtractOverlay() {
     // remove overlays etc
     cleanupOverlays();
 
-    if(targetForm) {
+    if (targetForm) {
       extractRules(targetForm);
     }
   }).on("click", "body", cleanupOverlays)
   .on("keyup", function keyUp(e) {
-    if(e.which === 27) {
+    if (e.which === 27) {
       cleanupOverlays();
     }
   });
@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, send
     var matches = [];
     var rules = JSONF.parse(message.rules);
     rules.forEach(function forEach(rule) {
-      if(typeof rule.content.test === "function" && rule.content.test(content)) {
+      if (typeof rule.content.test === "function" && rule.content.test(content)) {
         matches.push(rule.id);
       }
     });

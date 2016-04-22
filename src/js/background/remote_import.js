@@ -5,7 +5,7 @@ var RemoteImport = {
       jQuery.ajax({url: url, dataType: "text"})
         .done(function(dataAsString) {
           var toImport = JSONF.parse(dataAsString);
-          if(Rules.validateImport(toImport)) {
+          if (Rules.validateImport(toImport)) {
             resolve({url: url, data: toImport, status: 200, textStatus: "OK"});
           } else {
             reject({url: url, data: null, status: 501, textStatus: "FORMAT"});
@@ -27,7 +27,7 @@ var RemoteImport = {
     };
 
     // Save workflows (if any)
-    if(typeof importStruct.workflows !== "undefined" && typeof importStruct.workflows.length !== "undefined") {
+    if (typeof importStruct.workflows !== "undefined" && typeof importStruct.workflows.length !== "undefined") {
       data.workflows = importStruct.workflows;
     }
 
@@ -43,7 +43,7 @@ var RemoteImport = {
   notifySuccess: function(success, url) {
     url = url ? url : "wrong format";
     var msg = chrome.i18n.getMessage("import_remote_rules_succeeded", [ url ]);
-    if(!success) {
+    if (!success) {
       msg = chrome.i18n.getMessage("import_remote_rules_failed", [ url ]);
     }
     Notification.create(msg, chrome.i18n.getMessage("import_remote_rules_title"), function() {
@@ -52,11 +52,11 @@ var RemoteImport = {
   },
   listenToExternal: function() {
     chrome.runtime.onMessageExternal.addListener(function(request, sender) {
-      if(request.action === "importRemoteRules") {
-        if(/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
+      if (request.action === "importRemoteRules") {
+        if (/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
           // Extract the i=parameter
           var matches = sender.url.match(/i=(.*\.js)/);
-          if(typeof matches[1] !== "undefined") {
+          if (typeof matches[1] !== "undefined") {
             var url = decodeURIComponent(matches[1]);
             // Import rules from URL
             RemoteImport.import(url).then(function(resolved) {
@@ -84,7 +84,7 @@ var RemoteImport = {
 };
 
 // REMOVE STAR
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = RemoteImport;
 }
 // REMOVE END

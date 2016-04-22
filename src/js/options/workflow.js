@@ -25,7 +25,7 @@ var ruleHtml = function(rule) {
 // Show that there are unsaved changes
 var unsavedChanges = function(visible) {
   var $e = jQuery("h3 span.unsaved-changes");
-  if(visible) {
+  if (visible) {
     $e.show();
   } else {
     $e.hide();
@@ -63,7 +63,7 @@ var bindSortable = function() {
 
 // fill the form with workflow data
 var fillWorkflow = function(data) {
-  if(!data) {
+  if (!data) {
     return;
   }
   var stepsHtml = [];
@@ -76,7 +76,7 @@ var fillWorkflow = function(data) {
   jQuery("#workfloweditor ol").html(stepsHtml.join(""));
 
   var screenshot = false;
-  if(data.flags && data.flags.screenshot === true) {
+  if (data.flags && data.flags.screenshot === true) {
     screenshot = true;
   }
   document.querySelector(".wf-options input[name=wf-take-screenshot]").checked = screenshot;
@@ -95,7 +95,7 @@ var addStepToWorkflow = function() {
   var ruleName = $rule.data("ruleName");
   var ruleId = $rule.data("ruleId");
 
-  if(typeof ruleName !== "undefined") {
+  if (typeof ruleName !== "undefined") {
     jQuery("#workfloweditor ol").append(stepHtml(ruleName));
     unsavedChanges(true);
     bindSortable();
@@ -130,7 +130,7 @@ var findWorkflowById = function(wfId) {
   });
 
   // non found -> shouldn't happen
-  if(aWf.length === 0) {
+  if (aWf.length === 0) {
     return null;
   }
   return aWf[0];
@@ -141,20 +141,21 @@ var loadWorkflowById = function(wfId) {
   var aWf = findWorkflowById(wfId);
 
   // non found -> shouldn't happen
-  if(!aWf) {
+  if (!aWf) {
     return null;
   }
 
   // fill form
   Logger.info("[o/workflow.js] Loading WF #" + aWf.id + " '" + aWf.name + "'");
   fillWorkflow(aWf);
+  return undefined;
 };
 
 // Load all present workflows and fill select field
 var loadWorkflows = function(selectedWfId) {
   Workflows.all().then(function loadWf(rawWorkflows) {
     // When no workflows are defined, exit early
-    if(typeof rawWorkflows === "undefined") {
+    if (typeof rawWorkflows === "undefined") {
       return;
     }
 
@@ -166,7 +167,7 @@ var loadWorkflows = function(selectedWfId) {
     workflows = rawWorkflows;
 
     // if no selectedWfId is set select first
-    if(!selectedWfId && workflows.length > 0) {
+    if (!selectedWfId && workflows.length > 0) {
       selectedWfId = workflows[0].id;
     }
     selectedWfId = parseInt(selectedWfId, 10);
@@ -176,7 +177,7 @@ var loadWorkflows = function(selectedWfId) {
     var optionHtml = [];
     var selected = null;
 
-    if(rawWorkflows.length === 0) {
+    if (rawWorkflows.length === 0) {
       optionHtml.push("<option data-workflow-id='0' class='wf-no-created'>" + chrome.i18n.getMessage("opt_wf_no_wf_defined") + "</option>");
       jQuery("#workfloweditor").hide();
     } else {
@@ -189,9 +190,9 @@ var loadWorkflows = function(selectedWfId) {
     }
     $wfSelect.html(optionHtml.join());
 
-    if(selectedWfId && selectedWfId !== 0) {
+    if (selectedWfId && selectedWfId !== 0) {
       // Load a preset workflow
-      fillWorkflow(loadWorkflowById(selectedWfId));
+      loadWorkflowById(selectedWfId);
     }
   });
 };
@@ -202,7 +203,7 @@ var saveWorkflow = function() {
   var flags = {};
 
   // Should a screenshot be taken on every step?
-  if(document.querySelector(".wf-options input[name=wf-take-screenshot]").checked) {
+  if (document.querySelector(".wf-options input[name=wf-take-screenshot]").checked) {
     flags.screenshot = true;
   }
 
@@ -213,7 +214,7 @@ var saveWorkflow = function() {
     flags: flags
   };
 
-  if(currentWfId === 0) {
+  if (currentWfId === 0) {
     // Save a brand new workflow
     workflow.id = workflows.length + 1;
     currentWfId = workflow.id;
@@ -222,7 +223,7 @@ var saveWorkflow = function() {
   } else {
     // Save a modified workflow
     workflows.forEach(function wfForEach(wf, index) {
-      if(wf.id === currentWfId) {
+      if (wf.id === currentWfId) {
         workflows[index] = workflow;
       }
     });
@@ -243,14 +244,14 @@ var checkForErrors = function() {
 
   Promise.all([Workflows.all(), Rules.all()]).then(function (wfsAndAllRules) {
     // When no workflows are defined, exit early
-    if(typeof wfsAndAllRules[0] === "undefined") {
+    if (typeof wfsAndAllRules[0] === "undefined") {
       return;
     }
 
     // We only need the rule names (unique)
     var ruleSteps = [];
     wfsAndAllRules[1].forEach(function (rule) {
-      if(ruleSteps.indexOf(rule.name) === -1) {
+      if (ruleSteps.indexOf(rule.name) === -1) {
         ruleSteps.push(rule.name);
       }
     });
@@ -259,7 +260,7 @@ var checkForErrors = function() {
     wfsAndAllRules[0].forEach(function (workflow) {
       jQuery.makeArray(workflow.steps).forEach(function (step) {
         // Try to find the workflow step in the global step list
-        if(ruleSteps.indexOf(step) === -1) {
+        if (ruleSteps.indexOf(step) === -1) {
           wfErrors.push({
             wfId: workflow.id,
             wfName: workflow.name,
@@ -270,14 +271,14 @@ var checkForErrors = function() {
     });
 
     // report errors
-    if(wfErrors.length > 0) {
+    if (wfErrors.length > 0) {
 
       // Add unique workflows
       var missingHtml = [];
       var html = "";
       wfErrors.forEach(function wfErrMap(error) {
         html = ("<li><a href='#' data-workflow-id='" + error.wfId + "'>" + error.wfName + " (#" + error.wfId + ")</a></li>");
-        if(missingHtml.indexOf(html) === -1) {
+        if (missingHtml.indexOf(html) === -1) {
           missingHtml.push(html);
         }
       });
@@ -301,7 +302,7 @@ var deleteWorkflow = function() {
     /*eslint-enable eqeqeq */
   });
 
-  if(workflows.length > 0) {
+  if (workflows.length > 0) {
     // reorder
     workflows = workflows.map(function delWfMap(wf, index) {
       wf.id = index + 1;

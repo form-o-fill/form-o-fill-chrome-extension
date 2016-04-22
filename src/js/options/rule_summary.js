@@ -13,24 +13,24 @@ var ruleSummaryShow = function(show) {
 var ruleSummaryFind = function(term, startInRow, backward) {
   var src = editor._document.getAllLines();
 
-  if(typeof backward !== "boolean") {
+  if (typeof backward !== "boolean") {
     backward = true;
   }
 
-  if(typeof startInRow === "undefined") {
+  if (typeof startInRow === "undefined") {
     startInRow = 0;
   }
   var i = startInRow;
 
-  if(backward) {
-    for(i = startInRow; i >= 0; i--) {
-      if(src[i].match(term)) {
+  if (backward) {
+    for (i = startInRow; i >= 0; i--) {
+      if (src[i].match(term)) {
         return src[i];
       }
     }
   } else {
-    for(i = startInRow; i < src.length; i++) {
-      if(src[i].match(term)) {
+    for (i = startInRow; i < src.length; i++) {
+      if (src[i].match(term)) {
         return src[i];
       }
     }
@@ -78,30 +78,30 @@ var ruleSummaryRefreshByRule = function(rule) {
 var ruleSummaryRefresh = function() {
   var row = editor.editor().getSelectionRange().start.row;
 
-  if(row !== ruleSummary.currentRow) {
+  if (row !== ruleSummary.currentRow) {
     ruleSummary.currentRow = row;
 
     var currentLine = editor.session().getLine(row);
     var back = true;
 
     // If the current line is the url, cahcnes are we should look forward instead of backward
-    if(/url/.test(currentLine)) {
+    if (/url/.test(currentLine)) {
       back = false;
     }
 
     // try to find the "name" attribute in the first direction
     var line = ruleSummaryFind(/name["']?\s*:/, row, back);
 
-    if(!line) {
+    if (!line) {
       // try in the oter direction ...
       back = !back;
       line = ruleSummaryFind(/name["']?\s*:/, row, back);
     }
 
-    if(line) {
+    if (line) {
       // Extract name:
       var nameMatches = line.match(/:\s*["'](.*?)["']/);
-      if(nameMatches[1] !== "") {
+      if (nameMatches[1] !== "") {
         ruleSummary.name = nameMatches[1];
       }
       document.querySelector(".rule-name").innerHTML = ruleSummary.name;
@@ -118,7 +118,7 @@ var ruleSummaryRefresh = function() {
 // Sadly it is triggered way to often so we
 // need to throttle it down.
 editor.selection().on("changeSelection", function() {
-  if(!ruleSummary.refeshTimeout) {
+  if (!ruleSummary.refeshTimeout) {
     ruleSummary.refeshTimeout = true;
     setTimeout(ruleSummaryRefresh, 1000);
   }
@@ -127,7 +127,7 @@ editor.selection().on("changeSelection", function() {
 // Hide or show rule summary
 // when the user clicks on the menu item
 jQuery(".menu a").on("click", function() {
-  if(!this.classList.contains("the-rule-editor-menu")) {
+  if (!this.classList.contains("the-rule-editor-menu")) {
     ruleSummaryShow(false);
   }
 });

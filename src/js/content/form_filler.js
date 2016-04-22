@@ -31,14 +31,14 @@ var FormFiller = {
       fillMethod = this._fillMethod(domNode);
 
       // Check for "onlyEmpty" flag and break the loop
-      if(flags.onlyEmpty === true && domNode.value !== "") {
+      if (flags.onlyEmpty === true && domNode.value !== "") {
         Logger.info("[form_filler.js] Skipped the loop because the target was not empty");
         break;
       }
 
       // if the value is a function, call it with the jQuery wrapped domNode
       // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
-      if(typeof parsedValue === "function") {
+      if (typeof parsedValue === "function") {
         try {
           parsedValue = parsedValue(jQuery(domNode), beforeData);
         } catch (e) {
@@ -50,14 +50,14 @@ var FormFiller = {
       }
 
       // Fill field only if value is not null or not defined
-      if(parsedValue !== null && typeof parsedValue !== "undefined") {
+      if (parsedValue !== null && typeof parsedValue !== "undefined") {
         // Fill field using the specialized method or default
         returnValue = fillMethod(domNode, parsedValue, selector) || null;
       }
     }
 
     // Screenshot?
-    if(flags.screenshot !== "undefined" && flags.screenshot !== false) {
+    if (flags.screenshot !== "undefined" && flags.screenshot !== false) {
       // Only the BG page has the permissions to do a screenshot
       // so here we send it the request to do so
       Logger.info("[form_filler.js] sending request to take a screenshot to bg.js");
@@ -88,9 +88,9 @@ var FormFiller = {
   _fillSelectOne: function(domNode, value) {
     var i = 0;
     var optionNode = null;
-    for(i = 0; i < domNode.children.length; i++) {
+    for (i = 0; i < domNode.children.length; i++) {
       optionNode = domNode.children[i];
-      if(optionNode.value === value) {
+      if (optionNode.value === value) {
         optionNode.selected = value;
         return;
       }
@@ -104,59 +104,66 @@ var FormFiller = {
     };
     value = Array.isArray(value) ? value : [value];
 
-    for(i = 0; i < domNode.children.length; i++) {
+    for (i = 0; i < domNode.children.length; i++) {
       optionNode = domNode.children[i];
       optionNode.selected = value.some(someFunction);
     }
   },
   _fillDate: function(domNode, value, selector) {
-    if(/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_date"));
     }
+    return null;
   },
   _fillMonth: function(domNode, value, selector) {
-    if(/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
+    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_month"));
     }
+    return null;
   },
   _fillWeek: function(domNode, value, selector) {
-    if(/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
+    if (/^\d{4}-W(0[1-9]|[1-4][0-9]|5[0123])$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_week"));
     }
+    return null;
   },
   _fillTime: function(domNode, value, selector) {
-    if(/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+    if (/^(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_time"));
     }
+    return null;
   },
   _fillDatetime: function(domNode, value, selector) {
-    if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
+    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)([T|Z][^\d]|[+-][01][0-4]:\d\d)$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_datetime"));
     }
+    return null;
   },
   _fillDatetimeLocal: function(domNode, value, selector) {
-    if(/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
+    if (/^\d{4}-\d{2}-\d{2}T(0\d|1\d|2[0-3]):([0-5]\d):([0-5]\d)(\.(\d{1,3}))?$/.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_datetime_local"));
     }
+    return null;
   },
   _fillColor: function(domNode, value, selector) {
-    if(/^#[0-9a-f]{6}$/i.test(value)) {
+    if (/^#[0-9a-f]{6}$/i.test(value)) {
       domNode.value = value;
     } else {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_error_color"));
     }
+    return null;
   },
   _typeMethod: function(type) {
     return ("_fill-" + type).replace(/(\-[a-z])/g, function($1) {

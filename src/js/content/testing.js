@@ -10,14 +10,14 @@ var installTestingCode = function() {
       var $info = jQuery("#form-o-fill-testing-info");
       var foundEl = $info.find("." + key);
       // When the text property is set, append that to the DOM
-      if(foundEl.length === 0 && typeof text !== "undefined") {
+      if (foundEl.length === 0 && typeof text !== "undefined") {
         $info.append("<tr><td>" + text + "</td><td class='" + key + "'>" + value + "</td></tr>");
       } else {
         $info.find("." + key).html(value);
       }
     },
     appendTestLog: function(msg) {
-      if(shouldLog) {
+      if (shouldLog) {
         jQuery("td.log ul").append("<li>" + msg + "</li>");
       }
     }
@@ -43,12 +43,12 @@ var installTestingCode = function() {
   // Listen to messages from background.js
   chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // Set a variable in the DOM based on what is sent from bg.js
-    if(message.action === "setTestingVar" && message.key && typeof message.value !== "undefined") {
+    if (message.action === "setTestingVar" && message.key && typeof message.value !== "undefined") {
       Testing.setTestingVar(message.key, message.value, message.text);
       sendResponse(true);
     }
 
-    if(message.action === "appendTestLog" && typeof message.value !== "undefined") {
+    if (message.action === "appendTestLog" && typeof message.value !== "undefined") {
       Testing.appendTestLog(message.value);
       sendResponse(true);
     }
@@ -105,13 +105,13 @@ var installTestingCode = function() {
   });
 
   // Make the Testn object available in dev
-  if(!Utils.isLiveExtension()) {
+  if (!Utils.isLiveExtension()) {
     window.Testing = Testing;
   }
 };
 
 // Enable only if we are running inside a special testing URL and are not bound to the live extension ID
-if(!Utils.isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
+if (!Utils.isLiveExtension() && /http:\/\/localhost:9292\/form-o-fill-testing\//.test(window.location.href)) {
   installTestingCode();
   Logger.info("[c/testing.js] Installed testing code in content page");
 }

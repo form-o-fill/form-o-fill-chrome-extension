@@ -3,7 +3,7 @@
 var Notification = {
   create: function(message, title, onClickCallback) {
     var formNotificationId = null;
-    if(title === null) {
+    if (title === null) {
       title = "Form-O-Fill";
     }
     chrome.notifications.create(Math.random().toString(), {
@@ -13,7 +13,7 @@ var Notification = {
       "message": message,
       "isClickable": true
     }, function(notificationId) {
-      if(!Utils.isLiveExtension()) {
+      if (!Utils.isLiveExtension()) {
         Testing.setVar("notification-html", message, "Last Notification HTML");
         Testing.setVar("notification-status", "visible", "Last Notification status");
         Testing.setVar("notification-callback", onClickCallback.toString(), "Last Notification click callback");
@@ -22,8 +22,8 @@ var Notification = {
     });
 
     chrome.notifications.onClicked.addListener(function (notificationId) {
-      if(notificationId === formNotificationId) {
-        if(!Utils.isLiveExtension()) {
+      if (notificationId === formNotificationId) {
+        if (!Utils.isLiveExtension()) {
           Testing.setVar("notification-status", "clicked", "Last Notification status");
         }
         onClickCallback();
@@ -32,7 +32,7 @@ var Notification = {
   },
   forVersion: function(version) {
     var notificationContent = Changelog.findForVersion(version);
-    if(notificationContent) {
+    if (notificationContent) {
       Notification.create(notificationContent.message, notificationContent.title, function() {
         Utils.openOptions(notificationContent.target);
       });

@@ -3,7 +3,7 @@
 var FormExtractor = {
   _knownElements: null,
   knownElements: function() {
-    if(this._knownElements) {
+    if (this._knownElements) {
       return this._knownElements;
     }
     var inputs = [
@@ -52,7 +52,7 @@ var FormExtractor = {
         Logger.info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ") <" + this.name + ">");
         var value = extractor._valueFor(this);
         // Only include field if value !== null
-        if(value !== null) {
+        if (value !== null) {
           var field = {
             "selector": extractor._selectorFor(this),
             "value": value
@@ -101,9 +101,9 @@ var FormExtractor = {
   _valueSelectOne: function(domNode) {
     var optionNode = null;
     var i;
-    for(i = 0; i < domNode.children.length; i++) {
+    for (i = 0; i < domNode.children.length; i++) {
       optionNode = domNode.children[i];
-      if(optionNode.selected) {
+      if (optionNode.selected) {
         return optionNode.value;
       }
     }
@@ -114,7 +114,7 @@ var FormExtractor = {
     var optionNode = null;
     var selected = [];
 
-    for(i = 0; i < domNode.children.length; i++) {
+    for (i = 0; i < domNode.children.length; i++) {
       optionNode = domNode.children[i];
       if (optionNode.selected) {
         selected.push(optionNode.value);

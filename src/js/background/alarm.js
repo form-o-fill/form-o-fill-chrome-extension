@@ -10,7 +10,7 @@ var Alarm = {
 };
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = Alarm;
 }
 // REMOVE END

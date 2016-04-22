@@ -4,7 +4,7 @@ var Workflows = {
   all: function() {
     return new Promise(function (resolve) {
       Promise.all([Storage.load(Utils.keys.workflows), Storage.load(Utils.keys.shadowStorage)]).then(function prWfLoad(workflowsAndShadow) {
-        if(typeof workflowsAndShadow === "undefined") {
+        if (typeof workflowsAndShadow === "undefined") {
           resolve([]);
         } else {
           var workflows = workflowsAndShadow[0];
@@ -53,7 +53,7 @@ var Workflows = {
 
       Workflows.all().then(function prMatchesForRules(workflows) {
         var matchingWorkflows = [];
-        if(typeof workflows !== "undefined") {
+        if (typeof workflows !== "undefined") {
           matchingWorkflows = workflows.filter(function cbWfFilter(workflow) {
             return matchingRuleNames.indexOf(workflow.steps[0]) === 0;
           });

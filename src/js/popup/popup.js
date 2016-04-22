@@ -17,7 +17,7 @@ var Popup = {
     });
 
     // For chrome < 42: set the link
-    if(typeof chrome.runtime.openOptionsPage === "undefined") {
+    if (typeof chrome.runtime.openOptionsPage === "undefined") {
       var toOptionsLink = document.querySelector("a.to-options");
       toOptionsLink.href = chrome.extension.getURL("html/options.html");
       toOptionsLink.target = "blank";
@@ -40,12 +40,12 @@ var Popup = {
       var node = evt.target;
       var message;
 
-      if(!node) {
+      if (!node) {
         return;
       }
 
       // User selects on of many rules in the popup
-      if(node.classList.contains("select-rule")) {
+      if (node.classList.contains("select-rule")) {
         Logger.info("[popup.js] fill with rule " + node.dataset.ruleIndex + " clicked");
         message = {
           "action": "fillWithRule",
@@ -56,7 +56,7 @@ var Popup = {
       }
 
       // User select a workflow
-      if(node.classList.contains("select-workflow")) {
+      if (node.classList.contains("select-workflow")) {
         Logger.info("[popup.js] fill with workflow #" + node.dataset.workflowIndex + " clicked");
         message = {
           "action": "fillWithWorkflow",
@@ -67,20 +67,20 @@ var Popup = {
       }
 
       // Show Extract Overlay when user clicks "create one" link
-      if(node.classList.contains("cmd-show-extract-overlay")) {
+      if (node.classList.contains("cmd-show-extract-overlay")) {
         Utils.showExtractOverlay(function() {
           window.close();
         });
       }
 
       // Cancel blocking workflow
-      if(node.classList.contains("cmd-cancel-workflows")) {
+      if (node.classList.contains("cmd-cancel-workflows")) {
         // Cancel blocking workflow
         Storage.delete(Utils.keys.runningWorkflow).then(window.close);
       }
 
       // Toggle automatic re-matching of rules on/off
-      if(node.classList.contains("cmd-toggle-re-match")) {
+      if (node.classList.contains("cmd-toggle-re-match")) {
         var targetState = !node.classList.contains("on");
         Logger.info("[popup.js] setting toggleSetting -> reevalRules in bg.js (state: " + targetState + ")");
         chrome.runtime.getBackgroundPage(function(bgWindow) {
@@ -90,9 +90,9 @@ var Popup = {
       }
 
       // Click on options link
-      if(node.classList.contains("to-options")) {
+      if (node.classList.contains("to-options")) {
         // Chrome 42: use API, otherwise use normal href + target
-        if(typeof chrome.runtime.openOptionsPage === "function") {
+        if (typeof chrome.runtime.openOptionsPage === "function") {
           chrome.runtime.openOptionsPage();
           evt.stopPropagation();
         }
@@ -118,7 +118,7 @@ var Popup = {
     this.updateHeadline(matchingRules, matchingWorkflows);
     this.updateMatchingRules(matchingRules);
     this.updateMatchingWorkflows(matchingWorkflows);
-    if(!Utils.isLiveExtension()) {
+    if (!Utils.isLiveExtension()) {
       this.sendPopupHtmlForTesting();
     }
     this.updateHeight();
@@ -153,7 +153,7 @@ var Popup = {
       li.dataset.ruleIndex = index;
       li.dataset.ruleId = rule.id;
       li.dataset.ruleName = rule.name.replace(/[^a-zA-Z-]/g, "-").toLowerCase();
-      if(typeof rule.color !== "undefined") {
+      if (typeof rule.color !== "undefined") {
         li.style.color = rule.color;
       }
       fragment.appendChild(li);
@@ -161,7 +161,7 @@ var Popup = {
     ul.appendChild(fragment);
   },
   updateMatchingWorkflows: function(matches) {
-    if(typeof matches === "undefined") {
+    if (typeof matches === "undefined") {
       return;
     }
     Logger.info("[popup.js] updating popup to display " + matches.length + " workflows");

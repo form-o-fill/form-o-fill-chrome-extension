@@ -44,7 +44,7 @@ var JSONF = {
       }
 
       // Undefined?
-      if(value === JSONF._undef) {
+      if (value === JSONF._undef) {
         return undefined;
       }
     }
@@ -52,7 +52,7 @@ var JSONF = {
   }
 };
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = JSONF;
 }
 // REMOVE END

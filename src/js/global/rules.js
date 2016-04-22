@@ -3,7 +3,7 @@
 
 // REMOVE START
 /*eslint-disable no-undef, block-scoped-var */
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   var Utils = require("./utils.js");
   var Storage = require("./storage.js");
   var Rule = require("./rule.js");
@@ -46,12 +46,12 @@ var Rules = {
       Storage.load(that._nameForTabId(forTabId)).then(function prRulesLoadStorage(rulesData) {
 
         var rules = [];
-        if(rulesData) {
+        if (rulesData) {
           var libs = Libs.detectVendoredLibraries(rulesData.code);
           Libs.loadLibs(libs, "Rules.load").then(function prRulesLoadLibs() {
             var ruleFunction = that.text2function(rulesData.code);
 
-            if(ruleFunction === null) {
+            if (ruleFunction === null) {
               resolve(rules);
             }
 
@@ -59,7 +59,7 @@ var Rules = {
               return Rule.create(ruleJson, forTabId, index);
             });
 
-            if(typeof ruleIndex !== "undefined") {
+            if (typeof ruleIndex !== "undefined") {
               resolve(rules[ruleIndex - 1]);
             } else {
               resolve(rules);
@@ -75,7 +75,7 @@ var Rules = {
     // remove wrapper
     // results in [ code ... code ]
     var rulesCodeMatches = codeText.match(/^.*?(\[[\s\S]*\];)$/m);
-    if(!rulesCodeMatches || !rulesCodeMatches[1]) {
+    if (!rulesCodeMatches || !rulesCodeMatches[1]) {
       return false;
     }
     var ruleCode = "return " + rulesCodeMatches[1];
@@ -86,7 +86,7 @@ var Rules = {
     var rules = [];
     var ruleObjects;
     var index = 0;
-    if(typeof shadowStorage !== "undefined" && typeof shadowStorage.rules !== "undefined" && shadowStorage.rules.length > 0) {
+    if (typeof shadowStorage !== "undefined" && typeof shadowStorage.rules !== "undefined" && shadowStorage.rules.length > 0) {
       // rules contains an array of strings that contain an array of rules
       shadowStorage.rules.forEach(function(rulesCode) {
         // String of rules -> array of object
@@ -114,7 +114,7 @@ var Rules = {
         var tabSettings = tabSettingsAndShadow[0];
         var shadowStorage = tabSettingsAndShadow[1];
 
-        if(typeof tabSettings === "undefined") {
+        if (typeof tabSettings === "undefined") {
           reject();
         }
 
@@ -137,7 +137,7 @@ var Rules = {
           });
 
           // Add ruled from shadow storage to rules found in normal tabs
-          if(shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
+          if (shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
             rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
           }
 
@@ -175,7 +175,7 @@ var Rules = {
       "keep_function_indentation": true,
       "unescape_strings": false
     });
-    if(/\}\];$/.test(prettyCode)) {
+    if (/\}\];$/.test(prettyCode)) {
       prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
     }
     return prettyCode;
@@ -189,25 +189,25 @@ var Rules = {
     var lineEnd = editor._document.getLine(lineCount - 1);
 
     // Detect if the first line does not correctly containing "var rules = ["
-    if(lineStart.match(/var\s+\w+\s*=\s*\[/) === null) {
+    if (lineStart.match(/var\s+\w+\s*=\s*\[/) === null) {
       errors.push("need-var-rules");
     }
 
     // Do the rules end with ] ?
-    if(lineEnd.match(/][;]?\s*$/) === null) {
+    if (lineEnd.match(/][;]?\s*$/) === null) {
       errors.push("need-var-rules");
     }
 
     // Check if there are some ACE Annotations (aka. errors) present
     var annotationCount = editor.session().getAnnotations().length;
-    if(annotationCount > 0) {
+    if (annotationCount > 0) {
       errors.push("annotations-present");
     }
 
     // Check used library function definitions, must not contain reserved
     // library namespaces
     var libMatches = editor.getValue().match(/export["']?\s*:\s*['"].*?['"]/g);
-    if(libMatches !== null) {
+    if (libMatches !== null) {
       // There are library definitions
       var foundReservedNs = libMatches.map(function (matchStr) {
         return matchStr.match(/:\s*['"](.*?)['"]/)[1];
@@ -215,7 +215,7 @@ var Rules = {
         return Utils.reservedLibNamespaces.indexOf(matchStr) !== -1;
       });
 
-      if(foundReservedNs.length > 0) {
+      if (foundReservedNs.length > 0) {
         errors.push({id: "libs-using-reserved-namespaces", extra: foundReservedNs});
       }
     }
@@ -225,11 +225,11 @@ var Rules = {
       var ruleCodeCheck = this.text2function(editor.getValue());
 
       ruleCodeCheck.forEach(function (ruleFunction) {
-        if(ruleFunction.hasOwnProperty("before")) {
+        if (ruleFunction.hasOwnProperty("before")) {
           Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
           that.checkSurroundFunction(ruleFunction.before, errors);
         }
-        if(ruleFunction.hasOwnProperty("after")) {
+        if (ruleFunction.hasOwnProperty("after")) {
           Logger.info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
           that.checkSurroundFunction(ruleFunction.after, errors);
         }
@@ -241,12 +241,12 @@ var Rules = {
   checkSurroundFunction: function(ruleFunction, errors) {
     // before/after function can be either a function or an array of functions
     // Not a function or an array of functions
-    if(typeof ruleFunction !== "function" && typeof ruleFunction.length === "undefined") {
+    if (typeof ruleFunction !== "function" && typeof ruleFunction.length === "undefined") {
       errors.push("before-function-needs-to-be-a-function-or-array");
     }
 
     // Create an array to make checking easier
-    if(typeof ruleFunction === "function") {
+    if (typeof ruleFunction === "function") {
       ruleFunction = [ ruleFunction ];
     }
 
@@ -257,7 +257,7 @@ var Rules = {
     };
 
     // Used an array? Check for t least one rule
-    if(ruleFunction.length === 0) {
+    if (ruleFunction.length === 0) {
       ruleFuncErrors.needFunctions = true;
     }
 
@@ -267,7 +267,7 @@ var Rules = {
       var resolveMatches = ruleFunc.toString().match(/function[\s]*\((.*?)[,\)]/);
       var resolveFunctionName = resolveMatches[1];
 
-      if(resolveFunctionName === "") {
+      if (resolveFunctionName === "") {
         ruleFuncErrors.needResolveArg = true;
       } else {
         // Look for usage of the first argument (presumly "resolve") in the code
@@ -275,27 +275,27 @@ var Rules = {
         resolveMatches = ruleFunc.toString().match(regex);
         // No call to resolve?
         /*eslint-disable no-extra-parens*/
-        if(resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
+        if (resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
           ruleFuncErrors.needResolveCall = true;
         }
         /*eslint-enable no-extra-parens*/
       }
     });
 
-    if(ruleFuncErrors.needResolveArg) {
+    if (ruleFuncErrors.needResolveArg) {
       errors.push("before-function-needs-resolve-argument");
     }
-    if(ruleFuncErrors.needResolveCall) {
+    if (ruleFuncErrors.needResolveCall) {
       errors.push("before-function-needs-resolve-call");
     }
-    if(ruleFuncErrors.needFunctions) {
+    if (ruleFuncErrors.needFunctions) {
       errors.push("before-function-needs-functions");
     }
   },
   lastMatchingRules: function(rules) {
     return new Promise(function (resolve) {
       // Load or save rules
-      if(typeof rules === "undefined") {
+      if (typeof rules === "undefined") {
         Storage.load(Utils.keys.lastMatchingRules).then(function (serializedRules) {
           resolve(JSONF.parse(serializedRules));
         });
@@ -314,7 +314,7 @@ var Rules = {
       var promises = [];
       var parsed;
 
-      if(typeof dumpString === "object") {
+      if (typeof dumpString === "object") {
         parsed = dumpString;
       } else {
         parsed = JSONF.parse(dumpString);
@@ -330,7 +330,7 @@ var Rules = {
 
       // Old format with rules only?
       // Convert so it can be imported
-      if(typeof parsed.tabSettings !== "undefined") {
+      if (typeof parsed.tabSettings !== "undefined") {
         parsed.rules = {
           rules: parsed.rules,
           tabSettings: parsed.tabSettings
@@ -339,7 +339,7 @@ var Rules = {
       }
 
       // Save workflows (if any)
-      if(typeof parsed.workflows !== "undefined" && typeof parsed.workflows.length !== "undefined") {
+      if (typeof parsed.workflows !== "undefined" && typeof parsed.workflows.length !== "undefined") {
         promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
       }
 
@@ -376,7 +376,7 @@ var Rules = {
     var uniques = [];
     var ids = [];
     Object.keys(rules).forEach(function(key) {
-      if(ids.indexOf(rules[key].id) === -1) {
+      if (ids.indexOf(rules[key].id) === -1) {
         uniques.push(rules[key]);
         ids.push(rules[key].id);
       }
@@ -393,7 +393,7 @@ var Rules = {
 };
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = Rules;
 }
 // REMOVE END

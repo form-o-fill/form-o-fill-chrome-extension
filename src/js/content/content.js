@@ -15,16 +15,16 @@ chrome.runtime.onConnect.addListener(function (port) {
 
   Logger.info("[content.js] Got a connection from " + port.name);
 
-  if(port.name !== "FormOFill") {
+  if (port.name !== "FormOFill") {
     return;
   }
 
   var overlayHtml = function(text, isVisible) {
-    if(typeof text === "undefined") {
+    if (typeof text === "undefined") {
       text = chrome.i18n.getMessage("content_fof_is_working");
     }
 
-    if(typeof isVisible === "undefined") {
+    if (typeof isVisible === "undefined") {
       isVisible = false;
     }
     return "<div id='" + workingOverlayId + "' style='display: " + (isVisible ? "block" : "none") + ";'>" + text + "</div>";
@@ -62,13 +62,13 @@ chrome.runtime.onConnect.addListener(function (port) {
       currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
 
       // Remember the error
-      if(typeof currentError !== "undefined" && currentError !== null) {
+      if (typeof currentError !== "undefined" && currentError !== null) {
         Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
         errors.push(currentError);
       }
 
       // Send a message that we are done filling the form
-      if(message.meta.lastField) {
+      if (message.meta.lastField) {
         Logger.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
 
         chrome.runtime.sendMessage({
@@ -94,7 +94,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     // For the customized Lib.halt() message see down below
     if (message.action === "showOverlay" && typeof message.message === "undefined") {
       Logger.info("[content.js] Showing working overlay");
-      if(document.querySelectorAll("#" + workingOverlayId).length === 0) {
+      if (document.querySelectorAll("#" + workingOverlayId).length === 0) {
         jQuery("body").append(overlayHtml());
       }
 
@@ -119,17 +119,17 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 
     // Show a custom message
-    if(message.action === "showMessage") {
+    if (message.action === "showMessage") {
       showOverlay(message.message);
     }
 
     // reload the libraries
-    if(message.action === "reloadLibs") {
+    if (message.action === "reloadLibs") {
       Libs.import();
     }
 
     // execute setupContent function
-    if(message.action === "setupContent" && message.value) {
+    if (message.action === "setupContent" && message.value) {
       Logger.info("[content.js] Executing setupContent function", message.value);
 
       // Parse and execute function
@@ -147,7 +147,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
     // execute teardownContent function
     // It has jQuery available and the context object from value functions and setupContent
-    if(message.action === "teardownContent" && message.value) {
+    if (message.action === "teardownContent" && message.value) {
       Logger.info("[content.js] Executing teardownContent function", message.value);
 
       try {
@@ -168,9 +168,9 @@ chrome.runtime.onConnect.addListener(function (port) {
       var domElements = jQuery(message.message).map(function (index, $el) {
         return $el;
       });
-      if(domElements.length === 0) {
+      if (domElements.length === 0) {
         responseCb([]);
-      } else if(domElements.length === 1) {
+      } else if (domElements.length === 1) {
         responseCb(domElements[0].outerHTML);
       } else {
         responseCb(domElements.map(function(el) {
@@ -182,14 +182,14 @@ chrome.runtime.onConnect.addListener(function (port) {
     // Show a custom message
     // This appears twice in c/content.js because it uses a port and a one-shot
     // listener
-    if(message.action === "showOverlay" && typeof message.message !== "undefined") {
+    if (message.action === "showOverlay" && typeof message.message !== "undefined") {
       showOverlay(message.message);
       responseCb();
     }
 
     // Save a variable set in background via storage.set in the context of the content script
     // This makes the storage usable in value functions
-    if(message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
+    if (message.action === "storageSet" && typeof message.key !== "undefined" && typeof message.value !== "undefined") {
       Logger.info("[content.js] Saving " + message.key + " = " + message.value);
       window.sessionStorage.setItem(message.key, message.value);
     }

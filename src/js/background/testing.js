@@ -54,14 +54,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
   // Import Rules
   // Sends importInfo back to content/testing.js
-  if(message.action === "importRules") {
+  if (message.action === "importRules") {
     var parsed = JSONF.parse(message.value);
     var promises = [];
     var rulesToImport = null;
     var tabSettingsToImport = null;
 
     // Import can be rules only or rules+workflows
-    if(typeof parsed.rules !== "undefined" && typeof parsed.rules.rules !== "undefined") {
+    if (typeof parsed.rules !== "undefined" && typeof parsed.rules.rules !== "undefined") {
       rulesToImport = parsed.rules.rules;
       tabSettingsToImport = parsed.rules.tabSettings;
     } else {
@@ -77,7 +77,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     promises.push(Storage.save(tabSettingsToImport, Utils.keys.tabs));
 
     // Save workflows?
-    if(typeof parsed.workflows !== "undefined") {
+    if (typeof parsed.workflows !== "undefined") {
       Workflows.save(parsed.workflows);
     }
 

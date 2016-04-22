@@ -7,7 +7,7 @@ var context = {
   storage: {
     get: function(key) {
       var value = window.sessionStorage.getItem(key);
-      if(typeof value !== "undefined") {
+      if (typeof value !== "undefined") {
         return JSONF.parse(value);
       }
       return value;

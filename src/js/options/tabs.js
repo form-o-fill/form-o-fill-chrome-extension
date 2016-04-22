@@ -45,7 +45,7 @@ var loadTabsSettings = function() {
   Logger.info("[tabs.js] Loading tab setting");
 
   var activeTabId = jQuery("#ruleeditor .tab.current").data("tab-id");
-  if(typeof activeTabId === "undefined") {
+  if (typeof activeTabId === "undefined") {
     activeTabId = 1;
   }
   activeTabId = activeTabId.toString();
@@ -54,7 +54,7 @@ var loadTabsSettings = function() {
   Storage.load(Utils.keys.tabs).then(function(tabSettings) {
     var tabs = jQuery();
     if (typeof tabSettings !== "undefined") {
-      if(tabSettings.length < activeTabId) {
+      if (tabSettings.length < activeTabId) {
         activeTabId = "1";
       }
       tabSettings.forEach(function (tabSetting) {
@@ -72,7 +72,7 @@ var loadTabsSettings = function() {
 jQuery(function () {
   // Click on tab
   jQuery(document).on("click", ".tab", function (e) {
-    if(this.classList.contains("more")) {
+    if (this.classList.contains("more")) {
       return;
     }
     e.preventDefault();
@@ -113,11 +113,11 @@ jQuery(function () {
   // Fancy key events
   jQuery(".tabs").on("keyup", function (e) {
     e.stopPropagation();
-    if(e.which === 27) {
+    if (e.which === 27) {
       Logger.info("[tabs.js] Edit mode canceled by pressing ESC");
       jQuery(".tab a.edit").removeClass("edit");
       loadTabsSettings();
-    } else if(e.which === 13) {
+    } else if (e.which === 13) {
       Logger.info("[tabs.js] Edit mode ended by pressing ENTER");
       jQuery(".tab a.edit").removeClass("edit");
       jQuery(document).trigger("fof:tabs:saved:" + jQuery(".tab.current").data("tabId"));

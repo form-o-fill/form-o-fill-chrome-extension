@@ -12,7 +12,7 @@ var I18n = {
     var chosenLang = this.supportedLanguages().filter(function (supportedLanguage) {
       return supportedLanguage === uiLang;
     });
-    if(chosenLang.length === 1) {
+    if (chosenLang.length === 1) {
       this._lang = chosenLang[0];
     } else {
       this._lang = this.supportedLanguages()[0];
@@ -46,7 +46,7 @@ var I18n = {
 };
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = I18n;
 }
 // REMOVE END

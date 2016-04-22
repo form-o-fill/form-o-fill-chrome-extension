@@ -16,7 +16,7 @@ var Storage = {
       var key = keyToSaveTo || Utils.keys.rules;
       value[key] = rulesCode;
       chrome.storage.local.set(value, function storageSave() {
-        if(typeof chrome.runtime.lastError === "undefined") {
+        if (typeof chrome.runtime.lastError === "undefined") {
           Logger.debug("[storage.js] Saved '" + key + "'", JSONF.stringify(value[key]));
           resolve(true);
         } else {
@@ -28,7 +28,7 @@ var Storage = {
   delete: function (key) {
     return new Promise(function (resolve, reject) {
       chrome.storage.local.remove(key, function storageDelete() {
-        if(typeof chrome.runtime.lastError === "undefined") {
+        if (typeof chrome.runtime.lastError === "undefined") {
           Logger.debug("[storage.js] Removed key '" + key + "'");
           resolve(true);
         } else {
@@ -40,7 +40,7 @@ var Storage = {
 };
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = Storage;
 }
 // REMOVE END

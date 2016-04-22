@@ -39,10 +39,10 @@ Rule.create = function(options, tabId, ruleIndex) {
   });
 
   // RegExp in URL or string?
-  if(typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
+  if (typeof rule.url !== "undefined" && typeof rule.url.test !== "undefined") {
     // RegExp
     rule.matcher = new RegExp(rule.url);
-  } else if(typeof rule.url !== "undefined") {
+  } else if (typeof rule.url !== "undefined") {
     // String (match full url only)
     rule.matcher = new RegExp("^" + rule._escapeForRegexp(rule.url) + "$");
   }
@@ -53,30 +53,30 @@ Rule.create = function(options, tabId, ruleIndex) {
     rule.urlClean = "n/a";
   }
 
-  if(typeof rule.name !== "undefined") {
+  if (typeof rule.name !== "undefined") {
     rule.nameClean = rule.name.replace("<", "&lt;");
   }
 
-  if(typeof rule.id === "undefined") {
+  if (typeof rule.id === "undefined") {
     rule.id = tabId + "-" + ruleIndex;
   }
 
-  if(typeof rule.autorun === "undefined") {
+  if (typeof rule.autorun === "undefined") {
     rule.autorun = false;
   }
 
-  if(typeof rule.onlyEmpty === "undefined") {
+  if (typeof rule.onlyEmpty === "undefined") {
     rule.onlyEmpty = false;
   }
 
-  if(typeof rule.shadow === "undefined") {
+  if (typeof rule.shadow === "undefined") {
     rule.shadow = false;
   }
 
   rule.tabId = tabId;
 
   // REMOVE START
-  if(rule.export && rule.lib) {
+  if (rule.export && rule.lib) {
     Logger.debug("[rule.js] created rule (with lib named '" + rule.export + "' )", rule);
   } else {
     Logger.debug("[rule.js] created rule", rule);
@@ -88,7 +88,7 @@ Rule.create = function(options, tabId, ruleIndex) {
 /*eslint-enable complexity*/
 
 // REMOVE START
-if(typeof exports === "object") {
+if (typeof exports === "object") {
   module.exports = Rule;
 }
 // REMOVE END

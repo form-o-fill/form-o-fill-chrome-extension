@@ -85,9 +85,9 @@ Editor.prototype.cleanUp = function() {
   var lastLineIndex = this._document.getLength() - 1;
   var line = null;
   var i;
-  for(i = lastLineIndex; i > 0; i--) {
+  for (i = lastLineIndex; i > 0; i--) {
     line = this._document.getLine(i).trim();
-    if(line === "") {
+    if (line === "") {
       this._document.removeFullLines(i, i);
     } else {
       break;
@@ -103,7 +103,7 @@ Editor.prototype.format = function(Rules) {
 
 // redraw the editor
 Editor.prototype.redraw = function() {
-  if(typeof this._editor !== "undefined") {
+  if (typeof this._editor !== "undefined") {
     this._editor.resize();
   }
 };
@@ -123,7 +123,7 @@ Editor.prototype.resize = function() {
 // One resize per 200 ms
 Editor.prototype._resizeThrottler = function(editor) {
   return function() {
-    if(!editor._resizeTimeout) {
+    if (!editor._resizeTimeout) {
       editor._resizeTimeout = setTimeout(function() {
         editor._resizeTimeout = null;
         editor.resize();

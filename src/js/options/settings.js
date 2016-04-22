@@ -13,12 +13,12 @@ Settings.prototype.listen = function() {
   chrome.runtime.onMessage.addListener(function(request) {
 
     // Force reload settings from storage (called from bg.js)
-    if(request.action === "reloadSettings") {
+    if (request.action === "reloadSettings") {
       settings.loadSettings();
     }
 
     // Save the settings (called from bg.js)
-    if(request.action === "saveSettings" && typeof request.message !== "undefined") {
+    if (request.action === "saveSettings" && typeof request.message !== "undefined") {
       settings.saveSettings(request.message);
     }
   });
@@ -36,9 +36,9 @@ Settings.prototype.loadSettings = function() {
 Settings.prototype.updateLastImportDate = function() {
   Storage.load(Utils.keys.shadowStorage).then(function(shadowStorage) {
     var importDate = "never";
-    if(typeof shadowStorage !== "undefined") {
+    if (typeof shadowStorage !== "undefined") {
       importDate = shadowStorage.lastUpdate;
-      if(typeof importDate !== "undefined") {
+      if (typeof importDate !== "undefined") {
         importDate = new Date(importDate).toLocaleString();
       }
     }
@@ -51,7 +51,7 @@ Settings.prototype.showInfo = function(msg) {
   var $info = document.querySelector("li.info");
   $info.innerHTML = msg;
 
-  if(typeof this.infoShown === "undefined" || this.infoShown === false) {
+  if (typeof this.infoShown === "undefined" || this.infoShown === false) {
     setTimeout(function() {
       settings.infoShown = false;
       $info.innerHTML = "";
@@ -77,14 +77,14 @@ Settings.prototype.saveSettings = function(overwrites) {
   };
 
   // Allow overwriting of atributes
-  if(typeof overwrites === "object") {
+  if (typeof overwrites === "object") {
     Object.keys(overwrites).forEach(function(key) {
       currentSettings[key] = overwrites[key];
     });
   }
 
   // remove shadow storage when saving with checkbox disabled
-  if(currentSettings.importActive !== true) {
+  if (currentSettings.importActive !== true) {
     Storage.delete(Utils.keys.shadowStorage);
   }
 
@@ -101,9 +101,9 @@ Settings.prototype.bindHandlers = function() {
   var settings = this;
 
   document.querySelector("#settings").addEventListener("change", function(evt) {
-    if(evt.target && evt.target.nodeName === "INPUT") {
+    if (evt.target && evt.target.nodeName === "INPUT") {
 
-      if(evt.target.id === "settings-screenshot-quality") {
+      if (evt.target.id === "settings-screenshot-quality") {
         document.querySelector(".settings-screenshot-quality-percent").innerHTML = evt.target.value;
       }
 
@@ -117,7 +117,7 @@ Settings.prototype.bindHandlers = function() {
   document.querySelector("#settings").addEventListener("click", function(evt) {
     // Trigger when import button is clicked or the checkbox is checked (from unchecked state)
     //TODO: Bug -> Import works, change url slightly -> must press btn two times ?! (FS, 2015-12-09)
-    if( evt.target && (evt.target.classList.contains("validate-import-source-url") ||
+    if ( evt.target && (evt.target.classList.contains("validate-import-source-url") ||
        (evt.target.id === "settings-activate-import-source-url" && evt.target.checked))) {
       settings.validateAndImport();
     }
@@ -133,7 +133,7 @@ Settings.prototype.validateAndImport = function() {
   settings.saveSettings();
 
   // Simple base test for URL validity
-  if(/^https?:\/\/.*\.js(on)?$/i.test(url)) {
+  if (/^https?:\/\/.*\.js(on)?$/i.test(url)) {
     // Valid URL
     settings.getBg(function(bgWindow) {
       bgWindow.RemoteImport.import(url).then(settings.importFetchSuccess.bind(settings)).catch(settings.importFetchFail.bind(settings));
@@ -153,7 +153,7 @@ Settings.prototype.importFetchSuccess = function(resolved) {
     rules: 0
   };
 
-  if(typeof toImport.workflows !== "undefined" && typeof toImport.workflows.length !== "undefined") {
+  if (typeof toImport.workflows !== "undefined" && typeof toImport.workflows.length !== "undefined") {
     counts.workflows = toImport.workflows.length;
   }
 
@@ -185,7 +185,7 @@ Settings.prototype.importFetchFail = function(rejected) {
   document.querySelector("#settings-activate-import-source-url").checked = false;
   this.saveSettings();
 
-  if(rejected.textStatus === "FORMAT") {
+  if (rejected.textStatus === "FORMAT") {
     jQuery(".import-remote-fail-format").show();
   } else {
     jQuery(".import-remote-fail-fetch")
@@ -200,6 +200,9 @@ Settings.prototype.importFetchFail = function(rejected) {
 };
 
 Settings.prototype.applySettings = function(options) {
+  if (typeof options == "undefined") {
+    return;
+  }
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
   document.querySelector("#settings-activate-import-source-url").checked = options.importActive;

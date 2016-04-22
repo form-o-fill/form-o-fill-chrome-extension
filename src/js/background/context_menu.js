@@ -4,7 +4,7 @@
  * You MUST supply an "id" field or the contextmenu will not be shown. Its NOT optional as the doc says.
  * */
 var ctxHandleExtractClick = function(menuItem) {
-  if(menuItem.menuItemId === "ctxMain") {
+  if (menuItem.menuItemId === "ctxMain") {
     var message = {
       "action": "extractLastClickedForm"
     };

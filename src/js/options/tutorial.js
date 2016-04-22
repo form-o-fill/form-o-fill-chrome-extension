@@ -1,5 +1,7 @@
 /*global jQuery introJs window editor Rules loadRules updateTabStats Logger*/
+/*eslint-disable no-use-before-define*/
 var tutorials = tutorials || [];
+/*eslint-enable no-use-before-define*/
 
 (function tutorialScope(jQuery) {
   "use strict";
@@ -12,7 +14,7 @@ var tutorials = tutorials || [];
 
   // unbind all previousl bound document handlers
   Tutorial.prototype.unbindPageEvents = function() {
-    if(typeof this.boundPageEvents !== "undefined") {
+    if (typeof this.boundPageEvents !== "undefined") {
       this.boundPageEvents.forEach(function (eventName) {
         jQuery(document).off(eventName);
       });
@@ -28,7 +30,7 @@ var tutorials = tutorials || [];
 
     this.steps.forEach(function (step) {
       // Trigger set and starts with "!" ?
-      if(typeof step.trigger !== "undefined" && step.trigger.indexOf("!") === 0) {
+      if (typeof step.trigger !== "undefined" && step.trigger.indexOf("!") === 0) {
         var eventname = step.trigger.substr(1);
         // Bind event to goto the current step
         jQuery(document).on(eventname, function() {
@@ -43,7 +45,7 @@ var tutorials = tutorials || [];
   // Cancel all tutorials
   var cancelAllTutorials = function() {
     tutorials.forEach(function (tutorial) {
-      if(typeof tutorial.observer !== "undefined") {
+      if (typeof tutorial.observer !== "undefined") {
         tutorial.observer.disconnect();
         tutorial.unbindPageEvents();
         tutorial.intro.exit();
@@ -92,7 +94,7 @@ var tutorials = tutorials || [];
       step.tooltipClass = "step-" + stepIndex;
       step.position = tutorial.steps[stepIndex].position || "bottom";
 
-      if(typeof step.importRules !== "undefined") {
+      if (typeof step.importRules !== "undefined") {
         var importDump = document.querySelector(step.importRules).textContent;
         Rules.importAll(importDump).then(function(parsedDump) {
           Logger.info("[o/tutorial.js] Imported Dump", parsedDump);
@@ -104,7 +106,7 @@ var tutorials = tutorials || [];
         });
       }
 
-      if(!step.buttons) {
+      if (!step.buttons) {
         jQuery(".introjs-tooltipbuttons").hide();
         jQuery(".introjs-tooltipReferenceLayer").hide();
       } else {
@@ -112,7 +114,7 @@ var tutorials = tutorials || [];
         jQuery(".introjs-tooltipReferenceLayer").show();
       }
 
-      if(!step.overlay) {
+      if (!step.overlay) {
         jQuery(".introjs-overlay").hide();
       } else {
         jQuery(".introjs-overlay").show();
@@ -124,9 +126,9 @@ var tutorials = tutorials || [];
   };
 
   Tutorial.prototype.executeJavascriptStep = function(step) {
-    if(typeof Tutorial.tour[this.tourNumber] !== "undefined" && typeof Tutorial.tour[this.tourNumber][step.index + 1] === "function") {
+    if (typeof Tutorial.tour[this.tourNumber] !== "undefined" && typeof Tutorial.tour[this.tourNumber][step.index + 1] === "function") {
       var target = Tutorial.tour[this.tourNumber][step.index + 1](step);
-      if(target) {
+      if (target) {
         step.element = target;
         step.elementChanged = true;
       }
@@ -135,10 +137,10 @@ var tutorials = tutorials || [];
 
   Tutorial.prototype.handleMarkLine = function(step) {
     var marks = step.markLine.toString().split(",");
-    if(typeof marks[1] == "undefined") {
+    if (typeof marks[1] == "undefined") {
       marks[1] = marks[0];
     }
-    if(marks[0] === "0") {
+    if (marks[0] === "0") {
       editor.removeAllMarkers();
     } else {
       editor.setMarker(parseInt(marks[0], 10), parseInt(marks[1], 10));
@@ -167,7 +169,7 @@ var tutorials = tutorials || [];
 
       var $helper = jQuery(".introjs-helperLayer");
 
-      if(typeof step.markLine !== "undefined") {
+      if (typeof step.markLine !== "undefined") {
         tutorial.handleMarkLine(step);
       }
 
@@ -175,11 +177,11 @@ var tutorials = tutorials || [];
       // returns the element to be marked
       tutorial.executeJavascriptStep(step);
 
-      if(step.elementChanged) {
+      if (step.elementChanged) {
         tutorial.handleElementChanged($helper, step);
       }
 
-      if(!step.overlay) {
+      if (!step.overlay) {
         $helper.hide();
         jQuery(".introjs-overlay").addClass("hidden").hide();
       } else {
@@ -188,11 +190,11 @@ var tutorials = tutorials || [];
       }
 
       // Last step? No "next step" link
-      if(tutorial.intro._introItems.length - 1 === stepIndex) {
+      if (tutorial.intro._introItems.length - 1 === stepIndex) {
         jQuery(".introjs-nextbutton").hide();
       }
 
-      if(typeof step.width !== "undefined") {
+      if (typeof step.width !== "undefined") {
         jQuery(".introjs-tooltip").attr("data-width", step.width);
       }
     };
@@ -251,7 +253,7 @@ var tutorials = tutorials || [];
     var mutClasses = [];
     var aNodes = [].slice.call(nodeList);
 
-    if(aNodes.length > 0) {
+    if (aNodes.length > 0) {
       var classNames = aNodes.map(function (node) {
         return node.className;
       });
@@ -267,8 +269,8 @@ var tutorials = tutorials || [];
   Tutorial.prototype.mutatedTexts = function(nodeList) {
     var mutTexts = [];
 
-    for(var i = 0; i < nodeList.length; i++) {
-      if(nodeList[i].textContent) {
+    for (var i = 0; i < nodeList.length; i++) {
+      if (nodeList[i].textContent) {
         mutTexts.push(nodeList[i].textContent);
       }
     }
@@ -287,14 +289,14 @@ var tutorials = tutorials || [];
         added = added.concat(tutorial.mutatedClassNames(mutation.addedNodes));
         contentAdded = contentAdded.concat(tutorial.mutatedTexts(mutation.addedNodes));
         removed = removed.concat(tutorial.mutatedClassNames(mutation.removedNodes));
-        if(typeof mutation.target.style !== "undefined") {
+        if (typeof mutation.target.style !== "undefined") {
           attrs = attrs.concat(mutation.target.style.cssText);
         }
       });
 
       /*eslint-disable complexity */
       tutorial.steps.every(function (step) {
-        if(typeof step.trigger !== "undefined") {
+        if (typeof step.trigger !== "undefined") {
           var typeToCheck = step.trigger[0];
           var triggerCls = step.trigger.substr(1);
 
@@ -313,34 +315,34 @@ var tutorials = tutorials || [];
           // REMOVE END
 
           // + : element with class is visible
-          if(added.indexOf(triggerCls) !== -1 && typeToCheck === "+") {
+          if (added.indexOf(triggerCls) !== -1 && typeToCheck === "+") {
             // Trigger Step
             tutorial.intro.goToStep(step.index + 1);
             return false;
           }
 
           // - : element with class is invisible
-          if(removed.indexOf(triggerCls) !== -1 && typeToCheck === "-") {
+          if (removed.indexOf(triggerCls) !== -1 && typeToCheck === "-") {
             // Trigger Step
             tutorial.intro.goToStep(step.index + 1);
             return false;
           }
 
           // / : elements style attributes change
-          if(typeToCheck === "/") {
+          if (typeToCheck === "/") {
             var styleToCheckMatch = triggerCls.match(/^(.*?)\[(.*?)\]/);
             var found = attrs.filter(function (attr) {
               return attr.indexOf(styleToCheckMatch[2]) > -1;
             });
 
-            if(found.length > 0) {
+            if (found.length > 0) {
               tutorial.intro.goToStep(step.index + 1);
               return false;
             }
           }
 
           // ? : triggers when text gets visible SOMEWHERE ON THE PAGE
-          if(typeToCheck === "?" && contentAdded.indexOf(triggerCls) > -1) {
+          if (typeToCheck === "?" && contentAdded.indexOf(triggerCls) > -1) {
             tutorial.intro.goToStep(step.index + 1);
             return false;
           }
@@ -388,16 +390,16 @@ var tutorials = tutorials || [];
       tutorialNumber = parseInt(tutorialNumber, 10);
       // REMOVE START
       // For debugging:
-      if(typeof window.debugTutorial !== "undefined") {
+      if (typeof window.debugTutorial !== "undefined") {
         tutorialNumber = window.debugTutorial;
       }
       // REMOVE END
-      if(tutorialNumber > 0) {
+      if (tutorialNumber > 0) {
         var tutorial = tutorials.filter(function(theTutorial) {
           return parseInt(theTutorial.tourNumber, 10) === tutorialNumber;
         });
 
-        if(tutorial.length === 1) {
+        if (tutorial.length === 1) {
           // Start the tutorial
           tutorial[0].execute(tutorial[0]);
           tutorialNumber = 0;
@@ -412,7 +414,7 @@ var tutorials = tutorials || [];
 
 // If the tutorial tours are loaded, initialize the tutorial
 jQuery(document).on("i18n-loaded", function (event, pageName) {
-  if(pageName.indexOf("tutorial/_tour") > -1) {
+  if (pageName.indexOf("tutorial/_tour") > -1) {
     var tutorialNumber = pageName.match(/tour([0-9]+)/)[1];
     var tutorial = new window.Tutorial(tutorialNumber);
     tutorials.push(tutorial);

@@ -10,7 +10,7 @@ var Logger = {
     });
 
     // REMOVE START
-    if(typeof Testing !== "undefined") {
+    if (typeof Testing !== "undefined") {
       // Takes too much of a performance hit
       //Testing.appendTestLog(msg);
     }
@@ -40,7 +40,7 @@ var Logger = {
   load: function() {
     return new Promise(function (resolve) {
       chrome.storage.local.get(Utils.keys.logs, function (storage) {
-        if(typeof storage[Utils.keys.logs] === "undefined") {
+        if (typeof storage[Utils.keys.logs] === "undefined") {
           resolve([]);
           return;
         }
@@ -59,7 +59,7 @@ var Logger = {
 
       entries = entries.slice(-25);
 
-      if(parts !== null) {
+      if (parts !== null) {
         entries.push({
           "createdAt": new Date().toLocaleString(),
           "location": parts[1].trim(),

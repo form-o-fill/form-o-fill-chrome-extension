@@ -1,15 +1,16 @@
 /*global Rules onTabReadyRules Logger Utils Storage Workflows state */
-/*eslint no-undef:0 no-unused-vars:0 */
 
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).
 // This sets the active tutorial ID
 var didBackup = false;
 
+/*eslint-disable no-use-before-define */
 var Tutorial = Tutorial || {};
+/*eslint-enable no-use-before-define */
 
 Tutorial.isValidMessageSourceForTutorial = function (msgSender) {
-  if(/tutorial\/tour-[0-9-]+\.html.*$/.test(msgSender.url) || /^chrome-extension:.*options\.html$/.test(msgSender.url)) {
+  if (/tutorial\/tour-[0-9-]+\.html.*$/.test(msgSender.url) || /^chrome-extension:.*options\.html$/.test(msgSender.url)) {
     return true;
   }
   return false;
@@ -59,25 +60,25 @@ Tutorial.restoreBackedUpRulesHandler = function() {
 
 // Handler for request from the tutorial site
 /*eslint-disable complexity*/
-var tutorialMessagesListener = function tutorialMessagesListener(request, sender, responseCb) {
-  if(!Tutorial.isValidMessageSourceForTutorial(sender) || state.lastActiveTab === null) {
+var tutorialMessagesListener = function tutorialMessagesListener(request, sender) {
+  if (!Tutorial.isValidMessageSourceForTutorial(sender) || state.lastActiveTab === null) {
     return;
   }
 
   // Activate a tutorial when the user opens the options
   // panel
-  if(request.action === "activateTutorialOnOpenOptions") {
+  if (request.action === "activateTutorialOnOpenOptions") {
     didBackup = false;
     Tutorial.activateTutorialOnOpenOptionsHandler(request);
   }
 
   // Import Rules and Wfs
-  if(request.action === "importDump" && request.message !== "") {
+  if (request.action === "importDump" && request.message !== "") {
     Tutorial.importDumpHandler(request);
   }
 
   // backup rules
-  if(request.action === "backupCurrentRules" && !didBackup) {
+  if (request.action === "backupCurrentRules" && !didBackup) {
     Tutorial.backupCurrentRulesHandler();
   }
 };
@@ -91,12 +92,12 @@ chrome.runtime.onMessage.addListener(tutorialMessagesListener);
 // handler for receiving tutorials related information from the options.js
 var internalMessageListener = function(message, sender, responseCb) {
   // Send active tutorial number to options.js
-  if(message.action === "getTutorialOnOpenOptions") {
+  if (message.action === "getTutorialOnOpenOptions") {
     responseCb(Tutorial.getActiveTutorial() || 0);
   }
 
   // Reset state
-  if(message.action === "resetTutorialState") {
+  if (message.action === "resetTutorialState") {
     Tutorial.restoreBackedUpRulesHandler();
     didBackup = false;
     Tutorial.setActiveTutorial(0);
