@@ -60,30 +60,32 @@
       </label>
     </div>
 
-    <div class="text">
-      <label>
-        <input type="checkbox" name="activate-import-source-url" id="settings-activate-import-source-url">
-        <span>Activate remote rules import</span>
-        <div class="comment">
-          This will import the rules/workflows from the URL given below.<br />
-          Data will be updated when you press the import button, (re-)start the browser and automatically every ##Utils.alarmIntervalInMinutes## minutes.
-        </div>
-      </label>
-      <input type="url" name="import-source-url" id="settings-import-source-url" placeholder="http://my.url.com/rules.js" />
-      <button class="save-and-import validate-import-source-url">Validate and import</button>
-      <div class="comment">Last updated: <span id="import-source-url-date"></span></div>
-    </div>
+    <div class="grouped">
+      <div class="text">
+        <label>
+          <input type="checkbox" name="activate-import-source-url" id="settings-activate-import-source-url">
+          <span>Activate remote rules import</span>
+          <div class="comment">
+            This will import the rules/workflows from the URL given below.<br />
+            Data will be updated when you press the import button, (re-)start the browser and automatically every ##Utils.alarmIntervalInMinutes## minutes.
+          </div>
+        </label>
+        <input type="url" name="import-source-url" id="settings-import-source-url" placeholder="http://my.url.com/rules.js" />
+        <button class="save-and-import validate-import-source-url">Validate and import</button>
+        <div class="comment">Last updated: <span id="import-source-url-date"></span></div>
+      </div>
 
-    <div class="text">
-      <label>
-        <input type="checkbox" name="activate-import-source-password" id="settings-activate-import-source-password">
-        <span>Use password for encrypted remote import</span>
-        <div class="comment">
-          You can use an encrypted export of all rules &amp; workflows if you want to "hide" the content from prying eyes.<br />
-          Enter the decryption password here:
-        </div>
-      </label>
-      <input type="password" name="import-source-password" id="settings-import-source-password"/>
+      <div class="text">
+        <label>
+          <input type="checkbox" name="activate-import-source-password" id="settings-activate-import-source-password">
+          <span>Use password for encrypted remote import</span>
+          <div class="comment">
+            You can use an encrypted export of all rules &amp; workflows if you want to "hide" the content from prying eyes.<br />
+            Enter the password here:
+          </div>
+        </label>
+        <input type="password" name="import-source-password" id="settings-import-source-password"/>
+      </div>
     </div>
 
     <div class="text">

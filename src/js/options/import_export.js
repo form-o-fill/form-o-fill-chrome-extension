@@ -110,11 +110,19 @@ var ImportExport = {
       };
 
       var pwd = $("#export-encrypted-pwd1").val();
-      var crypt = new Crypto(pwd);
-      var encryptedData = crypt.encrypt(JSONF.stringify(exportJson));
-      pwd = null;
 
+      // Add flag if the rules should only be usable as remote import URL
+      exportJson.remoteOnly = $("#export-encrypted-remote-only").is(":checked");
+
+      // Encrypt data
+      var crypt = new Crypto(pwd);
+      pwd = null;
+      var encryptedData = crypt.encrypt(JSONF.stringify(exportJson));
+
+      // Final export form:
       exportJson = {
+        usage: "Please install Form-O-Fill from https://chrome.google.com/webstore/detail/form-o-fill-the-programma/iebbppibdpjldhohknhgjoapijellonp to use this file.",
+        onlyUsableAsRemoteImportUrl: exportJson.remoteOnly,
         encrypted: encryptedData
       };
 

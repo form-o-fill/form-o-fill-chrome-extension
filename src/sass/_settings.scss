@@ -41,4 +41,16 @@
     vertical-align: middle;
     margin-right: 4px;
   }
+
+  .grouped {
+    .text, .checkbox {
+      border-bottom: 0;
+    }
+
+    div:nth-child(1n+2) {
+      margin-left: 15px;
+    }
+
+  }
+
 }
