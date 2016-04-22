@@ -22,7 +22,7 @@ var replaceOpts = require("./buildReplacements");
 // Replace all occurences of ##Utils.someKey## by it's value
 Object.keys(Utils).forEach(function(key) {
   var val = Utils[key];
-  if(typeof val === "string" || typeof val === "number") {
+  if (typeof val === "string" || typeof val === "number") {
     replaceOpts.patterns.push({
       match: new RegExp("##Utils\." + key + "##"),
       replacement: val
@@ -102,7 +102,8 @@ gulp.task('globalJs', ['clean'], function () {
     "src/js/global/rules.js",
     "src/js/global/i18n.js",
     "src/js/global/libs.js",
-    "src/js/global/workflows.js"
+    "src/js/global/workflows.js",
+    "src/js/global/crypto.js"
   ])
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(plugins.concat('global.js'))

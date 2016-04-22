@@ -89,8 +89,27 @@
       }
     }
   },
+  "import_remote_rules_succeeded": {
+    "message": "Importing remote rules succeeded!\nURL: $URL$",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
   "import_remote_rules_title": {
     "message": "Import remote rules"
+  },
+  "import_remote_rules_pwd_title": {
+    "message": "Import remote rules: Password?"
+  },
+  "import_remote_rules_pwd_text": {
+    "message": "Password wrong for encrypted remote URL import",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
   },
   "content_fof_is_working": {
     "message": "Form-O-Fill is working, please wait!"

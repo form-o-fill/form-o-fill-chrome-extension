@@ -73,7 +73,9 @@ Settings.prototype.saveSettings = function(overwrites) {
     jpegQuality: document.querySelector("#settings-screenshot-quality").value,
     reevalRules: document.querySelector("#settings-reeval-rules").checked,
     importActive: document.querySelector("#settings-activate-import-source-url").checked,
-    importUrl: document.querySelector("#settings-import-source-url").value
+    importUrl: document.querySelector("#settings-import-source-url").value,
+    decryptionPassword: document.querySelector("#settings-import-source-password").value,
+    decryptionPasswordActive: document.querySelector("#settings-activate-import-source-password").checked
   };
 
   // Allow overwriting of atributes
@@ -117,7 +119,7 @@ Settings.prototype.bindHandlers = function() {
   document.querySelector("#settings").addEventListener("click", function(evt) {
     // Trigger when import button is clicked or the checkbox is checked (from unchecked state)
     //TODO: Bug -> Import works, change url slightly -> must press btn two times ?! (FS, 2015-12-09)
-    if ( evt.target && (evt.target.classList.contains("validate-import-source-url") ||
+    if (evt.target && (evt.target.classList.contains("validate-import-source-url") ||
        (evt.target.id === "settings-activate-import-source-url" && evt.target.checked))) {
       settings.validateAndImport();
     }
@@ -206,7 +208,9 @@ Settings.prototype.applySettings = function(options) {
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
   document.querySelector("#settings-activate-import-source-url").checked = options.importActive;
+  document.querySelector("#settings-activate-import-source-password").checked = options.decryptionPasswordActive;
   document.querySelector("#settings-import-source-url").value = options.importUrl;
+  document.querySelector("#settings-import-source-password").value = options.decryptionPassword;
   document.querySelector("#settings-screenshot-quality").value = options.jpegQuality;
   document.querySelector(".settings-screenshot-quality-percent").innerHTML = options.jpegQuality;
 };

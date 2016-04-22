@@ -78,11 +78,13 @@
   "background": {
     "scriptsBuild": [
       "vendor/jquery/jquery-2.1.4.min.js", 
+      "vendor/sjcl/sjcl.js", 
       "js/global.js",
       "js/background.js"
     ],
     "scripts": [
       "vendor/jquery/jquery-2.1.4.min.js", 
+      "vendor/sjcl/sjcl.js", 
       "js/debug/logger.js", 
       "js/global/state.js", 
       "js/global/jsonf.js", 
@@ -93,6 +95,7 @@
       "js/global/i18n.js",
       "js/global/libs.js", 
       "js/global/workflows.js", 
+      "js/global/crypto.js", 
       "js/background/remote_import.js",
       "js/background/alarm.js",
       "js/background/form_util.js",

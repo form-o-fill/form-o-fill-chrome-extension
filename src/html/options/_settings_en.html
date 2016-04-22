@@ -76,6 +76,18 @@
 
     <div class="text">
       <label>
+        <input type="checkbox" name="activate-import-source-password" id="settings-activate-import-source-password">
+        <span>Use password for encrypted remote import</span>
+        <div class="comment">
+          You can use an encrypted export of all rules &amp; workflows if you want to "hide" the content from prying eyes.<br />
+          Enter the decryption password here:
+        </div>
+      </label>
+      <input type="password" name="import-source-password" id="settings-import-source-password"/>
+    </div>
+
+    <div class="text">
+      <label>
         <input type="range" name="screenshot-quality" id="settings-screenshot-quality" min="30" max="100" step="10" value="60">
         <span>JPEG image quality (<span class="settings-screenshot-quality-percent">60</span>%)</span>
         <div class="comment">

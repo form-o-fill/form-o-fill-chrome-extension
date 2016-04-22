@@ -1,10 +1,34 @@
-/* global jQuery JSONF Rules Utils state */
+/* global jQuery JSONF Rules Utils state Crypto */
 var RemoteImport = {
   import: function(url) {
     return new Promise(function (resolve, reject) {
       jQuery.ajax({url: url, dataType: "text"})
         .done(function(dataAsString) {
           var toImport = JSONF.parse(dataAsString);
+
+          // Encrypted?
+          if (typeof toImport.encrypted !== "undefined") {
+
+            // Password missing?
+            if (state.optionSettings.decryptionPassword === null) {
+              RemoteImport.notifyPasswordFailure();
+              return;
+            }
+
+            // Password present
+            var crypt = new Crypto(state.optionSettings.decryptionPassword);
+            toImport = crypt.decrypt(toImport.encrypted);
+
+            // Decryption failure?
+            if (toImport === null) {
+              RemoteImport.notifyPasswordFailure();
+              return;
+            }
+
+            // Decryption OK!
+            toImport = JSONF.parse(toImport);
+          }
+
           if (Rules.validateImport(toImport)) {
             resolve({url: url, data: toImport, status: 200, textStatus: "OK"});
           } else {
@@ -14,6 +38,11 @@ var RemoteImport = {
       .fail(function(jqXhr, textStatus) {
         reject({url: url, data: null, status: jqXhr.status, textStatus: textStatus});
       });
+    });
+  },
+  notifyPasswordFailure: function() {
+    Notification.create(chrome.i18n.getMessage("import_remote_rules_pwd_text"), chrome.i18n.getMessage("import_remote_rules_pwd_title"), function() {
+      Utils.openOptions("#settings");
     });
   },
   save: function(importStruct) {
