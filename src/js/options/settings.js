@@ -74,8 +74,7 @@ Settings.prototype.saveSettings = function(overwrites) {
     reevalRules: document.querySelector("#settings-reeval-rules").checked,
     importActive: document.querySelector("#settings-activate-import-source-url").checked,
     importUrl: document.querySelector("#settings-import-source-url").value,
-    decryptionPassword: document.querySelector("#settings-import-source-password").value,
-    decryptionPasswordActive: document.querySelector("#settings-activate-import-source-password").checked
+    decryptionPassword: document.querySelector("#settings-import-source-password").value
   };
 
   // Allow overwriting of atributes
@@ -135,7 +134,7 @@ Settings.prototype.validateAndImport = function() {
   settings.saveSettings();
 
   // Simple base test for URL validity
-  if (/^https?:\/\/.*\.js(on)?$/i.test(url)) {
+  if (/^https?:\/\/.*\.js(on)?\??.*$/i.test(url)) {
     // Valid URL
     settings.getBg(function(bgWindow) {
       bgWindow.RemoteImport.import(url).then(settings.importFetchSuccess.bind(settings)).catch(settings.importFetchFail.bind(settings));
@@ -208,7 +207,6 @@ Settings.prototype.applySettings = function(options) {
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
   document.querySelector("#settings-activate-import-source-url").checked = options.importActive;
-  document.querySelector("#settings-activate-import-source-password").checked = options.decryptionPasswordActive;
   document.querySelector("#settings-import-source-url").value = options.importUrl;
   document.querySelector("#settings-import-source-password").value = options.decryptionPassword;
   document.querySelector("#settings-screenshot-quality").value = options.jpegQuality;

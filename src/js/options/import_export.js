@@ -48,13 +48,23 @@ var ImportExport = {
     loadWorkflows();
   },
   // Import encrypted rules & workflows
-  importEncryptedModal: function(encryptedString) {
+  importEncryptedModal: function(encryptedString, remoteOnly) {
+    // Save the encrypted data
     ImportExport.tmpEncrypted = encryptedString;
 
-    $("#modalimportall").hide();
+    // Hide all modals
+    $(".modalimport").hide();
 
-    // Show password dialog
-    $("#modalimportallencrypted").show();
+    // If remoteOnly is set, cancel import here.
+    // This is just a flag though which can be easily changed in an editor.
+    // We check the encoded flag later
+    if (remoteOnly) {
+      // show error message
+      $(".notice.import-forbidden").show();
+    } else {
+      // Show password dialog
+      $("#modalimportallencrypted").show();
+    }
   },
   // Import all rules and workflows from disc
   importAll: function() {
@@ -72,7 +82,7 @@ var ImportExport = {
 
         // Encrypted?
         if (typeof parsed.encrypted !== "undefined") {
-          ImportExport.importEncryptedModal(parsed.encrypted);
+          ImportExport.importEncryptedModal(parsed.encrypted, parsed.onlyUsableAsRemoteImportUrl);
         } else {
           // Import the parsed rules
           Rules.importAll(e.target.result).then(function() {
@@ -96,6 +106,15 @@ var ImportExport = {
     } else {
       // Import the parsed rules
       var parsed = JSONF.parse(decrypted);
+
+      // Usage as remote rules only?
+      if (parsed.remoteOnly) {
+        $(".modalimport").hide();
+        $(".notice.import-forbidden").show();
+        return;
+      }
+
+      // Import allowed ... go ahead
       Rules.importAll(parsed).then(function() {
         ImportExport.finishImport(parsed);
       });

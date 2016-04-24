@@ -27,6 +27,12 @@
     margin-bottom: 10px;
     border-bottom: 1px solid #999;
     padding-bottom: 10px;
+
+    &.no-cb {
+      .comment, input {
+        margin-left: 0;
+      }
+    }
   }
 
   input[type=url], input[type=password] {
@@ -50,7 +56,6 @@
     div:nth-child(1n+2) {
       margin-left: 15px;
     }
-
   }
 
 }
