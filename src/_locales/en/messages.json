@@ -104,12 +104,7 @@
     "message": "Import remote rules: Password?"
   },
   "import_remote_rules_pwd_text": {
-    "message": "Password wrong for encrypted remote URL import",
-    "placeholders": {
-      "url": {
-        "content": "$1"
-      }
-    }
+    "message": "Decryption of remote import URL content failed.\nPlease check the password in the settings dialogue."
   },
   "content_fof_is_working": {
     "message": "Form-O-Fill is working, please wait!"

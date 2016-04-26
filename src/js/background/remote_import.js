@@ -2,16 +2,19 @@
 var RemoteImport = {
   import: function(url) {
     return new Promise(function (resolve, reject) {
-      jQuery.ajax({url: url, dataType: "text"})
+      jQuery.ajax({url: url, dataType: "text", cache: false})
         .done(function(dataAsString) {
           var toImport = JSONF.parse(dataAsString);
 
           // Encrypted?
           if (typeof toImport.encrypted !== "undefined") {
+            var pwd = state.optionSettings.decryptionPassword;
 
             // Password missing?
-            if (state.optionSettings.decryptionPassword === null) {
-              RemoteImport.notifyPasswordFailure();
+            if (typeof pwd === "undefined" || pwd === null || pwd === "") {
+              // We resolve here since we need to set the remote URL but
+              // need not to activate the import
+              reject({url: url, data: null, status: 200, textStatus: "PASSWORD_NOT_SET"});
               return;
             }
 
@@ -21,7 +24,7 @@ var RemoteImport = {
 
             // Decryption failure?
             if (toImport === null) {
-              RemoteImport.notifyPasswordFailure();
+              reject({url: url, data: null, status: 501, textStatus: "PASSWORD_DECRYPT_FAILED"});
               return;
             }
 
@@ -70,7 +73,7 @@ var RemoteImport = {
     return Storage.save(data, Utils.keys.shadowStorage);
   },
   notifySuccess: function(success, url) {
-    url = url ? url : "wrong format";
+    url = url ? url : "Wrong format";
     var msg = chrome.i18n.getMessage("import_remote_rules_succeeded", [ url ]);
     if (!success) {
       msg = chrome.i18n.getMessage("import_remote_rules_failed", [ url ]);
@@ -81,10 +84,18 @@ var RemoteImport = {
   },
   listenToExternal: function() {
     chrome.runtime.onMessageExternal.addListener(function(request, sender) {
+
+      // Import via remote URL from
+      // http://form-o-fill.github.io/import-remote-rules
       if (request.action === "importRemoteRules") {
-        if (/import-remote-rules\/\?i=http.*\.js$/.test(sender.url)) {
+
+        // Check the URL
+        if (/import-remote-rules\/\?i=http.*\.(js|json).*$/.test(sender.url)) {
+
           // Extract the i=parameter
-          var matches = sender.url.match(/i=(.*\.js)/);
+          var matches = sender.url.match(/i=(.*\.(js|json).*)/);
+
+          // Is a URL present?
           if (typeof matches[1] !== "undefined") {
             var url = decodeURIComponent(matches[1]);
             // Import rules from URL
@@ -100,8 +111,18 @@ var RemoteImport = {
               chrome.runtime.sendMessage({action: "saveSettings", message: state.optionSettings});
 
               RemoteImport.notifySuccess(true, url);
-            }).catch(function() {
-              RemoteImport.notifySuccess(false, url);
+            }).catch(function(rejected) {
+              // If the password was not set, save the url to settings
+              if (rejected.textStatus === "PASSWORD_NOT_SET") {
+                state.optionSettings.importActive = false;
+                state.optionSettings.importUrl = url;
+                chrome.runtime.sendMessage({action: "saveSettings", message: state.optionSettings});
+
+                // Notify the user
+                RemoteImport.notifyPasswordFailure();
+              } else {
+                RemoteImport.notifySuccess(false, url);
+              }
             });
           }
         } else {

@@ -201,7 +201,8 @@ Settings.prototype.importFetchFail = function(rejected) {
 };
 
 Settings.prototype.applySettings = function(options) {
-  if (typeof options == "undefined") {
+  // If options are empty, exit here.
+  if (options === {}) {
     return;
   }
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
