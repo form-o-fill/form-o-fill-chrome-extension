@@ -99,30 +99,29 @@ Settings.prototype.saveSettings = function(overwrites) {
 };
 
 Settings.prototype.bindHandlers = function() {
-  var settings = this;
+  document.querySelector("#settings").addEventListener("change", this.handleChanges.bind(this));
+  document.querySelector("#settings").addEventListener("click", this.handleImportClicks.bind(this));
+};
 
-  document.querySelector("#settings").addEventListener("change", function(evt) {
-    if (evt.target && evt.target.nodeName === "INPUT") {
+Settings.prototype.handleChanges = function(evt) {
+  if (evt.target && evt.target.nodeName === "INPUT") {
 
-      if (evt.target.id === "settings-screenshot-quality") {
-        document.querySelector(".settings-screenshot-quality-percent").innerHTML = evt.target.value;
-      }
-
-      settings.saveSettings();
-      settings.showInfo("Settings saved");
-      evt.preventDefault();
+    // Screenshot quality setting
+    if (evt.target.id === "settings-screenshot-quality") {
+      document.querySelector(".settings-screenshot-quality-percent").innerHTML = evt.target.value;
     }
-  });
 
-  // Bind to validate button
-  document.querySelector("#settings").addEventListener("click", function(evt) {
-    // Trigger when import button is clicked or the checkbox is checked (from unchecked state)
-    //TODO: Bug -> Import works, change url slightly -> must press btn two times ?! (FS, 2015-12-09)
-    if (evt.target && (evt.target.classList.contains("validate-import-source-url") ||
-       (evt.target.id === "settings-activate-import-source-url" && evt.target.checked))) {
-      settings.validateAndImport();
-    }
-  });
+    this.saveSettings();
+    this.showInfo("Settings saved");
+  }
+};
+
+Settings.prototype.handleImportClicks = function(evt) {
+  //TODO: Bug -> Import works, change url slightly -> must press btn two times ?! (FS, 2015-12-09)
+  if (evt.target && (evt.target.classList.contains("validate-import-source-url") ||
+     (evt.target.id === "settings-activate-import-source-url" && evt.target.checked))) {
+    this.validateAndImport();
+  }
 };
 
 // Validate the URL the user has entered

@@ -1,5 +1,29 @@
 /* global jQuery JSONF Rules Utils state Crypto */
 var RemoteImport = {
+  handleEncryptedImport: function(url, toImport, reject) {
+    var pwd = state.optionSettings.decryptionPassword;
+
+    // Password missing?
+    if (typeof pwd === "undefined" || pwd === null || pwd === "") {
+      // We resolve here since we need to set the remote URL but
+      // need not to activate the import
+      reject({url: url, data: null, status: 200, textStatus: "PASSWORD_NOT_SET"});
+      return null;
+    }
+
+    // Password present
+    var crypt = new Crypto(state.optionSettings.decryptionPassword);
+    toImport = crypt.decrypt(toImport.encrypted);
+
+    // Decryption failure?
+    if (toImport === null) {
+      reject({url: url, data: null, status: 501, textStatus: "PASSWORD_DECRYPT_FAILED"});
+      return null;
+    }
+
+    // Decryption OK!
+    return JSONF.parse(toImport);
+  },
   import: function(url) {
     return new Promise(function (resolve, reject) {
       jQuery.ajax({url: url, dataType: "text", cache: false})
@@ -8,31 +32,10 @@ var RemoteImport = {
 
           // Encrypted?
           if (typeof toImport.encrypted !== "undefined") {
-            var pwd = state.optionSettings.decryptionPassword;
-
-            // Password missing?
-            if (typeof pwd === "undefined" || pwd === null || pwd === "") {
-              // We resolve here since we need to set the remote URL but
-              // need not to activate the import
-              reject({url: url, data: null, status: 200, textStatus: "PASSWORD_NOT_SET"});
-              return;
-            }
-
-            // Password present
-            var crypt = new Crypto(state.optionSettings.decryptionPassword);
-            toImport = crypt.decrypt(toImport.encrypted);
-
-            // Decryption failure?
-            if (toImport === null) {
-              reject({url: url, data: null, status: 501, textStatus: "PASSWORD_DECRYPT_FAILED"});
-              return;
-            }
-
-            // Decryption OK!
-            toImport = JSONF.parse(toImport);
+            toImport = RemoteImport.handleEncryptedImport(url, toImport, reject);
           }
 
-          if (Rules.validateImport(toImport)) {
+          if (toImport !== null && Rules.validateImport(toImport)) {
             resolve({url: url, data: toImport, status: 200, textStatus: "OK"});
           } else {
             reject({url: url, data: null, status: 501, textStatus: "FORMAT"});
