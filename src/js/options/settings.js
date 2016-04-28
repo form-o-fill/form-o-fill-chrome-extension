@@ -188,6 +188,10 @@ Settings.prototype.importFetchFail = function(rejected) {
 
   if (rejected.textStatus === "FORMAT") {
     jQuery(".import-remote-fail-format").show();
+  } else if (rejected.textStatus === "PASSWORD_NOT_SET") {
+    jQuery(".import-remote-fail-password").show();
+  } else if (rejected.textStatus === "PASSWORD_DECRYPT_FAILED") {
+    jQuery(".import-remote-fail-decrypt").show();
   } else {
     jQuery(".import-remote-fail-fetch")
     .find(".imp-fail-fetch-msg")
