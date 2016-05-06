@@ -8,6 +8,18 @@
   <body>
     <h1>TESTING SERVER RUNNING</h1>
 
+    <pre>
+    This demonstrates:
+    - usage of setupContent
+    - usage of context.storage in setupContent/teardownContent/value function
+    - the fact that all three functions have the same context available
+
+    #target: setBySetupContent
+    #target2: setByValueFunction
+    #target3: set by teardownContent
+    
+    </pre>
+
     #target: <input value="Value from pageload" id="target" /><br>
     #target2: <input value="Value from pageload" id="target2" /><br>
     #target3: <input value="Value from pageload" id="target3" /><br>
@@ -24,7 +36,7 @@
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  // This demonstrates:\n  // - usage of setupContent\n  // - usage of context.storage in setupContent/teardownContent/value function\n  // - the fact that all three functions have the same context available\n  \"url\": /20-teardown-content/,\n  \"name\": \"Teardown content function\",\n  \"setupContent\": function() {\n    context.storage.set(\"setBySetupContent\", \"setBySetupContent\");\n  },\n  \"teardownContent\": function() {\n    jQuery(\"#target\").val(context.storage.get(\"setBySetupContent\"));\n    jQuery(\"#target2\").val(context.storage.get(\"setByValueFunction\"));\n    jQuery(\"#target3\").val(\"set by teardownContent\");\n  },\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": function($e, data) {\n      context.storage.set(\"setByValueFunction\", \"setByValueFunction\");\n      return \"filled by field def\";\n    }\n  }]\n}\n];",
+        "code": "var rules = [{\n  // This demonstrates:\n  // - usage of setupContent\n  // - usage of context.storage in setupContent/teardownContent/value function\n  // - the fact that all three functions have the same context available\n  \"url\": /20-teardown-content/,\n  \"name\": \"Teardown content function\",\n  \"setupContent\": function() {\n    context.storage.set(\"setBySetupContent\", \"setBySetupContent\");\n  },\n  \"teardownContent\": function() {\n    jQuery(\"#target\").val(context.storage.get(\"setBySetupContent\"));\n    jQuery(\"#target2\").val(context.storage.get(\"setByValueFunction\"));\n    jQuery(\"#target3\").val(\"set by teardownContent\");\n  },\n  \"autorun\": true,\n  \"fields\": [{\n    \"selector\": \"input\",\n    \"value\": function($e, data) {\n      context.storage.set(\"setByValueFunction\", \"setByValueFunction\");\n      return \"filled by field def\";\n    }\n  }]\n}\n];",
         "tabId": 1
       }
     ]

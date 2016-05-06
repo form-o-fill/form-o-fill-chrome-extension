@@ -7,6 +7,11 @@
   </head>
   <body>
     <h1>TESTING SERVER RUNNING</h1>
+
+    <pre>
+    Load page -> autorun -> Row with "Created by setupContent : filled by field def"  
+    </pre>
+    
     <div id="container">
       Input field: <input value="Value from pageload" id="target" /><br>
     </div>
@@ -22,7 +27,7 @@
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  \"url\": /19-setup-content/,\n  \"name\": \"setupContent\",\n  \"setupContent\": function() {\n    jQuery(\"#container\").append(\"Created by setupContent <input type=text id=target2 value=''/>\");\n  },\n  \"fields\": [{\n    \"selector\": \"#target2\",\n    \"value\": \"filled by field def\"\n  }]\n}\n];",
+        "code": "var rules = [{\n  \"url\": /19-setup-content/,\n  \"name\": \"setupContent\",\n  \"autorun\": true,\n  \"setupContent\": function() {\n    jQuery(\"#container\").append(\"Created by setupContent <input type=text id=target2 value=''/>\");\n  },\n  \"fields\": [{\n    \"selector\": \"#target2\",\n    \"value\": \"filled by field def\"\n  }]\n}\n];",
         "tabId": 1
       }
     ]

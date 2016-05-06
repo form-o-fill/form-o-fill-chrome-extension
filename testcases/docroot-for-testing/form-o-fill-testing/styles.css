@@ -36,6 +36,7 @@ input {
   margin: 20px 0;
   padding: 5px;
   font-size: 18px;
+  width: 50%;
 }
 
 body.types input {
