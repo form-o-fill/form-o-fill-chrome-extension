@@ -184,10 +184,10 @@ var valueFunctionHelper = {
     // return new Function(_copyValueFunction <-- Take the body of the dummy function
     // .toString()                            <-- As a string
     // .replace(/##SELECTOR##/g, selector)    <-- Replace the selector placeholder with it's real value
-    // .replace(/^.*?\n/,"")                  <-- Strip the anonymous function declaration in the first line
+    // .replace(/^.*?[\n|{]/,"")              <-- Strip the anonymous function declaration in the first line (might not be newline sep. for builds)
     // .replace(/}$/,""));                    <-- Strip the last closing bracket
     /*eslint-disable no-new-func*/
-    return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?\n/,"").replace(/}$/,""));
+    return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?[\n|{]/,"").replace(/}$/,""));
     /*eslint-enable no-new-func*/
   },
   displayMessage: Libs.setThrobberText
