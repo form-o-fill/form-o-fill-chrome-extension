@@ -8,12 +8,20 @@ var Workflows = {
           resolve([]);
         } else {
           var workflows = workflowsAndShadow[0];
+
+          // No workflows in active rule set?
+          if (typeof workflows === "undefined") {
+            workflows = [];
+          }
+
+          // Do we have shadow workflows?
           if (typeof workflowsAndShadow[1] !== "undefined" && typeof workflowsAndShadow[1].workflows !== "undefined") {
             workflows = workflows.concat(workflowsAndShadow[1].workflows.map(function(workflow) {
               workflow.shadow = true;
               return workflow;
             }));
           }
+
           resolve(workflows);
         }
       });
