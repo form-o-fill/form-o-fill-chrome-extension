@@ -63,7 +63,7 @@ var Workflows = {
         var matchingWorkflows = [];
         if (typeof workflows !== "undefined") {
           matchingWorkflows = workflows.filter(function cbWfFilter(workflow) {
-            return matchingRuleNames.indexOf(workflow.steps[0]) === 0;
+            return matchingRuleNames.indexOf(workflow.steps[0]) > -1;
           });
         }
         resolve(matchingWorkflows);
