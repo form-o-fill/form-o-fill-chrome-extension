@@ -27,6 +27,9 @@ Permissions requested:
 - Communicate with websites (Used for the live tutorials)
 
 
+★ Version 2.7.1
+- Fixed workflow detection in some failing cases
+
 ★ Version 2.7.0
 - Added remote url import using an encrypted file format and a password
 - Fixed a bug with font rendering in popup
