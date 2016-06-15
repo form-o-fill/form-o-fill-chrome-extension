@@ -52,26 +52,7 @@ Permissions requested:
 - Bugfix: screenshots broken after changing quality setting
 - Optimization: remove jQuery dependency from popup.
 
-★ Version 2.4.0
-- Take screenshots whenever you want.
-- Settings panel added. Toggle popup display when one rule matches on and off.
-- Rules and field definitions accept an 'onlyEmpty' flag which fills the field only if empty
-- Add tutorial for shared rules
-- Add rule summary panel
-
-★ Version 2.3.1.1
-- Quickfix for broken import/export
-
-★ Version 2.3.1
-- Added tutorials for workflows, custom libraries and context object.
-- contest.storage.set works in value functions
-- Updated external dependencies
-
-★ Version 2.3.0
-- Live tutorial are here! Learn Form-O-Fill's features step by step. 
-- Fixed: input[type=checkbox] fields are extracted when not checked.
-
-★ Version 1.1.1 - 2.2.2
+★ Version 1.1.1 - 2.4.0
 - See "Changelog" in extension options
 
 Find the source at
