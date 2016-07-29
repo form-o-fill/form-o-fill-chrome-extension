@@ -27,6 +27,9 @@ Permissions requested:
 - Communicate with websites (Used for the live tutorials)
 
 
+★ Version 2.7.2
+- Try to fix the strangest of chrome API bugs. ¯\_(ツ)_/¯
+  
 ★ Version 2.7.1
 - Fixed workflow detection in some failing cases
 
