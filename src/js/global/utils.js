@@ -56,11 +56,18 @@ var Utils = {
     });
   },
   openOptions: function(parameter) {
-    var optionsUrl = chrome.runtime.getURL("html/options.html");
-    if (parameter && parameter[0] === "#") {
-      optionsUrl += parameter;
+    // Use the new API (>= 42) if possible
+    // This hopefully fixes a bug where some notification click events won't fire
+    if ("openOptionsPage" in chrome.runtime && typeof parameter === "undefined") {
+      chrome.runtime.openOptionsPage();
+    } else {
+      // Old API
+      var optionsUrl = chrome.runtime.getURL("html/options.html");
+      if (parameter && parameter[0] === "#") {
+        optionsUrl += parameter;
+      }
+      chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
     }
-    chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
   },
   infoMsg: function(msg) {
     // A function to display a nice message in the rule editor
