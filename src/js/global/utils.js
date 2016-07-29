@@ -57,7 +57,7 @@ var Utils = {
   },
   openOptions: function(parameter) {
     var optionsUrl = chrome.runtime.getURL("html/options.html");
-    if (parameter) {
+    if (parameter && parameter[0] === "#") {
       optionsUrl += parameter;
     }
     chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
