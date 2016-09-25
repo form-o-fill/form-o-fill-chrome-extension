@@ -26,6 +26,8 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 2.7.3
+- Add Libs.h.select and Libs.h.unselect for radiobuttons and checkboxes
 
 ★ Version 2.7.2.1
 - Try to fix the strangest of chrome API bugs. ¯\_(ツ)_/¯
@@ -68,4 +70,4 @@ Form-O-Fill icon taken from the Entypo Pictogram suite
 (http://www.entypo.com/)
 
 Licensed under the MIT license.
-The Software shall be used for Good, not Evil.
+The software shall be used for Good, not Evil.

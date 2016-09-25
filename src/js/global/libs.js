@@ -163,10 +163,12 @@ var _copyValueFunction = function() {
 
 // Helper for use in value functions
 //
-// "value" : Libs.h.click  => Clicks on the element specified by 'selector'
+// "value" : Libs.h.click                          => Clicks on the element specified by 'selector'
 //           Libs.h.screenshot("save_as_filename") => Save a screenshot of visible area as [filename]
-//           Libs.h.copyValue("#selector") => copies the *value* ofthe chosen field
-//           Libs.h.displayMessage("Some text") => shows a message to the user
+//           Libs.h.copyValue("#selector")         => copies the *value* ofthe chosen field
+//           Libs.h.displayMessage("Some text")    => shows a message to the user#
+//           Libs.h.select/unselect                => Activate/checks a field if it is a radiobutton/checkbox
+//                                                    and doesn't toggle on/off like Libs.h.click does.
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
@@ -190,7 +192,13 @@ var valueFunctionHelper = {
     return new Function(_copyValueFunction.toString().replace(/##SELECTOR##/g, selector).replace(/^.*?[\n|{]/,"").replace(/}$/,""));
     /*eslint-enable no-new-func*/
   },
-  displayMessage: Libs.setThrobberText
+  displayMessage: Libs.setThrobberText,
+  select: function($domNode) {
+    $domNode.prop("checked", true);
+  },
+  unselect: function($domNode) {
+    $domNode.prop("checked", false);
+  }
 };
 Libs.add("h", valueFunctionHelper);
 
