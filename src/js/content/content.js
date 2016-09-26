@@ -19,6 +19,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     return;
   }
 
+  // Returns the HTML used for the throbbing overlay
   var overlayHtml = function(text, isVisible) {
     if (typeof text === "undefined") {
       text = chrome.i18n.getMessage("content_fof_is_working");
@@ -46,6 +47,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     displayTimeout = setTimeout(hideOverlay, 3000);
   };
 
+  // Connect to background.js which opens a long running port connection
   port.onMessage.addListener(function (message) {
     Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
 
@@ -129,6 +131,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 
     // Execute setupContent function
+    // It has jQuery available
     if (message.action === "setupContent" && message.value) {
       Logger.info("[content.js] Executing setupContent function", message.value);
 
