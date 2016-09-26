@@ -119,16 +119,16 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
 
     // Show a custom message
-    if (message.action === "showMessage") {
+    if (message.action === "showMessage" && typeof message.message !== "undefined") {
       showOverlay(message.message);
     }
 
-    // reload the libraries
+    // Reload the libraries
     if (message.action === "reloadLibs") {
       Libs.import();
     }
 
-    // execute setupContent function
+    // Execute setupContent function
     if (message.action === "setupContent" && message.value) {
       Logger.info("[content.js] Executing setupContent function", message.value);
 
@@ -145,7 +145,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
     }
 
-    // execute teardownContent function
+    // Execute teardownContent function
     // It has jQuery available and the context object from value functions and setupContent
     if (message.action === "teardownContent" && message.value) {
       Logger.info("[content.js] Executing teardownContent function", message.value);
