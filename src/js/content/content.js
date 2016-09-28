@@ -197,6 +197,33 @@ chrome.runtime.onConnect.addListener(function (port) {
       window.sessionStorage.setItem(message.key, message.value);
     }
 
+    // Inject a <script> tag into the page which gets executed and replaces itself with the JSON serialized
+    // data the user wants.
+    // <script id="fof-get-variable-some-name">{data: { some: "JSON" }}</script>
+    // Only works with simple data, not functions :(
+    if (message.action === "getVar" && typeof message.key !== "undefined") {
+      var id = "fof-get-variable-" + message.key.replace(/[^a-zA-Z0-9_-]/g, "-");
+
+      // Insert the node only if not present
+      if (document.querySelectorAll("#" + id).length === 0) {
+        var elem = document.createElement("script");
+        elem.id = id;
+        elem.type = "text/javascript";
+        elem.dataset.purpose = "Used by Form-O-Fill to access JS variables on the site.";
+        elem.className = "fof-get-variable";
+        document.head.appendChild(elem);
+        elem.innerHTML = "document.querySelector('#" + id + "').innerHTML = JSON.stringify(" + message.key + ");";
+      }
+
+      // Now return the JSON to the caller
+      var jsonNode = document.querySelector("#" + id);
+      Logger.info("[content.js] getVar received " + jsonNode.innerText);
+      responseCb(JSONF.parse(jsonNode.innerText));
+
+      // ... and remove the node
+      jsonNode.remove();
+    }
+
     // Must return true to signal chrome that we do some work
     // asynchronously (see https://developer.chrome.com/extensions/runtime#event-onMessage)
     return true;

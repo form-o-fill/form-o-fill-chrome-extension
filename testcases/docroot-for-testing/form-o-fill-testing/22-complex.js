@@ -7,4 +7,14 @@ jQuery(function() {
   jQuery("#target4").on("click", function() {
     jQuery(this).val("clicked");
   });
+
 });
+
+/*eslint-disable no-unused-vars */
+var demoVar = {
+  data: 1,
+  func: function(a) {
+    return a;
+  }
+};
+

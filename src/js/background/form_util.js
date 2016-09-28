@@ -203,6 +203,17 @@ var FormUtil = {
       });
     };
   },
+  createGetVarPromise: function(lastActiveTabId) {
+    return function theRealGetVarPromise(key) {
+      return new Promise(function (resolve) {
+        var message = {"action": "getVar", "key": key};
+        chrome.tabs.sendMessage(lastActiveTabId, message, function (data) {
+          Logger.info("[form_util.js] Received data from 'getVar': '" + data + "'");
+          resolve(data);
+        });
+      });
+    };
+  },
   wrapInPromise: function wrapInPromise(func, context) {
     // Utility function to wrap a function in
     // a promise
@@ -275,11 +286,12 @@ var FormUtil = {
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
     // It also contains the grabber which can find content inside the current webpage
-    // and the storage object
+    // the storage object and the getVar function
     return {
       url: Utils.parseUrl(state.lastActiveTab.url),
       findHtml: FormUtil.createGrabber(state.lastActiveTab.id),
-      storage: FormUtil.storage
+      storage: FormUtil.storage,
+      getVar: FormUtil.createGetVarPromise(state.lastActiveTab.id)
     };
   },
   generateSetupContentPromise: function(setupContentFunc, port) {
@@ -385,7 +397,7 @@ var FormUtil = {
       // the array of before functions defined in the rule.
       // TODO: move to sep functions (FS, 2015-10-07)
       Promise.all(beforePromises).then(function beforeFunctionsPromise(beforeData) {
-        // If the first beforeData is a function and executes to null thebn
+        // If the first beforeData is a function and executes to null then
         // the rules and workflows that are running should be *canceled*
         if (typeof beforeData[0] === "function" && beforeData[0]() === null) {
           // Cancel workflows
