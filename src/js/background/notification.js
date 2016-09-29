@@ -11,7 +11,8 @@ var Notification = {
       "type": "basic",
       "title": title,
       "message": message,
-      "isClickable": true
+      "isClickable": true,
+      "requireInteraction": false
     }, function(notificationId) {
       if (!Utils.isLiveExtension()) {
         Testing.setVar("notification-html", message, "Last Notification HTML");
@@ -19,6 +20,9 @@ var Notification = {
         Testing.setVar("notification-callback", onClickCallback.toString(), "Last Notification click callback");
       }
       formNotificationId = notificationId;
+      setTimeout( function() {
+        chrome.notifications.clear(formNotificationId);
+      }, Utils.notificationTimeoutMs);
     });
 
     chrome.notifications.onClicked.addListener(function (notificationId) {

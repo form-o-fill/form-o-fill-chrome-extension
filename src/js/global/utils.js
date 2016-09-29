@@ -36,6 +36,7 @@ var Utils = {
     "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
   },
   alarmIntervalInMinutes: 1,
+  notificationTimeoutMs: 3000,
   alarmName: "FormOFillRemoteURLImportAlarm",
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
