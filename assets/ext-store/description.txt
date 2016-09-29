@@ -29,6 +29,7 @@ Permissions requested:
 ★ Version 2.7.3
 - Add Libs.h.select and Libs.h.unselect for radiobuttons and checkboxes
 - Add context.getVar to extract JS variables from the page the rule runs in
+- Bugfix: Show form filling errors in options even when options are already open
 
 ★ Version 2.7.2.1
 - Try to fix the strangest of chrome API bugs. ¯\_(ツ)_/¯
