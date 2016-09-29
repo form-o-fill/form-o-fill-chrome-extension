@@ -208,7 +208,7 @@ var FormUtil = {
       return new Promise(function (resolve) {
         var message = {"action": "getVar", "key": key};
         chrome.tabs.sendMessage(lastActiveTabId, message, function (data) {
-          Logger.info("[form_util.js] Received data from 'getVar': '" + data + "'");
+          Logger.info("[form_util.js] Received data from 'getVar': '" + JSONF.stringify(data) + "'");
           resolve(data);
         });
       });
