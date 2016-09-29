@@ -2,7 +2,7 @@
 <h3>The context object in before/after functions</h3>
 <p>
   The context object passed as the before/after functions second parameter has a certain structure.<br />
-  It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>) and a method to store and retrieve data between rule executions (<code>.storage</code>).
+  It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>), one to store and retrieve data between rule executions (<code>.storage</code>) and an access function for javascript variables in the content page (<code>.getVar()</code>).
 </p>
 
 <h3>The .url part of the context</h3>
@@ -68,3 +68,39 @@
 <p>
   Values stored in this way can be used in other before functions (eg. in another workflow step) or <a href="#help-functions-context">by value functions</a>.
 </p>
+
+<a name="help-beforecontext-getvar"></a>
+<h3>Getting javascript variables from the content page</h3>
+<p>
+  Sometimes it is valuable to access the JS variables of the page the current rule is going to be executed in.<br />
+  Since this is usually not allow in the <a href="https://developer.chrome.com/extensions/content_scripts#execution-environment">environment the chrome extension runs in</a> we have to use a workaround which<br >
+  allows the extension to access simple variables assigned to the <code>window</code> object:
+</p>
+<p>
+  Take amazon.com as an example. The site contains a lot of variables on the <code>window</code> object.
+  Let's read on of those: 
+</p>
+<pre>
+  // The getVar function is present on the context object,
+  // the second parameter to before functions:
+  before: function (resolve, context) {
+    // Read window.ue_sn from amazon.com:
+    context.getVar("ue_sn")]).then(function(uesn) {
+      resolve({amazonUesn: uesn});
+    });
+  }
+</pre>
+<p>
+  <code>getVar()</code> will return <code>undefined</code> it the variable was not found.<br />
+  After reading the variable you can use it as part of the data passed into value functions:
+</p>
+<pre>
+  ...
+  fields: [{
+    "selector": "input[name='amazon_ue']",
+    "value": function($element, beforeData) {
+      return beforeData.amazonUesn;
+    }
+  }]
+  ...
+</pre>

@@ -212,7 +212,7 @@ chrome.runtime.onConnect.addListener(function (port) {
         elem.dataset.purpose = "Used by Form-O-Fill to access JS variables on the site.";
         elem.className = "fof-get-variable";
         document.head.appendChild(elem);
-        elem.innerHTML = "document.querySelector('#" + id + "').innerHTML = JSON.stringify(" + message.key + ");";
+        elem.innerHTML = "var c = '**JSONF-UNDEFINED**'; try { c = JSON.stringify(" + message.key + "); } catch(e) {}; document.querySelector('#" + id + "').innerHTML = c;";
       }
 
       // Now return the JSON to the caller
