@@ -71,41 +71,43 @@ Storage.load(Utils.keys.extractedRule).then(function (extractedRule) {
 });
 
 // Check for rule filling errors
-Storage.load(Utils.keys.errors).then(function (errorsStorage) {
-  if (typeof errorsStorage !== "undefined") {
-    var rule = errorsStorage.rule;
-    var errors = errorsStorage.errors;
-    var $notice = $("#ruleeditor .notice.form-fill-errors");
-    var tableTrs = [];
-    var fullMsg = false;
-    errors.forEach(function (error) {
-      Logger.info("[options.js] Got error " + JSONF.stringify(error) + " for rule " + JSONF.stringify(rule));
-      if (typeof error.fullMessage !== "undefined") {
-        // One line output
-        tableTrs.push("<tr><td>" + error.fullMessage + "</td></tr>");
-        fullMsg = true;
-      } else {
-        // Typically an error in a rule
-        tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+var displayExecutionErrors = function() {
+  Storage.load(Utils.keys.errors).then(function (errorsStorage) {
+    if (typeof errorsStorage !== "undefined") {
+      var rule = errorsStorage.rule;
+      var errors = errorsStorage.errors;
+      var $notice = $("#ruleeditor .notice.form-fill-errors");
+      $notice.find("tr").not("#form-filling-errors-thead").remove();
+      var tableTrs = [];
+      var fullMsg = false;
+      errors.forEach(function (error) {
+        Logger.info("[options.js] Got error " + JSONF.stringify(error) + " for rule " + JSONF.stringify(rule));
+        if (typeof error.fullMessage !== "undefined") {
+          // One line output
+          tableTrs.push("<tr><td>" + error.fullMessage + "</td></tr>");
+          fullMsg = true;
+        } else {
+          // Typically an error in a rule
+          tableTrs.push("<tr><td>" + error.selector + "</td><td>" + error.value + "</td><td>" + error.message + "</td></tr>");
+        }
+      });
+      $notice.find("table").append(tableTrs.join("\n"));
+      if (fullMsg) {
+        $notice.find("#form-filling-errors-thead").remove();
       }
-    });
-    $notice.find("table").append(tableTrs.join("\n"));
-    if (fullMsg) {
-      $notice.find("#form-filling-errors-thead").remove();
-    }
-    $notice.find(".rule-name").html(rule.nameClean);
-    $notice.find(".rule-url").html(rule.urlClean);
-    $notice.show();
-    Storage.delete(Utils.keys.errors);
+      $notice.find(".rule-name").html(rule.nameClean);
+      $notice.find(".rule-url").html(rule.urlClean);
+      $notice.show();
 
-    // Activate the tab with the rule
-    var match = rule.id.match(/^([0-9]+)/);
-    if (match) {
-      Logger.info("[options.js] Activating tab #" + match[1]);
-      $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
+      // Activate the tab with the rule
+      var match = rule.id.match(/^([0-9]+)/);
+      if (match) {
+        Logger.info("[options.js] Activating tab #" + match[1]);
+        $(".tab[data-tab-id='" + match[1] + "']").trigger("click");
+      }
     }
-  }
-});
+  });
+};
 
 // Read all rules to update stats
 // Also fill quickjump select
@@ -217,6 +219,8 @@ var quickJumpToRule = function() {
   editor.editor().gotoLine(found.start.row, 1, false);
 };
 
+displayExecutionErrors();
+
 // Load data from tab and prefill editor
 loadRules(currentTabId());
 
@@ -257,6 +261,15 @@ $(".notice.extracted-present a.cmd-close-notice").on("click", function() {
 
 $(".notice.annotations-present a.cmd-close-notice, .notice.error a.cmd-close-notice").on("click", function() {
   $(this).parents(".notice").hide();
+});
+
+// When the options window gets focused,
+// check to see if errors are present
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible") {
+    Logger.info("[option.js] Options are visible. Checking for errors!");
+    displayExecutionErrors();
+  }
 });
 
 // Load all tutorials and insert them in the DOM

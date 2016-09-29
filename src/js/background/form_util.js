@@ -85,9 +85,8 @@ var FormUtil = {
   },
   saveErrors: function saveErrors(errors, rule) {
     // Save the errors to local storage
-    Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors).then(function storageSave() {
-      Utils.openOptions();
-    });
+    Logger.info("[form_util.js] Saving " + errors.length + " errors to " + Utils.keys.errors);
+    Storage.save({"errors": errors, "rule": rule}, Utils.keys.errors);
   },
   displayMessage: function displayMsg(msg) {
     this.getPort().postMessage({action: "showMessage", message: msg});
@@ -152,9 +151,8 @@ var FormUtil = {
   reportErrors: function(theErrors, rule, port) {
     Logger.warn("[b/form_util.js] Received 'getErrors' with " + theErrors.length + " errors");
     if (theErrors.length > 0) {
-      Notification.create(chrome.i18n.getMessage("bg_error_while_filling", [theErrors.length]), null, function notificationCreated() {
-        FormUtil.saveErrors(theErrors, rule);
-      });
+      FormUtil.saveErrors(theErrors, rule);
+      Notification.create(chrome.i18n.getMessage("bg_error_while_filling", [theErrors.length]), null, Utils.openOptions);
     }
     port.postMessage({"action": "hideWorkingOverlay"});
   },
@@ -315,9 +313,8 @@ var FormUtil = {
       return { selector: "Inside before function", value: errorObj.error.beforeFunction, message: errorObj.error.message };
     });
 
-    Notification.create(chrome.i18n.getMessage("bg_error_in_before"), null, function notificationCreate() {
-      FormUtil.saveErrors(errors, rule);
-    });
+    FormUtil.saveErrors(errors, rule);
+    Notification.create(chrome.i18n.getMessage("bg_error_in_before"), null, Utils.openOptions);
   },
   resolveImportsAndPostToContent: function(rule, beforeData, port) {
     // Check for rules to import (shared rules)
