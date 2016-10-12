@@ -1,5 +1,5 @@
 /*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm state */
-/* eslint complexity:0, max-nested-callbacks: [1,5] */
+/* eslint complexity:0, max-nested-callbacks: [1,6] */
 var lastMatchingRules = [];
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
@@ -137,7 +137,7 @@ var onTabReadyRules = function(tabId) {
               // one was found
               // The execution may be delayed by <param> msecs
               var timeout = parseInt(lastMatchingRules[0].autorun, 10);
-              if(isNaN(timeout)) {
+              if (isNaN(timeout)) {
                 timeout = 0;
               }
               Logger.info("[bj.js] Rule is set to autorun value '" + lastMatchingRules[0].autorun + "'");
