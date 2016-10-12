@@ -12,6 +12,8 @@
       }
     </style>
     <h1>TESTING SERVER RUNNING - 2</h1>
+    autorun is set to <span id="timer">4000</span> msecs...<br />
+
     Target 0:<input id="target0" type="text" value="value from pageload" /> ("set by setupContent")</br />
     Target 1:<input id="target1" type="text" value="value from pageload" /> ("value by json.json via jQuery.getJSON")</br />
     Target 2:<input id="target2" type="text" value="value from pageload" /> (Libs.chance.name: some name)</br />
@@ -30,5 +32,20 @@
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="22-complex.js"></script>
+    <script>
+      var time = 4000;
+      var itime = 100;
+      var $timer = document.querySelector("#timer");
+
+      var countdown = function() {
+        time = time - itime;
+        if(time <= 0) {
+          clearInterval(timer);
+        }
+        $timer.innerText = time;
+      };
+      var timer = setInterval(countdown, itime);
+    </script>
+
   </body>
 </html>

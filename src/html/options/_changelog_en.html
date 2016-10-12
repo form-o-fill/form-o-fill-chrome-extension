@@ -7,6 +7,7 @@
     <li>Add <code>Libs.h.select</code> and <code>Libs.h.unselect</code>.</li>
     <li>Add <code>context.getVar</code> to <a href="#help-beforecontext-getvar">extract JS variables</a> from the page the rule runs in.</li>
     <li>Bugfix: Show form filling errors in options even when options are already open.</li>
+    <li>The <code>autorun</code> property of a rule now takes true/false or a delay of auto-execution in milliseconds.</li>
   </ul>
   <p>★ Version 2.7.2</p>
   <ul>
@@ -57,20 +58,20 @@
   <ul>
     <li>Added tutorials for <a href="https://form-o-fill.github.io/tutorial/tour-7.html">workflows</a>, <a href="https://form-o-fill.github.io/tutorial/tour-8.html">custom libraries</a> and <a href="https://form-o-fill.github.io/tutorial/tour-9.html">context object</a>.</li>
     <li>You can now use <code>contest.storage.set</code> in value functions. Those vars are scoped to value functions.</li>
-    <li>Updated most important external dependencies (chance.js, moment.js, jQuery, ACE) to current versions.</li> 
+    <li>Updated most important external dependencies (chance.js, moment.js, jQuery, ACE) to current versions.</li>
   </ul>
   <p>★ Version 2.3.0</p>
   <ul>
-    <li><a href="options.html?#tutorials">Live tutorial are here!</a> Learn Form-O-Fill's features step by step. Try them out the tutorial option in the left menu. So much learning. So good.</li> 
+    <li><a href="options.html?#tutorials">Live tutorial are here!</a> Learn Form-O-Fill's features step by step. Try them out the tutorial option in the left menu. So much learning. So good.</li>
     <li>input[type=checkbox] fields are extracted when not checked.</li>
   </ul>
   <p>★ Version 2.2.2</p>
   <ul>
-    <li>Workflows graduated from beta</li> 
-    <li>Unified import/export functionality. Can import old format.</li> 
-    <li>Fix library function bug in content.js. No need to reload the webpage when changing custom library functions anymore</li> 
-    <li>Changing a tab save the current displayed rules</li> 
-    <li>A new export that eases the incorporation of changed rules into your ruleset. Still manual though.</li> 
+    <li>Workflows graduated from beta</li>
+    <li>Unified import/export functionality. Can import old format.</li>
+    <li>Fix library function bug in content.js. No need to reload the webpage when changing custom library functions anymore</li>
+    <li>Changing a tab save the current displayed rules</li>
+    <li>A new export that eases the incorporation of changed rules into your ruleset. Still manual though.</li>
   </ul>
   <p>★ Version 2.2.1</p>
   <ul>
@@ -92,8 +93,8 @@
   <p>★ Version 2.0.0</p>
   <ul>
     <li>
-      Added <a href="#help-workflows">workflows</a>. 
-      You can now automate multiple steps sequentially after one another. 
+      Added <a href="#help-workflows">workflows</a>.
+      You can now automate multiple steps sequentially after one another.
       This works even after a page load/reload.
       With this automating complete form workflows is easy.
     </li>

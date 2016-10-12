@@ -67,7 +67,7 @@ var ruleSummaryRefreshByRule = function(rule) {
 
     ruleSummaryYesNo(".rule-workflow-part", foundTheRule);
     ruleSummaryYesNo(".rule-import-part", usesImport);
-    ruleSummaryYesNo(".rule-autorun-part", rule.autorun === true);
+    ruleSummaryYesNo(".rule-autorun-part", rule.autorun === true || parseInt(rule.autorun, 10) > 0);
     ruleSummaryYesNo(".rule-empty-only-part", rule.onlyEmpty === true);
     ruleSummaryYesNo(".rule-screenshot-at-end", rule.screenshot === true);
 

@@ -132,11 +132,19 @@ var onTabReadyRules = function(tabId) {
               if (!Utils.isLiveExtension()) {
                 createCurrentPopupInIframe(tab.id);
               }
-            } else if (lastMatchingRules[0].autorun === true) {
+            } else if (lastMatchingRules[0].autorun === true || parseInt(lastMatchingRules[0].autorun, 10) > 0 ) {
               // If the rule is marked as "autorun", execute the rule if only
               // one was found
-              Logger.info("[bj.js] Rule is set to autorun");
-              FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
+              // The execution may be delayed by <param> msecs
+              var timeout = parseInt(lastMatchingRules[0].autorun, 10);
+              if(isNaN(timeout)) {
+                timeout = 0;
+              }
+              Logger.info("[bj.js] Rule is set to autorun value '" + lastMatchingRules[0].autorun + "'");
+
+              setTimeout(function() {
+                FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
+              }, timeout);
             }
           });
         });
