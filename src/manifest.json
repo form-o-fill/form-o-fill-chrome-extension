@@ -3,10 +3,10 @@
   "name": "Form-O-Fill - The programmable form filler",
   "short_name": "Form-O-Fill",
   "description": "The programmable form filler for developers using javascript functions.",
-  "version": "2.7.2.1",
+  "version": "2.7.3",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "33",
-  "icons": { 
+  "icons": {
     "16": "images/icon_16.png",
     "48": "images/icon_48.png",
     "128": "images/icon_128.png"
@@ -23,16 +23,16 @@
     "https://*/",
     "<all_urls>"
   ],
-  "web_accessible_resources": [ 
+  "web_accessible_resources": [
     "html/options.html",
     "vendor/moment.js/moment-with-locales.min.js",
     "vendor/chance.js/chance.js"
   ],
   "externally_connectable": {
     "matches": [
-      "*://form-o-fill.github.io/tutorial/*", 
+      "*://form-o-fill.github.io/tutorial/*",
       "http://localhost:4000/tutorial/*",
-      "*://form-o-fill.github.io/import-remote-rules/*", 
+      "*://form-o-fill.github.io/import-remote-rules/*",
       "http://localhost:4000/import-remote-rules/*"
     ]
   },
@@ -45,29 +45,29 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "jsBuild": [
-        "vendor/jquery/jquery-2.1.4.min.js", 
+        "vendor/jquery/jquery-2.1.4.min.js",
         "js/global.js",
         "js/content.js"
       ],
-      "js": [ 
-        "vendor/jquery/jquery-2.1.4.min.js", 
-        "js/debug/logger.js", 
-        "js/global/state.js", 
-        "js/global/utils.js", 
-        "js/global/jsonf.js", 
-        "js/global/rule.js", 
-        "js/global/rules.js", 
-        "js/global/storage.js", 
+      "js": [
+        "vendor/jquery/jquery-2.1.4.min.js",
+        "js/debug/logger.js",
+        "js/global/state.js",
+        "js/global/utils.js",
+        "js/global/jsonf.js",
+        "js/global/rule.js",
+        "js/global/rules.js",
+        "js/global/storage.js",
         "js/global/i18n.js",
         "js/global/libs.js",
-        "js/content/context.js", 
-        "js/content/form_errors.js", 
-        "js/content/form_filler.js", 
-        "js/content/form_extractor.js", 
+        "js/content/context.js",
+        "js/content/form_errors.js",
+        "js/content/form_filler.js",
+        "js/content/form_extractor.js",
         "js/content/extract_instrumentation.js",
         "js/content/context_menu.js",
         "js/content/content.js",
-        "js/content/testing.js" 
+        "js/content/testing.js"
       ],
       "css": [
         "css/content.css"
@@ -77,25 +77,25 @@
   "options_page": "html/options.html",
   "background": {
     "scriptsBuild": [
-      "vendor/jquery/jquery-2.1.4.min.js", 
-      "vendor/sjcl/sjcl.js", 
+      "vendor/jquery/jquery-2.1.4.min.js",
+      "vendor/sjcl/sjcl.js",
       "js/global.js",
       "js/background.js"
     ],
     "scripts": [
-      "vendor/jquery/jquery-2.1.4.min.js", 
-      "vendor/sjcl/sjcl.js", 
-      "js/debug/logger.js", 
-      "js/global/state.js", 
-      "js/global/jsonf.js", 
-      "js/global/utils.js", 
-      "js/global/storage.js", 
+      "vendor/jquery/jquery-2.1.4.min.js",
+      "vendor/sjcl/sjcl.js",
+      "js/debug/logger.js",
+      "js/global/state.js",
+      "js/global/jsonf.js",
+      "js/global/utils.js",
+      "js/global/storage.js",
       "js/global/rule.js",
       "js/global/rules.js",
       "js/global/i18n.js",
-      "js/global/libs.js", 
-      "js/global/workflows.js", 
-      "js/global/crypto.js", 
+      "js/global/libs.js",
+      "js/global/workflows.js",
+      "js/global/crypto.js",
       "js/background/remote_import.js",
       "js/background/alarm.js",
       "js/background/form_util.js",
