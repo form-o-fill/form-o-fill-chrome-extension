@@ -25,6 +25,7 @@ var Utils = {
     alwaysShowPopup: false,
     jpegQuality: 60,
     reevalRules: false,
+    matchOnLoad: false,
     importActive: false,
     importUrl: ""
   },

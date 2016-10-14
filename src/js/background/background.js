@@ -296,7 +296,14 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
-  if (changeInfo.status && changeInfo.status === "complete") {
+  var checkOn = "loading";
+  if (state.optionSettings.matchOnLoad === true) {
+    checkOn = "complete";
+  }
+
+  // "complete" => onload event
+  // "loading" => DOMContentLoader event
+  if (changeInfo.status && changeInfo.status === checkOn) {
     runWorkflowOrRule(tabId);
   }
 });
@@ -538,9 +545,9 @@ chrome.runtime.onStartup.addListener(function() {
 // Listen to alarms (import remote rules)
 chrome.alarms.onAlarm.addListener(alarmListener);
 
-// install listener for remote rules imortt requests
+// install listener for remote rules import requests
 RemoteImport.listenToExternal();
 
-// install listener for messages from cotennt page whil filling forms
+// install listener for messages from content page whil filling forms
 FormUtil.listenForContentMessages();
 
