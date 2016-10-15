@@ -40,6 +40,15 @@ var Utils = {
   alarmIntervalInMinutes: 1,
   notificationTimeoutMs: 3000,
   alarmName: "FormOFillRemoteURLImportAlarm",
+  defaultRule: 'var rules = [{\n' +
+    '  "name": "The default rule",\n' +
+    '  "url": "https://form-o-fill.github.io/tutorial/tour-1.html",\n' +
+    '  "fields": [{\n' +
+    '    "selector": "input[type=text]",\n' +
+    '    "value": "Welcome!"\n' +
+    '  }]\n' +
+    '}\n' +
+    '];',
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },

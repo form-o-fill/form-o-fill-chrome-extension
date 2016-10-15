@@ -156,7 +156,7 @@ jQuery(function () {
     jQuery(".tab").removeClass("current");
     tab.addClass("current");
     $insertAfterTab.after(tab);
-    editor.setValue("var rules = [\n];\n");
+    editor.setValue(Utils.defaultRule);
     saveTabsSetting();
     saveRules(nextTabId);
     jQuery(document).trigger("fof:tabs:created", { tabId: nextTabId });
