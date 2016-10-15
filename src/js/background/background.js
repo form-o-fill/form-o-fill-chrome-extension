@@ -289,7 +289,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
     if (changeInfo.status === checkOn) {
       runWorkflowOrRule(tabId);
     } else if (changeInfo.status === "loading" && state.optionSettings.matchOnLoad === true) {
-      badge.setText("WAIT", tabId);
+      // Waiting from DOMCOntentLoaded -> load event => show WAIT so the user knows FoF is working
+      badge.setText(chrome.i18n.getMessage("bg_wait_until_load_event"), tabId);
     }
   }
 });

@@ -73,6 +73,9 @@
   "bg_error_in_before": {
     "message": "An error occured while executing a before function. Click here to view it."
   },
+  "bg_wait_until_load_event": {
+    "message": "WAIT"
+  },
   "import_remote_rules_succeeded": {
     "message": "Importing remote rules succeeded!\nURL: $URL$",
     "placeholders": {
