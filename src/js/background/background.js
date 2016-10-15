@@ -370,6 +370,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 // Saves settings changed by popup or settings page
+// See calls there (bgWindow.setSettings)
 /*eslint-disable no-unused-vars */
 var setSettings = function(settings, value) {
   // First form key => value
