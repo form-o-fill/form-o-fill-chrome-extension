@@ -303,8 +303,12 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
 
   // "complete" => onload event
   // "loading" => DOMContentLoader event
-  if (changeInfo.status && changeInfo.status === checkOn) {
-    runWorkflowOrRule(tabId);
+  if (changeInfo.status) {
+    if (changeInfo.status === checkOn) {
+      runWorkflowOrRule(tabId);
+    } else if (changeInfo.status === "loading" && state.optionSettings.matchOnLoad === true) {
+      setBadge("WAIT", tabId);
+    }
   }
 });
 
