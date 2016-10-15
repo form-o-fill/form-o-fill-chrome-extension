@@ -122,6 +122,7 @@ gulp.task('backgroundJs', ['clean'], function () {
     "src/js/background/changelog.js",
     "src/js/background/context_menu.js",
     "src/js/background/remote_import.js",
+    "src/js/background/badge.js",
     "src/js/background/form_util.js",
     "src/js/background/notification.js",
     "src/js/background/background.js",

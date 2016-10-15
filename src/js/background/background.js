@@ -1,30 +1,10 @@
-/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm state */
+/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm state Badge*/
 /* eslint complexity:0, max-nested-callbacks: [1,6] */
 var lastMatchingRules = [];
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
 var recheckInterval = null;
-
-var defaultBadgeBgColor = [0, 136, 255, 200];
-var intervalBadgeBgColor = [43, 206, 7, 255];
-var useBadgeBgColor = defaultBadgeBgColor;
-
-// set the browser action badge
-var setBadge = function(txt, tabId) {
-  chrome.browserAction.setBadgeText({"text": txt, "tabId": tabId});
-  chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": tabId});
-
-  Testing.setVar("browser-action-badge-text", txt, "Browser action badge text");
-};
-
-// Shows number of matches in the extension's icon
-var refreshMatchCounter = function (tab, count) {
-  var txt = chrome.i18n.getMessage("no_match_available");
-  if (count && count > 0) {
-    txt = count.toString();
-  }
-  setBadge(txt, tab.id);
-};
+var badge = new Badge();
 
 // Testcode: Fill testing HTML with macthing rules
 var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
@@ -71,7 +51,7 @@ var onTabReadyRules = function(tabId) {
         // No rules present!
         Promise.all([Rules.lastMatchingRules([]), Workflows.saveMatches([])]).then(function() {
           chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
-          refreshMatchCounter(0);
+          badge.refreshMatchCounter(0);
           return;
         });
       }
@@ -118,7 +98,7 @@ var onTabReadyRules = function(tabId) {
 
             // Show matches in badge
             totalMatchesCount = lastMatchingRules.length + matchingWfs.length;
-            refreshMatchCounter(tab, totalMatchesCount);
+            badge.refreshMatchCounter(tab, totalMatchesCount);
 
             // TESTING
             if (!Utils.isLiveExtension()) {
@@ -181,7 +161,7 @@ var onTabReadyWorkflow = function() {
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
       Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
-      setBadge("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
+      badge.setText("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if (typeof rule === "undefined") {
@@ -270,7 +250,7 @@ var setCyclicRulesRecheck = function(shouldCheck) {
     clearInterval(recheckInterval);
     recheckInterval = null; // Collect it
     Logger.info("[bg.js] Deactivate interval for rule rechecking");
-    useBadgeBgColor = defaultBadgeBgColor;
+    badge.useBadgeBgColor = badge.defaultBadgeBgColor;
   }
 
   if (shouldCheck) {
@@ -280,12 +260,12 @@ var setCyclicRulesRecheck = function(shouldCheck) {
       }
     }, Utils.reevalRulesInterval);
     Logger.info("[bg.js] Activate interval for rule rechecking");
-    useBadgeBgColor = intervalBadgeBgColor;
+    badge.useBadgeBgColor = badge.intervalBadgeBgColor;
   }
 
   // Set BG color now even if not rematching has been done
   if (state.lastActiveTab !== null) {
-    chrome.browserAction.setBadgeBackgroundColor({"color": useBadgeBgColor, "tabId": state.lastActiveTab.id});
+    badge.setBgColor(badge.useBadgeBgColor, state.lastActiveTab.id);
   }
 };
 
@@ -309,7 +289,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
     if (changeInfo.status === checkOn) {
       runWorkflowOrRule(tabId);
     } else if (changeInfo.status === "loading" && state.optionSettings.matchOnLoad === true) {
-      setBadge("WAIT", tabId);
+      badge.setText("WAIT", tabId);
     }
   }
 });
@@ -323,7 +303,6 @@ chrome.browserAction.onClicked.addListener(function (){
 // Listen for messages from other background/popup scripts
 // Also listens to messages from testcases
 chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
-
   Logger.info("[bj.js] Received message " + JSONF.stringify(message));
 
   // From popup.js:
@@ -443,7 +422,7 @@ var initializeTabSettings = function() {
       }], Utils.keys.tabs);
 
       // Initialize rules
-      Rules.save("var rules = [];", 1);
+      Rules.save(Utils.defaultRule, 1);
     }
   });
 };
