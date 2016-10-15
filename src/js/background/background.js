@@ -408,25 +408,6 @@ var loadSettings = function() {
   });
 };
 
-// Checks to see if tabSettings are initialized
-// If not creates a default tabSetting
-var initializeTabSettings = function() {
-  // Check if tabs are saved or we start from scratch
-  Storage.load(Utils.keys.tabs).then(function (tabSettings) {
-    // No tab settings found, create one
-    if (typeof tabSettings === "undefined") {
-      Logger.info("[bg.js] Creating default tab setting");
-      Storage.save([{
-        "id": 1,
-        "name": chrome.i18n.getMessage("tabs_default_name")
-      }], Utils.keys.tabs);
-
-      // Initialize rules
-      Rules.save(Utils.defaultRule, 1);
-    }
-  });
-};
-
 // Triggered when update of remote rules was successful
 var remoteRulesImportSuccess = function(resolved) {
   Logger.info("[bg.js] Updating remote rules SUCCEEDED");
@@ -483,36 +464,6 @@ chrome.runtime.onMessage.addListener(function (message) {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
     takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
-});
-
-// Fires when the extension is install or updated
-chrome.runtime.onInstalled.addListener(function (details) {
-
-  Logger.info("[bg.js] chrome.runtime.inInstalled triggered");
-
-  // Called on very first install
-  if (details.reason === "install") {
-    Notification.create(chrome.i18n.getMessage("first_install_notification"), null, function () {
-      Utils.openOptions("#help");
-    });
-  }
-
-  // Initialize tab settings
-  initializeTabSettings();
-
-  // remove log entries
-  Logger.delete();
-
-  // Check if there are notifications to display
-  if (Utils.version.indexOf(".") > -1) {
-    Notification.forVersion(Utils.version);
-  }
-
-  // load and set settings. Uses defaults if non present.
-  loadSettings();
-
-  // This till trigger a re-import of the remote rules set in settings
-  Alarm.create();
 });
 
 // When the extension is activated:

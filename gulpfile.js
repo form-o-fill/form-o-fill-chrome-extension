@@ -125,6 +125,7 @@ gulp.task('backgroundJs', ['clean'], function () {
     "src/js/background/badge.js",
     "src/js/background/form_util.js",
     "src/js/background/notification.js",
+    "src/js/background/on_install.js",
     "src/js/background/background.js",
     "src/js/background/testing.js",
     "src/js/background/tutorial.js"
