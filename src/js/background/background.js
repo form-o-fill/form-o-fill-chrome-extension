@@ -291,7 +291,9 @@ var setCyclicRulesRecheck = function(shouldCheck) {
 
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  runWorkflowOrRule(activeInfo.tabId);
+  if (state.optionSettings.dontMatchOnTabSwitch === false) {
+    runWorkflowOrRule(activeInfo.tabId);
+  }
 });
 
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)

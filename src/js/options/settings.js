@@ -73,6 +73,7 @@ Settings.prototype.saveSettings = function(overwrites) {
     jpegQuality: document.querySelector("#settings-screenshot-quality").value,
     reevalRules: document.querySelector("#settings-reeval-rules").checked,
     matchOnLoad: document.querySelector("#settings-match-onload").checked,
+    dontMatchOnTabSwitch: document.querySelector("#settings-match-tab").checked,
     importActive: document.querySelector("#settings-activate-import-source-url").checked,
     importUrl: document.querySelector("#settings-import-source-url").value,
     decryptionPassword: document.querySelector("#settings-import-source-password").value
@@ -215,6 +216,7 @@ Settings.prototype.applySettings = function(options) {
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
   document.querySelector("#settings-match-onload").checked = options.matchOnLoad;
+  document.querySelector("#settings-match-tab").checked = options.dontMatchOnTabSwitch;
   document.querySelector("#settings-activate-import-source-url").checked = options.importActive;
   document.querySelector("#settings-import-source-url").value = options.importUrl;
   document.querySelector("#settings-import-source-password").value = options.decryptionPassword;

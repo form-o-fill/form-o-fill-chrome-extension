@@ -26,6 +26,7 @@ var Utils = {
     jpegQuality: 60,
     reevalRules: false,
     matchOnLoad: false,
+    dontMatchOnTabSwitch: false,
     importActive: false,
     importUrl: ""
   },
