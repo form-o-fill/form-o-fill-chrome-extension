@@ -1,10 +1,11 @@
-/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm state Badge*/
+/*global Rules Logger Utils FormUtil Notification JSONF Storage Testing createCurrentPopupInIframe Workflows Libs RemoteImport Alarm state Badge Screenshooter */
 /* eslint complexity:0, max-nested-callbacks: [1,6] */
 var lastMatchingRules = [];
 var totalMatchesCount = 0;
 var runWorkflowOrRule;
 var recheckInterval = null;
 var badge = new Badge();
+var screenshooter = new Screenshooter();
 
 // Testcode: Fill testing HTML with macthing rules
 var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
@@ -211,34 +212,6 @@ runWorkflowOrRule = function (tabId) {
     if (workflowStatus.runRule) {
       onTabReadyRules(tabId);
     }
-  });
-};
-
-// Generates a filename that is safe for disc storage
-var generateFilename = function(metadata) {
-  var ruleNameAsFilename = metadata.name.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
-  return "fof-screenshot-" + metadata.ruleId.replace(/([0-9]+)-([0-9]+)/, "tab-$1-rule-$2-field-") + metadata.fieldIndex + "_" + ruleNameAsFilename;
-};
-
-// Takes screenshot of a window
-// and downloads it to disk
-var takeScreenshot = function(windowId, ruleMetadata, potentialFilename) {
-  var quality = parseInt(state.optionSettings.jpegQuality, 10) || 60;
-  var fName;
-
-  // force download of the image
-  if (typeof potentialFilename === "string") {
-    // use user defined name
-    fName = potentialFilename.replace(/[^a-z0-9-_]/gi, '_') + ".jpg";
-  } else if (ruleMetadata) {
-    // use generated name
-    fName = generateFilename(ruleMetadata);
-  } else {
-    return;
-  }
-
-  chrome.tabs.captureVisibleTab(windowId, { format: "jpeg", quality: quality}, function(screenshotDataUri) {
-    Utils.downloadImage(screenshotDataUri, fName);
   });
 };
 
@@ -464,7 +437,7 @@ chrome.runtime.onMessage.addListener(function (message) {
   // the message.flag can be the filename or true/false
   if (message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
     Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
-    takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
+    screenshooter.takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
 });
 

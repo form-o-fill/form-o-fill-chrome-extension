@@ -103,6 +103,7 @@
       "js/background/changelog.js",
       "js/background/notification.js",
       "js/background/on_install.js",
+      "js/background/screenshooter.js",
       "js/background/background.js",
       "js/background/context_menu.js",
       "js/background/testing.js",
