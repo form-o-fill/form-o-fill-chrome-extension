@@ -6,6 +6,8 @@ var runWorkflowOrRule;
 var recheckInterval = null;
 var badge = new Badge();
 var screenshooter = new Screenshooter();
+var badgeInterval = null;
+
 
 // Testcode: Fill testing HTML with macthing rules
 var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
@@ -107,25 +109,48 @@ var onTabReadyRules = function(tabId) {
             }
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
-            // A single match should just fill the form (see below)
+            // A single match should just fill the form if "always show popup" is off (see below)
             if (totalMatchesCount !== 1 || (typeof state.optionSettings !== "undefined" && state.optionSettings.alwaysShowPopup)) {
               chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
               if (!Utils.isLiveExtension()) {
                 createCurrentPopupInIframe(tab.id);
               }
-            } else if (lastMatchingRules[0].autorun === true || parseInt(lastMatchingRules[0].autorun, 10) > 0 ) {
-              // If the rule is marked as "autorun", execute the rule if only
-              // one was found
-              // The execution may be delayed by <param> msecs
+            } else if (lastMatchingRules[0].autorun === true) {
+              // If the rule is marked as "autorun", execute the rule if only one was found.
+              Logger.info("[bj.js] Rule is set to autorun true");
+              FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
+            } else if (parseInt(lastMatchingRules[0].autorun, 10) > 0 ) {
+              //
+              // The autorun execution may be delayed by <param> msecs
+              //
               var timeout = parseInt(lastMatchingRules[0].autorun, 10);
-              if (isNaN(timeout)) {
-                timeout = 0;
+              Logger.info("[bj.js] Rule is set to autorun delay: " + timeout + " msec");
+
+              // If the delay is more than 2 second show countdown.
+              if (timeout >= 2000) {
+                var badgeDelayMsec = timeout;
+                if (badgeInterval !== null) {
+                  clearInterval(badgeInterval);
+                }
+                badgeInterval = setInterval(function() {
+                  badge.setText(chrome.i18n.getMessage("bg_autorun_countdown", [ Math.ceil(badgeDelayMsec / 1000) ]), state.lastActiveTab.id);
+                  badgeDelayMsec -= 500;
+                  if (badgeDelayMsec <= 0) {
+                    clearInterval(badgeInterval);
+                  }
+                }, 500);
               }
-              Logger.info("[bj.js] Rule is set to autorun value '" + lastMatchingRules[0].autorun + "'");
 
               setTimeout(function() {
+                // restore old badge text
+                badge.refreshMatchCounter(tab, totalMatchesCount);
+                // if interval is still set, clear it.
+                if (badgeInterval !== null) {
+                  clearInterval(badgeInterval);
+                }
                 FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
               }, timeout);
+
             }
           });
         });

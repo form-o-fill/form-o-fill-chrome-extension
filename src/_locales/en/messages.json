@@ -59,6 +59,14 @@
       }
     }
   },
+  "bg_autorun_countdown": {
+    "message": "\uD83D\uDD53$SEC$",
+    "placeholders": {
+      "sec": {
+        "content": "$1"
+      }
+    }
+  },
   "notification_form_extraction_done": {
     "message": "Extracted your form. Click here to check the options panel for more info."
   },
