@@ -2,7 +2,6 @@
 /*eslint no-undef:0 */
 var Notification = {
   create: function(message, title, onClickCallback) {
-    var formNotificationId = null;
     if (title === null) {
       title = "Form-O-Fill";
     }
@@ -19,26 +18,27 @@ var Notification = {
         Testing.setVar("notification-status", "visible", "Last Notification status");
         Testing.setVar("notification-callback", onClickCallback.toString(), "Last Notification click callback");
       }
-      formNotificationId = notificationId;
       setTimeout( function() {
-        chrome.notifications.clear(formNotificationId);
+        chrome.notifications.clear(notificationId);
       }, Utils.notificationTimeoutMs);
     });
 
-    chrome.notifications.onClicked.addListener(function (notificationId) {
-      if (notificationId === formNotificationId) {
-        if (!Utils.isLiveExtension()) {
-          Testing.setVar("notification-status", "clicked", "Last Notification status");
-        }
-        onClickCallback();
+    chrome.notifications.onClicked.addListener(function () {
+      if (!Utils.isLiveExtension()) {
+        Testing.setVar("notification-status", "clicked", "Last Notification status");
       }
+      onClickCallback();
     });
   },
   forVersion: function(version) {
     var notificationContent = Changelog.findForVersion(version);
     if (notificationContent) {
       Notification.create(notificationContent.message, notificationContent.title, function() {
-        Utils.openOptions(notificationContent.target);
+        if (notificationContent.target.indexOf("http") === 0) {
+          chrome.tabs.create({url: notificationContent.target});
+        } else {
+          Utils.openOptions(notificationContent.target);
+        }
       });
     }
   }

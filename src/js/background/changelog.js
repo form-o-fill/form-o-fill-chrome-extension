@@ -40,6 +40,11 @@ var Changelog = {
       title: "FoF updated: remote rules import",
       message: "Import remote rules from any URL. Share your rules with your colleagues.",
       target: "#help-settingsremoterules"
+    },
+    "3.0.0": {
+      title: "Major release 3.0",
+      message: "Faster ruleset searching. Please read the blogpost.",
+      target: "https://form-o-fill.github.io/releasing-version-3"
     }
   },
   findForVersion: function(version) {
