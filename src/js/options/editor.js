@@ -11,11 +11,13 @@ var Editor = function(selector) {
   this._document = this._session.getDocument();
   this._editor.setTheme("ace/theme/clouds");
   this._editor.setAutoScrollEditorIntoView(true);
-  this._editor.setOptions({enableBasicAutocompletion: true});
+  this._editor.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true
+  });
   this._editor.$blockScrolling = Infinity;
   this._session.setMode("ace/mode/javascript");
   this._session.setTabSize(2);
-  this._session.setUseSoftTabs(true);
   this._session.setUseSoftTabs(true);
   this._markers = [];
 };
