@@ -190,7 +190,7 @@ gulp.task('popupJs', ['clean'], function () {
 //
 gulp.task('copyUnchanged', ['clean'], function() {
   ["fonts", "images", "vendor", "_locales"].forEach(function (dir) {
-    gulp.src(['src/' + dir + '/**/*', "!src/vendor/jquery/jquery-2.1.4.js"], { nonegate: false })
+    gulp.src(['src/' + dir + '/**/*', "!src/vendor/jquery/jquery-3.1.1.min.js"], { nonegate: false })
     .pipe(gulp.dest('build/' + dir));
   });
 });
