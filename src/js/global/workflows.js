@@ -85,7 +85,7 @@ var Workflows = {
       Storage.load(Utils.keys.workflows).then(function(workflowData) {
 
         // Not workflow saved yet.
-        if (typeof workflowData === "undefined") {
+        if (typeof workflowData === "undefined" || typeof workflowData.map !== "function") {
           resolve([]);
         }
 
