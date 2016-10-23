@@ -229,7 +229,10 @@ Settings.prototype.exportDataJson = function() {
   var settings = this;
   return new Promise(function(resolve) {
     settings.getBg(function(bgWindow) {
-      resolve(bgWindow.state.optionSettings);
+      var options = bgWindow.state.optionSettings;
+      // Don't store passwords
+      options.decryptionPassword = "undefined";
+      resolve(options);
     });
   });
 };
