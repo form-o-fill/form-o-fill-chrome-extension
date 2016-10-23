@@ -439,7 +439,7 @@ window.Tutorial.tour[7] = {
     return null;
   },
   5: function() {
-    jQuery(".menu a[href=#workflows]").trigger("click");
+    jQuery(".workflows-menu").trigger("click");
     return document.querySelector(".wf-all select");
   }
 };
