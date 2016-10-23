@@ -40,8 +40,8 @@ jQuery(document).on("click", "a[href='#logs']", function (e) {
   e.preventDefault();
   logsInterval = setInterval(displayLogs, 500);
   displayLogs();
-}).on("click", "a[href^=#]", function () {
-  // clear auto updating log entries tble when clicking on
+}).on("click", "a", function () {
+  // clear auto updating log entries table when clicking on
   // a link other than "#logs"
   if (!/#logs$/.test(this.href)) {
     clearInterval(logsInterval);

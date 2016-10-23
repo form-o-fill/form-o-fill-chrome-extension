@@ -29,7 +29,10 @@ var ChromeBootstrap = {
     // Activate navigationitem via hashtag
     jQuery(window).on("load", ChromeBootstrap.relocate);
 
-    jQuery(document).on("click", "a[href*=#help-]", function() {
+    jQuery(document).on("click", "a", function() {
+      if (this.href.indexOf("#help-") === -1) {
+        return;
+      }
       ChromeBootstrap.relocate(this.href.replace(/^.*#/, "#"));
     });
 
@@ -70,7 +73,6 @@ var ChromeBootstrap = {
 
       // Activate sub-item
       if (sub !== "") {
-        window.location.hash = "#help";
         window.location.hash = hash;
       }
     }
