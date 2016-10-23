@@ -1,4 +1,4 @@
-/*global Workflows Logger Storage $ Utils JSONF Rules loadRules currentTabId loadTabsSettings updateTabStats fillAvailableRules loadWorkflows*/
+/*global Workflows Logger Storage $ Utils JSONF Rules loadRules currentTabId loadTabsSettings updateTabStats fillAvailableRules loadWorkflows settings */
 /*eslint no-unused-vars: 0*/
 var ImportExport = {
   tmpEncrypted: null,
@@ -20,10 +20,11 @@ var ImportExport = {
   },
   // Export rules and workflows
   exportAll: function() {
-    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
+    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson(), settings.exportDataJson()]).then(function(workflowsAndRulesAndSettings) {
       var exportJson = {
-        workflows: workflowsAndRules[0],
-        rules: workflowsAndRules[1]
+        workflows: workflowsAndRulesAndSettings[0],
+        rules: workflowsAndRulesAndSettings[1],
+        settings: workflowsAndRulesAndSettings[2]
       };
 
       var now = new Date();
@@ -122,10 +123,11 @@ var ImportExport = {
   },
   exportRulesEncrypted: function() {
     //TODO: extract multiple functions here! (FS, 2016-04-22)
-    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
+    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson(), settings.exportDataJson()]).then(function(workflowsAndRules) {
       var exportJson = {
         workflows: workflowsAndRules[0],
-        rules: workflowsAndRules[1]
+        rules: workflowsAndRules[1],
+        settings: workflowsAndRules[2]
       };
 
       var pwd = $("#export-encrypted-pwd1").val();
@@ -141,6 +143,7 @@ var ImportExport = {
       // Final export form:
       exportJson = {
         usage: "Please install Form-O-Fill from https://chrome.google.com/webstore/detail/form-o-fill-the-programma/iebbppibdpjldhohknhgjoapijellonp to use this file.",
+        readme: "This file has been encrypted with a password and is unusable without it. Please ask the person you have this URL from for the password.",
         onlyUsableAsRemoteImportUrl: exportJson.remoteOnly,
         encrypted: encryptedData
       };

@@ -224,6 +224,16 @@ Settings.prototype.applySettings = function(options) {
   document.querySelector(".settings-screenshot-quality-percent").innerHTML = options.jpegQuality;
 };
 
+// Resolves with an object of curent settings
+Settings.prototype.exportDataJson = function() {
+  var settings = this;
+  return new Promise(function(resolve) {
+    settings.getBg(function(bgWindow) {
+      resolve(bgWindow.state.optionSettings);
+    });
+  });
+};
+
 var settings = new Settings();
 
 document.addEventListener("DOMContentLoaded", function() {
