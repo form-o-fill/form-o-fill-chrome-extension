@@ -7,10 +7,6 @@ var noticesVisible = false;
 
 I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "tutorials"]);
 
-if (Utils.debug) {
-  I18n.loadPages(["logs"]);
-}
-
 ChromeBootstrap.init();
 
 // reset notices once the user starts typing

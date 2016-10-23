@@ -61,11 +61,6 @@ h3 span.unsaved-changes {
   position: absolute;
 }
 
-#logs table td:nth-child(3) {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 11px;
-}
-
 .unpacked-only {
   margin: 10px 0;
 }
@@ -73,7 +68,6 @@ h3 span.unsaved-changes {
 @import "editor";
 @import "workflows";
 @import "help";
-@import "logs";
 @import "tabs";
 @import "tutorial";
 @import "notice";
