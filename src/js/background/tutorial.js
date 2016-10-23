@@ -55,7 +55,6 @@ Tutorial.backupCurrentRulesHandler = function() {
 Tutorial.restoreBackedUpRulesHandler = function() {
   Storage.load(Utils.keys.tutorialDataBackup)
   .then(Rules.importAll);
-  // TODO send to options -> reload!
 };
 
 // Handler for request from the tutorial site
