@@ -173,19 +173,6 @@ var onTabReadyWorkflow = function() {
         return;
       }
 
-      // End of workflow reached
-      if (runningWorkflow.currentStep >= runningWorkflow.steps.length) {
-        FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
-        Storage.delete(Utils.keys.runningWorkflow);
-
-        // Search for matching rules and workflows
-        // to fill the icon again
-        runWorkflowOrRule(state.lastActiveTab.id);
-
-        resolve({status: "finished", runRule: false});
-        return;
-      }
-
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
       Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
@@ -204,13 +191,28 @@ var onTabReadyWorkflow = function() {
         } else {
           // Should a screenshot be taken?
           if (runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
-            Logger.info("[background.js] setting rule.screenshot = true because Wf config said so");
+            Logger.info("[bg.js] setting rule.screenshot = true because Wf config said so");
             rule.screenshot = true;
           }
 
           // Fill with this rule
           FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_step", [runningWorkflow.currentStep + 1, runningWorkflow.steps.length]), state.lastActiveTab);
           FormUtil.applyRule(rule, state.lastActiveTab);
+
+          // End of workflow reached?
+          if ((runningWorkflow.currentStep + 1) >= runningWorkflow.steps.length) {
+            FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
+            Logger.info("[bg.js] workflow finished on rule " + (runningWorkflow.currentStep + 1) + " of " + runningWorkflow.steps.length);
+            Storage.delete(Utils.keys.runningWorkflow);
+
+            // Search for matching rules and workflows
+            // to fill the icon again
+            runWorkflowOrRule(state.lastActiveTab.id);
+            state.forceRunOnLoad = false;
+
+            resolve({status: "finished", runRule: false});
+            return;
+          }
 
           // Save workflow state so we can continue even after a page reload
           Storage.save({
@@ -279,9 +281,11 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   var checkOn = "loading";
-  if (state.optionSettings.matchOnLoad === true) {
+  // May be set by options or running workflow
+  if (state.optionSettings.matchOnLoad === true || state.forceRunOnLoad) {
     checkOn = "complete";
   }
+  Logger.info("[bg.js] Matching rules/workflows on state " + checkOn + "(state.forceRunOnLoad = )" + state.forceRunOnLoad);
 
   // "complete" => onload event
   // "loading" => DOMContentLoader event
@@ -323,6 +327,11 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   if (message.action === "fillWithWorkflow") {
     // Load previously saved matching workflows
     Workflows.findById(message.id).then(function prLoadMatches(matchingWf) {
+
+      // Workflow steps can only run on "load" event
+      // otherwise they will trigger when the page hasn't changed yet
+      state.forceRunOnLoad = true;
+
       // Now save the steps of that workflow to the storage and
       // mark the current running workflow
       Storage.save({ currentStep: 0, steps: matchingWf.steps, flags: matchingWf.flags }, Utils.keys.runningWorkflow).then(function () {

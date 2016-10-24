@@ -5,6 +5,7 @@ var State = function State() {
   this.currentRuleMetadata = null;
   this.optionSettings = {};
   this.decryptionPassword = null;
+  this.forceRunOnLoad = false;
 };
 
 var state = new State();
