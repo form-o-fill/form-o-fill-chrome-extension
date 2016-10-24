@@ -67,6 +67,9 @@
       }
     }
   },
+  "bg_rule_reeval_autorun": {
+    "message": "Can not autorun while automatic rematch is on.\nTurn it off to enable autorun."
+  },
   "notification_form_extraction_done": {
     "message": "Extracted your form. Click here to check the options panel for more info."
   },
