@@ -1,4 +1,4 @@
-/*global jQuery */
+/*global jQuery Rules Workflows */
 var UsageReport = function() {
   this.featuresConfig = {
     "_rule-url-string": "Rule definition: Set if you use the 'url' property with a string as parameter (full url match)",
@@ -10,7 +10,7 @@ var UsageReport = function() {
     "_rule-content-string": "Rule definition: Using 'content' property with a string (page contains text)",
     "rule-content-string": "",
 
-    "_rule-content-regex": "Rule definition: Using 'content' proptery with a /regex/",
+    "_rule-content-regex": "Rule definition: Using 'content' property with a /regex/",
     "rule-content-regex": "",
 
     "_rule-autorun-boolean": "Rule definition: Using 'autorun' property with true/false",
@@ -88,8 +88,8 @@ var UsageReport = function() {
     "_workflows-used": "Other: Using workflows",
     "workflows-used": "",
 
-    "_before-functions-used": "Before/After: 'before' function used",
-    "before-functions-used": "",
+    "_before-function-used": "Before/After: 'before' function used",
+    "before-function-used": "",
 
     "_after-function-used": "Before/After: 'after' function used. Does anybody really use this?",
     "after-function-used": "",
@@ -139,6 +139,10 @@ var UsageReport = function() {
     "_tabs-count": "Counts: Total number of tabs in editor",
     "tabs-count": ""
   };
+
+  this.allFields = [];
+  this.workflows = [];
+  this.options = {};
 };
 
 UsageReport.prototype.features = function() {
@@ -147,9 +151,15 @@ UsageReport.prototype.features = function() {
   });
 };
 
-UsageReport.prototype.init = function() {
+UsageReport.prototype.init = function(options) {
+  var usageReport = this;
+  this.options = options;
   this.attachHandler();
-  this.insertPreviewDom();
+  Promise.all([Rules.all(), Workflows.all()]).then(function(all) {
+    usageReport.rules = all[0];
+    usageReport.workflows = all[1];
+    usageReport.insertPreviewDom(all[0]);
+  });
 };
 
 UsageReport.prototype.insertPreviewDom = function() {
@@ -207,6 +217,284 @@ UsageReport.prototype.previewHTML = function() {
   return html.join("");
 };
 
+UsageReport.prototype.fields = function() {
+  var usageReport = this;
+
+  if (this.allFields.length > 0) {
+    return this.allFields;
+  }
+
+  this.rules.forEach(function(rule) {
+    if (typeof rule.fields !== "undefined") {
+      usageReport.allFields = usageReport.allFields.concat(rule.fields);
+    }
+  });
+
+  return usageReport.allFields;
+};
+
 UsageReport.prototype._ruleUrlString = function() {
-  return "YUPP";
+  return this.rules.filter(function(rule) {
+    return typeof rule.url === "string";
+  }).length;
+};
+
+UsageReport.prototype._ruleUrlRegex = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.url === "object" && "test" in rule.url;
+  }).length;
+};
+
+UsageReport.prototype._ruleContentString = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.content === "string";
+  }).length;
+};
+
+UsageReport.prototype._ruleContentRegex = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.content === "object" && "test" in rule.content;
+  }).length;
+};
+
+UsageReport.prototype._ruleAutorunBoolean = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.autorun === "boolean";
+  }).length;
+};
+
+UsageReport.prototype._ruleAutorunTimer = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.autorun === "number" || parseInt(rule.autorun, 10) > 0;
+  }).length;
+};
+
+UsageReport.prototype._ruleScreenshot = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.screenshot !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._ruleOnlyEmpty = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.onlyEmpty !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._ruleColor = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.color !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._ruleTeardownContentUsed = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.teardownContent !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._ruleSetupContentUsed = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.setupContent !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._fieldsImportUsed = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.import !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._fieldsValueString = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "string";
+  }).length;
+};
+
+UsageReport.prototype._fieldsValueFunction = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function";
+  }).length;
+};
+
+UsageReport.prototype._fieldsOnlyEmpty = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.onlyEmpty !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._fieldsScreenshot = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.screenshot !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._fieldsValueFunctionContextStorageGet = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" && field.value.toString().indexOf("context.storage.get") > -1;
+  }).length;
+};
+
+UsageReport.prototype._fieldsValueFunctionContextStorageSet = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" && field.value.toString().indexOf("context.storage.set") > -1;
+  }).length;
+};
+
+UsageReport.prototype._libsHScreenshot = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" && field.value.toString().indexOf("Libs.h.screenshot") > -1;
+  }).length;
+};
+
+UsageReport.prototype._libsChance = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" && field.value.toString().indexOf("Libs.chance") > -1;
+  }).length;
+};
+
+UsageReport.prototype._libsMoment = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" && field.value.toString().indexOf("Libs.moment") > -1;
+  }).length;
+};
+
+UsageReport.prototype._libsHClick = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" &&
+      (field.value.toString().indexOf("$domNode.click()") > -1 ||
+       field.value.toString().indexOf("Libs.h.click") > -1);
+  }).length;
+};
+
+UsageReport.prototype._libsHSelect = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" &&
+      (field.value.toString().indexOf("$domNode.prop(\"checked\", true") > -1 ||
+       field.value.toString().indexOf("Libs.h.select") > -1);
+  }).length;
+};
+
+
+UsageReport.prototype._libsHUnselect = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" &&
+      (field.value.toString().indexOf("$domNode.prop(\"checked\", false") > -1 ||
+       field.value.toString().indexOf("Libs.h.unselect") > -1);
+  }).length;
+};
+
+UsageReport.prototype._libsHCopyValue = function() {
+  return this.fields().filter(function(field) {
+    return typeof field.value === "function" &&
+      (field.value.toString().indexOf("// element not found") > -1 ||
+       field.value.toString().indexOf("Libs.h.copyValue") > -1);
+  }).length;
+};
+
+UsageReport.prototype._libsHalt = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before === "function" && rule.before.toString().indexOf("Libs.halt") > -1;
+  }).length;
+};
+
+UsageReport.prototype._libsHDisplayMessage = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before === "function" && rule.before.toString().indexOf("Libs.h.displayMessage") > -1;
+  }).length;
+};
+
+UsageReport.prototype._customLibrariesUsed = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.export === "string" && typeof rule.lib === "function";
+  }).length;
+};
+
+UsageReport.prototype._workflowsUsed = function() {
+  return this.workflows.length;
+};
+
+UsageReport.prototype._beforeFunctionUsed = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._afterFunctionUsed = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.after !== "undefined";
+  }).length;
+};
+
+UsageReport.prototype._beforeFunctionContextUrl = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.url") > -1;
+  }).length;
+};
+
+
+UsageReport.prototype._beforeFunctionContextFindHtml = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.findHtml") > -1;
+  }).length;
+};
+
+UsageReport.prototype._beforeFunctionContextStorageGet = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.storage.get") > -1;
+  }).length;
+};
+
+UsageReport.prototype._beforeFunctionContextStorageSet = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.storage.set") > -1;
+  }).length;
+};
+
+UsageReport.prototype._beforeFunctionContextStorageDelete = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.storage.delete") > -1;
+  }).length;
+};
+
+UsageReport.prototype._beforeFunctionContextGetVar = function() {
+  return this.rules.filter(function(rule) {
+    return typeof rule.before !== "undefined" && rule.before.toString().indexOf("context.getVar") > -1;
+  }).length;
+};
+
+UsageReport.prototype._optionsAutomaticRematch = function() {
+  return this.options.reevalRules === true ? 1 : 0;
+};
+
+UsageReport.prototype._optionsRemoteRules = function() {
+  return typeof this.options.importUrl === "string" ? 1 : 0;
+};
+
+UsageReport.prototype._optionsRemoteRulesUsePassword = function() {
+  return typeof this.options.decryptionPassword === "string" ? 1 : 0;
+};
+
+UsageReport.prototype._optionsAlwaysShowPopup = function() {
+  return this.options.alwaysShowPopup === true ? 1 : 0;
+};
+
+UsageReport.prototype._optionsMatchOnLoad = function() {
+  return this.options.matchOnLoad === true ? 1 : 0;
+};
+
+UsageReport.prototype._optionsDontMatchOnTabSwitch = function() {
+  return this.options.dontMatchOnTabSwitch === true ? 1 : 0;
+};
+
+UsageReport.prototype._rulesRuleCount = function() {
+  return this.rules.length;
+};
+
+UsageReport.prototype._rulesFieldsCount = function() {
+  return this.fields().length;
+};
+
+UsageReport.prototype._tabsCount = function() {
+  return jQuery("[data-tab-id]").length;
 };

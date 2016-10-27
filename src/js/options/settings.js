@@ -213,6 +213,9 @@ Settings.prototype.applySettings = function(options) {
   if (options === {}) {
     return;
   }
+
+  this.current = options;
+
   document.querySelector("#settings-always-show-popup").checked = options.alwaysShowPopup;
   document.querySelector("#settings-reeval-rules").checked = options.reevalRules;
   document.querySelector("#settings-match-onload").checked = options.matchOnLoad;

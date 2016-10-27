@@ -1,4 +1,4 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor JSONF Libs UsageReport */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor JSONF Libs UsageReport settings */
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
@@ -271,7 +271,7 @@ document.addEventListener("visibilitychange", function() {
 // Initialize usage report
 $(function() {
   var usageReport = new UsageReport();
-  usageReport.init();
+  usageReport.init(settings.current);
 });
 
 // Load all tutorials and insert them in the DOM
