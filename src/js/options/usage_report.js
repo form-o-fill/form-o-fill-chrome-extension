@@ -179,18 +179,34 @@ UsageReport.prototype.previewHTML = function() {
   var group = "";
   var description;
   var parts;
+  var value;
 
   this.features().forEach(function(feature) {
     description = usageReport.featuresConfig["_" + feature];
     parts = description.match(/^(.*?): ?(.*)$/);
+    value = "?";
+
     if (group !== parts[1]) {
       group = parts[1];
       html.push("<tr class='section'><td colspan=3>" + parts[1] + "</td></tr>");
     }
-    html.push("<tr><td>" + feature + "</td><td>" + parts[2] + "</td><td>?</td></tr>");
+
+    var methodName = "_" + feature.replace(/-[a-z]/g, function(match) {
+      return match.replace("-", "").toUpperCase();
+    });
+
+    if (typeof usageReport[methodName] === "function") {
+      value = usageReport[methodName]();
+    }
+
+    html.push("<tr><td>" + feature + "</td><td>" + parts[2] + "</td><td>" + value + "</td></tr>");
   });
 
   html.push("</table>");
 
   return html.join("");
+};
+
+UsageReport.prototype._ruleUrlString = function() {
+  return "YUPP";
 };
