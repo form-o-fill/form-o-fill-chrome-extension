@@ -1,0 +1,25 @@
+.usage-report-preview {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+
+  th, td {
+    padding: 4px;
+  }
+
+  th {
+    text-align: left;
+    background-color: #999;
+    color: #fff;
+  }
+
+  tr.section td {
+    background-color: #aaa;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #eee;
+  }
+}
