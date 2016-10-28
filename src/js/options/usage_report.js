@@ -152,10 +152,12 @@ UsageReport.prototype.features = function() {
 };
 
 UsageReport.prototype.init = function(options) {
-  var usageReport = this;
   this.options = options;
   this.attachHandler();
-  Promise.all([Rules.all(), Workflows.all()]).then(function(all) {
+};
+
+UsageReport.prototype.setData = function(usageReport) {
+  return Promise.all([Rules.all(), Workflows.all()]).then(function(all) {
     usageReport.rules = all[0];
     usageReport.workflows = all[1];
     usageReport.insertPreviewDom(all[0]);
@@ -166,12 +168,22 @@ UsageReport.prototype.insertPreviewDom = function() {
   jQuery("#modalusagereport .content-area").append(this.previewHTML());
 };
 
-UsageReport.prototype.handlePreview = function() {
-  jQuery(".usage-report-preview").addClass("visible");
+UsageReport.prototype.handlePreview = function(usageReport) {
+  usageReport.setData(usageReport).then(function() {
+    jQuery(".usage-report-preview").addClass("visible");
+  });
+};
+
+UsageReport.prototype.handleCloseModal = function(usageReport) {
 };
 
 UsageReport.prototype.attachHandler = function() {
-  jQuery(document).on("click", ".cmd-preview-usage-report", this.handlePreview);
+  var usageReport = this;
+  jQuery(document).on("click", ".cmd-preview-usage-report", function() {
+    usageReport.handlePreview(usageReport);
+  }).on("click", ".cmd-send-usage-cancel", function() {
+    usageReport.handleCloseModal(usageReport);
+  });
 };
 
 UsageReport.prototype.previewHTML = function() {
