@@ -1,4 +1,4 @@
-/*global jQuery Rules Workflows */
+/*global jQuery Rules Workflows settings Utils*/
 var UsageReport = function() {
   this.featuresConfig = {
     "_rule-url-string": "Rule definition: Set if you use the 'url' property with a string as parameter (full url match)",
@@ -174,7 +174,25 @@ UsageReport.prototype.handlePreview = function(usageReport) {
   });
 };
 
-UsageReport.prototype.handleCloseModal = function(usageReport) {
+UsageReport.prototype.handleCloseModal = function() {
+  // Save that the user doesn't want to send stats
+  Storage.save({ sent: false, updated: (new Date()).toString() }, Utils.keys.usageReport).then(function() {
+    jQuery("#modalusagereport").hide();
+  });
+};
+
+UsageReport.prototype.handleSendData = function() {
+  var usageReport = this;
+  jQuery("#modalusagereport .content-area").hide();
+  jQuery("#modalusagereport .content-area-working").show();
+  this.setData(this).then(function() {
+    // Send data
+    jQuery.post(Utils.usageReportEndpoint, usageReport.reportData(), function() {
+      Storage.save({ sent: true, updated: (new Date()).toString() }, Utils.keys.usageReport).then(function() {
+        jQuery("#modalusagereport").hide();
+      });
+    });
+  });
 };
 
 UsageReport.prototype.attachHandler = function() {
@@ -182,8 +200,22 @@ UsageReport.prototype.attachHandler = function() {
   jQuery(document).on("click", ".cmd-preview-usage-report", function() {
     usageReport.handlePreview(usageReport);
   }).on("click", ".cmd-send-usage-cancel", function() {
-    usageReport.handleCloseModal(usageReport);
+    usageReport.handleCloseModal();
+  }).on("click", ".cmd-send-usage-report", function() {
+    usageReport.handleSendData();
   });
+};
+
+UsageReport.prototype.reportData = function() {
+  var usageReport = this;
+  var data = {};
+  this.features().forEach(function(feature) {
+    var methodName = "_" + feature.replace(/-[a-z]/g, function(match) {
+      return match.replace("-", "").toUpperCase();
+    });
+    data[feature] = usageReport[methodName]();
+  });
+  return data;
 };
 
 UsageReport.prototype.previewHTML = function() {
@@ -510,3 +542,11 @@ UsageReport.prototype._rulesFieldsCount = function() {
 UsageReport.prototype._tabsCount = function() {
   return jQuery("[data-tab-id]").length;
 };
+
+
+// Initialize usage report
+jQuery(function() {
+  var usageReport = new UsageReport();
+  usageReport.init(settings.current);
+});
+

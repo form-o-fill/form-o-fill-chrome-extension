@@ -268,12 +268,6 @@ document.addEventListener("visibilitychange", function() {
   }
 });
 
-// Initialize usage report
-$(function() {
-  var usageReport = new UsageReport();
-  usageReport.init(settings.current);
-});
-
 // Load all tutorials and insert them in the DOM
 // Must be last.
 I18n.loadPages(["tour1", "tour2", "tour3", "tour4", "tour5", "tour6", "tour7", "tour8", "tour9", "tour10", "tour11", "tour12", "tour13"], "tutorial");
