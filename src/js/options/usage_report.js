@@ -183,6 +183,7 @@ UsageReport.prototype.handleCloseModal = function() {
 
 UsageReport.prototype.handleSendData = function() {
   var usageReport = this;
+  jQuery("#modalusagereport .usage-report-preview").hide();
   jQuery("#modalusagereport .content-area").hide();
   jQuery("#modalusagereport .content-area-working").show();
   this.setData(this).then(function() {
@@ -546,7 +547,12 @@ UsageReport.prototype._tabsCount = function() {
 
 // Initialize usage report
 jQuery(function() {
-  var usageReport = new UsageReport();
-  usageReport.init(settings.current);
+  Storage.load(Utils.keys.usageReport).then(function(data) {
+    if (typeof data === "undefined") {
+      var usageReport = new UsageReport();
+      usageReport.init(settings.current);
+      jQuery("#modalusagereport").show();
+    }
+  });
 });
 
