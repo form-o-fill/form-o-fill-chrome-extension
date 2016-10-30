@@ -65,6 +65,26 @@ h3 span.unsaved-changes {
   margin: 10px 0;
 }
 
+.modalimport {
+  .content-sidebar {
+    display: inline-block;
+    padding-left: 15px;
+    vertical-align: top;
+
+    + .content-area {
+      display: inline-block;
+    }
+  }
+
+  .tldr {
+    border: 1px solid #999;
+    background-color: #eee;
+    padding: 10px;
+  }
+
+}
+
+@import "usage_report";
 @import "editor";
 @import "workflows";
 @import "help";

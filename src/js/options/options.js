@@ -1,11 +1,11 @@
-/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor, JSONF Libs */
+/*global $, JSONEditor, ace, Storage, Logger, Utils, Rules, Rule, I18n, ChromeBootstrap, Editor JSONF Libs UsageReport settings */
 /*eslint no-unused-vars: [2, { "vars": "local"}]*/
 // This file is a big bag of mixed responsibilities.
 // Break this into parts!
 var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
 
-I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "tutorials"]);
+I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "modalusagereport", "tutorials"]);
 
 ChromeBootstrap.init();
 

@@ -19,7 +19,8 @@ var Utils = {
     tutorialDataBackup: "form-o-fill-tutorialDataBackup",
     tutorialActive: "form-o-fill-tut-active",
     settings: "form-o-fill-settings",
-    shadowStorage: "form-o-fill-shadow-storage"
+    shadowStorage: "form-o-fill-shadow-storage",
+    usageReport: "form-o-fill-usage-report"
   },
   defaultSettings: {
     alwaysShowPopup: false,
@@ -49,6 +50,7 @@ var Utils = {
     '  }]\n' +
     '}\n' +
     '];',
+  usageReportEndpoint: "https://script.google.com/macros/s/AKfycby3DJt1KiGPQlzdfLhNws2sGhrpP1zFG1AF_7xddZsKMbhH6yd0/exec",
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },
