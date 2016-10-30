@@ -5,7 +5,7 @@
 var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
 
-I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "modalusagereport", "tutorials"]);
+I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "modaldeletetab", "modalusagereport", "tutorials"]);
 
 ChromeBootstrap.init();
 

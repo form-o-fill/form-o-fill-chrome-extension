@@ -69,6 +69,30 @@ var loadTabsSettings = function() {
   });
 };
 
+var removeTabAndRules = function() {
+  var tabId = jQuery("#modaldeletetab").data("deleteTabId");
+
+  // If no tabId is defined, cancel
+  if (tabId === "undefined") {
+    return;
+  }
+
+  Logger.info("[tabs.js] removing tab #" + tabId);
+  var $toBeRemoved = jQuery(".tabs [data-tab-id=" + tabId + "]");
+  $toBeRemoved.remove();
+
+  // Activate prior tab
+  jQuery(".tab[data-tab-id=" + (tabId - 1) + "]").trigger("click");
+
+  // Delete rules and save them
+  Rules.delete(tabId);
+  saveTabsSetting();
+
+  jQuery("#modaldeletetab")
+    .data("deleteTabId", null)
+    .hide();
+};
+
 jQuery(function () {
   // Click on tab
   jQuery(document).on("click", ".tab", function (e) {
@@ -132,11 +156,12 @@ jQuery(function () {
 
     var toBeRemoved = jQuery(this).parent("li");
     var tabId = toBeRemoved.data("tab-id");
-    Logger.info("[tabs.js] removing tab #" + tabId);
-    toBeRemoved.remove();
-    jQuery(".tab[data-tab-id=" + (tabId - 1) + "]").trigger("click");
-    Rules.delete(tabId);
-    saveTabsSetting();
+
+    // Show modal to make sure user understand what is happening when
+    // he clicks that button
+    jQuery("#modaldeletetab")
+      .data("deleteTabId", tabId)
+      .show();
   });
 
   // Add a new tab
@@ -161,6 +186,9 @@ jQuery(function () {
     saveRules(nextTabId);
     jQuery(document).trigger("fof:tabs:created", { tabId: nextTabId });
   });
+
+  // When the user confirm deletion of a tab, do it
+  jQuery("#modaldeletetab").on("click", ".cmd-tab-delete-ok", removeTabAndRules);
 
   loadTabsSettings();
 });
