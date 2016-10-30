@@ -1,8 +1,0 @@
-language: node_js
-node_js:
-  - "6.3.1"
-notifications:
-  email: false
-branches:
-  except:
-    - /^v\d/
