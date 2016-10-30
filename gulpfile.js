@@ -165,7 +165,8 @@ gulp.task('optionsJs', ['clean'], function () {
     "src/js/options/help.js",
     "src/js/options/workflow.js",
     "src/js/options/settings.js",
-    "src/js/options/rule_summary.js"
+    "src/js/options/rule_summary.js",
+    "src/js/options/usage_report.js"
   ])
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(plugins.concat('options.js'))
@@ -190,7 +191,7 @@ gulp.task('popupJs', ['clean'], function () {
 //
 gulp.task('copyUnchanged', ['clean'], function() {
   ["fonts", "images", "vendor", "_locales"].forEach(function (dir) {
-    gulp.src(['src/' + dir + '/**/*', "!src/vendor/jquery/jquery-3.1.1.min.js"], { nonegate: false })
+    gulp.src(['src/' + dir + '/**/*'], { nonegate: false })
     .pipe(gulp.dest('build/' + dir));
   });
 });
