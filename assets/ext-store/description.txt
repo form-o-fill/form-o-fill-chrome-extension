@@ -31,6 +31,7 @@ Permissions requested:
 - Bugfix: Workflow end condition moved to the end of last check cycle
 - Added a small feature usage report
 - Added safety dialogue before deleting tabs
+- jQuery 3.1.1
 
 ★ Version 3.0.0
 - The matching of rules will now by default be done when the HTML of the page is complete ("DOMContentLoaded" event)
