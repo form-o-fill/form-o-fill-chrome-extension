@@ -4,17 +4,20 @@ var FormFiller = {
   error: null,
   // This fills the field with a value
   fill: function(selector, value, beforeData, flags, meta) {
-    var domNodes = document.querySelectorAll(selector);
+
     var domNode = null;
     var fillMethod = null;
     state.currentRuleMetadata = meta;
 
+
+    // Recreate original value for "value" (function or string)
+    var parsedValue = JSONF.parse(value);
+
+    var domNodes = document.querySelectorAll(selector);
     if (domNodes.length === 0) {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_not_found"));
     }
     Logger.info("[form_filler.js] Filling " + domNodes.length + " fields on the page");
-
-    var parsedValue = JSONF.parse(value);
 
     // Call field specific method on EVERY field found
     //
@@ -48,6 +51,10 @@ var FormFiller = {
           return new FormError(selector, value, chrome.i18n.getMessage("fill_error_value_function", [ JSONF.stringify(e.message) ]));
         }
       }
+
+      //TODO: meta.within == string && parsedValue == "string" (FS, 2016-12-06)
+      //TODO: access iframe and search within qs().contentWindow.qsa() (FS, 2016-12-06)
+      //TODO: Check domain iframe != frame -> useful error message (FS, 2016-12-06)
 
       // Fill field only if value is not null or not defined
       if (parsedValue !== null && typeof parsedValue !== "undefined") {

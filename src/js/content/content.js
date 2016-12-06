@@ -56,6 +56,10 @@ chrome.runtime.onConnect.addListener(function (port) {
       Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value) + "; flags : " + JSONF.stringify(message.flags));
 
       // REMOVE START
+      if (message.within && message.within !== null) {
+        Logger.info("[content.js] Using within selector " + message.within);
+      }
+
       if (message.beforeData && message.beforeData !== null) {
         Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
       }
