@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    <pre>
+      iframe value should be "value of outer frame".
+      outer frame value should be "value of iframe".
+    </pre>
+    Outer field: <input value="Value from pageload" id="target" /><br>
+    <br />
+    <iframe src="23-iframe-2.html"></iframe>
+    <br />
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "iframe"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"iframe access\",\n  url: /23-iframe-1/,\n  fields: [{\n    within: \"iframe\",\n    selector: \"#target\",\n    value: \"value of outer frame\"\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info"></table>
+  </body>
+</html>
