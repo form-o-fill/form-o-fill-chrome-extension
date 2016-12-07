@@ -155,8 +155,13 @@ var _copyValueFunction = function() {
       return null;
     }
 
-    // element found
-    return $source.value;
+    // element found : input
+    if (typeof $source.value !== "undefined") {
+      return $source.value;
+    }
+
+    // Other elements: use innerText
+    return $source.innerText;
   }
   return null;
 };
