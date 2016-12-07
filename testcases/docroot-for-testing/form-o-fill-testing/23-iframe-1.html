@@ -8,12 +8,13 @@
   <body>
     <h1>TESTING SERVER RUNNING</h1>
     <pre>
-      iframe value should be "value of outer frame".
-      outer frame value should be "value of iframe".
+      left iframe : value should be "value of outer frame"
+      right iframe: value shouldn't change but should produce an error
     </pre>
     Outer field: <input value="Value from pageload" id="target" /><br>
     <br />
-    <iframe src="23-iframe-2.html"></iframe>
+    <iframe src="23-iframe-2.html" id="iframe1"></iframe>
+    <iframe src="https://form-o-fill.github.io/form-o-fill-testing/23-iframe-3.html" id="iframe2"></iframe>
     <br />
     Rules Import: <textarea id="form-o-fill-testing-import">{
   "workflows": [],
