@@ -133,12 +133,12 @@ var FormUtil = {
       // meta: meta data about the source of the data
       message = {
         "action": "fillField",
-        "within": field.within,
         "selector": field.selector,
         "value": JSONF.stringify(field.value),
         "flags": FormUtil.buildFlags(aRule, field),
         "beforeData": beforeData,
         "meta": {
+          "within": field.within,
           "ruleId": aRule.id,
           "name": aRule.nameClean,
           "fieldIndex": fieldIndex,

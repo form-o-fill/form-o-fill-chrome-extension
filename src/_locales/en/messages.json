@@ -132,6 +132,33 @@
   "fill_field_not_found": {
     "message": "Could not find field"
   },
+  "fill_within_not_found": {
+    "message": "Could not find any element matching within selector '$WITHIN$' on the page.",
+    "placeholders": {
+      "within": {
+        "content": "$1"
+      }
+    }
+  },
+  "fill_within_too_many_found": {
+    "message": "More than one element matching within selector '$WITHIN$' on the page.",
+    "placeholders": {
+      "within": {
+        "content": "$1"
+      }
+    }
+  },
+  "fill_within_security_error": {
+    "message": "Error while accessing iframe with selector '$WITHIN$'.\nOriginal error: $MESSAGE$",
+    "placeholders": {
+      "within": {
+        "content": "$1"
+      },
+      "message": {
+        "content": "$2"
+      }
+    }
+  },
   "fill_error_value_function": {
     "message": "Error while executing value-function: $MESSAGE$",
     "placeholders": {

@@ -7,13 +7,49 @@ var FormFiller = {
 
     var domNode = null;
     var fillMethod = null;
-    state.currentRuleMetadata = meta;
+    var baseDocument = document;
 
+    state.currentRuleMetadata = meta;
 
     // Recreate original value for "value" (function or string)
     var parsedValue = JSONF.parse(value);
 
-    var domNodes = document.querySelectorAll(selector);
+    // Is the "within" property used and a string?
+    // If yes we must do one of the following:
+    // - If the selector doesn't resolve -> report error
+    // - If the selector matches an iframe -> read DOM of iframe
+    // - If the selector matches another element -> change selector to "#within other selector"
+    // - If the selector matches multiple elements -> error!
+    if (typeof meta !== "undefined" && typeof meta.within === "string") {
+      var $within = document.querySelectorAll(meta.within);
+      if ($within.length === 0) {
+        return new FormError(meta.within, value, chrome.i18n.getMessage("fill_within_not_found", [ meta.within ]));
+      } else if ($within.length > 1) {
+        return new FormError(meta.within, value, chrome.i18n.getMessage("fill_within_too_many_found", [ meta.within ]));
+      }
+
+      $within = $within[0];
+
+      if ($within.nodeName === "IFRAME") {
+        // <iframe> -> deep dive
+        try {
+          baseDocument = $within.contentDocument;
+          Logger.info("[form_filler.js] base document changed to <frame> at " + meta.within);
+        } catch (exception) {
+          // Cross origin policy error?
+          if (exception.name === "SecurityError") {
+            return new FormError(meta.within, value, chrome.i18n.getMessage("fill_within_security_error", [ meta.within, exception.message ]));
+          }
+        }
+      } else {
+        // Other element -> change selector
+        selector = meta.within + " " + selector;
+        Logger.info("[form_filler.js] Changed selector to be '" + selector + "' because 'within' property was set.");
+      }
+    }
+
+    // Select nodes from either this page or an iframe
+    var domNodes = baseDocument.querySelectorAll(selector);
     if (domNodes.length === 0) {
       return new FormError(selector, value, chrome.i18n.getMessage("fill_field_not_found"));
     }
@@ -51,10 +87,6 @@ var FormFiller = {
           return new FormError(selector, value, chrome.i18n.getMessage("fill_error_value_function", [ JSONF.stringify(e.message) ]));
         }
       }
-
-      //TODO: meta.within == string && parsedValue == "string" (FS, 2016-12-06)
-      //TODO: access iframe and search within qs().contentWindow.qsa() (FS, 2016-12-06)
-      //TODO: Check domain iframe != frame -> useful error message (FS, 2016-12-06)
 
       // Fill field only if value is not null or not defined
       if (parsedValue !== null && typeof parsedValue !== "undefined") {

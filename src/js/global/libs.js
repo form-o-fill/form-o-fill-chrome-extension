@@ -148,7 +148,14 @@ var Libs = {
 // see Libs.h.copyValue
 var _copyValueFunction = function() {
   if (!Utils.isBgPage()) {
-    var $source = document.querySelector("##SELECTOR##");
+    var baseDocument = document;
+
+    // 'within' property set on this field definition?
+    if (typeof state.currentRuleMetadata === "object" && typeof state.currentRuleMetadata.within === "string") {
+      baseDocument = document.querySelector(state.currentRuleMetadata.within).contentDocument;
+    }
+
+    var $source = baseDocument.querySelector("##SELECTOR##");
     if ($source === null) {
       // element not found
       Libs.setThrobberText(chrome.i18n.getMessage("lib_h_copyvalue_field_not_found", [ "##SELECTOR##" ]));
