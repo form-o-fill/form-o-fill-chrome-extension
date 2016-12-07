@@ -22,17 +22,18 @@
     "tabSettings": [
       {
         "id": "1",
-        "name": "iframe"
+        "name": "Rules"
       }
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  name: \"iframe access\",\n  url: /23-iframe-1/,\n  fields: [{\n    within: \"iframe\",\n    selector: \"#target\",\n    value: \"value of outer frame\"\n  }]\n}\n];",
+        "code": "var rules = [{\n  \"name\": \"iframe : same domain\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"#iframe1\",\n    \"selector\": \"input[type=text]\",\n    \"value\": \"value of outer frame\"\n  }]\n}, {\n  \"name\": \"iframe : same domain; value function\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"#iframe1\",\n    \"selector\": \"input[type=text]\",\n    \"value\": function() {\n      return \"from value function\";\n    }\n  }]\n}, {\n  \"name\": \"iframe : same domain; copyValue function\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"#iframe1\",\n    \"selector\": \"input[type=text]\",\n    \"value\": Libs.h.copyValue(\"#copyfrom\")\n  }]\n}, {\n  \"name\": \"iframe : different domain (error)\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"#iframe2\",\n    \"selector\": \"input[type=text]\",\n    \"value\": \"value of outer frame\"\n  }]\n}, {\n  \"name\": \"iframe : same domain; within DOM not found (error)\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"#not-existing\",\n    \"selector\": \"input[type=text]\",\n    \"value\": \"value of outer frame\"\n  }]\n}, {\n  \"name\": \"iframe : same domain; multiple DOM els found (error)\",\n  \"url\": /23-iframe-1.html/,\n  \"fields\": [{\n    \"within\": \"iframe\",\n    \"selector\": \"input[type=text]\",\n    \"value\": \"value of outer frame\"\n  }]\n}\n];",
         "tabId": 1
       }
     ]
   }
-}</textarea>
+}
+</textarea>
     <button id="form-o-fill-testing-import-submit" value="import">Import</button>
     <table id="form-o-fill-testing-info"></table>
   </body>
