@@ -50,8 +50,8 @@ var Logger = {
   },
   _dateOptions: function() {
     return {year: "numeric", month: "numeric", day: "numeric",
-           hour: "numeric", minute: "numeric", second: "numeric",
-           hour12: false};
+      hour: "numeric", minute: "numeric", second: "numeric",
+      hour12: false};
   },
   store: function(msg) {
     this.load().then(function (entries) {
