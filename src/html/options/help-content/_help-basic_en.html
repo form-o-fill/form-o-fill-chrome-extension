@@ -124,6 +124,15 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
+    Limits the <code>selector</code> to an area specified by the <code>within</code> CSS selector.<br />
+    Use this if you want to fill a form inside an <code>iframe</code>!
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;within: "#my-iframe", <--- Fills "#myfield" inside "#my-iframe"
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
     Only fill this field if currently empty.<br />
     Can also be set for the whole rule (see above).
     Can be omitted and defaults to <code>false</code>.

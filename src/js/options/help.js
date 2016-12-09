@@ -9,6 +9,7 @@ jQuery(document).on("i18n-loaded", function (event, pageName) {
       "help-filling",
       "help-editor",
       "help-basic",
+      "help-iframe",
       "help-functions",
       "help-screenshot",
       "help-libraries",

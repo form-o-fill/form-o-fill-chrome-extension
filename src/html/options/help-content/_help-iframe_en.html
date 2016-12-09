@@ -1,0 +1,56 @@
+<a name="help-iframe"></a>
+<h3>Selecting forms inside iframes</h3>
+<p>
+  If the form you want fill is contained inside an &lt;iframe&gt; you can use the <code>within</code> property
+  of a field definition to scope the <code>selector</code> to the frame.
+</p>
+<div class="block-of-code">
+  <div class="explaining"><br /><br /><br /><br /><br /></div>
+  <div class="code">
+    var rules = [{<br />
+    &nbsp;&nbsp;name: "This is my first rule. So excited!",<br />
+    &nbsp;&nbsp;url: /^http.*test.html$/,<br />
+    &nbsp;&nbsp;fields: [{<br />
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Form-O-Fill will look for a &lt;iframe&gt; tag but you can use any <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Getting_Started/Selectors">CSS selector</a> here.<br />
+    Just make sure the <code>within</code> selector matches <em>only one</em> element.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;within: "iframe",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    The selector to be used <em>inside</em> the iframe.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    The value to fill the field with.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;value: "Nyan Nyan Nyan",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;}]
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }];
+  </div>
+</div>
