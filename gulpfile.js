@@ -191,7 +191,7 @@ gulp.task('popupJs', ['clean'], function () {
 //
 gulp.task('copyUnchanged', ['clean'], function() {
   ["fonts", "images", "vendor", "_locales"].forEach(function (dir) {
-    gulp.src(['src/' + dir + '/**/*'], { nonegate: false })
+    gulp.src(['src/' + dir + '/**/*' ], { nonegate: false })
     .pipe(gulp.dest('build/' + dir));
   });
 });

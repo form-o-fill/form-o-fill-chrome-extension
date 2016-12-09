@@ -14,7 +14,7 @@ global.jsdom = require("jsdom");
 global.chrome = require("./support/chrome_api.js");
 
 // jQuery loaded with the jsDOM window
-global.jQuery = require("./support/jquery.js")(jsdom.jsdom().parentWindow);
+global.jQuery = require("./support/jquery.js")(jsdom.jsdom().defaultView);
 
 global.document = jsdom.jsdom();
 
