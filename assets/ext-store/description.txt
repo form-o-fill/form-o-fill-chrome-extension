@@ -44,41 +44,7 @@ Permissions requested:
 - Add option to stop Form-O-Fill from activating when switching tabs
 - If using autorun with a msec value you can now see the seconds until activation in the extensions's icon
 
-★ Version 2.7.3
-- Add Libs.h.select and Libs.h.unselect for radiobuttons and checkboxes
-- Add context.getVar to extract JS variables from the page the rule runs in
-- Bugfix: Show form filling errors in options even when options are already open
-- autorun property takes a number of milliseconds to wait until auto-execution
-
-★ Version 2.7.2.1
-- Try to fix the strangest of chrome API bugs. ¯\_(ツ)_/¯
-
-★ Version 2.7.1
-- Fixed workflow detection in some failing cases
-
-★ Version 2.7.0
-- Added remote url import using an encrypted file format and a password
-- Fixed a bug with font rendering in popup
-- Fixed a bug that made Libs.h.copyValue useless [build related]
-
-★ Version 2.6.0
-- Added on demand loading of moment.js and chance.js in background page. Reduces memory consumption.
-- Added Libs.h.displayMessage("some text"). Use it to display custom messages while the rule is running.
-- Added remote rules. You can import rules via http/https. Includes auto-update.
-- Added one-click import URLs for remote rules import. Try http://form-o-fill.github.io/import-remote-rules
-- Added Libs.h.copyValue("#some-selector") to copy a value from another field.
-- Fixed bug regarding duplicate event listener attachment.
-
-★ Version 2.5.0
-- Added 'after' function as a complement to the 'before' function.
-- Added setupContent and teardownContent. Work like before/after only executed inside the content page.
-- Added "automatic rematch" mode that searches for matching rules every two seconds and not only on page load.
-- Added "color" attribute for rule definitions. Colors rule in popup. Use for grouping.
-- Bugfix: rules with no name appeared in workflow dropdown.
-- Bugfix: screenshots broken after changing quality setting
-- Optimization: remove jQuery dependency from popup.
-
-★ Version 1.1.1 - 2.4.0
+★ Version 1.1.1 - 2.7.3
 - See "Changelog" in extension options
 
 Find the source at
