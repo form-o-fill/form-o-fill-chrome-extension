@@ -2,7 +2,7 @@
 <h3>The context object in before/after functions</h3>
 <p>
   The context object passed as the before/after functions second parameter has a certain structure.<br />
-  It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>), one to store and retrieve data between rule executions (<code>.storage</code>) and an access function for javascript variables in the content page (<code>.getVar()</code>).
+  It contains a method that describes the URL form-o-fill is working in (<code>.url</code>), a method to find HTML in the webpage (<code>.findHtml()</code>), one to store and retrieve data between rule executions (<code>.storage</code>), an access function for javascript variables in the content page (<code>.getVar()</code>) and some runtime information about rule execution (<code>.state</code>).
 </p>
 
 <h3>The .url part of the context</h3>
@@ -103,4 +103,34 @@
     }
   }]
   ...
+</pre>
+
+<a name="help-beforecontext-state"></a>
+<h3>State of the system while the rules are executing</h3>
+<p>
+  You can access some information inside before functions that give you hints about the state of the rule execution.<br />
+  This information is stored inside the <code>context.state</code> object.
+</p>
+<p>
+  Contained within:<br />
+  <code>context.state.ruleManuallyTriggered</code>: <code>true</code> if the rule was triggered manually by the user clicking the extension button or a rule in the popup, <code>false</code> otherwise.<br />
+  <code>context.state.ruleAutomaticallyTriggered</code>: <code>true</code> if the rule was triggered by the "<a href="#help-basic">autorun</a>" feature, <code>false</code> otherwise.<br />
+  <code>context.state.ruleRunningInWorkflow</code>: <code>true</code> if the rule is running as part of a workflow step, <code>false</code> otherwise.
+</p>
+<p>A simple rule demonstrating the state:</p>
+<pre>
+var rules = [{
+  "name": "The default rule",
+  "url": "https://form-o-fill.github.io/tutorial/tour-1.html",
+  "before": function(resolve, context) {
+    console.warn("Rule manually triggered? %s", context.state.ruleManuallyTriggered);
+    console.warn("Rule automatically triggered? %s", context.state.ruleAutomaticallyTriggered);
+    console.warn("Rule part of workflow? %s", context.state.ruleRunningInWorkflow);
+    resolve();
+  },
+  "fields": [{
+    "selector": "input[type=text]",
+    "value": "Welcome!"
+  }]
+}
 </pre>
