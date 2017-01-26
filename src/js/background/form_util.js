@@ -281,6 +281,13 @@ var FormUtil = {
 
     return prepFunctions;
   },
+  ruleState: function() {
+    return {
+      ruleManuallyTriggered: state.ruleRuntime.triggered === "manual",
+      ruleAutomaticallyTriggered: state.ruleRuntime.triggered === "autorun",
+      ruleRunningInWorkflow: state.ruleRuntime.partOfWorkflow
+    };
+  },
   createContext: function() {
     // The context is passed as the second argument to the before function.
     // It represents to environment in which the rule is executed.
@@ -290,7 +297,8 @@ var FormUtil = {
       url: Utils.parseUrl(state.lastActiveTab.url),
       findHtml: FormUtil.createGrabber(state.lastActiveTab.id),
       storage: FormUtil.storage,
-      getVar: FormUtil.createGetVarPromise(state.lastActiveTab.id)
+      getVar: FormUtil.createGetVarPromise(state.lastActiveTab.id),
+      state: FormUtil.ruleState()
     };
   },
   generateSetupContentPromise: function(setupContentFunc, port) {

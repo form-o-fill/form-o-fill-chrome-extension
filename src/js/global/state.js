@@ -6,6 +6,10 @@ var State = function State() {
   this.optionSettings = {};
   this.decryptionPassword = null;
   this.forceRunOnLoad = false;
+  this.ruleRuntime = {
+    triggered: "manually",
+    partOfWorkflow: false
+  };
 };
 
 var state = new State();

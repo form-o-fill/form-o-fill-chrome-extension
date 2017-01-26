@@ -120,11 +120,19 @@ var onTabReadyRules = function(tabId) {
             } else if (lastMatchingRules[0].autorun === true && !state.optionSettings.reevalRules) {
               // If the rule is marked as "autorun", execute the rule if only one was found.
               Logger.info("[bj.js] Rule is set to autorun true");
+
+              // Set state -> rule was triggered via autorun
+              state.ruleRuntime.triggered = "autorun";
+
               FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
             } else if (parseInt(lastMatchingRules[0].autorun, 10) > 0  && !state.optionSettings.reevalRules) {
               //
               // The autorun execution may be delayed by <param> msecs
               //
+
+              // Set state -> rule was triggered via autorun
+              state.ruleRuntime.triggered = "autorun";
+
               var timeout = parseInt(lastMatchingRules[0].autorun, 10);
               Logger.info("[bj.js] Rule is set to autorun delay: " + timeout + " msec");
 
@@ -172,11 +180,14 @@ var onTabReadyWorkflow = function() {
         resolve({status: "not_running", runRule: true});
         return;
       }
+      // Set state -> rule is running as part of workflow
+      state.ruleRuntime.partOfWorkflow = true;
 
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
       Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
       badge.setText("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
+
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if (typeof rule === "undefined") {
@@ -302,6 +313,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
 // This event will only fire if NO POPUP is set
 // This is the case when only one rule matches
 chrome.browserAction.onClicked.addListener(function (){
+  // Set state -> rule is triggered manually
+  state.ruleRuntime.triggered = "manual";
+  state.ruleRuntime.partOfWorkflow = false;
+
   FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
 });
 
@@ -313,11 +328,16 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // From popup.js:
   // This receives the index of the rule to apply when there is more than one match
   if (message.action === "fillWithRule") {
+    // Set state -> rule is triggered manually
+    state.ruleRuntime.triggered = "manual";
+    state.ruleRuntime.partOfWorkflow = false;
+
     Logger.info("[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id);
     // Find the rule by id
     var rules = lastMatchingRules.filter(function (rule) {
       return rule.id === message.id;
     });
+
     FormUtil.applyRule(rules[0], state.lastActiveTab);
     sendResponse(true);
   }
@@ -325,6 +345,10 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // From popup.js:
   // Apply a workflow starting at the first step / rule
   if (message.action === "fillWithWorkflow") {
+    // Set state -> rule is running as part of workflow
+    state.ruleRuntime.triggered = "manual";
+    state.ruleRuntime.partOfWorkflow = true;
+
     // Load previously saved matching workflows
     Workflows.findById(message.id).then(function prLoadMatches(matchingWf) {
 
