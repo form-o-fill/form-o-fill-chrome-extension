@@ -544,15 +544,18 @@ UsageReport.prototype._tabsCount = function() {
   return jQuery("[data-tab-id]").length;
 };
 
-
 // Initialize usage report
 jQuery(function() {
   Storage.load(Utils.keys.usageReport).then(function(data) {
-    if (typeof data === "undefined") {
-      var usageReport = new UsageReport();
-      usageReport.init(settings.current);
-      jQuery("#modalusagereport").show();
+    if (typeof data === "undefined" || data === null) {
+      Rules.all().then(function(rules) {
+        // Only show if the user has more than one rule
+        if (rules.length > 1) {
+          var usageReport = new UsageReport();
+          usageReport.init(settings.current);
+          jQuery("#modalusagereport").show();
+        }
+      });
     }
   });
 });
-
