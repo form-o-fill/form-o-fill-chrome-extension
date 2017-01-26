@@ -26,6 +26,10 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 3.3.0
+- Added: context.state in before functions for runtime information
+- Fix: only show usage report modal when the user has more than one rule
+
 ★ Version 3.2.0
 - Added: "within" property on field definitions to enable filling of iframes
 - Libs.h.copyValue works with non input fields
