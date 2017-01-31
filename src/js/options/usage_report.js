@@ -88,6 +88,9 @@ var UsageReport = function() {
     "_workflows-used": "Other: Using workflows",
     "workflows-used": "",
 
+    "_chrome-version": "Other: Chrome Version",
+    "chrome-version": "",
+
     "_before-function-used": "Before/After: 'before' function used",
     "before-function-used": "",
 
@@ -138,6 +141,7 @@ var UsageReport = function() {
 
     "_tabs-count": "Counts: Total number of tabs in editor",
     "tabs-count": ""
+
   };
 
   this.allFields = [];
@@ -542,6 +546,10 @@ UsageReport.prototype._rulesFieldsCount = function() {
 
 UsageReport.prototype._tabsCount = function() {
   return jQuery("[data-tab-id]").length;
+};
+
+UsageReport.prototype._chromeVersion = function() {
+  return (/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [0,0])[1];
 };
 
 // Initialize usage report
