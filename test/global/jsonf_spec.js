@@ -33,6 +33,50 @@ describe("JSONF", function(){
     expect(JSONF.parse(serialized)()).to.eq(42);
   });
 
+  describe("ES2015 functions", () => {
+    //    ((?:.*?)|(?:\((.*?)\)))\s*=>\s*((?:.+[;\n])|(?:\{[\s\S]*?\}))
+
+    //(p1, p2, p3) => {\n      return 42;\n    }
+    //() => {\n      return 42;\n    }
+    //([a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c;
+    //([a, b] = [1, 2], {x: c} = {x: a + b}) => a + b + c
+    //() => 1;
+    //() => 1
+    //singleParam => { return singleParam }
+    it("works with version 1", () => {
+      var func = (resolve, context) => {
+        return 42;
+      };
+      var serialized = JSONF.stringify(func);
+      expect(serialized).to.eq("\"(resolve, context) => {\\n        return 42;\\n      }\"")
+      expect(JSONF.parse(serialized)()).to.eq(42);
+    });
+
+    it("works with version 2", () => {
+      var func = (resolve, context) => { return 42; };
+      var serialized = JSONF.stringify(func);
+      expect(JSONF.parse(serialized)()).to.eq(42);
+    });
+
+    it("works with version 3", () => {
+      var func = () => { return 42; };
+      var serialized = JSONF.stringify(func);
+      expect(JSONF.parse(serialized)()).to.eq(42);
+    });
+
+    it("works with version 4", () => {
+      var func = (a) => a;
+      var serialized = JSONF.stringify(func);
+      expect(JSONF.parse(serialized)(42)).to.eq(42);
+    });
+
+    it("works with version 5", () => {
+      var func = singleParam => { return singleParam };
+      var serialized = JSONF.stringify(func);
+      expect(JSONF.parse(serialized)(43)).to.eq(43);
+    });
+  });
+
   it("works with different formatted functions (#27)", function(){
     /*eslint-disable brace-style*/
     var func = function()
