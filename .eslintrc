@@ -9,7 +9,7 @@
 ---
   env:
     browser: true
-    es2015: true
+    es6: true
   globals:
     module: true
     chrome: true
