@@ -343,7 +343,7 @@ var FormUtil = {
       Logger.info("[form_util.js] Got before data: " + JSONF.stringify(beforeData));
 
       // Lets see if we got any errors thrown inside the executed before function
-      var filteredErrors = beforeData.filter(function filteredErrors(beforeFunctionData) {
+      var filteredErrors = beforeData.filter(function filterErrors(beforeFunctionData) {
         return beforeFunctionData && beforeFunctionData.hasOwnProperty("error");
       });
 
