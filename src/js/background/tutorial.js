@@ -1,4 +1,4 @@
-/*global Rules onTabReadyRules Logger Utils Storage Workflows state */
+/*global Rules onTabReadyRules Logger Utils Storage Workflows state JSONF */
 
 // Handler for receiving messages from defined
 // webpages (see manifest.json -> externally_connectable).
@@ -39,18 +39,25 @@ Tutorial.importDumpHandler = function(request) {
   });
 };
 
+Tutorial.getExportableData = function() {
+  return new Promise(function(resolve) {
+    Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
+      var exportJson = {
+        workflows: workflowsAndRules[0],
+        rules: workflowsAndRules[1]
+      };
+      resolve(exportJson);
+    });
+  });
+};
+
 Tutorial.backupCurrentRulesHandler = function() {
-  Promise.all([Workflows.exportDataJson(), Rules.exportDataJson()]).then(function(workflowsAndRules) {
-    var exportJson = {
-      workflows: workflowsAndRules[0],
-      rules: workflowsAndRules[1]
-    };
-    Logger.info("[bg/tutorial.js] Backing up current rules (" + workflowsAndRules[1].length + ") and workflows (" + workflowsAndRules[0] + ")");
+  Tutorial.getExportableData().then(function(exportJson) {
+    Logger.info("[bg/tutorial.js] Backing up current rules (" + exportJson.workflows.length + ") and workflows (" + exportJson.rules.length + ")");
     didBackup = true;
     Storage.save(exportJson, Utils.keys.tutorialDataBackup);
   });
 };
-
 
 Tutorial.restoreBackedUpRulesHandler = function() {
   Storage.load(Utils.keys.tutorialDataBackup)
@@ -59,9 +66,9 @@ Tutorial.restoreBackedUpRulesHandler = function() {
 
 // Handler for request from the tutorial site
 /*eslint-disable complexity*/
-var tutorialMessagesListener = function tutorialMessagesListener(request, sender) {
+var tutorialMessagesListener = function tutorialMessagesListener(request, sender, responseCb) {
   if (!Tutorial.isValidMessageSourceForTutorial(sender) || state.lastActiveTab === null) {
-    return;
+    return false;
   }
 
   // Activate a tutorial when the user opens the options
@@ -80,6 +87,16 @@ var tutorialMessagesListener = function tutorialMessagesListener(request, sender
   if (request.action === "backupCurrentRules" && !didBackup) {
     Tutorial.backupCurrentRulesHandler();
   }
+
+  // export current rules
+  if (request.action === "exportCurrentRules") {
+    Tutorial.getExportableData().then(function(exportJson) {
+      responseCb(btoa(JSONF.stringify(exportJson)));
+    });
+    return true;
+  }
+
+  return false;
 };
 
 /*eslint-enable complexity*/
