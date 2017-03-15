@@ -519,6 +519,6 @@ chrome.alarms.onAlarm.addListener(alarmListener);
 // install listener for remote rules import requests
 RemoteImport.listenToExternal();
 
-// install listener for messages from content page whil filling forms
+// install listener for messages from content page while filling forms
 FormUtil.listenForContentMessages();
 
