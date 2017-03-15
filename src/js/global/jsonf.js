@@ -33,7 +33,7 @@ var JSONF = {
       var rfunc = /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m;
 
       // A regex for es2015 arrow functions
-      var rarrowFunc = /\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}/m;
+      var rarrowFunc = /\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}(?!`)/m;
       var rarrowFuncImplRet = /\((.*?)\)\s*=>\s*([^;\n]*)/;
 
       // A regex for regexes
