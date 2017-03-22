@@ -1,6 +1,7 @@
 /*eslint no-new-func:0, complexity: 0*/
 var JSONF = {
   _undef: "**JSONF-UNDEFINED**",
+  _es6ArrowFuncDetect: /\s+=>\s+/,
   stringify: function(object) {
     return JSON.stringify(object, this._serializer, 2);
   },
@@ -13,7 +14,7 @@ var JSONF = {
       return JSONF._undef;
     }
 
-    // Is a FUNCTION or REGEXP ?
+    // Is a FUNCTION (ES5 or ES6) or REGEXP ?
     if (value !== null && (typeof value === "function" || typeof value.test === "function")) {
       return value.toString();
     }
@@ -24,7 +25,7 @@ var JSONF = {
     // 1. not a function
     // 2. not a regex
     // 3. not an es2015 arrow function
-    if (key === "" && typeof value === "string" && value.indexOf("function") !== 0 && value.indexOf("/") !== 0 && /\s*=>\s*/.test(value) === false) {
+    if (key === "" && typeof value === "string" && value.indexOf("function") !== 0 && value.indexOf("/") !== 0 && JSONF._es6ArrowFuncDetect.test(value) === false) {
       return value;
     }
 
@@ -33,8 +34,8 @@ var JSONF = {
       var rfunc = /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m;
 
       // A regex for es2015 arrow functions
-      var rarrowFunc = /\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}(?!`)/m;
-      var rarrowFuncImplRet = /\((.*?)\)\s*=>\s*([^;\n]*)/;
+      var rarrowFunc = /^\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}(?!`)/;
+      var rarrowFuncImplRet = /^\((.*?)\)\s*=>\s*([^;\n]*)/;
 
       // A regex for regexes
       var rregexp = /^\/(.*?)\/$/m;

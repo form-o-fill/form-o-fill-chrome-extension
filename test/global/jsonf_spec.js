@@ -1,3 +1,4 @@
+/*eslint-disable no-unused-vars, brace-style*/
 var JSONF = require("../../src/js/global/jsonf.js");
 
 describe("JSONF", function(){
@@ -34,7 +35,12 @@ describe("JSONF", function(){
   });
 
   describe("ES2015 functions", () => {
-    //    ((?:.*?)|(?:\((.*?)\)))\s*=>\s*((?:.+[;\n])|(?:\{[\s\S]*?\}))
+
+    it("serializes ES2015 arrow functions", () => {
+      var func = (p1, p2) => { return "return"; };
+      var serialized = JSONF.stringify(func);
+      expect(serialized).to.eq("\"(p1, p2) => { return \\\"return\\\"; }\"");
+    });
 
     //(p1, p2, p3) => {\n      return 42;\n    }
     //() => {\n      return 42;\n    }
@@ -48,7 +54,7 @@ describe("JSONF", function(){
         return 42;
       };
       var serialized = JSONF.stringify(func);
-      expect(serialized).to.eq("\"(resolve, context) => {\\n        return 42;\\n      }\"")
+      expect(serialized).to.eq("\"(resolve, context) => {\\n        return 42;\\n      }\"");
       expect(JSONF.parse(serialized)()).to.eq(42);
     });
 
@@ -71,9 +77,22 @@ describe("JSONF", function(){
     });
 
     it("works with version 5", () => {
-      var func = singleParam => { return singleParam };
+      var func = singleParam => { return singleParam; };
       var serialized = JSONF.stringify(func);
       expect(JSONF.parse(serialized)(43)).to.eq(43);
+    });
+
+    it("serializing works with a field definition example", () => {
+      let serialized = "{\"value\": \"(p1, p2) => { return \\\"return\\\"; }\"}";
+      let deserialized = JSONF.parse(serialized);
+      expect(deserialized.value(1,2)).to.eq("return");
+    });
+
+    it("works with template literals", () => {
+      var func = (a) => `VALUE ${a}`;
+      let serialized = JSONF.stringify(func);
+      let deserialized = JSONF.parse(serialized);
+      expect(deserialized("1")).to.eq("VALUE 1");
     });
   });
 
