@@ -3,7 +3,7 @@
   "name": "Form-O-Fill - The programmable form filler",
   "short_name": "Form-O-Fill",
   "description": "The programmable form filler for developers using javascript functions.",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "33",
   "homepage_url": "https://form-o-fill.github.io/",
