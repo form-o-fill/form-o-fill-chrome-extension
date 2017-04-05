@@ -91,7 +91,8 @@ var tutorialMessagesListener = function tutorialMessagesListener(request, sender
   // export current rules
   if (request.action === "exportCurrentRules") {
     Tutorial.getExportableData().then(function(exportJson) {
-      responseCb(btoa(JSONF.stringify(exportJson)));
+      var code = btoa(unescape(encodeURIComponent(JSONF.stringify(exportJson))));
+      responseCb(code);
     });
     return true;
   }
