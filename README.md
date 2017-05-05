@@ -50,7 +50,7 @@ Here are a few "rules" we like to adhere to:
 - Thank you!
 
 # TESTING
-*Mocha*: See http://visionmedia.github.io/mocha/  
+*Mocha*: See http://mochajs.org/  
 Base testing framework providing describe/it/...
 
 *Chai*: http://chaijs.com/  
