@@ -50,6 +50,10 @@ var ruleSummaryYesNo = function(selector, foundTheRule) {
 //
 // Refresh all items in the rule summary
 var ruleSummaryRefreshByRule = function(rule) {
+  if (typeof rule === "undefined") {
+    return;
+  }
+
   ruleSummary.currentRule = rule;
 
   document.querySelector(".rule-fields-count").innerHTML = rule.fields.length;
@@ -101,7 +105,7 @@ var ruleSummaryRefresh = function() {
     if (line) {
       // Extract name:
       var nameMatches = line.match(/:\s*["'](.*?)["']/);
-      if (nameMatches[1] !== "") {
+      if (nameMatches && nameMatches[1] !== "") {
         ruleSummary.name = nameMatches[1];
       }
       document.querySelector(".rule-name").innerHTML = ruleSummary.name;
