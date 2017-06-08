@@ -196,7 +196,7 @@ var FormUtil = {
       return new Promise(function (resolve) {
         var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
         chrome.tabs.sendMessage(lastActiveTabId, grabberMessage, function returnFromContentGrabber(content) {
-          Logger.info("[form_util.js] Received content from 'grabber': '" + content + "'");
+          Logger.info("[form_util.js] Received content from 'grabber': %o", content);
           resolve(content);
         });
       });
