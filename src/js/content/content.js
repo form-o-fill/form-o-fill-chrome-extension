@@ -180,7 +180,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       } else if (domElements.length === 1) {
         responseCb(domElements[0].outerHTML);
       } else {
-        responseCb(domElements.map(function(el) {
+        responseCb(domElements.map(function(index, el) {
           return el.outerHTML;
         }));
       }
