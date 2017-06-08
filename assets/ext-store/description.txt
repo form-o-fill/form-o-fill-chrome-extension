@@ -26,7 +26,11 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
-★ Version 3.4.0
+★ Version 3.4.2
+- Fix: context.findHtml() now returns an array of HTML elements if multiple found
+- Fix: rule summary now more robust
+
+★ Version 3.4.1
 - You can use ES2015 arrow functions for value functions
 - Allow tutorials to trigger the export of all rules right from the tutorial page
 
