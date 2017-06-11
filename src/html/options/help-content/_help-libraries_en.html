@@ -161,6 +161,35 @@
     &nbsp;&nbsp;value: Libs.h.select
   </div>
 </div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type='text']",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Strip HTML from strings. Useful for the return value of<br />
+    <code>context.findHtml</code>.<br />
+    &nbsp;
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;return Libs.h.stripTags($data.someHtml);<br />
+    &nbsp;&nbsp;}
+  </div>
+</div>
+
 
 <div class="block-of-code">
   <div class="explaining">

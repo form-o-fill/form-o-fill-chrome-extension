@@ -197,7 +197,13 @@ var FormUtil = {
         var grabberMessage = {"action": "grabContentBySelector", "message": selector.toString()};
         chrome.tabs.sendMessage(lastActiveTabId, grabberMessage, function returnFromContentGrabber(content) {
           Logger.info("[form_util.js] Received content from 'grabber': %o", content);
-          resolve(content);
+          var nodes = content.nodes;
+
+          // Array are transported as Objects so convert them back
+          if (content.count === 0 || content.count > 1) {
+            nodes = Array.from(nodes);
+          }
+          resolve(nodes);
         });
       });
     };

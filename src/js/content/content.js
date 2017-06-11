@@ -176,13 +176,14 @@ chrome.runtime.onConnect.addListener(function (port) {
         return $el;
       });
       if (domElements.length === 0) {
-        responseCb([]);
+        responseCb({count: 0, nodes: []});
       } else if (domElements.length === 1) {
-        responseCb(domElements[0].outerHTML);
+        responseCb({count: 1, nodes: domElements[0].outerHTML});
       } else {
-        responseCb(domElements.map(function(index, el) {
+        var elements = domElements.map(function(index, el) {
           return el.outerHTML;
-        }));
+        });
+        responseCb({count: elements.length, nodes: elements});
       }
     }
 

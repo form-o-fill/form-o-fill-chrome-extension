@@ -181,6 +181,7 @@ var _copyValueFunction = function() {
 //           Libs.h.displayMessage("Some text")    => shows a message to the user#
 //           Libs.h.select/unselect                => Activate/checks a field if it is a radiobutton/checkbox
 //                                                    and doesn't toggle on/off like Libs.h.click does.
+//           Libs.h.stripTags("<h1>content</h1>")  => Strips all tags from the string (eg. "content")
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode.click();
@@ -210,6 +211,16 @@ var valueFunctionHelper = {
   },
   unselect: function($domNode) {
     $domNode.prop("checked", false);
+  },
+  stripTags: function($domNodes) {
+    if (Object.prototype.toString.call($domNodes) === '[object Array]' && typeof $domNodes.map === "function") {
+      $domNodes = $domNodes.map(function($domNode) {
+        return $domNode.replace(/<(?:.|\n)*?>/gm, "");
+      });
+    } else {
+      $domNodes = $domNodes.replace(/<(?:.|\n)*?>/gm, "");
+    }
+    return $domNodes;
   }
 };
 Libs.add("h", valueFunctionHelper);

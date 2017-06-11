@@ -26,6 +26,10 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 3.4.3
+- Improved handling of multiple found nodes via .findHtml(). Now returns a real array
+- Libs.h.stripTags removes tags from HTML strings or arrays of strings
+
 ★ Version 3.4.2
 - Fix: context.findHtml() now returns an array of HTML elements if multiple found
 - Fix: rule summary now more robust
