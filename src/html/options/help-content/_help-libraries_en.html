@@ -1,19 +1,59 @@
 <a name="help-libraries"></a>
 <h3>Using libraries</h3>
-<p>
-  Form-O-Fill ships with two powerful libraries for creating test data.<br />
-  To create random data you can use <a href="http://chancejs.com/#basics" target="_blank">chance.js</a>.<br />
-  To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a>.<br />
-</p>
-<p>
-  Both test data related libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
-</p>
-<p>
-  There is also a library accessible as <code>Libs.h</code> which contains functions to use in your <a href="#help-functions">value function</a>.
-</p>
-<p>
-  This is how to use moment.js, chance.js and Libs.h:
-</p>
+<div class="anchor">
+  <p>
+    Form-O-Fill ships with two powerful libraries for creating test data.<br />
+    To create random data you can use <a href="http://chancejs.com/#basics" target="_blank">chance.js</a>.<br />
+    To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a>.<br />
+  </p>
+  <p>
+    Both test data related libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
+  </p>
+  <p>
+    There is also a library accessible as <code>Libs.h</code> which contains functions to use in your <a href="#help-functions">value function</a>.
+  </p>
+  <p>
+    This is how to use moment.js, chance.js and Libs.h:
+  </p>
+  <table class="floating-hint">
+    <tr>
+      <th>function</th>
+      <th>Purpose</th>
+    </tr>
+    <tr>
+      <td>Libs.chance.[ChanceJsFunction]</td>
+      <td>Calls <a href="http://chancejs.com/">chance.js</a> function</td>
+    </tr>
+    <tr>
+      <td>Libs.moment().[MomentJsFunction]</td>
+      <td>Calls <a href="http://momentjs.com/docs/">moment.js</a> function</td>
+    </tr>
+    <tr>
+      <td>Libs.h.click</td>
+      <td>Click the element</td>
+    </tr>
+    <tr>
+      <td>Libs.h.copyValue(".some-selector")</td>
+      <td>Copy the current value of that element to this element</td>
+    </tr>
+    <tr>
+      <td>Libs.h.select</td>
+      <td>Select a radio or checkbox field</td>
+    </tr>
+    <tr>
+      <td>Libs.h.unselect</td>
+      <td>Unselect a radio or checkbox field</td>
+    </tr>
+    <tr>
+      <td>Libs.h.stripTags("&lt;a>SomeHTML&lt;/a>")</td>
+      <td>Remove HTML tags from a string</td>
+    </tr>
+    <tr>
+      <td>Libs.h.screenshot("filename.png")</td>
+      <td>Save a screenshot</td>
+    </tr>
+  </table>
+</div>
 <div class="block-of-code">
   <div class="explaining">
     Inside a field definition ...

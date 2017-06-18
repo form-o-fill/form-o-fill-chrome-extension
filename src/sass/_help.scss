@@ -131,5 +131,25 @@
     vertical-align: middle;
     margin-right: 4px;
   }
+
+  .anchor {
+    position: relative;
+  }
+
+  .floating-hint {
+    width: 38%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid #ddd;
+
+    th {
+      background-color: #eee;
+    }
+
+    td {
+      padding: 5px 5px;
+    }
+  }
 }
 
