@@ -4,16 +4,17 @@
   <p>
     Form-O-Fill ships with two powerful libraries for creating test data.<br />
     To create random data you can use <a href="http://chancejs.com/#basics" target="_blank">chance.js</a>.<br />
-    To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a>.<br />
+    To create and manipulate dates, Form-O-Fill provides <a href="http://momentjs.com/docs/" target="_blank">moment.js</a> and if you are really into<br />
+    math then <a href="http://mathjs.org" target="_blank">math.js</a> is also included.<br />
   </p>
   <p>
-    Both test data related libraries are available as <code>Libs.chance</code> and <code>Libs.moment</code>
+    The libraries are available as <code>Libs.chance</code>, <code>Libs.moment</code> and <code>Libs.math</code>.
   </p>
   <p>
     There is also a library accessible as <code>Libs.h</code> which contains functions to use in your <a href="#help-functions">value function</a>.
   </p>
   <p>
-    This is how to use moment.js, chance.js and Libs.h:
+    This is how to use the library functions:
   </p>
   <table class="floating-hint">
     <tr>
@@ -27,6 +28,10 @@
     <tr>
       <td>Libs.moment().[MomentJsFunction]</td>
       <td>Calls <a href="http://momentjs.com/docs/">moment.js</a> function</td>
+    </tr>
+    <tr>
+      <td>Libs.math.[MathJsFunction]</td>
+      <td>Calls <a href="http://mathjs.com/docs/">math.js</a> function</td>
     </tr>
     <tr>
       <td>Libs.h.click</td>
@@ -126,6 +131,38 @@
     &nbsp;&nbsp;&nbsp;&nbsp;return Libs.moment().format();
   </div>
 </div>
+<div class="block-of-code">
+  <div class="explaining">
+    &nbsp;
+  </div>
+  <div class="code">
+    }, {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;selector: "input[type=text]",
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    Use <a href="http://mathjs.com/docs/" target="_blank">math.js</a> to fill it ...
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;value: function($element, $data) {
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
+    .. with some calculated units
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;&nbsp;&nbsp;return Libs.math.add(Libs.math.unit(1, "cm"), Libs.math.unit(10, "cm"));
+  </div>
+</div>
+
 <div class="block-of-code">
   <div class="explaining">
     &nbsp;

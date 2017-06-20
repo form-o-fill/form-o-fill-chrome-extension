@@ -35,6 +35,7 @@ var Utils = {
   reevalRulesInterval: 2000,
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
+    "vendor/math.js/math.min.js": { detectWith: /Libs\.math/, name: "math", onWindowName: "math" },
     "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
     "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
   },

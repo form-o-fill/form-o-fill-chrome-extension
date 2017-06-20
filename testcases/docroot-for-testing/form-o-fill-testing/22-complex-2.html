@@ -18,7 +18,7 @@
     <div class="element">ELEMENT2</div>
 
     Target 0:<input id="target0" type="text" value="value from pageload" /> ("set by setupContent")</br />
-    Target 1:<input id="target1" type="text" value="value from pageload" /> ("value by json.json via jQuery.getJSON")</br />
+    Target 1:<input id="target1" type="text" value="value from pageload" /> ("value by json.json via jQuery.getJSON"; only works when coming from first page!)</br />
     Target 2:<input id="target2" type="text" value="value from pageload" /> (Libs.chance.name: some name)</br />
     Target 3:<input id="target3" type="text" value="value from pageload" /> (Libs.moment.format: "2015-10-19T21:38:52+02:00")</br />
     Target 4:<input id="target4" type="text" value="value from pageload" /> (Libs.h.click: "clicked")</br />
@@ -35,6 +35,8 @@
     Target 15:<iframe src="22-complex-iframe.html" style="height: 30px" id="target15"></iframe> (within: "set by rule")</br />
     Target 16:<input id="target16" type="text" value="" /> (ES2016 arrow function: ES2015 =&gt; &lt;title&gt;Form-O-Fill Testpage&lt;/title&gt;)</br />
     Target 17:<input id="target17" type="text" value="value from pageload" /> (context.findHtml (multiple matches): "ELEMENT1,ELEMENT2"; Uses Libs.h.stripTags)<br />
+    Target 18:<iframe src="22-complex-iframe2-click-handler.html" style="height: 30px" id="target18"></iframe> (Libs.h.click works with handler attached to field; "handler wrote this")<br />
+    Target 19:<input id="target19" type="text" value="value from pageload" /> (Libs.math: "43 cm")<br />
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="22-complex.js"></script>
@@ -50,6 +52,7 @@
         }
         $timer.innerText = time;
       };
+      
       var timer = setInterval(countdown, itime);
     </script>
 

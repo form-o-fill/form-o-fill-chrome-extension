@@ -27,7 +27,8 @@
   "web_accessible_resources": [
     "html/options.html",
     "vendor/moment.js/moment-with-locales.min.js",
-    "vendor/chance.js/chance.js"
+    "vendor/chance.js/chance.js",
+    "vendor/math.js/math.min.js"
   ],
   "externally_connectable": {
     "matches": [

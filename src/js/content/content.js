@@ -183,7 +183,7 @@ chrome.runtime.onConnect.addListener(function (port) {
         var elements = domElements.map(function(index, el) {
           return el.outerHTML;
         });
-        responseCb({count: elements.length, nodes: elements});
+        responseCb({count: elements.length, nodes: jQuery.makeArray(elements)});
       }
     }
 
