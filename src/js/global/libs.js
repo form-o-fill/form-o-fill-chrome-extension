@@ -184,7 +184,7 @@ var _copyValueFunction = function() {
 //           Libs.h.stripTags("<h1>content</h1>")  => Strips all tags from the string (eg. "content")
 var valueFunctionHelper = {
   click: function($domNode) {
-    $domNode.click();
+    $domNode[0].click();
   },
   screenshot: function(saveAs) {
     chrome.runtime.sendMessage({action: "takeScreenshot", value: state.currentRuleMetadata, flag: saveAs});
