@@ -6,7 +6,7 @@ var jTab = function(tabIndex, name, isCurrent) {
 };
 
 // maximal tab count including (+)-tab
-var maxTabs = 7;
+var maxTabs = 15;
 
 // Clear tab settings
 /*eslint-disable no-unused-vars */
@@ -166,7 +166,7 @@ jQuery(function () {
 
   // Add a new tab
   jQuery(".tabs").on("click", "a.cmd-tabs-open", function (e) {
-    if (jQuery(".tab").length === maxTabs) {
+    if (jQuery(".editor .tab").length >= maxTabs) {
       Logger.info("[tabs.js] Max tab count reached");
       Utils.infoMsg(chrome.i18n.getMessage("opt_max_tabs_reached"));
       return;

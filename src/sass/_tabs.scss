@@ -1,12 +1,10 @@
 .tabcontainer {
   position: relative;
-  height: 45px;
   width: 100%;
 }
 
 .tabs {
   border-bottom: 1px solid #ddd;
-  position: absolute;
   width: 100%;
 }
 
@@ -16,7 +14,7 @@
   border-right: 1px solid #ddd;
   padding: 6px;
   display: inline-block;
-  margin-left:  10px;
+  margin-left: 5px;
   margin-bottom: -1px;
   border-radius: 3px 3px 0 0;
   cursor: pointer;
@@ -80,6 +78,9 @@
 
 .tabs .tab.current {
   border-bottom: 1px solid #fff;
+  .rule-count {
+    color: #111;
+  }
 }
 
 .tabs .tab.current input {

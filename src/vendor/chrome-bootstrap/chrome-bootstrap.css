@@ -66,6 +66,7 @@
 .chrome-bootstrap ul,
 .chrome-bootstrap ol {
   padding: 0;
+  margin-bottom: 2px;
 }
 .chrome-bootstrap li {
   list-style-type: none;
@@ -552,8 +553,13 @@
 }
 .chrome-bootstrap input[type='search']:disabled,
 .chrome-bootstrap input[type='text']:disabled {
-  color: #999;
+  color: #bbb;
 }
+
+.chrome-bootstrap input[type='text']:disabled + a + span{
+  color: #bbb;
+}
+
 .chrome-bootstrap select:hover:enabled,
 .chrome-bootstrap input[type='checkbox']:hover:enabled,
 .chrome-bootstrap input[type='radio']:hover:enabled,
