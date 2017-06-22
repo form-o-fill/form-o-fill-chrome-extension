@@ -186,7 +186,45 @@ var FormUtil = {
       });
     }
 
+    // Some JS to load from remote URLs?
+    if (typeof rule.loadContentJs !== "undefined") {
+      prUsedLibs = FormUtil.addLoadContentJsPr(prUsedLibs, rule.loadContentJs);
+    }
+
     return prUsedLibs;
+  },
+  addLoadContentJsPr: function(promises, urls) {
+    var loadUrls = [];
+
+    // Can be an array or a string
+    if (typeof urls === "string") {
+      loadUrls.push(urls);
+    } else if (typeof urls.forEach === "function") {
+      loadUrls = urls;
+    }
+
+    loadUrls.forEach(function(loadUrl) {
+      if (loadUrl.indexOf("https://") !== 0) {
+        Logger.warn("[b/form_util.js] Loading of '" + loadUrl + "' failed because it is not hosted on a https://* URL");
+      } else {
+        var code = `
+          var fofHead = document.querySelector('head');
+
+          var fofScript = document.createElement('script');
+          fofScript.async = false;
+          fofScript.src = '${loadUrl}';
+          fofHead.appendChild(fofScript);
+        `;
+
+        promises.push(new Promise(function(resolve) {
+          chrome.tabs.executeScript({code: code}, function() {
+            resolve();
+          });
+        }));
+      }
+    });
+
+    return promises;
   },
   createGrabber: function(lastActiveTabId) {
     // the grabber is passed as part of the context
