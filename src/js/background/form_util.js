@@ -204,24 +204,17 @@ var FormUtil = {
     }
 
     loadUrls.forEach(function(loadUrl) {
-      if (loadUrl.indexOf("https://") !== 0) {
-        Logger.warn("[b/form_util.js] Loading of '" + loadUrl + "' failed because it is not hosted on a https://* URL");
-      } else {
-        var code = `
-          var fofHead = document.querySelector('head');
+      var code = "var fofHead = document.querySelector('head'); " +
+                 "var fofScript = document.createElement('script'); " +
+                 "fofScript.async = false; " +
+                 "fofScript.src = '" + loadUrl + "'; " +
+                 "fofHead.appendChild(fofScript); ";
 
-          var fofScript = document.createElement('script');
-          fofScript.async = false;
-          fofScript.src = '${loadUrl}';
-          fofHead.appendChild(fofScript);
-        `;
-
-        promises.push(new Promise(function(resolve) {
-          chrome.tabs.executeScript({code: code}, function() {
-            resolve();
-          });
-        }));
-      }
+      promises.push(new Promise(function(resolve) {
+        chrome.tabs.executeScript({code: code}, function() {
+          resolve();
+        });
+      }));
     });
 
     return promises;
