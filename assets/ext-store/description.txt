@@ -29,6 +29,10 @@ Permissions requested:
 ★ Version 3.5.0
 - Fix: Sometimes a jQuery click handler won't trigger
 - Added math.js. Available as Libs.math
+- Allowed more tabs to be opened
+- Updated jQuery to 3.2.1
+- Updated chance.js to 1.0.4
+- Updated moment.js to 2.18.1
 
 ★ Version 3.4.3
 - Improved handling of multiple found nodes via .findHtml(). Now returns a real array
