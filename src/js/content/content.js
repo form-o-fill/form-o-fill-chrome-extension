@@ -142,29 +142,27 @@ chrome.runtime.onConnect.addListener(function (port) {
       // Parse and execute function
       var error = null;
 
-      var setupContentFunctionPr = Promise.resolve(function(r) {
-        r();
-      });
-
       try {
         var setupContentFunction = JSONF.parse(message.value);
 
         // Check if promises should be used:
         if (setupContentFunction.length > 0) {
-          setupContentFunctionPr = new Promise(function(resolve) {
+          var setupContentFunctionPr = new Promise(function(resolve) {
             setupContentFunction(resolve);
           });
+
+          setupContentFunctionPr.then(function() {
+            port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
+          });
         } else {
-          setupContentFunctionPr = Promise.resolve(setupContentFunction);
+          setupContentFunction();
+          port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
         }
       } catch (e) {
         Logger.error("[content.js] error while executing setupContent function");
         error = e.message;
       }
 
-      setupContentFunctionPr.then(function() {
-        port.postMessage({action: "setupContentDone", value: JSONF.stringify(error)});
-      });
     }
 
     // Execute teardownContent function
