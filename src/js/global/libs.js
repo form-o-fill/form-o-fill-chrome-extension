@@ -185,6 +185,7 @@ var _copyValueFunction = function() {
 var valueFunctionHelper = {
   click: function($domNode) {
     $domNode[0].click();
+    return null;
   },
   screenshot: function(saveAs) {
     chrome.runtime.sendMessage({action: "takeScreenshot", value: state.currentRuleMetadata, flag: saveAs});

@@ -210,6 +210,8 @@ var FormFiller = {
     });
   },
   _fillMethod: function(domNode) {
+    // Look for a method that reflects the "type" attribute
+    // of the found field.
     var fillMethod = this[this._typeMethod(domNode.type)];
     // Default is to set the value of the field if
     // no special function is defined for that type

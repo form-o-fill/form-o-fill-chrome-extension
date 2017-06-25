@@ -8,6 +8,10 @@ jQuery(function() {
     jQuery(this).val("clicked");
   });
 
+  jQuery("#target21").on("click", function() {
+    jQuery(this).html("clicked");
+  });
+
 });
 
 /*eslint-disable no-unused-vars */
