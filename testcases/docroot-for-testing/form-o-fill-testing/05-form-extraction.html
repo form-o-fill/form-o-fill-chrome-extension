@@ -7,7 +7,8 @@
   </head>
   <body class="types">
     <h1>TESTING SERVER RUNNING</h1>
-    <form action="#" method="post">
+    <form action="/a/path" method="post">
+      &lt;form action="#" method="post"&gt;<br />
       <input type="text" name="text" value="text" class="input-text">
       <input type="radio" name="radio" value="radio" checked="checked"> Radio
       <input type="checkbox" name="checkbox-value" value="checkbox" checked> Checkbox
@@ -39,6 +40,37 @@
       <textarea name="textarea" class="textarea">textarea</textarea>
     </form>
 
+
+    <form id="a-form" action="/a/form-id" method="post">
+      &lt;form id="a-form" action="/a/form-id" method="post"&gt;<br />
+      <input type="text" name="text" value="#a-form input[name='text']" />
+      <input type="text" name="text" id="a-form-field" value="#a-form-field" />
+    </form>
+
+    <form action="/there/are/two" method="post">
+      &lt;form action="/there/are/two" method="post"&gt;<br />
+    </form>
+
+    <form action="/there/are/two" method="post">
+      &lt;form action="/there/are/two" method="post"&gt;<br />
+      <input type="text" name="text" value="form[action='/there/are/two']" />
+    </form>
+
     <table id="form-o-fill-testing-info"></table>
+    <style>
+      form {
+        border: 2px solid #eee; 
+        padding: 10px;
+      }
+
+      input, textarea {
+        margin: 0;
+      }
+
+      body.types form input[type=text ] {
+        width: 50%;
+      }
+
+    </style>
   </body>
 </html>
