@@ -26,6 +26,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 3.6.0
+- Better selectors for extracted form fields
+
 ★ Version 3.5.0
 - Fix: Sometimes a jQuery click handler won't trigger
 - Added math.js. Available as Libs.math

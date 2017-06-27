@@ -1,4 +1,4 @@
-/*global jQuery, Rule, Logger, Utils*/
+/*global jQuery, Rule, Logger, Utils, CssSelectorGenerator */
 /* eslint no-unused-vars: 0 */
 var FormExtractor = {
   _knownElements: null,
@@ -45,6 +45,7 @@ var FormExtractor = {
       "name": "A rule for " + document.location.href,
       "fields": []
     };
+    var cssSelectorGenerator = new CssSelectorGenerator();
 
     this.knownElements().forEach(function (selector) {
       Logger.info("[form_extractor.js] Looking for '" + selector + "'");
@@ -54,7 +55,7 @@ var FormExtractor = {
         // Only include field if value !== null
         if (value !== null) {
           var field = {
-            "selector": extractor._selectorFor(this),
+            "selector": cssSelectorGenerator.getSelector(this),
             "value": value
           };
           ruleData.fields.push(field);
@@ -64,31 +65,9 @@ var FormExtractor = {
 
     return Rule.create(ruleData).prettyPrint();
   },
-  _selectorFor: function(domNode) {
-    var method = this._method("selector", domNode);
-    return method(domNode);
-  },
   _valueFor: function(domNode) {
     var method = this._method("value", domNode);
     return method(domNode);
-  },
-  _selectorDefault: function(domNode) {
-    return "input[name='" + domNode.name + "']";
-  },
-  _selectorButton: function(domNode) {
-    return "button[name='" + domNode.name + "']";
-  },
-  _selectorTextarea: function(domNode) {
-    return "textarea[name='" + domNode.name + "']";
-  },
-  _selectorSelectOne: function(domNode) {
-    return "select[name='" + domNode.name + "']";
-  },
-  _selectorSelectMultiple: function(domNode) {
-    return "select[name='" + domNode.name + "']";
-  },
-  _valueDefault: function(domNode) {
-    return domNode.value;
   },
   _valueCheckbox: function(domNode) {
     // if checked include the checkbox in the rule
@@ -122,6 +101,9 @@ var FormExtractor = {
     }
 
     return selected;
+  },
+  _valueDefault: function(domNode) {
+    return domNode.value;
   },
   _method: function(prefix, domNode) {
     var valueMethod = this[this._typeMethod(prefix, domNode.type)];
