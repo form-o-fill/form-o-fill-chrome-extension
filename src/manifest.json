@@ -49,7 +49,7 @@
       "jsBuild": [
         "vendor/jquery/jquery.min.js",
         "js/global.js",
-        "js/content.js"
+        "js/fof_content.js"
       ],
       "js": [
         "vendor/jquery/jquery.min.js",
@@ -69,7 +69,7 @@
         "js/content/form_extractor.js",
         "js/content/extract_instrumentation.js",
         "js/content/context_menu.js",
-        "js/content/content.js",
+        "js/content/fof_content.js",
         "js/content/testing.js"
       ],
       "css": [

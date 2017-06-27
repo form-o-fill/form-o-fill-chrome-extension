@@ -64,7 +64,7 @@ gulp.task('clean', ["announce"], function() {
 // ESLINT the javascript (BEFORE uglifier ran over it)
 //
 gulp.task('lint', function () {
-  return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/content.js', '!src/js/popup.js', '!src/js/options.js'])
+  return gulp.src(['src/js/*/*.js', '!src/js/background.js', '!src/js/fof_content.js', '!src/js/popup.js', '!src/js/options.js'])
   .pipe(plugins.eslint())
   .pipe(plugins.eslint.format())
   .pipe(plugins.eslint.failOnError());
@@ -139,12 +139,12 @@ gulp.task('backgroundJs', ['clean'], function () {
 });
 
 //
-// Build content.js
+// Build fof_content.js
 //
 gulp.task('contentJs', ['clean'], function () {
   return gulp.src("src/js/content/*.js")
   .pipe(plugins.replaceTask(replaceOpts))
-  .pipe(plugins.concat('content.js'))
+  .pipe(plugins.concat('fof_content.js'))
   .pipe(plugins.stripDebug())
   .pipe(plugins.uglify())
   .pipe(gulp.dest('build/js/'));
