@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body class="test-no-log">
+    <h1>TESTING SERVER RUNNING</h1>
+
+    <pre>
+      This runs a single rule continously until the field is submitted with the value "10"
+      in which case it will redirect to "01-all-types.html" 
+    </pre>
+
+    <form action="24-auto-reload.html" method="get" style="background-color: #eee; padding: 10px; margin: 10px;">
+      <input type="text" value="continue with number 10 in this field" />
+      <input type="submit" />
+    </form>
+
+    Rules Import: <textarea id="form-o-fill-testing-import"></textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+
+    <table id="form-o-fill-testing-info"></table>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+      // Simulate a POST + server logic + redirect
+      $("form").on("submit", function(e) {
+        if ($("input[type='text']").val() == "10") {
+          e.preventDefault();
+          window.location.href = "01-all-types.html";
+        }
+      });
+    
+    </script>
+  </body>
+</html>
