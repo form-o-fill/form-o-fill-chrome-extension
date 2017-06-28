@@ -18,7 +18,33 @@
       <input type="submit" />
     </form>
 
-    Rules Import: <textarea id="form-o-fill-testing-import"></textarea>
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "auto-reload"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"auto-reload page and retry entry\",\n  url: /24-auto-reload\\.html/,\n  autorun: true,\n  fields: [{\n    selector: \"input[type=text]\",\n    value: function() {\n      return Libs.math.randomInt(7,11);\n    }\n  }, {\n    selector: \"input[type=submit]\",\n    value: Libs.h.click\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  },
+  "settings": {
+    "alwaysShowPopup": false,
+    "decryptionPassword": "undefined",
+    "dontMatchOnTabSwitch": false,
+    "importActive": false,
+    "importUrl": "",
+    "jpegQuality": "60",
+    "matchOnLoad": false,
+    "reevalRules": false
+  }
+}</textarea>
     <button id="form-o-fill-testing-import-submit" value="import">Import</button>
 
     <table id="form-o-fill-testing-info"></table>
