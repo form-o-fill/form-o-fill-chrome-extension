@@ -4,7 +4,7 @@ var CssSelectorGenerator = function(options) {
     options = {};
   }
   this.options = {
-    selectors: ['id', 'class', 'tag', 'nthchild']
+    selectors: ['id', 'class', 'tag', 'attribute', 'nthchild']
   };
 };
 
@@ -85,7 +85,7 @@ CssSelectorGenerator.prototype.getAttributeSelectors = function(element) {
   for (k = 0, len = ref.length; k < len; k++) {
     attribute = ref[k];
     if (ref1 = attribute.nodeName, blacklist.indexOf(ref1) < 0) {
-      result.push("[" + attribute.nodeName + "=" + attribute.nodeValue + "]");
+      result.push("[" + attribute.nodeName + "='" + attribute.nodeValue + "']");
     }
   }
   return result;
