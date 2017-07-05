@@ -78,29 +78,13 @@ var FormExtractor = {
     return domNode.checked ? domNode.value : null;
   },
   _valueSelectOne: function(domNode) {
-    var optionNode = null;
-    var i;
-    for (i = 0; i < domNode.children.length; i++) {
-      optionNode = domNode.children[i];
-      if (optionNode.selected) {
-        return optionNode.value;
-      }
-    }
-    return "";
+    return (jQuery(domNode).find("option:selected").eq(0).val()) || "";
   },
   _valueSelectMultiple: function(domNode) {
-    var i = 0;
-    var optionNode = null;
-    var selected = [];
-
-    for (i = 0; i < domNode.children.length; i++) {
-      optionNode = domNode.children[i];
-      if (optionNode.selected) {
-        selected.push(optionNode.value);
-      }
-    }
-
-    return selected;
+    var values = jQuery(domNode).find("option:selected").map(function() {
+      return this.value;
+    }).get();
+    return values || [];
   },
   _valueDefault: function(domNode) {
     return domNode.value;

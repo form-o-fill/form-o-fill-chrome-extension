@@ -37,9 +37,32 @@
         <option name="multiple2" value="multiple2" selected>multiple2</option>
         <option name="multiple3" value="multiple3">multiple3</option>
       </select>
+      <select name="select-optgroup-multiple" multiple="multiple">
+        <optgroup label="Gruppe 1">
+          <option value="o11">Option 1.1</option>
+        </optgroup> 
+        <optgroup label="Gruppe 2">
+          <option value="o21">Option 2.1</option>
+        </optgroup>
+        <optgroup label="Gruppe 3">
+          <option value="o31" selected>Option 3.1</option>
+          <option value="o32" selected>Option 3.2</option>
+        </optgroup>
+      </select>
+      <select name="select-optgroup">
+        <optgroup label="Gruppe 1">
+          <option value="o11">Option 1.1</option>
+        </optgroup> 
+        <optgroup label="Gruppe 2">
+          <option value="o21" selected>Option 2.1</option>
+        </optgroup>
+        <optgroup label="Gruppe 3">
+          <option value="o31">Option 3.1</option>
+          <option value="o32">Option 3.2</option>
+        </optgroup>
+      </select>
       <textarea name="textarea" class="textarea">textarea</textarea>
     </form>
-
 
     <form id="a-form" action="/a/form-id" method="post">
       &lt;form id="a-form" action="/a/form-id" method="post"&gt;<br />

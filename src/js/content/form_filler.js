@@ -127,26 +127,22 @@ var FormFiller = {
   _fillSelectOne: function(domNode, value) {
     var i = 0;
     var optionNode = null;
-    for (i = 0; i < domNode.children.length; i++) {
-      optionNode = domNode.children[i];
-      if (optionNode.value === value) {
-        optionNode.selected = value;
-        return;
-      }
-    }
+
+    jQuery(domNode).find("option").each(function() {
+      this.selected = (value === this.value);
+    });
   },
   _fillSelectMultiple: function(domNode, value) {
     var i = 0;
     var optionNode = null;
-    var someFunction = function(targetValue) {
-      return optionNode.value === targetValue;
-    };
     value = Array.isArray(value) ? value : [value];
 
-    for (i = 0; i < domNode.children.length; i++) {
-      optionNode = domNode.children[i];
-      optionNode.selected = value.some(someFunction);
-    }
+    jQuery(domNode).find("option").each(function() {
+      var that = this;
+      this.selected = value.some(function(targetValue) {
+        return targetValue === that.value;
+      });
+    });
   },
   _fillDate: function(domNode, value, selector) {
     if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
