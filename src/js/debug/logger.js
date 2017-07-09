@@ -1,6 +1,5 @@
-/*global Utils Testing */
-/* eslint no-unused-vars: 0 */
 var Logger = {
+  storageKey: "form-o-fill-logs",
   out: function (level, msg, obj) {
     // Port to background.js
     var port = chrome.runtime.connect();
@@ -8,13 +7,6 @@ var Logger = {
       "action": "log",
       "message": msg
     });
-
-    // REMOVE START
-    if (typeof Testing !== "undefined") {
-      // Takes too much of a performance hit
-      //Testing.appendTestLog(msg);
-    }
-    // REMOVE END
 
     if (obj) {
       console[level]("[*FOF*]%s %O", msg, obj);
@@ -35,16 +27,16 @@ var Logger = {
     this.out("error", msg, obj);
   },
   delete: function() {
-    chrome.storage.local.remove(Utils.keys.logs);
+    chrome.storage.local.remove(Logger.storageKey);
   },
   load: function() {
     return new Promise(function (resolve) {
-      chrome.storage.local.get(Utils.keys.logs, function (storage) {
-        if (typeof storage[Utils.keys.logs] === "undefined") {
+      chrome.storage.local.get(Logger.storageKey, function (storage) {
+        if (typeof storage[Logger.storageKey] === "undefined") {
           resolve([]);
           return;
         }
-        resolve(storage[Utils.keys.logs]);
+        resolve(storage[Logger.storageKey]);
       });
     });
   },
@@ -68,10 +60,9 @@ var Logger = {
       }
 
       var a = {};
-      a[Utils.keys.logs] = entries;
+      a[Logger.storageKey] = entries;
       chrome.storage.local.set(a);
     });
   }
 };
-
 
