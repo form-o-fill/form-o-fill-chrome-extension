@@ -165,8 +165,7 @@ gulp.task('optionsJs', ['clean'], function () {
     "src/js/options/help.js",
     "src/js/options/workflow.js",
     "src/js/options/settings.js",
-    "src/js/options/rule_summary.js",
-    "src/js/options/usage_report.js"
+    "src/js/options/rule_summary.js"
   ])
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(plugins.concat('options.js'))
