@@ -1,4 +1,4 @@
-/*global Logger js_beautify JSONF Rule Storage Rule Libs state */
+/*global Logger JSONF Storage Libs state */
 /*eslint no-new-func:0, max-nested-callbacks:[1,4], complexity: 0, block-scoped-var: 0*/
 
 // REMOVE START
