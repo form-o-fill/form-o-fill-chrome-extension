@@ -19,7 +19,7 @@ Features:
 ✓ Browser notifications to show you what happened.
 
 Requires:
-Chrome 33+
+Chrome 49+
 
 Permissions requested:
 - Read and change all data on all sites (It's a form filler :) It should work everywhere)
