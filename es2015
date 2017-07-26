@@ -1,0 +1,8 @@
+chrome version supported:
+-------------------------
+- class : 49+
+- promise : 33+
+- static : 49+
+- Obj.assign : 45+
+- let : 49+
+- Arrow : 45+
