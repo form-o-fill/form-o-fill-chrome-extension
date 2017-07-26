@@ -10,6 +10,11 @@
   env:
     browser: true
     es6: true
+    node: true
+  ecmaFeatures:
+    modules: true
+  parserOptions:
+    sourceType: "module"
   globals:
     module: true
     chrome: true
