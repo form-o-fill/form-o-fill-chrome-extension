@@ -29,6 +29,8 @@ Permissions requested:
 ★ Version 3.7.0
 - Make <optgroup> extraction work
 - Better CSS selector generation
+- Require Chrome 49+ (for ES2015 goodness)
+- Remove Usage Report stuff
 
 ★ Version 3.6.0
 - Better selectors for extracted form fields
