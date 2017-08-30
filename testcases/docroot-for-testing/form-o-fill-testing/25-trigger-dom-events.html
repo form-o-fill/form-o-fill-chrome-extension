@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    <pre>
+      DOM Events need to be triggerd by FoF
+    </pre>
+    <form action="form1">
+      <input type="text" name="form1-1" value="pageload" />
+    </form>
+    <div id="form1-1-events">
+    </div>
+    <br />
+    Rules Import: <textarea id="form-o-fill-testing-import"></textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info">
+      {
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Rules Tour 1"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  \"name\": \"25-dynamic-field-visibility\",\n  \"url\": \"http://localhost:9292/form-o-fill-testing/25-dynamic-field-visibility.html\",\n  \"fields\": [{\n    \"selector\": \"[name='form1-1']\",\n    \"value\": \"CHANGED\"\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}
+    </table>
+    <script>
+      let log = (eventName) => {
+        let $e = document.getElementById("form1-1-events");
+        $e.innerHTML = $e.innerHTML + "<br />Got "+ eventName + " event on " + new Date;
+      };
+
+      document.querySelector("[name='form1-1']").addEventListener("input", () => log("INPUT"));
+      document.querySelector("[name='form1-1']").addEventListener("change", () => log("CHANGE"));
+    </script>
+  </body>
+</html>
