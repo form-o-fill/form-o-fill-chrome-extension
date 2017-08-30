@@ -39,6 +39,7 @@
     Target 19:<input id="target19" type="text" value="value from pageload" /> (Libs.math: "43 cm")<br />
     Target 20:<input id="target20" type="text" value="value from pageload" /> (rule.loadContentJs: "Used aLib '#target20'"; defunct for now!)<br />
     Target 21:<a href="javascript:void(0);" id="target21">&lt;a&gt;value from pageload&lt;/a&gt;</a> (clicking a &lt;a&gt;; "clicked")<br />
+    Target 22:<input id="target22" type="text" value="value from pageload" /> (Fire INPUT and CHANGE event after filling: "INPUT CHANGE")<br />
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="22-complex.js"></script>
@@ -56,6 +57,17 @@
       };
       
       var timer = setInterval(countdown, itime);
+
+      var $target22 = document.querySelector("#target22");
+      $target22.addEventListener("input", () => {
+        $target22.value = "INPUT ";
+      });
+
+      $target22.addEventListener("change", () => {
+        $target22.value = $target22.value + "CHANGE";
+      });
+
+
     </script>
 
   </body>
