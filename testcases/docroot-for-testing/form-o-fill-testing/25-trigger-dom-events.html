@@ -16,26 +16,38 @@
     <div id="form1-1-events">
     </div>
     <br />
-    Rules Import: <textarea id="form-o-fill-testing-import"></textarea>
-    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
-    <table id="form-o-fill-testing-info">
+    Rules Import: <textarea id="form-o-fill-testing-import">
       {
   "workflows": [],
   "rules": {
     "tabSettings": [
       {
         "id": "1",
-        "name": "Rules Tour 1"
+        "name": "25"
       }
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  \"name\": \"25-dynamic-field-visibility\",\n  \"url\": \"http://localhost:9292/form-o-fill-testing/25-dynamic-field-visibility.html\",\n  \"fields\": [{\n    \"selector\": \"[name='form1-1']\",\n    \"value\": \"CHANGED\"\n  }]\n}\n];",
+        "code": "var rules = [{\n  \"name\": \"25-trigger-dom-events\",\n  \"url\": /25-trigger-dom-events/,\n  \"fields\": [{\n    \"selector\": \"[name='form1-1']\",\n    \"value\": \"CHANGED\"\n  }]\n}\n];",
         "tabId": 1
       }
     ]
+  },
+  "settings": {
+    "alwaysShowPopup": false,
+    "jpegQuality": "70",
+    "reevalRules": false,
+    "matchOnLoad": false,
+    "dontMatchOnTabSwitch": false,
+    "importActive": false,
+    "importUrl": "undefined",
+    "decryptionPassword": "undefined",
+    "dontFireEvents": false
   }
-}
+  }
+    </textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info">
     </table>
     <script>
       let log = (eventName) => {

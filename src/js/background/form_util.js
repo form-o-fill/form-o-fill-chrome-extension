@@ -1,4 +1,4 @@
-/* global Utils, Logger, JSONF, Notification, Storage, Rules, state Libs */
+/* global Utils, Logger, JSONF, Notification, Storage, Rules, state, Libs */
 var FormUtil = {
   lastRule: null,
   functionToHtml: function functionToHtml(func) {
@@ -142,7 +142,8 @@ var FormUtil = {
           "ruleId": aRule.id,
           "name": aRule.nameClean,
           "fieldIndex": fieldIndex,
-          "lastField": fieldIndex === aRule.fields.length - 1 ? true : false
+          "lastField": fieldIndex === aRule.fields.length - 1 ? true : false,
+          "dontFireEvents": state.optionSettings.dontFireEvents === true ? true : false
         }
       };
       port.postMessage(message);

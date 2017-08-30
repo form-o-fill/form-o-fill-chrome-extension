@@ -93,6 +93,12 @@ var FormFiller = {
         // Fill field using the specialized method or default
         returnValue = fillMethod(domNode, parsedValue, selector) || null;
       }
+
+      // Need to fire events?
+      if (!meta.dontFireEvents) {
+        domNode.dispatchEvent(new Event('input'));
+        domNode.dispatchEvent(new Event('change'));
+      }
     }
 
     // Screenshot?
