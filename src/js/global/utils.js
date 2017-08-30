@@ -28,7 +28,8 @@ var Utils = {
     matchOnLoad: false,
     dontMatchOnTabSwitch: false,
     importActive: false,
-    importUrl: ""
+    importUrl: "",
+    dontFireEvents: false
   },
   tabIdForShadow: 900,
   reevalRulesInterval: 2000,

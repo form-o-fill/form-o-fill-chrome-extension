@@ -76,10 +76,11 @@ Settings.prototype.saveSettings = function(overwrites) {
     dontMatchOnTabSwitch: document.querySelector("#settings-match-tab").checked,
     importActive: document.querySelector("#settings-activate-import-source-url").checked,
     importUrl: document.querySelector("#settings-import-source-url").value,
-    decryptionPassword: document.querySelector("#settings-import-source-password").value
+    decryptionPassword: document.querySelector("#settings-import-source-password").value,
+    dontFireEvents: document.querySelector("#settings-dont-fire-events").checked
   };
 
-  // Allow overwriting of atributes
+  // Allow overwriting of attributes
   if (typeof overwrites === "object") {
     Object.keys(overwrites).forEach(function(key) {
       currentSettings[key] = overwrites[key];
@@ -107,7 +108,6 @@ Settings.prototype.bindHandlers = function() {
 
 Settings.prototype.handleChanges = function(evt) {
   if (evt.target && evt.target.nodeName === "INPUT") {
-
     // Screenshot quality setting
     if (evt.target.id === "settings-screenshot-quality") {
       document.querySelector(".settings-screenshot-quality-percent").innerHTML = evt.target.value;
@@ -225,6 +225,7 @@ Settings.prototype.applySettings = function(options) {
   document.querySelector("#settings-import-source-password").value = options.decryptionPassword;
   document.querySelector("#settings-screenshot-quality").value = options.jpegQuality;
   document.querySelector(".settings-screenshot-quality-percent").innerHTML = options.jpegQuality;
+  document.querySelector("#settings-dont-fire-events").checked = options.dontFireEvents;
 };
 
 // Resolves with an object of curent settings

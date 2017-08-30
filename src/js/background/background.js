@@ -436,6 +436,7 @@ var loadSettings = function() {
     if (typeof settings === "undefined") {
       settings = Utils.defaultSettings;
     }
+
     state.optionSettings = settings;
 
     // Turn rematch on/off
