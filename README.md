@@ -41,7 +41,7 @@ Here are a few steps to make the error debugging easier on our side:
 You want to contribute to Form-O-Fill? That is awesome!  
 Here are a few "rules" we like to adhere to:
 
-- fork the repo and create a branch named after the thing you are fixing / implementing (``git checkout -b implement-a-flux-capacitator``)
+- Fork the repo and create a branch named after the thing you are fixing / implementing (``git checkout -b implement-a-flux-capacitator``)
 - We use eslint to check our code. Please install it with [npm install -g esilint](http://eslint.org).
 - Implement and check your code with eslint (``eslint src``)
 - Test your code using mocha, chai and sinon. Executing ``gulp`` will run all tests (there's also ``gulp watch``).
