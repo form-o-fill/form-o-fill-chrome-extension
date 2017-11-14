@@ -142,7 +142,10 @@ gulp.task('backgroundJs', ['clean'], function () {
 // Build fof_content.js
 //
 gulp.task('contentJs', ['clean'], function () {
-  return gulp.src("src/js/content/*.js")
+  return gulp.src([
+    "src/vendor/optimal-select/optimal-select.js",
+    "src/js/content/*.js"
+  ])
   .pipe(plugins.replaceTask(replaceOpts))
   .pipe(plugins.concat('fof_content.js'))
   .pipe(plugins.stripDebug())
