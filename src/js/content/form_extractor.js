@@ -1,4 +1,4 @@
-/*global jQuery, Rule, Logger, Utils, CssSelectorGenerator */
+/*global jQuery, Rule, Logger, Utils, OptimalSelect */
 /* eslint no-unused-vars: 0 */
 var FormExtractor = {
   _knownElements: null,
@@ -45,7 +45,6 @@ var FormExtractor = {
       "name": "A rule for " + document.location.href,
       "fields": []
     };
-    var cssSelectorGenerator = new CssSelectorGenerator();
 
     this.knownElements().forEach(function (selector) {
       Logger.info("[form_extractor.js] Looking for '" + selector + "'");
@@ -54,8 +53,13 @@ var FormExtractor = {
         var value = extractor._valueFor(this);
         // Only include field if value !== null
         if (value !== null) {
+          // Find shortest selector for element
+          var optimalSelect = OptimalSelect.select(this, {
+            priority: ['id', 'name', 'class', 'href', 'src']
+          }).replace(/\"/g, "'").replace(/\\\//g,"/");
+
           var field = {
-            "selector": cssSelectorGenerator.getSelector(this),
+            "selector": optimalSelect,
             "value": value
           };
           ruleData.fields.push(field);

@@ -53,6 +53,7 @@
       ],
       "js": [
         "vendor/jquery/jquery.min.js",
+        "vendor/optimal-select/optimal-select.js",
         "js/debug/logger.js",
         "js/global/state.js",
         "js/global/utils.js",
@@ -65,7 +66,6 @@
         "js/content/context.js",
         "js/content/form_errors.js",
         "js/content/form_filler.js",
-        "js/content/css_selector_generator.js",
         "js/content/form_extractor.js",
         "js/content/extract_instrumentation.js",
         "js/content/context_menu.js",
