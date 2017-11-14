@@ -27,7 +27,9 @@ Permissions requested:
 - Communicate with websites (Used for the live tutorials)
 
 ★ Version 3.8.1
-- Update chance.js to 1.0.12 and moment.js to 2.19.2
+- Update chance.js (1.0.12), moment.js (2.19.2), math.js (3.16.5)
+- Added OptimalSelect
+- Removed CssSelectorGenerator
 
 ★ Version 3.8.0
 - Fire input and change events after filling a field
