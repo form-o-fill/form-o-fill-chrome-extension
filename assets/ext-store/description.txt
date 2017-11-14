@@ -26,6 +26,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 3.8.1
+- Update chance.js to 1.0.12 and moment.js to 2.19.2
+
 ★ Version 3.8.0
 - Fire input and change events after filling a field
 
