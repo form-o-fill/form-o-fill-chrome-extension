@@ -26,6 +26,9 @@ Permissions requested:
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
+★ Version 3.8.2
+- Fixed nasty bug #101
+
 ★ Version 3.8.1
 - Update chance.js (1.0.12), moment.js (2.19.2), math.js (3.16.5)
 - Added OptimalSelect

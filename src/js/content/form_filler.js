@@ -8,11 +8,18 @@ var FormFiller = {
     var domNode = null;
     var fillMethod = null;
     var baseDocument = document;
+    var parsedValueFunction = null;
 
     state.currentRuleMetadata = meta;
 
     // Recreate original value for "value" (function or string)
     var parsedValue = JSONF.parse(value);
+
+    // Remember value function so we can call it on every dom node
+    // https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/101
+    if (typeof parsedValue === "function") {
+      parsedValueFunction = parsedValue;
+    }
 
     // Is the "within" property used and a string?
     // If yes we must do one of the following:
@@ -77,11 +84,11 @@ var FormFiller = {
 
       // if the value is a function, call it with the jQuery wrapped domNode
       // The value for 'Libs' and 'context' are implicitly passed in by defining them on the sandboxed window object
-      if (typeof parsedValue === "function") {
+      if (typeof parsedValueFunction === "function") {
         try {
-          parsedValue = parsedValue(jQuery(domNode), beforeData);
+          parsedValue = parsedValueFunction(jQuery(domNode), beforeData);
         } catch (e) {
-          Logger.info("[form_filler.js] Got an exception executing value function: " + parsedValue);
+          Logger.info("[form_filler.js] Got an exception executing value function: " + parsedValueFunction);
           Logger.info("[form_filler.js] Original exception: " + e);
           Logger.info("[form_filler.js] Original stack: " + e.stack);
           return new FormError(selector, value, chrome.i18n.getMessage("fill_error_value_function", [ JSONF.stringify(e.message) ]));

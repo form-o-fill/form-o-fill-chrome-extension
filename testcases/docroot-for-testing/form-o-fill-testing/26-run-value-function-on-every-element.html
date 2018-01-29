@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>TESTING SERVER RUNNING</h1>
+    <pre>
+      Run value function separatly on every dom element
+      https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/101
+    </pre>
+    <form action="form1">
+      <input type="text" name="form1" value="pageload" />
+      <input type="text" name="form1" value="pageload" />
+    </form>
+    <div id="form1-1-events">
+    </div>
+    <br />
+    Rules Import: <textarea id="form-o-fill-testing-import">
+      {
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "26"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"Complex - 1\",\n  url: /26-run-value-function-on-every-element/,\n  fields: [{\n    selector: \"input[name='form1']\",\n    value: function() { return Math.random(); }\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  }
+}
+    </textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info">
+    </table>
+  </body>
+</html>
