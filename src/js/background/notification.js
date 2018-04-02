@@ -10,8 +10,7 @@ var Notification = {
       "type": "basic",
       "title": title,
       "message": message,
-      "isClickable": true,
-      "requireInteraction": false
+      "isClickable": true
     }, function(notificationId) {
       if (!Utils.isLiveExtension()) {
         Testing.setVar("notification-html", message, "Last Notification HTML");
