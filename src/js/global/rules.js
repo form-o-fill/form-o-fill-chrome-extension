@@ -20,28 +20,28 @@ if (typeof exports === "object") {
 var Rules = {
   match: function(target) {
     var rules = this;
-    var matcher = function(ruleUrl) {
-      return target === ruleUrl;
-    };
-
-    // If target is a regexp 'test' it
-    if (typeof target === "object" && /^\/.*\/$/.test(target.toString())) {
-      matcher = function(ruleUrl) {
-        return target.test(rule.url);
-      };
-      Logger.info("[rules.js] Using a regexp for target");
-    }
-
     return new Promise(function(resolve) {
       rules.all().then(function(rulez) {
         var matchingRules = rulez.filter(function(rule) {
+          var matcher = function(target) {
+            return target === rule.url;
+          };
+
+          // If rule.url is a regexp 'test' it
+          if (typeof rule.url === "object" && /^\/.*\/$/.test(rule.url.toString())) {
+            Logger.info(`[rules.js] Using the regexp '${rule.url.toString()}' for target`);
+            matcher = function(target) {
+              return rule.url.test(target);
+            };
+          }
+
           Logger.info(
             `[rules.js] Matching current URL '${target}' against rule URL '${
               rule.url
             }' = ${target.match(rule.url)}`
           );
 
-          return typeof rule.url !== "undefined" && matcher(rule.url);
+          return typeof rule.url !== "undefined" && matcher(target);
         });
         resolve(matchingRules);
       });
