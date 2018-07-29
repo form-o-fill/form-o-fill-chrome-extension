@@ -20,10 +20,28 @@ if (typeof exports === "object") {
 var Rules = {
   match: function(target) {
     var rules = this;
-    return new Promise(function (resolve) {
+    var matcher = function(ruleUrl) {
+      return target === ruleUrl;
+    };
+
+    // If target is a regexp 'test' it
+    if (typeof target === "object" && /^\/.*\/$/.test(target.toString())) {
+      matcher = function(ruleUrl) {
+        return target.test(rule.url);
+      };
+      Logger.info("[rules.js] Using a regexp for target");
+    }
+
+    return new Promise(function(resolve) {
       rules.all().then(function(rulez) {
-        var matchingRules = rulez.filter(function (rule) {
-          return typeof rule.url !== "undefined" && target.match(rule.url);
+        var matchingRules = rulez.filter(function(rule) {
+          Logger.info(
+            `[rules.js] Matching current URL '${target}' against rule URL '${
+              rule.url
+            }' = ${target.match(rule.url)}`
+          );
+
+          return typeof rule.url !== "undefined" && matcher(rule.url);
         });
         resolve(matchingRules);
       });
@@ -31,9 +49,9 @@ var Rules = {
   },
   findByName: function(target) {
     var rules = this;
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       rules.all().then(function(rulez) {
-        var matchingRules = rulez.filter(function (rule) {
+        var matchingRules = rulez.filter(function(rule) {
           return typeof rule.name !== "undefined" && target === rule.name;
         });
         resolve(matchingRules[0]);
@@ -44,7 +62,6 @@ var Rules = {
     var that = this;
     return new Promise(function prRulesLoad(resolve) {
       Storage.load(that._nameForTabId(forTabId)).then(function prRulesLoadStorage(rulesData) {
-
         var rules = [];
         if (rulesData) {
           var libs = Libs.detectVendoredLibraries(rulesData.code);
@@ -55,7 +72,7 @@ var Rules = {
               resolve(rules);
             }
 
-            rules = ruleFunction.map(function (ruleJson, index) {
+            rules = ruleFunction.map(function(ruleJson, index) {
               return Rule.create(ruleJson, forTabId, index);
             });
 
@@ -86,7 +103,11 @@ var Rules = {
     var rules = [];
     var ruleObjects;
     var index = 0;
-    if (typeof shadowStorage !== "undefined" && typeof shadowStorage.rules !== "undefined" && shadowStorage.rules.length > 0) {
+    if (
+      typeof shadowStorage !== "undefined" &&
+      typeof shadowStorage.rules !== "undefined" &&
+      shadowStorage.rules.length > 0
+    ) {
       // rules contains an array of strings that contain an array of rules
       shadowStorage.rules.forEach(function(rulesCode) {
         // String of rules -> array of object
@@ -107,53 +128,63 @@ var Rules = {
     return new Promise(function prRulesAll(resolve, reject) {
       Logger.info("[rules.js] Fetching all rules + shadow");
 
-      Promise.all([Storage.load(Utils.keys.tabs), Storage.load(Utils.keys.shadowStorage)]).then(function prRulesAllStorageLoad(tabSettingsAndShadow) {
-        var promises = [];
-        var rules = [];
+      Promise.all([Storage.load(Utils.keys.tabs), Storage.load(Utils.keys.shadowStorage)]).then(
+        function prRulesAllStorageLoad(tabSettingsAndShadow) {
+          var promises = [];
+          var rules = [];
 
-        var tabSettings = tabSettingsAndShadow[0];
-        var shadowStorage = tabSettingsAndShadow[1];
+          var tabSettings = tabSettingsAndShadow[0];
+          var shadowStorage = tabSettingsAndShadow[1];
 
-        if (typeof tabSettings === "undefined") {
-          reject();
-        }
-
-        // Generate a Promise for all tab to be loaded
-        tabSettings.forEach(function rulesAlltabSetting(tabSetting) {
-          promises.push(Rules.load(tabSetting.id));
-        });
-
-        // Wait until resolved
-        Promise.all(promises).then(function prRulesAllgenerateRuleSet(values) {
-          // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
-          values.filter(function(ruleSetForTab) {
-            // null can happen on very first install
-            return ruleSetForTab !== null;
-          }).forEach(function (ruleSetForTab) {
-            // Inner Loop: An array of rules [Rule, Rule]
-            ruleSetForTab.forEach(function (ruleSet) {
-              rules.push(ruleSet);
-            });
-          });
-
-          // Add ruled from shadow storage to rules found in normal tabs
-          if (shadowStorage !== "undefined" && typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true) {
-            rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
+          if (typeof tabSettings === "undefined") {
+            reject();
           }
 
-          Logger.info("[rules.js] Fetched " + rules.length + " rules from normal and shadow storage");
-          resolve(rules);
-        });
-      });
+          // Generate a Promise for all tab to be loaded
+          tabSettings.forEach(function rulesAlltabSetting(tabSetting) {
+            promises.push(Rules.load(tabSetting.id));
+          });
+
+          // Wait until resolved
+          Promise.all(promises).then(function prRulesAllgenerateRuleSet(values) {
+            // Outer loop: An array of arrays of rules [[Rule, Rule], [Rule, Rule]]
+            values
+              .filter(function(ruleSetForTab) {
+                // null can happen on very first install
+                return ruleSetForTab !== null;
+              })
+              .forEach(function(ruleSetForTab) {
+                // Inner Loop: An array of rules [Rule, Rule]
+                ruleSetForTab.forEach(function(ruleSet) {
+                  rules.push(ruleSet);
+                });
+              });
+
+            // Add ruled from shadow storage to rules found in normal tabs
+            if (
+              shadowStorage !== "undefined" &&
+              typeof state.optionSettings !== "undefined" &&
+              state.optionSettings.importActive === true
+            ) {
+              rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
+            }
+
+            Logger.info(
+              "[rules.js] Fetched " + rules.length + " rules from normal and shadow storage"
+            );
+            resolve(rules);
+          });
+        }
+      );
     });
   },
   save: function(ruleCode, activeTabId) {
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       var rulesData = {
         tabId: activeTabId,
-        code: ruleCode
+        code: ruleCode,
       };
-      Storage.save(rulesData, Rules._nameForTabId(activeTabId)).then(function () {
+      Storage.save(rulesData, Rules._nameForTabId(activeTabId)).then(function() {
         resolve(true);
       });
     });
@@ -167,13 +198,13 @@ var Rules = {
   format: function(rulesCodeString) {
     // Prettify code a little
     var prettyCode = js_beautify(rulesCodeString, {
-      "indent_size": 2,
-      "indent_char": " ",
-      "preserve_newlines": false,
-      "brace_style": "collapse",
-      "space_before_conditional": true,
-      "keep_function_indentation": true,
-      "unescape_strings": false
+      indent_size: 2,
+      indent_char: " ",
+      preserve_newlines: false,
+      brace_style: "collapse",
+      space_before_conditional: true,
+      keep_function_indentation: true,
+      unescape_strings: false,
     });
     if (/\}\];$/.test(prettyCode)) {
       prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
@@ -209,14 +240,16 @@ var Rules = {
     var libMatches = editor.getValue().match(/export["']?\s*:\s*['"].*?['"]/g);
     if (libMatches !== null) {
       // There are library definitions
-      var foundReservedNs = libMatches.map(function (matchStr) {
-        return matchStr.match(/:\s*['"](.*?)['"]/)[1];
-      }).filter(function (matchStr) {
-        return Utils.reservedLibNamespaces.indexOf(matchStr) !== -1;
-      });
+      var foundReservedNs = libMatches
+        .map(function(matchStr) {
+          return matchStr.match(/:\s*['"](.*?)['"]/)[1];
+        })
+        .filter(function(matchStr) {
+          return Utils.reservedLibNamespaces.indexOf(matchStr) !== -1;
+        });
 
       if (foundReservedNs.length > 0) {
-        errors.push({id: "libs-using-reserved-namespaces", extra: foundReservedNs});
+        errors.push({ id: "libs-using-reserved-namespaces", extra: foundReservedNs });
       }
     }
 
@@ -224,17 +257,20 @@ var Rules = {
       // Check for before/after function structure
       var ruleCodeCheck = this.text2function(editor.getValue());
 
-      ruleCodeCheck.forEach(function (ruleFunction) {
+      ruleCodeCheck.forEach(function(ruleFunction) {
         if (ruleFunction.hasOwnProperty("before")) {
-          Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
+          Logger.info(
+            "[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'"
+          );
           that.checkSurroundFunction(ruleFunction.before, errors);
         }
         if (ruleFunction.hasOwnProperty("after")) {
-          Logger.info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
+          Logger.info(
+            "[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'"
+          );
           that.checkSurroundFunction(ruleFunction.after, errors);
         }
       });
-
     }
     return errors;
   },
@@ -247,13 +283,13 @@ var Rules = {
 
     // Create an array to make checking easier
     if (typeof ruleFunction === "function") {
-      ruleFunction = [ ruleFunction ];
+      ruleFunction = [ruleFunction];
     }
 
     var ruleFuncErrors = {
       needResolveArg: false,
       needResolveCall: false,
-      needFunctions: false
+      needFunctions: false,
     };
 
     // Used an array? Check for t least one rule
@@ -262,7 +298,7 @@ var Rules = {
     }
 
     // If it is a function check if it uses resolve()
-    ruleFunction.forEach(function (ruleFunc) {
+    ruleFunction.forEach(function(ruleFunc) {
       // Fetch the name of the first argument
       var resolveMatches = ruleFunc.toString().match(/function[\s]*\((.*?)[,\)]/);
       var resolveFunctionName = resolveMatches[1];
@@ -275,7 +311,13 @@ var Rules = {
         resolveMatches = ruleFunc.toString().match(regex);
         // No call to resolve?
         /*eslint-disable no-extra-parens*/
-        if (resolveMatches === null || (resolveMatches && !resolveMatches[0].match(resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"))) {
+        if (
+          resolveMatches === null ||
+          (resolveMatches &&
+            !resolveMatches[0].match(
+              resolveFunctionName + "\\s*[\\(\\)]|\\(\\s*" + resolveFunctionName + "\\s*\\)"
+            ))
+        ) {
           ruleFuncErrors.needResolveCall = true;
         }
         /*eslint-enable no-extra-parens*/
@@ -293,14 +335,14 @@ var Rules = {
     }
   },
   lastMatchingRules: function(rules) {
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       // Load or save rules
       if (typeof rules === "undefined") {
-        Storage.load(Utils.keys.lastMatchingRules).then(function (serializedRules) {
+        Storage.load(Utils.keys.lastMatchingRules).then(function(serializedRules) {
           resolve(JSONF.parse(serializedRules));
         });
       } else {
-        Storage.save(JSONF.stringify(rules), Utils.keys.lastMatchingRules).then(function () {
+        Storage.save(JSONF.stringify(rules), Utils.keys.lastMatchingRules).then(function() {
           resolve(true);
         });
       }
@@ -310,7 +352,7 @@ var Rules = {
   // Imports a dump created by the option pages export functionality
   // returns a promise that resolves when all rules/Wfs are imported
   importAll: function(dumpString) {
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       var promises = [];
       var parsed;
 
@@ -333,18 +375,21 @@ var Rules = {
       if (typeof parsed.tabSettings !== "undefined") {
         parsed.rules = {
           rules: parsed.rules,
-          tabSettings: parsed.tabSettings
+          tabSettings: parsed.tabSettings,
         };
         parsed.workflows = [];
       }
 
       // Save workflows (if any)
-      if (typeof parsed.workflows !== "undefined" && typeof parsed.workflows.length !== "undefined") {
+      if (
+        typeof parsed.workflows !== "undefined" &&
+        typeof parsed.workflows.length !== "undefined"
+      ) {
         promises.push(Storage.save(parsed.workflows, Utils.keys.workflows));
       }
 
       // Save the rules in all tabs
-      parsed.rules.rules.forEach(function (editorTabAndRules) {
+      parsed.rules.rules.forEach(function(editorTabAndRules) {
         promises.push(Rules.save(editorTabAndRules.code, editorTabAndRules.tabId));
       });
       // save tabsetting
@@ -355,17 +400,17 @@ var Rules = {
     });
   },
   exportDataJson: function() {
-    return new Promise(function (resolve) {
+    return new Promise(function(resolve) {
       var promises = [];
       Storage.load(Utils.keys.tabs).then(function(tabSettings) {
-        tabSettings.forEach(function (setting) {
+        tabSettings.forEach(function(setting) {
           promises.push(Storage.load(Utils.keys.rules + "-tab-" + setting.id));
         });
 
         Promise.all(promises).then(function(rulesFromAllTabs) {
           var exportJson = {
-            "tabSettings": tabSettings,
-            "rules": rulesFromAllTabs
+            tabSettings: tabSettings,
+            rules: rulesFromAllTabs,
           };
           resolve(exportJson);
         });
@@ -384,12 +429,14 @@ var Rules = {
     return uniques;
   },
   validateImport: function(importData) {
-    return typeof importData === "object"
-      && typeof importData.workflows === "object"
-      && typeof importData.rules === "object"
-      && typeof importData.rules.rules === "object"
-      && typeof importData.rules.tabSettings === "object";
-  }
+    return (
+      typeof importData === "object" &&
+      typeof importData.workflows === "object" &&
+      typeof importData.rules === "object" &&
+      typeof importData.rules.rules === "object" &&
+      typeof importData.rules.tabSettings === "object"
+    );
+  },
 };
 
 // REMOVE START
