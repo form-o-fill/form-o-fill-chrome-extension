@@ -475,6 +475,17 @@ var alarmListener = function(alarm) {
   executeRemoteImport();
 };
 
+// Initializes extension
+var initializeExtension = function() {
+  loadSettings();
+
+  // This will trigger a re-import of the remote rules set in settings
+  Alarm.create();
+
+  // re-import remote rules
+  executeRemoteImport();
+};
+
 // REMOVE START
 // Debug Messages from content.js
 chrome.runtime.onConnect.addListener(function (port) {
@@ -505,13 +516,7 @@ chrome.runtime.onMessage.addListener(function (message) {
 // When the extension is activated:
 chrome.runtime.onStartup.addListener(function() {
   Logger.info("[bg.js] chrome.runtime.onStartup triggered");
-  loadSettings();
-
-  // This will trigger a re-import of the remote rules set in settings
-  Alarm.create();
-
-  // re-import remote rules
-  executeRemoteImport();
+  initializeExtension();
 });
 
 // Listen to alarms (import remote rules)
@@ -523,3 +528,6 @@ RemoteImport.listenToExternal();
 // install listener for messages from content page while filling forms
 FormUtil.listenForContentMessages();
 
+// Initialize extension
+// Needs to be here so chrome can safely unload and restore the extensions BG script
+initializeExtension();
