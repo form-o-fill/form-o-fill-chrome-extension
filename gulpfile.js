@@ -18,6 +18,7 @@ var Utils = require('./src/js/global/utils');
 
 // Load replacement variables
 var replaceOpts = require("./buildReplacements");
+var replaceOptsBeta = require("./buildReplacementsBeta");
 
 // Replace all occurences of ##Utils.someKey## by it's value
 Object.keys(Utils).forEach(function(key) {
@@ -245,6 +246,18 @@ gulp.task('build', ['announce', 'clean', 'test', 'lint', 'copyHtml', 'sass', 'op
   .pipe(gulp.dest('dist'));
 });
 
+//
+// Build a BETA
+//
+gulp.task('build-beta', ['build'], function() {
+  gulp.src('src/manifest.json')
+  .pipe(plugins.replaceTask(replaceOptsBeta))
+  .pipe(gulp.dest('build'));
+
+  gulp.src(['build/**'])
+  .pipe(plugins.zip(distFilename + ".beta.zip"))
+  .pipe(gulp.dest('dist'));
+});
 //
 // Run tests
 //
