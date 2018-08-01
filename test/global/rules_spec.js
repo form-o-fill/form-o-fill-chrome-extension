@@ -20,6 +20,11 @@ describe("Rules", function() {
       Rules.all.restore();
     });
 
+    it("returns all rules matching the full url when a string is passed", () => {
+      stubRules([{url: "http://localhost:9292/test.html"}, {url: /test2\.html/}]);
+      return expect(Rules.match("http://localhost:9292/test.html")).to.become([ { url: "http://localhost:9292/test.html" } ]);
+    });
+
     it("returns all rules with matching url", function(){
       stubRules([{url: /test\.html/}, {url: /test2\.html/}]);
       return expect(Rules.match("test2.html")).to.become([ { url: /test2\.html/ } ]);
