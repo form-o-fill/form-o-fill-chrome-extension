@@ -23,23 +23,16 @@ var Rules = {
     return new Promise(function(resolve) {
       rules.all().then(function(rulez) {
         var matchingRules = rulez.filter(function(rule) {
-          var matcher = function(target) {
-            return target === rule.url;
+          var matcher = function(target2) {
+            return target2 === rule.url;
           };
 
           // If rule.url is a regexp 'test' it
           if (typeof rule.url === "object" && /^\/.*\/$/.test(rule.url.toString())) {
-            Logger.info(`[rules.js] Using the regexp '${rule.url.toString()}' for target`);
-            matcher = function(target) {
-              return rule.url.test(target);
+            matcher = function(target2) {
+              return rule.url.test(target2);
             };
           }
-
-          Logger.info(
-            `[rules.js] Matching current URL '${target}' against rule URL '${
-              rule.url
-            }' = ${target.match(rule.url)}`
-          );
 
           return typeof rule.url !== "undefined" && matcher(target);
         });
@@ -169,9 +162,7 @@ var Rules = {
               rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
             }
 
-            Logger.info(
-              "[rules.js] Fetched " + rules.length + " rules from normal and shadow storage"
-            );
+            Logger.info("[rules.js] Fetched " + rules.length + " rules from normal and shadow storage");
             resolve(rules);
           });
         }
@@ -197,6 +188,7 @@ var Rules = {
   },
   format: function(rulesCodeString) {
     // Prettify code a little
+    /*eslint-disable camelcase */
     var prettyCode = js_beautify(rulesCodeString, {
       indent_size: 2,
       indent_char: " ",
@@ -206,6 +198,7 @@ var Rules = {
       keep_function_indentation: true,
       unescape_strings: false,
     });
+    /*eslint-enable camelcase */
     if (/\}\];$/.test(prettyCode)) {
       prettyCode = prettyCode.replace(/\}\];$/, "}\n];");
     }
@@ -259,15 +252,11 @@ var Rules = {
 
       ruleCodeCheck.forEach(function(ruleFunction) {
         if (ruleFunction.hasOwnProperty("before")) {
-          Logger.info(
-            "[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'"
-          );
+          Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
           that.checkSurroundFunction(ruleFunction.before, errors);
         }
         if (ruleFunction.hasOwnProperty("after")) {
-          Logger.info(
-            "[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'"
-          );
+          Logger.info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
           that.checkSurroundFunction(ruleFunction.after, errors);
         }
       });
