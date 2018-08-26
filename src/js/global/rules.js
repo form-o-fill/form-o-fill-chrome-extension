@@ -131,6 +131,7 @@ var Rules = {
 
           if (typeof tabSettings === "undefined") {
             reject();
+            return;
           }
 
           // Generate a Promise for all tab to be loaded
@@ -162,7 +163,9 @@ var Rules = {
               rules = rules.concat(rulesInst.getRulesFromShadow(shadowStorage));
             }
 
-            Logger.info("[rules.js] Fetched " + rules.length + " rules from normal and shadow storage");
+            Logger.info(
+              "[rules.js] Fetched " + rules.length + " rules from normal and shadow storage"
+            );
             resolve(rules);
           });
         }
@@ -252,11 +255,15 @@ var Rules = {
 
       ruleCodeCheck.forEach(function(ruleFunction) {
         if (ruleFunction.hasOwnProperty("before")) {
-          Logger.info("[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'");
+          Logger.info(
+            "[rules.js] Found a before function in rule '" + ruleFunction.before.toString() + "'"
+          );
           that.checkSurroundFunction(ruleFunction.before, errors);
         }
         if (ruleFunction.hasOwnProperty("after")) {
-          Logger.info("[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'");
+          Logger.info(
+            "[rules.js] Found a after function in rule '" + ruleFunction.after.toString() + "'"
+          );
           that.checkSurroundFunction(ruleFunction.after, errors);
         }
       });
