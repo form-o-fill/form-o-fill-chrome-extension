@@ -19,7 +19,7 @@ var Utils = {
     tutorialActive: "form-o-fill-tut-active",
     settings: "form-o-fill-settings",
     shadowStorage: "form-o-fill-shadow-storage",
-    usageReport: "form-o-fill-usage-report"
+    usageReport: "form-o-fill-usage-report",
   },
   defaultSettings: {
     alwaysShowPopup: false,
@@ -29,42 +29,55 @@ var Utils = {
     dontMatchOnTabSwitch: false,
     importActive: false,
     importUrl: "",
-    dontFireEvents: false
+    dontFireEvents: false,
   },
   tabIdForShadow: 900,
   reevalRulesInterval: 2000,
   reservedLibNamespaces: ["h", "halt"],
   vendoredLibs: {
     "vendor/math.js/math.min.js": { detectWith: /Libs\.math/, name: "math", onWindowName: "math" },
-    "vendor/chance.js/chance.js": { detectWith: /Libs\.chance/, name: "chance", onWindowName: "chance" },
-    "vendor/moment.js/moment-with-locales.min.js": { detectWith: /Libs\.moment/, name: "moment", onWindowName: "moment" }
+    "vendor/chance.js/chance.js": {
+      detectWith: /Libs\.chance/,
+      name: "chance",
+      onWindowName: "chance",
+    },
+    "vendor/moment.js/moment-with-locales.min.js": {
+      detectWith: /Libs\.moment/,
+      name: "moment",
+      onWindowName: "moment",
+    },
   },
   alarmIntervalInMinutes: 1,
   notificationTimeoutMs: 3000,
   alarmName: "FormOFillRemoteURLImportAlarm",
-  defaultRule: 'var rules = [{\n' +
+  defaultRule:
+    "var rules = [{\n" +
     '  "name": "The default rule",\n' +
     '  "url": "https://form-o-fill.github.io/tutorial/tour-1.html",\n' +
     '  "fields": [{\n' +
     '    "selector": "input[type=text]",\n' +
     '    "value": "Welcome!"\n' +
-    '  }]\n' +
-    '}\n' +
-    '];',
-  usageReportEndpoint: "https://script.google.com/macros/s/AKfycby3DJt1KiGPQlzdfLhNws2sGhrpP1zFG1AF_7xddZsKMbhH6yd0/exec",
+    "  }]\n" +
+    "}\n" +
+    "];",
+  usageReportEndpoint:
+    "https://script.google.com/macros/s/AKfycby3DJt1KiGPQlzdfLhNws2sGhrpP1zFG1AF_7xddZsKMbhH6yd0/exec",
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },
   onFormOFillSite: function() {
     /*eslint-disable no-extra-parens*/
-    return window.location.host === "form-o-fill.github.io" || (window.location.host === "localhost" && window.location.port === "4000");
+    return (
+      window.location.host === "form-o-fill.github.io" ||
+      (window.location.host === "localhost" && window.location.port === "4000")
+    );
     /*eslint-enable no-extra-parens*/
   },
   showExtractOverlay: function(whenFinishedCallback) {
     // Send message to content script
-    chrome.runtime.sendMessage({"action": "lastActiveTabId"}, function(tabId) {
+    chrome.runtime.sendMessage({ action: "lastActiveTabId" }, function(tabId) {
       var message = {
-        "action": "showExtractOverlay"
+        action: "showExtractOverlay",
       };
       chrome.tabs.sendMessage(tabId, message);
       whenFinishedCallback();
@@ -81,16 +94,16 @@ var Utils = {
       if (parameter && parameter[0] === "#") {
         optionsUrl += parameter;
       }
-      chrome.runtime.sendMessage({"action": "openIntern", "url": optionsUrl});
+      chrome.runtime.sendMessage({ action: "openIntern", url: optionsUrl });
     }
   },
   infoMsg: function(msg) {
     // A function to display a nice message in the rule editor
     var fadeAfterMSec = 1000;
     var $menuInfo = jQuery(".editor .menu .info, #workflows .info");
-    $menuInfo.html(msg).css({"opacity": "1"});
+    $menuInfo.html(msg).css({ opacity: "1" });
     setTimeout(function() {
-      $menuInfo.animate({"opacity": 0}, 1000, function() {
+      $menuInfo.animate({ opacity: 0 }, 1000, function() {
         jQuery(this).html("");
       });
     }, fadeAfterMSec);
@@ -110,7 +123,7 @@ var Utils = {
   },
   download: function(data, filename, mimeType) {
     // Creates and triggers a download from a string
-    var blob = new Blob([data], { type: mimeType});
+    var blob = new Blob([data], { type: mimeType });
     var url = window.URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.download = filename;
@@ -121,7 +134,7 @@ var Utils = {
     document.querySelector("body").removeChild(a);
   },
   parseUrl: function(url) {
-    var parser = document.createElement('a');
+    var parser = document.createElement("a");
     parser.href = url;
     return {
       url: url,
@@ -130,11 +143,11 @@ var Utils = {
       port: parser.port,
       path: parser.pathname,
       query: parser.search,
-      hash: parser.hash
+      hash: parser.hash,
     };
   },
   sortRules: function(unsortedRules) {
-    return unsortedRules.sort(function (a, b) {
+    return unsortedRules.sort(function(a, b) {
       if (a.name > b.name) {
         return 1;
       }
@@ -145,11 +158,14 @@ var Utils = {
     });
   },
   isBgPage: function() {
-    if (typeof chrome.extension === "undefined" || typeof chrome.extension.getBackgroundPage === "undefined") {
+    if (
+      typeof chrome.extension === "undefined" ||
+      typeof chrome.extension.getBackgroundPage === "undefined"
+    ) {
       return false;
     }
     return true;
-  }
+  },
 };
 
 // REMOVE START
