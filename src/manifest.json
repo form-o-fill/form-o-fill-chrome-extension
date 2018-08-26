@@ -126,7 +126,8 @@
       "js/background/background.js",
       "js/background/context_menu.js",
       "js/background/testing.js",
-      "js/background/tutorial.js"
+      "js/background/tutorial.js",
+      "js/background/hotkeys.js"
     ],
     "persistent": true
   }
