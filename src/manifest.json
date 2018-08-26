@@ -43,6 +43,22 @@
     "default_title": "Form-O-Fill",
     "default_icon": "images/icon_19.png"
   },
+  "commands": {
+    "hotkey-action-fill-with-rule-1": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Execute the first matching rule (if any)"
+    },
+    "hotkey-action-show-extract-overlay": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Show the extraction overlay"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
