@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+    
+    <h1>TESTING SERVER RUNNING</h1>
+    <pre>
+      This demos the ways you can react to appearing DOM elements.
+      They can appear:
+      1. by adding or removing some class like "hidden" triggered by a click handler
+      2. by loading data via XHR and insering it into the DOM (Like jQuery.load() for example)
+    </pre>
+
+    <h1>Triggered by adding/removing a classes:</h1>
+    <pre>
+      The trick here is to look for the HTML that changes and choose some part of it as the "content" selector in Form-O-Fill.
+      Then activate "automatic rematch" (in the popup or in settings) and the rule will show up once the HTML is present in the DOM.
+
+      The rule will look something like:
+
+      var rules = [{
+        name: "Element visibility 1 : classes",
+        content: /&lt;select class=""/, // Activate rule if the "hidden" class on the select is gone
+        fields: [{
+          selector: "select",
+          value: "1"
+        }]
+      }
+      ];
+
+    </pre>
+    <button onclick="document.querySelector('.hidden').classList.remove('hidden');">Click me to remove the "hidden" class on the element below</button>
+    <select class="hidden"><option value="0">automatic rematch will show the rule in the extension icon</option><option value="1">I'm visible</option></select>
+
+    <h1>Triggered by some XHR</h1>
+
+    <script>
+      const fakeXhr = () => {
+        // Fake some delay...
+        setTimeout(fakeXhrResult, 2000);
+      };
+
+      const fakeXhrResult = () => {
+        fakeData = [{key: "e1", value: "option value 1"}, { key: "e2", value: "option value 2"}];
+        let select$ = document.querySelector("#fakexhr-select");
+        fakeData.forEach((data) => {
+          var option$ = document.createElement("option");
+          option$.value = data["key"];
+          option$.text = data["value"];
+          select$.add(option$);
+        });
+      }
+    </script>
+
+    <pre>
+      This is even easier.
+      The XHR will change the HTML or will change the values of some element so the same applies as above.
+      Here two new &lt;option>s will be added after 2 seconds and then the rule will trigger because some
+      known option is present. Requires "automatic rematch" to be active.
+      After waiting two seconds the extension icon will show one matching rule.
+    </pre>
+    <button onclick="fakeXhr()">Click me to trigger a (fake) XHR</button>
+    <select id="fakexhr-select"><option value="">Nothing to see here</option></select>
+
+    <br />
+    <br />
+
+
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+  "workflows": [],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "element visibility"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"Element visibility 1 : classes\",\n  content: /<select class=\"\"/,\n  fields: [{\n    selector: \"select\",\n    value: \"1\"\n  }]\n}, {\n  name: \"Element visibility 2 : XHR\",\n  content: /<option value=\"e1\"/,\n  fields: [{\n    selector: \"select\",\n    value: \"e2\"\n  }]\n}, ];",
+        "tabId": 1
+      }
+    ]
+  }
+}</textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    <table id="form-o-fill-testing-info">
+    </table>
+  </body>
+</html>
