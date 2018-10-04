@@ -133,6 +133,7 @@ var onTabReadyRules = function(tabId) {
               // Set state -> rule was triggered via autorun
               state.ruleRuntime.triggered = "autorun";
 
+              //TODO: Extract the autorun stuff to a function and make it available for workflow step delay (#107) (FS, 2018-10-04)
               var timeout = parseInt(lastMatchingRules[0].autorun, 10);
               Logger.info("[bj.js] Rule is set to autorun delay: " + timeout + " msec");
 
