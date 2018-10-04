@@ -8,13 +8,14 @@ var badge = new Badge();
 var screenshooter = new Screenshooter();
 var badgeInterval = null;
 
-
 // Testcode: Fill testing HTML with macthing rules
 var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflows) {
   /*eslint-disable max-nested-callbacks*/
-  var mRule = matchingRules.map(function (rule) {
-    return rule.prettyPrint();
-  }).join(",");
+  var mRule = matchingRules
+    .map(function(rule) {
+      return rule.prettyPrint();
+    })
+    .join(",");
   /*eslint-enable max-nested-callbacks*/
   Testing.setVar("matching-rules-count", matchingRules.length, "Matching rule #");
   Testing.setVar("matching-rules-text", "[" + mRule + "]", "Matching rules JSON");
@@ -22,7 +23,15 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
 
   // If there is only one match we need something in the testpage to click on
   if (matchingRules.length + lastMatchingWorkflows.length === 1) {
-    Testing.setVar("popup-html", "<li class='select-rule' data-rule-name='" + matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() + "'>" + matchingRules[0].name + "</li>", "Popup HTML (one match)");
+    Testing.setVar(
+      "popup-html",
+      "<li class='select-rule' data-rule-name='" +
+        matchingRules[0].name.replace(/[^a-zA-Z-]/g, "-").toLowerCase() +
+        "'>" +
+        matchingRules[0].name +
+        "</li>",
+      "Popup HTML (one match)"
+    );
   }
 };
 
@@ -32,11 +41,10 @@ var onTabReadyRules = function(tabId) {
   lastMatchingRules = [];
 
   // Clear popup HTML
-  chrome.browserAction.setPopup({"tabId": tabId, "popup": ""});
+  chrome.browserAction.setPopup({ tabId: tabId, popup: "" });
   Logger.info("[bg.js] onTabReadyRules on Tab " + tabId);
 
   chrome.tabs.get(tabId, function(tab) {
-
     // return if the tab isn't active anymore
     if (chrome.runtime.lastError || !tab.active || tab.url.indexOf("chrome") === 0) {
       return;
@@ -47,35 +55,37 @@ var onTabReadyRules = function(tabId) {
 
     // This is a little bit complicated.
     // I wish the chromium API would implement Promises for all that.
-    Rules.all().then(function (rules) {
-
+    Rules.all().then(function(rules) {
       // This happens only on the very first install:
       if (rules.length === 0) {
         // No rules present!
         Promise.all([Rules.lastMatchingRules([]), Workflows.saveMatches([])]).then(function() {
-          chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+          chrome.browserAction.setPopup({ tabId: tab.id, popup: "html/popup.html" });
           badge.refreshMatchCounter(0);
           return;
         });
       }
 
       // First filter all rules that have content matchers
-      var relevantRules = rules.filter(function (rule) {
+      var relevantRules = rules.filter(function(rule) {
         return typeof rule.content !== "undefined";
       });
 
       // Send these rules to the content script so it can return the matching
       // rules based on the regex and the pages content
-      var message = { "action": "matchContent", "rules": JSONF.stringify(relevantRules)};
-      chrome.tabs.sendMessage(tabId, message, function (matchingContentRulesIds) {
+      var message = { action: "matchContent", rules: JSONF.stringify(relevantRules) };
+      chrome.tabs.sendMessage(tabId, message, function(matchingContentRulesIds) {
         var matchingContentRules = [];
 
         // If we found rules that match by content ...
         if (typeof matchingContentRulesIds !== "undefined") {
           // ... select rules that match those ids
           matchingContentRulesIds = JSONF.parse(matchingContentRulesIds);
-          if (typeof matchingContentRulesIds !== "undefined" && matchingContentRulesIds.length > 0) {
-            matchingContentRules = rules.filter(function (rule) {
+          if (
+            typeof matchingContentRulesIds !== "undefined" &&
+            matchingContentRulesIds.length > 0
+          ) {
+            matchingContentRules = rules.filter(function(rule) {
               return matchingContentRulesIds.indexOf(rule.id) > -1;
             });
 
@@ -83,11 +93,15 @@ var onTabReadyRules = function(tabId) {
             lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
           }
         }
-        Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
+        Logger.info(
+          "[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page"
+        );
 
         // Now match those rules that have a "url" matcher
-        Rules.match(tab.url).then(function (matchingRules) {
-          Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
+        Rules.match(tab.url).then(function(matchingRules) {
+          Logger.info(
+            "[bg.js] Got " + matchingRules.length + " rules matching the url of the page"
+          );
 
           // Concatenate matched rules by CONTENT and URL
           lastMatchingRules = Rules.unique(lastMatchingRules.concat(matchingRules));
@@ -110,13 +124,23 @@ var onTabReadyRules = function(tabId) {
 
             // No matches? Multiple Matches? Show popup when the user clicks on the icon
             // A single match should just fill the form if "always show popup" is off (see below)
-            if (totalMatchesCount !== 1 || (typeof state.optionSettings !== "undefined" && state.optionSettings.alwaysShowPopup)) {
-              chrome.browserAction.setPopup({"tabId": tab.id, "popup": "html/popup.html"});
+            if (
+              totalMatchesCount !== 1 ||
+              (typeof state.optionSettings !== "undefined" && state.optionSettings.alwaysShowPopup)
+            ) {
+              chrome.browserAction.setPopup({ tabId: tab.id, popup: "html/popup.html" });
               if (!Utils.isLiveExtension()) {
                 createCurrentPopupInIframe(tab.id);
               }
-            } else if ((lastMatchingRules[0].autorun === true || parseInt(lastMatchingRules[0].autorun, 10) > 0) && state.optionSettings.reevalRules) {
-              FormUtil.displayMessage(chrome.i18n.getMessage("bg_rule_reeval_autorun"), state.lastActiveTab);
+            } else if (
+              (lastMatchingRules[0].autorun === true ||
+                parseInt(lastMatchingRules[0].autorun, 10) > 0) &&
+              state.optionSettings.reevalRules
+            ) {
+              FormUtil.displayMessage(
+                chrome.i18n.getMessage("bg_rule_reeval_autorun"),
+                state.lastActiveTab
+              );
             } else if (lastMatchingRules[0].autorun === true && !state.optionSettings.reevalRules) {
               // If the rule is marked as "autorun", execute the rule if only one was found.
               Logger.info("[bj.js] Rule is set to autorun true");
@@ -125,7 +149,10 @@ var onTabReadyRules = function(tabId) {
               state.ruleRuntime.triggered = "autorun";
 
               FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
-            } else if (parseInt(lastMatchingRules[0].autorun, 10) > 0  && !state.optionSettings.reevalRules) {
+            } else if (
+              parseInt(lastMatchingRules[0].autorun, 10) > 0 &&
+              !state.optionSettings.reevalRules
+            ) {
               //
               // The autorun execution may be delayed by <param> msecs
               //
@@ -144,7 +171,12 @@ var onTabReadyRules = function(tabId) {
                   clearInterval(badgeInterval);
                 }
                 badgeInterval = setInterval(function() {
-                  badge.setText(chrome.i18n.getMessage("bg_autorun_countdown", [ Math.ceil(badgeDelayMsec / 1000) ]), state.lastActiveTab.id);
+                  badge.setText(
+                    chrome.i18n.getMessage("bg_autorun_countdown", [
+                      Math.ceil(badgeDelayMsec / 1000),
+                    ]),
+                    state.lastActiveTab.id
+                  );
                   badgeDelayMsec -= 500;
                   if (badgeDelayMsec <= 0) {
                     clearInterval(badgeInterval);
@@ -161,11 +193,9 @@ var onTabReadyRules = function(tabId) {
                 }
                 FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
               }, timeout);
-
             }
           });
         });
-
       });
     });
   });
@@ -174,11 +204,11 @@ var onTabReadyRules = function(tabId) {
 // Load running workflow storage
 // and run the next step
 var onTabReadyWorkflow = function() {
-  return new Promise(function (resolve) {
+  return new Promise(function(resolve) {
     Storage.load(Utils.keys.runningWorkflow).then(function prOnTabReadyWf(runningWorkflow) {
       // No running workflow?
       if (typeof runningWorkflow === "undefined" || !state.lastActiveTab) {
-        resolve({status: "not_running", runRule: true});
+        resolve({ status: "not_running", runRule: true });
         return;
       }
       // Set state -> rule is running as part of workflow
@@ -186,9 +216,14 @@ var onTabReadyWorkflow = function() {
 
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
-      Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
+      Logger.info(
+        "[background.js] Using workflow step # " +
+          (runningWorkflow.currentStep + 1) +
+          " (" +
+          ruleNameToRun +
+          ")"
+      );
       badge.setText("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
-
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
         if (typeof rule === "undefined") {
@@ -199,7 +234,7 @@ var onTabReadyWorkflow = function() {
           // Search for matching rules and workflows
           runWorkflowOrRule(state.lastActiveTab.id);
 
-          resolve({status: "rule_not_found", runRule: false});
+          resolve({ status: "rule_not_found", runRule: false });
         } else {
           // Should a screenshot be taken?
           if (runningWorkflow.flags && runningWorkflow.flags.screenshot === true) {
@@ -208,13 +243,27 @@ var onTabReadyWorkflow = function() {
           }
 
           // Fill with this rule
-          FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_step", [runningWorkflow.currentStep + 1, runningWorkflow.steps.length]), state.lastActiveTab);
+          FormUtil.displayMessage(
+            chrome.i18n.getMessage("bg_workflow_step", [
+              runningWorkflow.currentStep + 1,
+              runningWorkflow.steps.length,
+            ]),
+            state.lastActiveTab
+          );
           FormUtil.applyRule(rule, state.lastActiveTab);
 
           // End of workflow reached?
-          if ((runningWorkflow.currentStep + 1) >= runningWorkflow.steps.length) {
-            FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
-            Logger.info("[bg.js] workflow finished on rule " + (runningWorkflow.currentStep + 1) + " of " + runningWorkflow.steps.length);
+          if (runningWorkflow.currentStep + 1 >= runningWorkflow.steps.length) {
+            FormUtil.displayMessage(
+              chrome.i18n.getMessage("bg_workflow_finished"),
+              state.lastActiveTab
+            );
+            Logger.info(
+              "[bg.js] workflow finished on rule " +
+                (runningWorkflow.currentStep + 1) +
+                " of " +
+                runningWorkflow.steps.length
+            );
             Storage.delete(Utils.keys.runningWorkflow);
 
             // Search for matching rules and workflows
@@ -222,30 +271,33 @@ var onTabReadyWorkflow = function() {
             runWorkflowOrRule(state.lastActiveTab.id);
             state.forceRunOnLoad = false;
 
-            resolve({status: "finished", runRule: false});
+            resolve({ status: "finished", runRule: false });
             return;
           }
 
           // Save workflow state so we can continue even after a page reload
-          Storage.save({
-            currentStep: runningWorkflow.currentStep + 1,
-            steps: runningWorkflow.steps,
-            flags: runningWorkflow.flags
-          }, Utils.keys.runningWorkflow).then(function () {
-            resolve({status: "running_workflow", runRule: false});
+          Storage.save(
+            {
+              currentStep: runningWorkflow.currentStep + 1,
+              steps: runningWorkflow.steps,
+              flags: runningWorkflow.flags,
+            },
+            Utils.keys.runningWorkflow
+          ).then(function() {
+            resolve({ status: "running_workflow", runRule: false });
           });
         }
       });
 
       // Running workflow! Don't run normal rules.
-      resolve({status: "running_workflow", runRule: false});
+      resolve({ status: "running_workflow", runRule: false });
     });
   });
 };
 
 // Searches for workflows or rules to run
 // Workflows steps are then run and subsequent matching rules are ignored
-runWorkflowOrRule = function (tabId) {
+runWorkflowOrRule = function(tabId) {
   // First check (and run) workflows
   return onTabReadyWorkflow().then(function prOnTabReadyWf(workflowStatus) {
     // If a workflow step has been run, don't run rules
@@ -284,20 +336,25 @@ var setCyclicRulesRecheck = function(shouldCheck) {
 };
 
 // Fires when a tab becomes active (https://developer.chrome.com/extensions/tabs#event-onActivated)
-chrome.tabs.onActivated.addListener(function (activeInfo) {
+chrome.tabs.onActivated.addListener(function(activeInfo) {
   if (state.optionSettings.dontMatchOnTabSwitch === false) {
     runWorkflowOrRule(activeInfo.tabId);
   }
 });
 
 // Fires when the URL changes (https://developer.chrome.com/extensions/tabs#event-onUpdated)
-chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
   var checkOn = "loading";
   // May be set by options or running workflow
   if (state.optionSettings.matchOnLoad === true || state.forceRunOnLoad) {
     checkOn = "complete";
   }
-  Logger.info("[bg.js] Matching rules/workflows on state " + checkOn + "(state.forceRunOnLoad = )" + state.forceRunOnLoad);
+  Logger.info(
+    "[bg.js] Matching rules/workflows on state " +
+      checkOn +
+      "(state.forceRunOnLoad = )" +
+      state.forceRunOnLoad
+  );
 
   // "complete" => onload event
   // "loading" => DOMContentLoader event
@@ -313,7 +370,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
 
 // This event will only fire if NO POPUP is set
 // This is the case when only one rule matches
-chrome.browserAction.onClicked.addListener(function (){
+chrome.browserAction.onClicked.addListener(function() {
   // Set state -> rule is triggered manually
   state.ruleRuntime.triggered = "manual";
   state.ruleRuntime.partOfWorkflow = false;
@@ -333,9 +390,11 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     state.ruleRuntime.triggered = "manual";
     state.ruleRuntime.partOfWorkflow = false;
 
-    Logger.info("[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id);
+    Logger.info(
+      "[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id
+    );
     // Find the rule by id
-    var rules = lastMatchingRules.filter(function (rule) {
+    var rules = lastMatchingRules.filter(function(rule) {
       return rule.id === message.id;
     });
 
@@ -352,14 +411,16 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
 
     // Load previously saved matching workflows
     Workflows.findById(message.id).then(function prLoadMatches(matchingWf) {
-
       // Workflow steps can only run on "load" event
       // otherwise they will trigger when the page hasn't changed yet
       state.forceRunOnLoad = true;
 
       // Now save the steps of that workflow to the storage and
       // mark the current running workflow
-      Storage.save({ currentStep: 0, steps: matchingWf.steps, flags: matchingWf.flags }, Utils.keys.runningWorkflow).then(function () {
+      Storage.save(
+        { currentStep: 0, steps: matchingWf.steps, flags: matchingWf.flags },
+        Utils.keys.runningWorkflow
+      ).then(function() {
         onTabReadyWorkflow();
       });
     });
@@ -370,13 +431,17 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
   // Callable by content script that otherwise isn't allowed to open intern urls.
   if (message.action === "openIntern" && message.url) {
     Logger.info("[bg.js] received 'openIntern' with url '" + message.url + "'");
-    chrome.tabs.create({ "active": true, "url": message.url });
+    chrome.tabs.create({ active: true, url: message.url });
   }
 
   // Display a notification to the user that the extract has finished
   if (message.action === "extractFinishedNotification") {
     Logger.info("[bg.js] received 'extractFinishedNotification'");
-    Notification.create(chrome.i18n.getMessage("notification_form_extraction_done"), null, Utils.openOptions);
+    Notification.create(
+      chrome.i18n.getMessage("notification_form_extraction_done"),
+      null,
+      Utils.openOptions
+    );
   }
 
   // Return the last active tab id
@@ -425,7 +490,7 @@ var setSettings = function(settings, value) {
   Logger.info("[bg.js] Settings set to " + JSONF.stringify(state.optionSettings));
 
   // Tell options page to reload the settings
-  chrome.runtime.sendMessage({action: "reloadSettings"});
+  chrome.runtime.sendMessage({ action: "reloadSettings" });
 };
 /*eslint-enable no-unused-vars */
 
@@ -454,16 +519,26 @@ var remoteRulesImportSuccess = function(resolved) {
 // Triggered when update of remote rules was failed
 var remoteRulesImportFail = function() {
   Logger.warn("[bg.js] Updating remote rules FAILED");
-  Notification.create(chrome.i18n.getMessage("notification_remote_import_failed"), null, function () {
-    Utils.openOptions("#settings");
-  });
+  Notification.create(
+    chrome.i18n.getMessage("notification_remote_import_failed"),
+    null,
+    function() {
+      Utils.openOptions("#settings");
+    }
+  );
 };
 
 // Update remote rules if options are set correctly
 var executeRemoteImport = function() {
-  if (typeof state.optionSettings !== "undefined" && state.optionSettings.importActive === true && state.optionSettings.importUrl.indexOf("http") > -1) {
+  if (
+    typeof state.optionSettings !== "undefined" &&
+    state.optionSettings.importActive === true &&
+    state.optionSettings.importUrl.indexOf("http") > -1
+  ) {
     Logger.info("[bg.js] Alarm triggered update of remote rules");
-    RemoteImport.import(state.optionSettings.importUrl).then(remoteRulesImportSuccess).catch(remoteRulesImportFail);
+    RemoteImport.import(state.optionSettings.importUrl)
+      .then(remoteRulesImportSuccess)
+      .catch(remoteRulesImportFail);
   }
 };
 
@@ -489,7 +564,7 @@ var initializeExtension = function() {
 
 // REMOVE START
 // Debug Messages from content.js
-chrome.runtime.onConnect.addListener(function (port) {
+chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(message) {
     if (message.action === "log" && message.message) {
       Logger.store(message.message);
@@ -499,7 +574,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 // REMOVE END
 
 // Listen for messages from content.js
-chrome.runtime.onMessage.addListener(function (message) {
+chrome.runtime.onMessage.addListener(function(message) {
   // REMOVE START
   if (message.action === "log" && message.message) {
     Logger.store(message.message);
@@ -509,7 +584,10 @@ chrome.runtime.onMessage.addListener(function (message) {
   // The content page (form_filler.js) requests a screenshot to be taken
   // the message.flag can be the filename or true/false
   if (message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
-    Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
+    Logger.info(
+      "[bg.js] Request from content.js to take a screenshot of windowId " +
+        state.lastActiveTab.windowId
+    );
     screenshooter.takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
 });
