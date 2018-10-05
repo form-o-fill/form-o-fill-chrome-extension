@@ -49,14 +49,18 @@
     "message": "Workflow error: rule not found!"
   },
   "bg_workflow_step": {
-    "message": "Workflow step $CURRENT_STEP$/$TOTAL_STEPS$",
+    "message": "Workflow step $CURRENT_STEP$/$TOTAL_STEPS$$DELAY_TEXT$",
     "placeholders": {
       "current_step": {
         "content": "$1"
       },
       "total_steps": {
         "content": "$2"
+      },
+      "delay_text": {
+        "content": "$3"
       }
+
     }
   },
   "bg_autorun_countdown": {

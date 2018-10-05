@@ -201,6 +201,25 @@ var onTabReadyRules = function(tabId) {
   });
 };
 
+// Ends the current workflow
+const endCurrentWorkflow = (runningWorkflow, resolve) => {
+  FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
+  Logger.info(
+    "[bg.js] workflow finished on rule " +
+      (runningWorkflow.currentStep + 1) +
+      " of " +
+      runningWorkflow.steps.length
+  );
+  Storage.delete(Utils.keys.runningWorkflow);
+
+  // Search for matching rules and workflows
+  // to fill the icon again
+  runWorkflowOrRule(state.lastActiveTab.id);
+  state.forceRunOnLoad = false;
+
+  resolve({ status: "finished", runRule: false });
+};
+
 // Load running workflow storage
 // and run the next step
 var onTabReadyWorkflow = function() {
@@ -242,36 +261,36 @@ var onTabReadyWorkflow = function() {
             rule.screenshot = true;
           }
 
+          // How long should we delay the execution of the workflow step
+          var delayWorkflowStep = parseInt(
+            runningWorkflow.delays[runningWorkflow.currentStep] || 0,
+            10
+          );
+          var delayText =
+            delayWorkflowStep > 0 ? `<br />Delaying ${delayWorkflowStep} milliseconds` : "";
+
           // Fill with this rule
           FormUtil.displayMessage(
             chrome.i18n.getMessage("bg_workflow_step", [
               runningWorkflow.currentStep + 1,
               runningWorkflow.steps.length,
+              delayText,
             ]),
             state.lastActiveTab
           );
-          FormUtil.applyRule(rule, state.lastActiveTab);
+
+          // Delay the execution of the step
+          if (delayWorkflowStep > 0) {
+            setTimeout(() => {
+              FormUtil.applyRule(rule, state.lastActiveTab);
+            }, delayWorkflowStep);
+          } else {
+            FormUtil.applyRule(rule, state.lastActiveTab);
+          }
 
           // End of workflow reached?
           if (runningWorkflow.currentStep + 1 >= runningWorkflow.steps.length) {
-            FormUtil.displayMessage(
-              chrome.i18n.getMessage("bg_workflow_finished"),
-              state.lastActiveTab
-            );
-            Logger.info(
-              "[bg.js] workflow finished on rule " +
-                (runningWorkflow.currentStep + 1) +
-                " of " +
-                runningWorkflow.steps.length
-            );
-            Storage.delete(Utils.keys.runningWorkflow);
-
-            // Search for matching rules and workflows
-            // to fill the icon again
-            runWorkflowOrRule(state.lastActiveTab.id);
-            state.forceRunOnLoad = false;
-
-            resolve({ status: "finished", runRule: false });
+            endCurrentWorkflow(runningWorkflow, resolve);
             return;
           }
 
@@ -281,6 +300,7 @@ var onTabReadyWorkflow = function() {
               currentStep: runningWorkflow.currentStep + 1,
               steps: runningWorkflow.steps,
               flags: runningWorkflow.flags,
+              delays: runningWorkflow.delays,
             },
             Utils.keys.runningWorkflow
           ).then(function() {
@@ -418,7 +438,12 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
       // Now save the steps of that workflow to the storage and
       // mark the current running workflow
       Storage.save(
-        { currentStep: 0, steps: matchingWf.steps, flags: matchingWf.flags },
+        {
+          currentStep: 0,
+          steps: matchingWf.steps,
+          flags: matchingWf.flags,
+          delays: matchingWf.delays,
+        },
         Utils.keys.runningWorkflow
       ).then(function() {
         onTabReadyWorkflow();
