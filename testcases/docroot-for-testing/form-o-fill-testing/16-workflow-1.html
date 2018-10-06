@@ -19,9 +19,15 @@
       2. Input field: <input value="Value from pageload" id="target2" /><br>
     </form>
     Rules Import: 
-    <textarea id="form-o-fill-testing-import">{
+    <textarea id="form-o-fill-testing-import">
+      {
   "workflows": [
     {
+      "delays": [
+        "2000",
+        "0"
+      ],
+      "flags": {},
       "id": 1,
       "name": "Form-O-Fill Workflow Test",
       "steps": [
@@ -43,6 +49,17 @@
         "tabId": 1
       }
     ]
+  },
+  "settings": {
+    "alwaysShowPopup": false,
+    "jpegQuality": 60,
+    "reevalRules": false,
+    "matchOnLoad": false,
+    "dontMatchOnTabSwitch": false,
+    "importActive": false,
+    "importUrl": "",
+    "dontFireEvents": false,
+    "decryptionPassword": "undefined"
   }
 }
     </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
