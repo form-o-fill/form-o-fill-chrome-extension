@@ -7,6 +7,27 @@ var plugins = require("gulp-load-plugins")();
 // this can be used to debug gulp runs:
 // .pipe(debug({verbose: true}))
 
+/* If the strip-debug step breaks check
+ * 1. No ES6 stuff used
+ * 2. No Multiline Logger statements
+ *
+ * use this in gulp-strip.debug/index.js:
+ *
+module.exports = function(src) {
+  // src
+  //   .split(/\r?\n/)
+  //   .slice(600)
+  //   .forEach(function(line, index) {
+  //     console.log("#" + (index + 1) + ": " + line);
+  //   });
+  return rocambole.moonwalk(src, function(node) {
+    stripDebugger(node);
+    stripConsole(node);
+    stripAlert(node);
+  });
+};
+ */
+
 // Load the manifest as JSON
 var manifest = require("./src/manifest");
 
