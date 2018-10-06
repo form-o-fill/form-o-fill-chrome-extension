@@ -4,15 +4,8 @@
   "description": "The programmable form filler for developers",
   "main": "gulpfile.js",
   "private": true,
-  "dependencies": {
-    "babel-core": "^6.25.0",
-    "babel-loader": "^7.1.1",
-    "babel-preset-env": "^1.6.0",
-    "gulp-minify-css": "^1.2.4",
-    "html-webpack-plugin": "^2.29.0",
-    "webpack": "^3.1.0"
-  },
   "devDependencies": {
+    "gulp-minify-css": "^1.2.4",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "chalk": "^1.1.3",
