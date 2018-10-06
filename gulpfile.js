@@ -133,8 +133,8 @@ gulp.task("globalJs", ["clean"], function() {
       "src/js/global/crypto.js",
     ])
     .pipe(plugins.replaceTask(replaceOpts))
-    .pipe(plugins.concat("global.js"))
     .pipe(plugins.stripDebug())
+    .pipe(plugins.concat("global.js"))
     .pipe(plugins.uglify())
     .pipe(gulp.dest("build/js/"));
 });
@@ -161,8 +161,8 @@ gulp.task("backgroundJs", ["clean"], function() {
       "src/js/background/hotkeys.js",
     ])
     .pipe(plugins.replaceTask(replaceOpts))
-    .pipe(plugins.concat("background.js"))
     .pipe(plugins.stripDebug())
+    .pipe(plugins.concat("background.js"))
     .pipe(plugins.uglify())
     .pipe(gulp.dest("build/js/"));
 });
@@ -174,8 +174,8 @@ gulp.task("contentJs", ["clean"], function() {
   return gulp
     .src(["src/vendor/optimal-select/optimal-select.js", "src/js/content/*.js"])
     .pipe(plugins.replaceTask(replaceOpts))
-    .pipe(plugins.concat("fof_content.js"))
     .pipe(plugins.stripDebug())
+    .pipe(plugins.concat("fof_content.js"))
     .pipe(plugins.uglify())
     .pipe(gulp.dest("build/js/"));
 });
@@ -199,8 +199,8 @@ gulp.task("optionsJs", ["clean"], function() {
       "src/js/options/rule_summary.js",
     ])
     .pipe(plugins.replaceTask(replaceOpts))
-    .pipe(plugins.concat("options.js"))
     .pipe(plugins.stripDebug())
+    .pipe(plugins.concat("options.js"))
     .pipe(plugins.uglify())
     .pipe(gulp.dest("build/js/"));
 });
