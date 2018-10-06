@@ -93,15 +93,11 @@ var onTabReadyRules = function(tabId) {
             lastMatchingRules = lastMatchingRules.concat(matchingContentRules);
           }
         }
-        Logger.info(
-          "[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page"
-        );
+        Logger.info("[bg.js] Got " + matchingContentRules.length + " rules matching the content of the page");
 
         // Now match those rules that have a "url" matcher
         Rules.match(tab.url).then(function(matchingRules) {
-          Logger.info(
-            "[bg.js] Got " + matchingRules.length + " rules matching the url of the page"
-          );
+          Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
 
           // Concatenate matched rules by CONTENT and URL
           lastMatchingRules = Rules.unique(lastMatchingRules.concat(matchingRules));
@@ -202,14 +198,9 @@ var onTabReadyRules = function(tabId) {
 };
 
 // Ends the current workflow
-const endCurrentWorkflow = (runningWorkflow, resolve) => {
+var endCurrentWorkflow = function(runningWorkflow, resolve) {
   FormUtil.displayMessage(chrome.i18n.getMessage("bg_workflow_finished"), state.lastActiveTab);
-  Logger.info(
-    "[bg.js] workflow finished on rule " +
-      (runningWorkflow.currentStep + 1) +
-      " of " +
-      runningWorkflow.steps.length
-  );
+  Logger.info("[bg.js] workflow finished on rule " + (runningWorkflow.currentStep + 1) + " of " + runningWorkflow.steps.length);
   Storage.delete(Utils.keys.runningWorkflow);
 
   // Search for matching rules and workflows
@@ -235,13 +226,7 @@ var onTabReadyWorkflow = function() {
 
       // load rule for workflow step
       var ruleNameToRun = runningWorkflow.steps[runningWorkflow.currentStep];
-      Logger.info(
-        "[background.js] Using workflow step # " +
-          (runningWorkflow.currentStep + 1) +
-          " (" +
-          ruleNameToRun +
-          ")"
-      );
+      Logger.info("[background.js] Using workflow step # " + (runningWorkflow.currentStep + 1) + " (" + ruleNameToRun + ")");
       badge.setText("#" + (runningWorkflow.currentStep + 1), state.lastActiveTab.id);
 
       Rules.findByName(ruleNameToRun).then(function prExecWfStep(rule) {
@@ -262,12 +247,8 @@ var onTabReadyWorkflow = function() {
           }
 
           // How long should we delay the execution of the workflow step
-          var delayWorkflowStep = parseInt(
-            runningWorkflow.delays[runningWorkflow.currentStep] || 0,
-            10
-          );
-          var delayText =
-            delayWorkflowStep > 0 ? `<br />Delaying ${delayWorkflowStep} milliseconds` : "";
+          var delayWorkflowStep = typeof runningWorkflow.delays === "undefined" ? 0 : parseInt(runningWorkflow.delays[runningWorkflow.currentStep] || 0, 10);
+          var delayText = delayWorkflowStep > 0 ? "<br />Delaying " + delayWorkflowStep + " milliseconds" : "";
 
           // Fill with this rule
           FormUtil.displayMessage(
@@ -281,7 +262,7 @@ var onTabReadyWorkflow = function() {
 
           // Delay the execution of the step
           if (delayWorkflowStep > 0) {
-            setTimeout(() => {
+            setTimeout(function() {
               FormUtil.applyRule(rule, state.lastActiveTab);
             }, delayWorkflowStep);
           } else {
@@ -369,12 +350,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
   if (state.optionSettings.matchOnLoad === true || state.forceRunOnLoad) {
     checkOn = "complete";
   }
-  Logger.info(
-    "[bg.js] Matching rules/workflows on state " +
-      checkOn +
-      "(state.forceRunOnLoad = )" +
-      state.forceRunOnLoad
-  );
+  Logger.info("[bg.js] Matching rules/workflows on state " + checkOn + "(state.forceRunOnLoad = )" + state.forceRunOnLoad);
 
   // "complete" => onload event
   // "loading" => DOMContentLoader event
@@ -410,9 +386,7 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
     state.ruleRuntime.triggered = "manual";
     state.ruleRuntime.partOfWorkflow = false;
 
-    Logger.info(
-      "[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id
-    );
+    Logger.info("[bg.js] called by popup.js with rule index " + message.index + ", id = " + message.id);
     // Find the rule by id
     var rules = lastMatchingRules.filter(function(rule) {
       return rule.id === message.id;
@@ -609,10 +583,7 @@ chrome.runtime.onMessage.addListener(function(message) {
   // The content page (form_filler.js) requests a screenshot to be taken
   // the message.flag can be the filename or true/false
   if (message.action === "takeScreenshot" && typeof message.flag !== "undefined") {
-    Logger.info(
-      "[bg.js] Request from content.js to take a screenshot of windowId " +
-        state.lastActiveTab.windowId
-    );
+    Logger.info("[bg.js] Request from content.js to take a screenshot of windowId " + state.lastActiveTab.windowId);
     screenshooter.takeScreenshot(state.lastActiveTab.windowId, message.value, message.flag);
   }
 });

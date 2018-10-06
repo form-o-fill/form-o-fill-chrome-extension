@@ -13,26 +13,41 @@ var emptyWorkflow = {
 };
 
 // generate a step html
-const stepHtml = function(text, hasError, delayMsec) {
+var stepHtml = function(text, hasError, delayMsec) {
   delayMsec = typeof delayMsec === "undefined" ? "0" : delayMsec;
-  return `<li class="${
-    hasError ? "has-error" : ""
-  }" data-step-delay="${delayMsec}" data-step-name="${text}">${text}
-  <button class="wf-delete-step">${chrome.i18n.getMessage("opt_wf_step_remove_button")}</button>
-  <input type="text" class="wf-delay-step" value="${delayMsec}" maxlength="4"></input> 🕐msec delay
-  ${
-    hasError
+  return (
+    '<li class="' +
+    (hasError ? "has-error" : "") +
+    '" data-step-delay="' +
+    delayMsec +
+    '" data-step-name="' +
+    text +
+    '">' +
+    text +
+    '<button class="wf-delete-step">' +
+    chrome.i18n.getMessage("opt_wf_step_remove_button") +
+    "</button>" +
+    '<input type="text" class="wf-delay-step" value="' +
+    delayMsec +
+    '" maxlength="4"></input> 🕐msec delay' +
+    (hasError
       ? "<span class='has-error'>" + chrome.i18n.getMessage("opt_wf_missing_rule") + "</span>"
-      : ""
-  }
-  </li>`;
+      : "") +
+    "</li>"
+  );
 };
 
 // generate a rule
-const ruleHtml = rule => {
-  return `<option data-rule-name="${rule.name}" data-rule-id="${rule.id}">${
-    rule.nameClean
-  }</option>`;
+var ruleHtml = function(rule) {
+  return (
+    '<option data-rule-name="' +
+    rule.name +
+    '" data-rule-id="' +
+    rule.id +
+    '">' +
+    rule.nameClean +
+    "</option>"
+  );
 };
 
 // Show that there are unsaved changes
@@ -276,17 +291,7 @@ var saveWorkflow = function() {
     });
   }
   Workflows.save(workflows);
-  Logger.info(
-    "[o/workflow.js] Saving WF {id: " +
-      workflow.id +
-      "; name: " +
-      workflow.name +
-      "; steps#: " +
-      workflow.steps.length +
-      "} = " +
-      workflows.length +
-      " total"
-  );
+  Logger.info("[o/workflow.js] Saving WF {id: " + workflow.id + "; name: " + workflow.name + "; steps#: " + workflow.steps.length + "} = " + workflows.length + " total");
 
   // reload workflows
   jQuery("#workfloweditor").data("workflowId", currentWfId);
