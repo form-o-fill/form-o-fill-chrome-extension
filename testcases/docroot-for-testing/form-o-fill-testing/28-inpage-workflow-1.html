@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Form-O-Fill Testpage</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body class="test-no-log">
+    <pre>
+      Inpage workflow
+    </pre>
+
+    Target 1:<input id="target1" type="text" value="value from pageload" /> ("inpage WF 1")<br/>
+    Target 2:<input id="target2" type="text" value="value from pageload" /> ("inpage WF 2")<br/>
+
+    <form action="28-inpage-workflow-2.html" method="get"><input id="submit" type="submit">Continue</input></form>
+
+    Rules Import: <textarea id="form-o-fill-testing-import">{
+    {
+  "workflows": [
+    {
+      "delays": [
+        0,
+        0
+      ],
+      "flags": {},
+      "id": 1,
+      "name": "Inplace WF",
+      "steps": [
+        "Inpage WF - 1",
+        "Inpage WF - 2"
+      ]
+    }
+  ],
+  "rules": {
+    "tabSettings": [
+      {
+        "id": "1",
+        "name": "Inplace WF"
+      }
+    ],
+    "rules": [
+      {
+        "code": "var rules = [{\n  name: \"Inpage WF - 1\",\n  url: /28-inpage-workflow/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"WF step 1\"\n  }]\n},{\n  name: \"Inpage WF - 2\",\n  url: /28-inpage-workflow/,\n  fields: [{\n    selector: \"#target2\",\n    value: \"WF step 2\"\n  }]\n}\n];",
+        "tabId": 1
+      }
+    ]
+  },
+  "settings": {
+    "alwaysShowPopup": false,
+    "jpegQuality": 60,
+    "reevalRules": false,
+    "matchOnLoad": false,
+    "dontMatchOnTabSwitch": false,
+    "importActive": false,
+    "importUrl": "",
+    "dontFireEvents": false,
+    "decryptionPassword": "undefined"
+  }
+}
+</textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
+
+    <table id="form-o-fill-testing-info"></table>
+
+  </body>
+</html>
