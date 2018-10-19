@@ -7,7 +7,8 @@
   </head>
   <body class="test-no-log">
     <pre>
-      Inpage workflow
+      Inpage workflow 1:
+      Both fields should be filled then a page change should occur followed by the fields 3+4 being filled.
     </pre>
 
     Target 1:<input id="target1" type="text" value="value from pageload" /> ("inpage WF 1")<br/>
@@ -16,19 +17,22 @@
     <form action="28-inpage-workflow-2.html" method="get"><input id="submit" type="submit">Continue</input></form>
 
     Rules Import: <textarea id="form-o-fill-testing-import">{
-    {
   "workflows": [
     {
       "delays": [
-        0,
-        0
+        "0",
+        "0",
+        "0",
+        "0"
       ],
       "flags": {},
       "id": 1,
       "name": "Inplace WF",
       "steps": [
         "Inpage WF - 1",
-        "Inpage WF - 2"
+        "Inpage WF - 2",
+        "Inpage WF - 3",
+        "Inpage WF - 4"
       ]
     }
   ],
@@ -41,7 +45,7 @@
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  name: \"Inpage WF - 1\",\n  url: /28-inpage-workflow/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"WF step 1\"\n  }]\n},{\n  name: \"Inpage WF - 2\",\n  url: /28-inpage-workflow/,\n  fields: [{\n    selector: \"#target2\",\n    value: \"WF step 2\"\n  }]\n}\n];",
+        "code": "var rules = [{\n  name: \"Inpage WF - 1\",\n  url: /28-inpage-workflow-1/,\n  fields: [{\n    selector: \"#target1\",\n    value: \"WF step 1\"\n  }]\n}, {\n  name: \"Inpage WF - 2\",\n  url: /28-inpage-workflow-1/,\n  fields: [{\n    selector: \"#target2\",\n    value: \"WF step 2\"\n  },{\n    selector: \"#submit\",\n    value: Libs.h.click\n  }]\n}, {\n  name: \"Inpage WF - 3\",\n  url: /28-inpage-workflow-2/,\n  fields: [{\n    selector: \"#target3\",\n    value: \"WF step 3\"\n  }]\n}, {\n  name: \"Inpage WF - 4\",\n  url: /28-inpage-workflow-2/,\n  fields: [{\n    selector: \"#target4\",\n    value: \"WF step 4\"\n  }]\n}\n];",
         "tabId": 1
       }
     ]
@@ -57,8 +61,7 @@
     "dontFireEvents": false,
     "decryptionPassword": "undefined"
   }
-}
-</textarea>
+}</textarea>
     <button id="form-o-fill-testing-import-submit" value="import">Import</button>
 
     <table id="form-o-fill-testing-info"></table>
