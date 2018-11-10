@@ -13,13 +13,10 @@ var emptyWorkflow = {
 };
 
 // generate a step html
-var stepHtml = function(text, hasError, delayMsec) {
-  delayMsec = typeof delayMsec === "undefined" ? "0" : delayMsec;
+var stepHtml = function(text, hasError) {
   return (
     '<li class="' +
     (hasError ? "has-error" : "") +
-    '" data-step-delay="' +
-    delayMsec +
     '" data-step-name="' +
     text +
     '">' +
@@ -27,9 +24,6 @@ var stepHtml = function(text, hasError, delayMsec) {
     '<button class="wf-delete-step">' +
     chrome.i18n.getMessage("opt_wf_step_remove_button") +
     "</button>" +
-    '<input type="text" class="wf-delay-step" value="' +
-    delayMsec +
-    '" maxlength="4"></input> 🕐msec delay' +
     (hasError
       ? "<span class='has-error'>" + chrome.i18n.getMessage("opt_wf_missing_rule") + "</span>"
       : "") +
@@ -101,14 +95,13 @@ var fillWorkflow = function(data) {
     return;
   }
   var stepsHtml = [];
-  var delays = typeof data.delays === "undefined" ? [] : data.delays;
 
   jQuery("#workfloweditor")
     .show()
     .data("workflowId", data.id);
   jQuery(".wf-name").val(data.name);
-  jQuery.makeArray(data.steps).forEach(function dataStep(step, index) {
-    stepsHtml.push(stepHtml(step, !!findError(data.id, step), delays[index]));
+  jQuery.makeArray(data.steps).forEach(function dataStep(step) {
+    stepsHtml.push(stepHtml(step, !!findError(data.id, step)));
   });
   jQuery("#workfloweditor ol li").remove();
   jQuery("#workfloweditor ol").html(stepsHtml.join(""));
@@ -157,14 +150,6 @@ var currentWfSteps = function() {
   return jQuery("#workfloweditor li").map(function() {
     return this.dataset.stepName;
   });
-};
-
-var currentWfDelays = function() {
-  return jQuery.makeArray(
-    jQuery("#workfloweditor li .wf-delay-step").map(function() {
-      return this.value === "" ? 0 : this.value;
-    })
-  );
 };
 
 // Find a single workflow by id
@@ -272,7 +257,6 @@ var saveWorkflow = function() {
     id: currentWfId,
     name: jQuery(".wf-name").val(),
     steps: currentWfSteps(),
-    delays: currentWfDelays(),
     flags: flags,
   };
 

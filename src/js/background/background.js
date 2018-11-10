@@ -156,7 +156,6 @@ var onTabReadyRules = function(tabId) {
               // Set state -> rule was triggered via autorun
               state.ruleRuntime.triggered = "autorun";
 
-              //TODO: Extract the autorun stuff to a function and make it available for workflow step delay (#107) (FS, 2018-10-04)
               var timeout = parseInt(lastMatchingRules[0].autorun, 10);
               Logger.info("[bj.js] Rule is set to autorun delay: " + timeout + " msec");
 
@@ -247,27 +246,17 @@ var onTabReadyWorkflow = function() {
           }
 
           // How long should we delay the execution of the workflow step
-          var delayWorkflowStep = typeof runningWorkflow.delays === "undefined" ? 0 : parseInt(runningWorkflow.delays[runningWorkflow.currentStep] || 0, 10);
-          var delayText = delayWorkflowStep > 0 ? "<br />Delaying " + delayWorkflowStep + " milliseconds" : "";
 
           // Fill with this rule
           FormUtil.displayMessage(
             chrome.i18n.getMessage("bg_workflow_step", [
               runningWorkflow.currentStep + 1,
               runningWorkflow.steps.length,
-              delayText,
             ]),
             state.lastActiveTab
           );
 
-          // Delay the execution of the step
-          if (delayWorkflowStep > 0) {
-            setTimeout(function() {
-              FormUtil.applyRule(rule, state.lastActiveTab);
-            }, delayWorkflowStep);
-          } else {
-            FormUtil.applyRule(rule, state.lastActiveTab);
-          }
+          FormUtil.applyRule(rule, state.lastActiveTab);
 
           // End of workflow reached?
           if (runningWorkflow.currentStep + 1 >= runningWorkflow.steps.length) {
@@ -281,7 +270,6 @@ var onTabReadyWorkflow = function() {
               currentStep: runningWorkflow.currentStep + 1,
               steps: runningWorkflow.steps,
               flags: runningWorkflow.flags,
-              delays: runningWorkflow.delays,
             },
             Utils.keys.runningWorkflow
           ).then(function() {
@@ -416,7 +404,6 @@ chrome.extension.onMessage.addListener(function(message, sender, sendResponse) {
           currentStep: 0,
           steps: matchingWf.steps,
           flags: matchingWf.flags,
-          delays: matchingWf.delays,
         },
         Utils.keys.runningWorkflow
       ).then(function() {

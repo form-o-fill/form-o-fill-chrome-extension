@@ -25,7 +25,7 @@
     }
   },
   "options": {
-    "message": "Options" 
+    "message": "Options"
   },
   "tabs_default_name": {
     "message": "Rules"
@@ -49,18 +49,14 @@
     "message": "Workflow error: rule not found!"
   },
   "bg_workflow_step": {
-    "message": "Workflow step $CURRENT_STEP$/$TOTAL_STEPS$$DELAY_TEXT$",
+    "message": "Workflow step $CURRENT_STEP$/$TOTAL_STEPS$",
     "placeholders": {
       "current_step": {
         "content": "$1"
       },
       "total_steps": {
         "content": "$2"
-      },
-      "delay_text": {
-        "content": "$3"
       }
-
     }
   },
   "bg_autorun_countdown": {
@@ -190,7 +186,7 @@
     "message": "'datetime-local' field cannot be filled with this value. See http://bit.ly/formofill-format-date-time-local"
   },
   "fill_field_error_color": {
-    "message": "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color" 
+    "message": "'color' field cannot be filled with this value. See http://bit.ly/formofill-format-color"
   },
   "lib_h_copyvalue_field_not_found": {
     "message": "Libs.h.copyValue didn't find source element with selector '$SELECTOR$'.",
@@ -265,5 +261,4 @@
   "opt_wf_rule_removed": {
     "message": "Rule removed"
   }
-
 }
