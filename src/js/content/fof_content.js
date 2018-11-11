@@ -1,5 +1,52 @@
 /*global FormFiller, JSONF, jQuery, Logger, Libs */
 /*eslint complexity:0 */
+var poorMansDelayMaxCyles = 10000;
+
+// Warp the waitUntil function so that invalid selectors and other jQuery expections get caught
+var wrapWaitUntilFunction = function(waitUntilFunction) {
+  return function wrappedWaitUntilFunction() {
+    try {
+      return waitUntilFunction();
+    } catch (exception) {
+      return false;
+    }
+  };
+};
+
+// Handles the value of "waitUntil" in a step.
+// If it is a string it is assumed that it is an selector which should be on the page to continue.
+// If it is a function it must returen true to continue
+// If it is not set (undefined) then we wait for the selector of the step
+var handleWaitUntil = function(selector, waitUntilSerialized) {
+  var waitUntil = JSONF.parse(waitUntilSerialized);
+  var poorMansDelay = 0;
+  var waitUntilFunction = null;
+
+  // Look for the step selector
+  if (typeof waitUntil === "undefined") {
+    waitUntilFunction = function() {
+      return jQuery.find(selector).length > 0;
+    };
+  }
+
+  // If string: use that as selector
+  if (typeof waitUntil === "string") {
+    waitUntilFunction = function() {
+      return jQuery.find(waitUntil).length > 0;
+    };
+  }
+
+  // If function evaluate it
+  if (typeof waitUntil === "function") {
+    waitUntilFunction = waitUntil;
+  }
+
+  waitUntilFunction = wrapWaitUntilFunction(waitUntilFunction);
+
+  while (waitUntilFunction() !== true && poorMansDelay < poorMansDelayMaxCyles) {
+    poorMansDelay++;
+  }
+};
 
 // This listens for messages coming from the background page
 // This is a long running communication channel
@@ -52,7 +99,7 @@ chrome.runtime.onConnect.addListener(function (port) {
     Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
 
     // Request to fill fields
-    if (message.action === "fillFields" && message.steps) {
+    if (message.action === "fillFields" && message.steps && message.steps.length > 0) {
       Logger.info("[content.js] Filling " + message.steps.length + " fields");
 
       // Loop over every step
@@ -61,11 +108,10 @@ chrome.runtime.onConnect.addListener(function (port) {
         if (step.within && step.within !== null) {
           Logger.info("[content.js] Using within selector " + message.within);
         }
-
-        if (step.beforeData && step.beforeData !== null) {
-          Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
-        }
         // REMOVE END
+
+        // Wait a little if necessary
+        handleWaitUntil(step.selector, step.waitUntil);
 
         currentError = FormFiller.fill(step.selector, step.value, step.beforeData, step.flags, step.meta);
 

@@ -145,12 +145,14 @@ var FormUtil = {
       // action: "fillField"
       // selector: the query selector to use
       // value: The value to fill the field with (or a value function to execute)
+      // waitUntil: Wait for something until filling this field
       // flags: boolean flags to honor (like onlyEmpty)
       // beforeData: The resolved before data
       // meta: meta data about the source of the data
       transformedField = {
         selector: field.selector,
         value: JSONF.stringify(field.value),
+        waitUntil: JSONF.stringify(field.waitUntil),
         flags: FormUtil.buildFlags(aRule, field),
         beforeData: beforeData,
         meta: {
