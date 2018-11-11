@@ -127,8 +127,10 @@ var FormUtil = {
   },
   sendFieldsToContent: function(aRule, beforeData, port) {
     // Now send all field definitions to the content script
-    var message;
     var screenshotFlagFromRule = aRule.screenshot === true ? true : false;
+
+    var steps = [];
+    var transformedField = null;
 
     aRule.fields.forEach(function ruleFieldsForEach(field, fieldIndex) {
       // If the rule has screenshot : true and this is the last executing field definition
@@ -146,8 +148,7 @@ var FormUtil = {
       // flags: boolean flags to honor (like onlyEmpty)
       // beforeData: The resolved before data
       // meta: meta data about the source of the data
-      message = {
-        action: "fillField",
+      transformedField = {
         selector: field.selector,
         value: JSONF.stringify(field.value),
         flags: FormUtil.buildFlags(aRule, field),
@@ -156,14 +157,16 @@ var FormUtil = {
           within: field.within,
           ruleId: aRule.id,
           name: aRule.nameClean,
-          fieldIndex: fieldIndex,
-          lastField: fieldIndex === aRule.fields.length - 1 ? true : false,
           dontFireEvents: state.optionSettings.dontFireEvents === true ? true : false,
         },
       };
-      port.postMessage(message);
-      Logger.info("[b/form_util.js] Posted to content.js: Fill " + field.selector + " with " + field.value);
+
+      steps.push(transformedField);
+
     });
+
+    port.postMessage({action: "fillFields", steps: steps});
+    Logger.info("[b/form_util.js] Posted to content.js: Fill with " + steps.length + " steps");
   },
   reportErrors: function(theErrors, rule, port) {
     Logger.warn("[b/form_util.js] Received 'getErrors' with " + theErrors.length + " errors");

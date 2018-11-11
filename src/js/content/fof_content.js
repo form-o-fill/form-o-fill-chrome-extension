@@ -51,37 +51,38 @@ chrome.runtime.onConnect.addListener(function (port) {
   port.onMessage.addListener(function (message) {
     Logger.info("[content.js] Got message via port.onMessage : " + JSONF.stringify(message) + " from bg.js");
 
-    // Request to fill one field with a value
-    if (message.action === "fillField" && message.selector && message.value) {
-      Logger.info("[content.js] Filling " + message.selector + " with value " + JSONF.stringify(message.value) + "; flags : " + JSONF.stringify(message.flags));
+    // Request to fill fields
+    if (message.action === "fillFields" && message.steps) {
+      Logger.info("[content.js] Filling " + message.steps.length + " fields");
 
-      // REMOVE START
-      if (message.within && message.within !== null) {
-        Logger.info("[content.js] Using within selector " + message.within);
-      }
+      // Loop over every step
+      message.steps.forEach(function(step) {
+        // REMOVE START
+        if (step.within && step.within !== null) {
+          Logger.info("[content.js] Using within selector " + message.within);
+        }
 
-      if (message.beforeData && message.beforeData !== null) {
-        Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
-      }
-      // REMOVE END
+        if (step.beforeData && step.beforeData !== null) {
+          Logger.info("[content.js] Also got beforeData = " + JSONF.stringify(message.beforeData));
+        }
+        // REMOVE END
 
-      currentError = FormFiller.fill(message.selector, message.value, message.beforeData, message.flags, message.meta);
+        currentError = FormFiller.fill(step.selector, step.value, step.beforeData, step.flags, step.meta);
 
-      // Remember the error
-      if (typeof currentError !== "undefined" && currentError !== null) {
-        Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
-        errors.push(currentError);
-      }
+        // Remember the error
+        if (typeof currentError !== "undefined" && currentError !== null) {
+          Logger.info("[content.js] Got error " + JSONF.stringify(currentError));
+          errors.push(currentError);
+        }
+      });
 
       // Send a message that we are done filling the form
-      if (message.meta.lastField) {
-        Logger.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
+      Logger.info("[content.js] Sending fillFieldFinished since we are done with the last field definition");
 
-        chrome.runtime.sendMessage({
-          "action": "fillFieldFinished",
-          "errors": JSONF.stringify(errors)
-        });
-      }
+      chrome.runtime.sendMessage({
+        "action": "fillFieldFinished",
+        "errors": JSONF.stringify(errors)
+      });
     }
 
     // request to return all accumulated errors
