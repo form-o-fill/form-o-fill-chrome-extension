@@ -21,6 +21,12 @@ var JSONF = {
     return value;
   },
   _deserializer: function(key, value) {
+
+    // Undefined?
+    if (typeof value === "string" && value === JSONF._undef) {
+      return undefined;
+    }
+
     // Return simple value if...
     // 1. not a function
     // 2. not a regex
@@ -70,11 +76,6 @@ var JSONF = {
       match = value.match(rregexp);
       if (match) {
         return new RegExp(match[1]);
-      }
-
-      // Undefined?
-      if (value === JSONF._undef) {
-        return undefined;
       }
     }
     return value;
