@@ -2,9 +2,18 @@
   <h1>Changelog Form-O-Fill</h1>
 </header>
 <div class="content">
+  <p>★ Version 3.9.1</p>
+  <ul>
+    <li>Extract &lt;input&gt; fields without type attribute (#116)</li>
+  </ul>
   <p>★ Version 3.9.0</p>
   <ul>
-    <li>Configure a delay for each step of a workflow (<a href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/107">#107</a>)</li>
+    <li>
+      Configure a delay for each step of a workflow (<a
+        href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/107"
+        >#107</a
+      >)
+    </li>
     <li>Update jQuery to 3.3.1</li>
     <li>Update chance.js to 1.0.16</li>
     <li>Update math.js to 5.2.0</li>
@@ -13,11 +22,20 @@
   <p>★ Version 3.8.3</p>
   <ul>
     <li>Fixed <code>"url": "https://a.full.url"</code> not working as expected in rules</li>
-    <li>Fixed a bug where the extension lost it's settings when being unloading by chrome (<a href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/102">#102</a>)</li>
+    <li>
+      Fixed a bug where the extension lost it's settings when being unloading by chrome (<a
+        href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/102"
+        >#102</a
+      >)
+    </li>
   </ul>
   <p>★ Version 3.8.2</p>
   <ul>
-    <li>Fixed <a href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/101">#101</a>. Nasty!</li>
+    <li>
+      Fixed
+      <a href="https://github.com/form-o-fill/form-o-fill-chrome-extension/issues/101">#101</a>.
+      Nasty!
+    </li>
   </ul>
   <p>★ Version 3.8.1</p>
   <ul>
@@ -27,7 +45,10 @@
   </ul>
   <p>★ Version 3.8.0</p>
   <ul>
-    <li>Form-O-Fill will now fire <code>input</code> and <code>change</code> DOM events after form filling</li>
+    <li>
+      Form-O-Fill will now fire <code>input</code> and <code>change</code> DOM events after form
+      filling
+    </li>
   </ul>
   <p>★ Version 3.7.0</p>
   <ul>
@@ -42,7 +63,10 @@
   </ul>
   <p>★ Version 3.5.0</p>
   <ul>
-    <li>Fix: In some strange cases a jQuery click handler attached to an element being clicked won't trigger</li>
+    <li>
+      Fix: In some strange cases a jQuery click handler attached to an element being clicked won't
+      trigger
+    </li>
     <li>Added <a href="http://mathjs.org/">math.js</a>. Available as <code>Libs.math</code></li>
     <li>Allowed more tabs to be opened</li>
     <li>Updated jQuery to 3.2.1</li>
@@ -56,7 +80,10 @@
   </ul>
   <p>★ Version 3.4.2</p>
   <ul>
-    <li>Fix: <a href="#help-beforecontext-findhtml">context.findHtml()</a> now returns an array of HTML elements if multiple found</li>
+    <li>
+      Fix: <a href="#help-beforecontext-findhtml">context.findHtml()</a> now returns an array of
+      HTML elements if multiple found
+    </li>
     <li>Fix: rule summary now more robust</li>
   </ul>
   <p>★ Version 3.4.1</p>
@@ -66,11 +93,16 @@
   <p>★ Version 3.4.0</p>
   <ul>
     <li>You can use ES2015 arrow functions for <code>value</code> functions</li>
-    <li>Allow tutorials to trigger the export of all rules right from the tutorial page (fixes #86)</li>
+    <li>
+      Allow tutorials to trigger the export of all rules right from the tutorial page (fixes #86)
+    </li>
   </ul>
   <p>★ Version 3.3.1</p>
   <ul>
-    <li>Added: <code>context.state</code> in before functions. See <a href="#help-beforecontext-state">the section in help</a></li>
+    <li>
+      Added: <code>context.state</code> in before functions. See
+      <a href="#help-beforecontext-state">the section in help</a>
+    </li>
     <li>Fix: only show usage report modal when the user has more than one rule</li>
     <li>Report chrome version so I can see if I can use ES2015</li>
   </ul>
@@ -88,18 +120,39 @@
   </ul>
   <p>★ Version 3.0.0</p>
   <ul>
-    <li>The matching of rules will now by default be done when the HTML of the page is complete ("DOMContentLoaded" event).</li>
-    <li>Add option to revert to old behaviour of matching when all assets + HTML are loaded ("load" event).</li>
-    <li>Extension badge shows WAIT when it is waiting for all assets to load (when using the old behaviour via settings).</li>
+    <li>
+      The matching of rules will now by default be done when the HTML of the page is complete
+      ("DOMContentLoaded" event).
+    </li>
+    <li>
+      Add option to revert to old behaviour of matching when all assets + HTML are loaded ("load"
+      event).
+    </li>
+    <li>
+      Extension badge shows WAIT when it is waiting for all assets to load (when using the old
+      behaviour via settings).
+    </li>
     <li>Add option to stop Form-O-Fill from activating when switching tabs.</li>
-    <li>If using <code>autorun</code> with a msec value you can now see the seconds until activation in the extensions's icon.</li>
+    <li>
+      If using <code>autorun</code> with a msec value you can now see the seconds until activation
+      in the extensions's icon.
+    </li>
   </ul>
   <p>★ Version 2.7.3</p>
   <ul>
-    <li>Add <code>Libs.h.select</code> and <code>Libs.h.unselect</code> (see <a href="#help-libraries">help</a>).</li>
-    <li>Add <code>context.getVar</code> to <a href="#help-beforecontext-getvar">extract JS variables</a> from the page the rule runs in.</li>
+    <li>
+      Add <code>Libs.h.select</code> and <code>Libs.h.unselect</code> (see
+      <a href="#help-libraries">help</a>).
+    </li>
+    <li>
+      Add <code>context.getVar</code> to
+      <a href="#help-beforecontext-getvar">extract JS variables</a> from the page the rule runs in.
+    </li>
     <li>Bugfix: Show form filling errors in options even when options are already open.</li>
-    <li>The <code>autorun</code> property of a rule now takes true/false or a delayed auto-execution in milliseconds.</li>
+    <li>
+      The <code>autorun</code> property of a rule now takes true/false or a delayed auto-execution
+      in milliseconds.
+    </li>
   </ul>
   <p>★ Version 2.7.2</p>
   <ul>
@@ -112,34 +165,75 @@
   <p>★ Version 2.7.0</p>
   <ul>
     <li>Fixed a bug with font rendering in popup</li>
-    <li>Added remote url import using an <a href="options.html?#settings">encrypted file format and a password</a></li>
+    <li>
+      Added remote url import using an
+      <a href="options.html?#settings">encrypted file format and a password</a>
+    </li>
     <li>Fixed a bug that made Libs.h.copyValue useless [build related]</li>
   </ul>
   <p>★ Version 2.6.0</p>
   <ul>
-    <li>Added on demand loading of moment.js and chance.js in background page. Reduces memory consumption.</li>
-    <li>Added <code>Libs.h.displayMessage("some text")</code>. Use it to display custom messages while the rule is running.</li>
-    <li>Added <a href="#help-settingsremoterules">remote rules</a>. You can import rules via http/https. Includes auto-update.</li>
-    <li>Added one-click import URLs for remote rules import. Try <a href="http://form-o-fill.github.io/import-remote-rules/">http://form-o-fill.github.io/import-remote-rules/</a></li>
-    <li>Added <a href="#help-libraries"><code>Libs.h.copyValue("#some-selector")</code></a> to copy a value from another field.</li>
+    <li>
+      Added on demand loading of moment.js and chance.js in background page. Reduces memory
+      consumption.
+    </li>
+    <li>
+      Added <code>Libs.h.displayMessage("some text")</code>. Use it to display custom messages while
+      the rule is running.
+    </li>
+    <li>
+      Added <a href="#help-settingsremoterules">remote rules</a>. You can import rules via
+      http/https. Includes auto-update.
+    </li>
+    <li>
+      Added one-click import URLs for remote rules import. Try
+      <a href="http://form-o-fill.github.io/import-remote-rules/"
+        >http://form-o-fill.github.io/import-remote-rules/</a
+      >
+    </li>
+    <li>
+      Added <a href="#help-libraries"><code>Libs.h.copyValue("#some-selector")</code></a> to copy a
+      value from another field.
+    </li>
     <li>Fixed bug regarding duplicate event listener attachment</li>
   </ul>
   <p>★ Version 2.5.0</p>
   <ul>
     <li>Added 'after' function as a complement to the 'before' function.</li>
-    <li>Added <a href="#help-setupcontent">setupContent</a> and <code>teardownContent</code>. Work like before/after only executed <em>inside the content page</em>.</li>
-    <li>Added "<a href="#help-automaticrematch">automatic rematch</a>" mode that searches for matching rules every two seconds and not only on page load.</li>
-    <li>Added "<a href="#help-basic">color</a>" attribute for rule definitions. Colors rule in popup. Use for grouping.</li>
+    <li>
+      Added <a href="#help-setupcontent">setupContent</a> and <code>teardownContent</code>. Work
+      like before/after only executed <em>inside the content page</em>.
+    </li>
+    <li>
+      Added "<a href="#help-automaticrematch">automatic rematch</a>" mode that searches for matching
+      rules every two seconds and not only on page load.
+    </li>
+    <li>
+      Added "<a href="#help-basic">color</a>" attribute for rule definitions. Colors rule in popup.
+      Use for grouping.
+    </li>
     <li>Bugfix: rules with no name appeared in workflow dropdown.</li>
     <li>Optimization: remove jQuery dependency from popup.</li>
     <li>Bugfix: screenshots broken after changing quality setting</li>
   </ul>
   <p>★ Version 2.4.0</p>
   <ul>
-    <li>Ability to <a href="#help-screenshot">take screenshots</a>. Add 'screenshot: true' to a field definition.</li>
-    <li>Settings panel added. Toggle popup display when one rule matches on and off and define screenshot qaulity.</li>
-    <li>Rules and field definitions accept a '<a href="#help-basic">onlyEmpty</a>' flag which fills the field only if empty.</li>
-    <li>Add tutorial for  <a href="https://form-o-fill.github.io/tutorial/tour-11.html">shared rules</a></li>
+    <li>
+      Ability to <a href="#help-screenshot">take screenshots</a>. Add 'screenshot: true' to a field
+      definition.
+    </li>
+    <li>
+      Settings panel added. Toggle popup display when one rule matches on and off and define
+      screenshot qaulity.
+    </li>
+    <li>
+      Rules and field definitions accept a '<a href="#help-basic">onlyEmpty</a>' flag which fills
+      the field only if empty.
+    </li>
+    <li>
+      Add tutorial for
+      <a href="https://form-o-fill.github.io/tutorial/tour-11.html">shared rules</a>
+    </li>
     <li>Rule summary panel on the left side for a quick overview. Not sure if it will stay.</li>
   </ul>
   <p>★ Version 2.3.1.1</p>
@@ -148,28 +242,52 @@
   </ul>
   <p>★ Version 2.3.1</p>
   <ul>
-    <li>Added tutorials for <a href="https://form-o-fill.github.io/tutorial/tour-7.html">workflows</a>, <a href="https://form-o-fill.github.io/tutorial/tour-8.html">custom libraries</a> and <a href="https://form-o-fill.github.io/tutorial/tour-9.html">context object</a>.</li>
-    <li>You can now use <code>contest.storage.set</code> in value functions. Those vars are scoped to value functions.</li>
-    <li>Updated most important external dependencies (chance.js, moment.js, jQuery, ACE) to current versions.</li>
+    <li>
+      Added tutorials for
+      <a href="https://form-o-fill.github.io/tutorial/tour-7.html">workflows</a>,
+      <a href="https://form-o-fill.github.io/tutorial/tour-8.html">custom libraries</a> and
+      <a href="https://form-o-fill.github.io/tutorial/tour-9.html">context object</a>.
+    </li>
+    <li>
+      You can now use <code>contest.storage.set</code> in value functions. Those vars are scoped to
+      value functions.
+    </li>
+    <li>
+      Updated most important external dependencies (chance.js, moment.js, jQuery, ACE) to current
+      versions.
+    </li>
   </ul>
   <p>★ Version 2.3.0</p>
   <ul>
-    <li><a href="options.html?#tutorials">Live tutorial are here!</a> Learn Form-O-Fill's features step by step. Try them out the tutorial option in the left menu. So much learning. So good.</li>
+    <li>
+      <a href="options.html?#tutorials">Live tutorial are here!</a> Learn Form-O-Fill's features
+      step by step. Try them out the tutorial option in the left menu. So much learning. So good.
+    </li>
     <li>input[type=checkbox] fields are extracted when not checked.</li>
   </ul>
   <p>★ Version 2.2.2</p>
   <ul>
     <li>Workflows graduated from beta</li>
     <li>Unified import/export functionality. Can import old format.</li>
-    <li>Fix library function bug in content.js. No need to reload the webpage when changing custom library functions anymore</li>
+    <li>
+      Fix library function bug in content.js. No need to reload the webpage when changing custom
+      library functions anymore
+    </li>
     <li>Changing a tab save the current displayed rules</li>
-    <li>A new export that eases the incorporation of changed rules into your ruleset. Still manual though.</li>
+    <li>
+      A new export that eases the incorporation of changed rules into your ruleset. Still manual
+      though.
+    </li>
   </ul>
   <p>★ Version 2.2.1</p>
   <ul>
-    <li><code>moment.js</code> and <code>chance.js</code> are now loaded on demand. Reduces the memory footprint.</li>
     <li>
-      Save and load arbitrary data using <a href="#help-before-context">the storage functions in the context object</a>.<br />
+      <code>moment.js</code> and <code>chance.js</code> are now loaded on demand. Reduces the memory
+      footprint.
+    </li>
+    <li>
+      Save and load arbitrary data using
+      <a href="#help-before-context">the storage functions in the context object</a>.<br />
       Use it to storage values between workflow steps.
     </li>
   </ul>
@@ -179,44 +297,59 @@
   </ul>
   <p>★ Version 2.1.0</p>
   <ul>
-    <li>Use the new <code>Libs.halt()</code> function to <a href="#help-before">cancel a workflow/rule</a> from inside before functions.</li>
+    <li>
+      Use the new <code>Libs.halt()</code> function to
+      <a href="#help-before">cancel a workflow/rule</a> from inside before functions.
+    </li>
   </ul>
 
   <p>★ Version 2.0.0</p>
   <ul>
     <li>
-      Added <a href="#help-workflows">workflows</a>.
-      You can now automate multiple steps sequentially after one another.
-      This works even after a page load/reload.
-      With this automating complete form workflows is easy.
+      Added <a href="#help-workflows">workflows</a>. You can now automate multiple steps
+      sequentially after one another. This works even after a page load/reload. With this automating
+      complete form workflows is easy.
     </li>
-    <li>Introduce the <code>Libs.h</code> namespace for <a href="#help-libraries">value function helper</a>. First helper is <code>Libs.h.click</code> which clicks the matched dom element</li>
+    <li>
+      Introduce the <code>Libs.h</code> namespace for
+      <a href="#help-libraries">value function helper</a>. First helper is
+      <code>Libs.h.click</code> which clicks the matched dom element
+    </li>
   </ul>
 
   <p>★ Version 1.6.1</p>
   <ul>
     <li>
-      Moved from callback to <a href="https://www.promisejs.org/" target="_blank">promise</a> for <a href="#help-beforecontext-findhtml">context.findHtml()</a><br />
-      To convert from callback to promise change<br/><code>context.findHtml("selector", function(html) { ... your code ... });</code> to <br />
+      Moved from callback to <a href="https://www.promisejs.org/" target="_blank">promise</a> for
+      <a href="#help-beforecontext-findhtml">context.findHtml()</a><br />
+      To convert from callback to promise change<br /><code
+        >context.findHtml("selector", function(html) { ... your code ... });</code
+      >
+      to <br />
       <code>context.findHtml("selector").then(function(html) { ... your code ... });</code>
     </li>
   </ul>
 
   <p>★ Version 1.6.0</p>
   <ul>
-    <li>Added <a href="#help-beforecontext-findhtml">.findHtml() function</a> to the context object</li>
+    <li>
+      Added <a href="#help-beforecontext-findhtml">.findHtml() function</a> to the context object
+    </li>
   </ul>
 
   <p>★ Version 1.5.1</p>
   <ul>
     <li>Fix a potential chrome bug with flickering or too small popup.</li>
-    <li>Report missing rules when using <a href="#help-sharedrules">shared field definitions</a>.</li>
+    <li>
+      Report missing rules when using <a href="#help-sharedrules">shared field definitions</a>.
+    </li>
   </ul>
 
   <p>★ Version 1.5.0</p>
   <ul>
-    <li>New feature: <a href="#help-sharedrules">Shared field definitions</a> (like rspec shared_examples).
-      Import common field definitions into a rule in any place you want.
+    <li>
+      New feature: <a href="#help-sharedrules">Shared field definitions</a> (like rspec
+      shared_examples). Import common field definitions into a rule in any place you want.
     </li>
   </ul>
 
@@ -228,7 +361,10 @@
 
   <p>★ Version 1.4.0</p>
   <ul>
-    <li>You can now create <a href="#help-ownlibraries">reusable functions</a> to simplify your complex rules.</li>
+    <li>
+      You can now create <a href="#help-ownlibraries">reusable functions</a> to simplify your
+      complex rules.
+    </li>
   </ul>
 
   <p>★ Version 1.3.6</p>
@@ -269,7 +405,10 @@
 
   <p>★ Version 1.3.0</p>
   <ul>
-    <li>before functions receive the environment as second parameter (see help). Super useful addition by github user @floj</li>
+    <li>
+      before functions receive the environment as second parameter (see help). Super useful addition
+      by github user @floj
+    </li>
   </ul>
 
   <p>★ Version 1.2.0</p>
@@ -279,8 +418,13 @@
 
   <p>★ Version 1.1.1</p>
   <ul>
-    <li>context menu click on form element extracts that form without showing the selection overlay</li>
-    <li>Display a busy notice on screen when Form-O-Fill takes some time (eg. slow connection while fetching JSON in before functions)</li>
+    <li>
+      context menu click on form element extracts that form without showing the selection overlay
+    </li>
+    <li>
+      Display a busy notice on screen when Form-O-Fill takes some time (eg. slow connection while
+      fetching JSON in before functions)
+    </li>
   </ul>
 
   <p>★ Version 1.1.0</p>
