@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Form-O-Fill Testpage</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
   </head>
@@ -9,25 +9,26 @@
     <h1>TESTING SERVER RUNNING</h1>
     <form action="/a/path" method="post">
       &lt;form action="#" method="post"&gt;<br />
-      <input type="text" name="text" value="text" class="input-text">
-      <input type="radio" name="radio" value="radio" checked="checked"> Radio
-      <input type="checkbox" name="checkbox-value" value="checkbox" checked> Checkbox
-      <input type="button" name="button" value="input[type=button]">
-      <input type="image" name="image" src="animage.png">
-      <input type="password" name="password" value="password">
-      <input type="search" name="search" value="search">
-      <input type="email" name="email" value="a@example.com">
-      <input type="url" name="url" value="http://www.example.com">
-      <input type="tel" name="tel" value="+49123456">
-      <input type="number" name="number" value="123">
-      <input type="range" name="range" value="100" min="0" max="125">
-      <input type="date" name="date" value="2014-12-31">
-      <input type="month" name="month" value="2014-06">
-      <input type="week" name="week" value="2014-W42">
-      <input type="time" name="time" value="12:01:02.123">
-      <input type="datetime" name="datetime" value="1996-12-19T16:39:57-08:00">
-      <input type="datetime-local" name="datetime-local" value="1996-12-19T16:39:57.123">
-      <input type="color" name="color" value="#FF0000">
+      <input name="text-no-type" value="text-no-type" class="input-text" />
+      <input type="text" name="text" value="text" class="input-text" />
+      <input type="radio" name="radio" value="radio" checked="checked" /> Radio
+      <input type="checkbox" name="checkbox-value" value="checkbox" checked /> Checkbox
+      <input type="button" name="button" value="input[type=button]" />
+      <input type="image" name="image" src="animage.png" />
+      <input type="password" name="password" value="password" />
+      <input type="search" name="search" value="search" />
+      <input type="email" name="email" value="a@example.com" />
+      <input type="url" name="url" value="http://www.example.com" />
+      <input type="tel" name="tel" value="+49123456" />
+      <input type="number" name="number" value="123" />
+      <input type="range" name="range" value="100" min="0" max="125" />
+      <input type="date" name="date" value="2014-12-31" />
+      <input type="month" name="month" value="2014-06" />
+      <input type="week" name="week" value="2014-W42" />
+      <input type="time" name="time" value="12:01:02.123" />
+      <input type="datetime" name="datetime" value="1996-12-19T16:39:57-08:00" />
+      <input type="datetime-local" name="datetime-local" value="1996-12-19T16:39:57.123" />
+      <input type="color" name="color" value="#FF0000" />
       <select name="select" class="single">
         <option name="option1" value="option1">option1</option>
         <option name="option2" value="option2" selected>option2</option>
@@ -40,7 +41,7 @@
       <select name="select-optgroup-multiple" multiple="multiple">
         <optgroup label="Gruppe 1">
           <option value="o11">Option 1.1</option>
-        </optgroup> 
+        </optgroup>
         <optgroup label="Gruppe 2">
           <option value="o21">Option 2.1</option>
         </optgroup>
@@ -52,7 +53,7 @@
       <select name="select-optgroup">
         <optgroup label="Gruppe 1">
           <option value="o11">Option 1.1</option>
-        </optgroup> 
+        </optgroup>
         <optgroup label="Gruppe 2">
           <option value="o21" selected>Option 2.1</option>
         </optgroup>
@@ -82,18 +83,18 @@
     <table id="form-o-fill-testing-info"></table>
     <style>
       form {
-        border: 2px solid #eee; 
+        border: 2px solid #eee;
         padding: 10px;
       }
 
-      input, textarea {
+      input,
+      textarea {
         margin: 0;
       }
 
-      body.types form input[type=text ] {
+      body.types form input[type="text"] {
         width: 50%;
       }
-
     </style>
   </body>
 </html>

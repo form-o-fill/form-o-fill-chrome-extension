@@ -24,14 +24,14 @@ var FormExtractor = {
       "time",
       "datetime",
       "datetime-local",
-      "color"
+      "color",
     ];
-    var tags = [
-      "button",
-      "textarea",
-      "select"
-    ];
-    this._knownElements = inputs.map(function (inputType) {
+
+    // Other extractable tags including the "input" element without a type which
+    // defaults to "type=text"
+    // See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#Form_%3Cinput%3E_types
+    var tags = ["button", "textarea", "select", "input"];
+    this._knownElements = inputs.map(function(inputType) {
       return "input[type=" + inputType + "]";
     });
     this._knownElements = this._knownElements.concat(tags);
@@ -41,26 +41,30 @@ var FormExtractor = {
     var extractor = this;
     var $form = jQuery(domNodeStartExtractionHere);
     var ruleData = {
-      "url": document.location.href,
-      "name": "A rule for " + document.location.href,
-      "fields": []
+      url: document.location.href,
+      name: "A rule for " + document.location.href,
+      fields: [],
     };
 
-    this.knownElements().forEach(function (selector) {
+    this.knownElements().forEach(function(selector) {
       Logger.info("[form_extractor.js] Looking for '" + selector + "'");
       $form.find(selector).each(function() {
-        Logger.info("[form_extractor.js] Found a '" + this.type + "' (" + this.value + ") <" + this.name + ">");
+        Logger.info(
+          "[form_extractor.js] Found a '" + this.type + "' (" + this.value + ") <" + this.name + ">"
+        );
         var value = extractor._valueFor(this);
         // Only include field if value !== null
         if (value !== null) {
           // Find shortest selector for element
           var optimalSelect = OptimalSelect.select(this, {
-            priority: ['id', 'name', 'class', 'href', 'src']
-          }).replace(/\"/g, "'").replace(/\\\//g,"/");
+            priority: ["id", "name", "class", "href", "src"],
+          })
+            .replace(/\"/g, "'")
+            .replace(/\\\//g, "/");
 
           var field = {
-            "selector": optimalSelect,
-            "value": value
+            selector: optimalSelect,
+            value: value,
           };
           ruleData.fields.push(field);
         }
@@ -82,12 +86,20 @@ var FormExtractor = {
     return domNode.checked ? domNode.value : null;
   },
   _valueSelectOne: function(domNode) {
-    return (jQuery(domNode).find("option:selected").eq(0).val()) || "";
+    return (
+      jQuery(domNode)
+        .find("option:selected")
+        .eq(0)
+        .val() || ""
+    );
   },
   _valueSelectMultiple: function(domNode) {
-    var values = jQuery(domNode).find("option:selected").map(function() {
-      return this.value;
-    }).get();
+    var values = jQuery(domNode)
+      .find("option:selected")
+      .map(function() {
+        return this.value;
+      })
+      .get();
     return values || [];
   },
   _valueDefault: function(domNode) {
@@ -104,7 +116,7 @@ var FormExtractor = {
   },
   _typeMethod: function(prefix, type) {
     return ("_" + prefix + "-" + type).replace(/(\-[a-z])/g, function($1) {
-      return $1.toUpperCase().replace('-', '');
+      return $1.toUpperCase().replace("-", "");
     });
-  }
+  },
 };
