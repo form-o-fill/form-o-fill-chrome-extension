@@ -2,12 +2,6 @@ var Logger = {
   storageKey: "form-o-fill-logs",
   out: function(level, msg, obj) {
     // Port to background.js
-    var port = chrome.runtime.connect();
-    port.postMessage({
-      action: "log",
-      message: msg,
-    });
-
     if (typeof msg !== "undefined" && typeof obj !== "undefined") {
       console[level]("[*FOF*] %s %O", msg, obj);
       return;
