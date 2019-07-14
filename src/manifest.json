@@ -3,7 +3,7 @@
   "name": "Form-O-Fill - The programmable form filler",
   "short_name": "Form-O-Fill",
   "description": "The programmable form filler for developers using javascript functions.",
-  "version": "3.9.1",
+  "version": "3.9.2",
   "author": "formofillextension@gmail.com",
   "minimum_chrome_version": "49",
   "homepage_url": "https://form-o-fill.github.io/",
@@ -62,11 +62,7 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "jsBuild": [
-        "vendor/jquery/jquery.min.js",
-        "js/global.js",
-        "js/fof_content.js"
-      ],
+      "jsBuild": ["vendor/jquery/jquery.min.js", "js/global.js", "js/fof_content.js"],
       "js": [
         "vendor/jquery/jquery.min.js",
         "vendor/optimal-select/optimal-select.js",
@@ -88,9 +84,7 @@
         "js/content/fof_content.js",
         "js/content/testing.js"
       ],
-      "css": [
-        "css/content.css"
-      ]
+      "css": ["css/content.css"]
     }
   ],
   "options_page": "html/options.html",
