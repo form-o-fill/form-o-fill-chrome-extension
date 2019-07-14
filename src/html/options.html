@@ -224,7 +224,154 @@
       <!-- loaded per language -->
       <div id="help"></div>
       <div id="importexport"></div>
-      <div id="settings"></div>
+      <div id="settings">
+        <header>
+          <h1>Settings</h1>
+        </header>
+        <div class="content">
+
+          <div class="tabcontainer">
+            <ul class="tabs">
+              <li class="tab current">
+                <input type="text" value="Settings" disabled>
+              </li>
+              <li class="info"></li>
+            </ul>
+          </div>
+
+          <div id="notices">
+            <div class="notice settings-error-url">
+              The import URL looks wrong. It must end with .js or .json.
+              <a href="#" class="cmd-close-notice"></a>
+            </div>
+
+            <div class="notice import-remote-ready">
+              Imported&nbsp;<span class="imp-wfs-count"></span>&nbsp;workflow(s) and&nbsp;<span class="imp-rules-count"></span>&nbsp;rule(s) from&nbsp;<a class="imp-rules-url" href="#"></a><br />
+              I will keep them up to date. You will not find those rules in the editor since they are saved in a separate storage.
+            </div>
+
+            <div class="notice import-remote-fail-format">
+              Failed to import. Please check the format of the import file.<br />
+              Use <a href="#importexport">Export Rules &amp; Workflows</a> on the Import / Export panel to export a valid file.
+            </div>
+
+            <div class="notice import-remote-fail-fetch">
+              Fetching the data from the <a href="#" class="imp-fail-fetch-url">remote URL</a> failed.<br />
+              This is what the browser has to say:<br />
+              <span class="imp-fail-fetch-msg"></span>
+            </div>
+
+            <div class="notice import-remote-fail-password">
+              The import file at the <a href="#" class="imp-fail-fetch-url">remote URL</a> seems to be password protected.<br />
+              Please enter the password for that file in the password field below. 
+            </div>
+            
+            <div class="notice import-remote-fail-decrypt">
+              The import file at the <a href="#" class="imp-fail-fetch-url">remote URL</a> seems to be password protected.<br />
+              The password you entered below doesn't seem to decrypt the file properly.<br />
+              Please re-enter the password and try again.
+            </div>
+
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="always-show-popup" id="settings-always-show-popup" />
+              <span>Always show popup</span>
+              <div class="comment">
+                Check this if you want Form-O-Fill to always show the rule selection popup when you click the action button.
+              </div>
+              <div class="comment">
+                If unchecked Form-O-Fill will instantly execute the rule <strong>if only one rule matches</strong>.
+              </div>
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="reeval-rules" id="settings-reeval-rules" />
+              <span>Re-match rules every two seconds</span>
+              <div class="comment">
+                Form-o-Fill will re-check if rules match every two seconds when this option is activated.<br/>
+                Very useful for single page apps that dynamically change the DOM / the URL without a reload.
+              </div>
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="settings-match-onload" id="settings-match-onload">
+              <span>Match rules only when all assets are loaded</span>
+              <div class="comment">
+                Form-o-Fill will by default check if any rules or workflows match when the HTML of the page is loaded ("<a href="https://developer.mozilla.org/de/docs/Web/Events/DOMContentLoaded">DOMContentLoaded</a>" event).<br>
+                By activating this checkbox it will revert to the pre 3.0.0 behaviour of checking when all assets (images, javascript, CSS) are loaded ("<a href="https://developer.mozilla.org/de/docs/Web/Events/load">load</a>" event).
+              </div>
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="settings-match-tab" id="settings-match-tab">
+              <span>Do not re-matches rules when switching tabs</span>
+              <div class="comment">
+                By default Form-O-Fill will match rules when switching tabs. This behaviour might be not be wanted especially when using <code>autorun</code>.<br />
+                Checking this deactivate this behaviour.
+              </div>
+            </label>
+          </div>
+
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="settings-dont-fire-events" id="settings-dont-fire-events">
+              <span>Don't fire events after fields are filled</span>
+              <div class="comment">
+                If activated Form-O-Fill will <em>not</em> fire the DOM events on every field that is filled. <br />
+                Events fired are those defined by the <a href="https://html.spec.whatwg.org/#the-input-element:event-change-2">HTML spec</a>, usually <code>input</code> and <code>change</code> after that.
+              </div>
+            </label>
+          </div>
+
+          <div class="grouped">
+            <div class="text">
+              <label>
+                <input type="checkbox" name="activate-import-source-url" id="settings-activate-import-source-url">
+                <span>Activate remote rules import</span>
+                <div class="comment">
+                  This will import the rules/workflows from the URL given below.<br />
+                  Data will be updated when you press the import button, (re-)start the browser and automatically every ##Utils.alarmIntervalInMinutes## minutes.
+                </div>
+              </label>
+              <input type="url" name="import-source-url" id="settings-import-source-url" placeholder="http://my.url.com/rules.js" />
+              <button class="save-and-import validate-import-source-url">Validate and import</button>
+              <div class="comment">Last updated: <span id="import-source-url-date"></span></div>
+            </div>
+
+            <div class="text no-cb">
+              <label>
+                <span>Use password for encrypted remote import</span>
+                <div class="comment">
+                  You can use an encrypted export of all rules &amp; workflows if you want to "hide" the content from prying eyes.<br />
+                  Enter the password here:
+                </div>
+              </label>
+              <input type="password" name="import-source-password" id="settings-import-source-password"/>
+            </div>
+          </div>
+
+          <div class="text">
+            <label>
+              <input type="range" name="screenshot-quality" id="settings-screenshot-quality" min="30" max="100" step="10" value="60">
+              <span>JPEG image quality (<span class="settings-screenshot-quality-percent">60</span>%)</span>
+              <div class="comment">
+                If you take a screenshot using <code>Libs.h.screenshot</code> or the rule/field definition flags this quality setting will be used.
+              </div>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+
       <div id="tutorials"></div>
       <div id="about"></div>
       <div id="changelog"></div>

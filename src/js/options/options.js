@@ -5,7 +5,8 @@
 var editor = new Editor("#ruleeditor-ace");
 var noticesVisible = false;
 
-I18n.loadPages(["help", "importexport", "settings", "about", "changelog", "modalimportall", "modalimportallencrypted", "modaldeletetab", "modalusagereport", "tutorials"]);
+// settings is inlined now because of timing issues
+I18n.loadPages(["help", "importexport", "about", "changelog", "modalimportall", "modalimportallencrypted", "modaldeletetab", "modalusagereport", "tutorials"]);
 
 ChromeBootstrap.init();
 
