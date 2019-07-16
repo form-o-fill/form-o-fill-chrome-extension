@@ -27,7 +27,7 @@ Permissions requested:
 - Communicate with websites (Used for the live tutorials)
 
 ★ Version 3.9.2
-- Inline settings page to try to fix settings loading no working
+- Inline settings page to try to fix settings loading not working
 
 ★ Version 3.9.1
 - Extract input fields that have no type attribute
