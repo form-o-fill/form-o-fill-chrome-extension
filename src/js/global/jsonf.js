@@ -1,7 +1,16 @@
 /*eslint no-new-func:0, complexity: 0*/
 var JSONF = {
+  // Codified value for "undefined"
   _undef: "**JSONF-UNDEFINED**",
   _es6ArrowFuncDetect: /\s+=>\s+/,
+  // A regex for normal "function"
+  _detectFuncRegex: /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m,
+  // Regexes for es2015 arrow functions
+  _detectArrowFuncRegex: /^\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}(?!`)/,
+  _detectArrowFuncImplRetRegex: /^\((.*?)\)\s*=>\s*([^;\n]*)/,
+  // A regex for regexes
+  _detectRegexpRegex: /^\/(.*?)\/$/m,
+  // Better (formatted) stringify
   stringify: function(object) {
     return JSON.stringify(object, this._serializer, 2);
   },
@@ -36,17 +45,7 @@ var JSONF = {
     }
 
     if (typeof value === "string") {
-      // A regex for normal "function"
-      var rfunc = /^function\s*(\w*)\s*\(([\s\S]*?)\)[\s\S]*?\{([\s\S]*)\}/m;
-
-      // A regex for es2015 arrow functions
-      var rarrowFunc = /^\(?(.*?)\)?\s*=>\s*\{([\s\S]*?)\}(?!`)/;
-      var rarrowFuncImplRet = /^\((.*?)\)\s*=>\s*([^;\n]*)/;
-
-      // A regex for regexes
-      var rregexp = /^\/(.*?)\/$/m;
-
-      var match = value.match(rfunc);
+      var match = value.match(JSONF._detectFuncRegex);
 
       // Function?
       if (match) {
@@ -57,7 +56,7 @@ var JSONF = {
       }
 
       // ES2015 arrow function with brackets
-      match = value.match(rarrowFunc);
+      match = value.match(JSONF._detectArrowFuncRegex);
       if (match) {
         // 1: function arguments
         // 2: function body (without {})
@@ -65,7 +64,7 @@ var JSONF = {
       }
 
       // ES2015 arrow function without brackets (implicit return)
-      match = value.match(rarrowFuncImplRet);
+      match = value.match(JSONF._detectArrowFuncImplRetRegex);
       if (match) {
         // 1: function arguments
         // 2: function body;
@@ -73,7 +72,7 @@ var JSONF = {
       }
 
       // RegEx?
-      match = value.match(rregexp);
+      match = value.match(JSONF._detectRegexpRegex);
       if (match) {
         return new RegExp(match[1]);
       }
