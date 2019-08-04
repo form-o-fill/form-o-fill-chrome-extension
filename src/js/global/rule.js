@@ -73,6 +73,10 @@ Rule.create = function(options, tabId, ruleIndex) {
     rule.shadow = false;
   }
 
+  if (typeof rule.matchBoth === "undefined") {
+    rule.matchBoth = false;
+  }
+
   rule.tabId = tabId;
 
   // REMOVE START
