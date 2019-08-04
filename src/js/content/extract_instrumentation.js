@@ -70,6 +70,7 @@ var showExtractOverlay = function showExtractOverlay() {
 
 // This is a one-off message listener
 chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, sender, responseCallback) {
+
   // Request to start extracting a form to rules
   if (message && message.action === "showExtractOverlay") {
     showExtractOverlay();
@@ -82,9 +83,11 @@ chrome.runtime.onMessage.addListener(function extractInstOnMessage(message, send
     var matches = [];
     var rules = JSONF.parse(message.rules);
     rules.forEach(function forEach(rule) {
+      // content is a regexp
       if (typeof rule.content.test === "function" && rule.content.test(content)) {
         matches.push(rule.id);
       }
+      //TODO: allow content match via indexOf ? So content: "some string" works? (FS, 2019-08-04)
     });
     Logger.info("[extract_instr.js] Matched content against " + rules.length + " rules with " + matches.length + " content matches");
     responseCallback(JSONF.stringify(matches));
