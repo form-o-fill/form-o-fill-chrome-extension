@@ -84,7 +84,8 @@
         "js/content/fof_content.js",
         "js/content/testing.js"
       ],
-      "css": ["css/content.css"]
+      "css": ["css/content.css"],
+      "run_at": "document_start"
     }
   ],
   "options_page": "html/options.html",
