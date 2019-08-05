@@ -35,6 +35,15 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
   }
 };
 
+// Finds rules that have "matchBoth" set and both url and content specified
+var findRuleIdsWithMatchBoth = function(rules, filter) {
+  return rules.filter(function(rule) {
+    return rule.matchBoth === true && typeof rule.url !== "undefined" && typeof rule.content !== "undefined";
+  }).map(function(rule) {
+    return rule.id;
+  });
+};
+
 // When the user changes a tab, search for matching rules for that url
 // or matching rules for that content
 var onTabReadyRules = function(tabId) {
@@ -45,6 +54,7 @@ var onTabReadyRules = function(tabId) {
   Logger.info("[bg.js] onTabReadyRules on Tab " + tabId);
 
   chrome.tabs.get(tabId, function(tab) {
+
     // return if the tab isn't active anymore
     if (chrome.runtime.lastError || !tab.active || tab.url.indexOf("chrome") === 0) {
       return;
@@ -99,8 +109,53 @@ var onTabReadyRules = function(tabId) {
         Rules.match(tab.url).then(function(matchingRules) {
           Logger.info("[bg.js] Got " + matchingRules.length + " rules matching the url of the page");
 
+          // lastMatchingRules now contains only those matching by CONTENT
+          // and matchingRules contains only those matching by URL
+          // If one of this sets contains a rule with "matchBoth" === true we must
+          // remove them from the array unless the rule.id is present in both arrays.
+          let rulesToRemove = new Set();
+          var contentMatchesWithMatchBoth = findRuleIdsWithMatchBoth(lastMatchingRules);
+          var urlMatchesWithMatchBoth = findRuleIdsWithMatchBoth(matchingRules);
+
+          // Find rules that have CONTENT specified and are not in the URL array
+          contentMatchesWithMatchBoth.forEach(function(ruleId) {
+            if (urlMatchesWithMatchBoth.indexOf(ruleId) === -1) {
+              rulesToRemove.add(ruleId);
+            }
+          });
+
+          // Find rules that have URL specified and are not in the CONTENT array
+          urlMatchesWithMatchBoth.forEach(function(ruleId) {
+            if (contentMatchesWithMatchBoth.indexOf(ruleId) === -1) {
+              rulesToRemove.add(ruleId);
+            }
+          });
+
+          // REMOVE START
+          let rC = lastMatchingRules.map(function(rule) {
+            return rule.id;
+          });
+          let rU = matchingRules.map(function(rule) {
+            return rule.id;
+          });
+          Logger.info("[bg.js] Rules CONTENT: " + rC + ", URL: " + rU);
+          // REMOVE END
+
           // Concatenate matched rules by CONTENT and URL
           lastMatchingRules = Rules.unique(lastMatchingRules.concat(matchingRules));
+          Logger.info("[bg.js] Rules unique: " + lastMatchingRules.length);
+
+          // If there are rules to remove due to "matchBoth":
+          if (rulesToRemove.size > 0) {
+            lastMatchingRules = lastMatchingRules.filter(function(rule) {
+              // REMOVE START
+              if (rulesToRemove.has(rule.id)) {
+                Logger.info("[bg.js] Removing '" + rule.id + "' (" + rule.name + ") because it has matchBoth but doesn't");
+              }
+              // REMOVE END
+              return !rulesToRemove.has(rule.id);
+            });
+          }
 
           // Save rules to localStorage for popup to load
           Rules.lastMatchingRules(lastMatchingRules);
@@ -338,11 +393,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
   if (state.optionSettings.matchOnLoad === true || state.forceRunOnLoad) {
     checkOn = "complete";
   }
-  Logger.info("[bg.js] Matching rules/workflows on state " + checkOn + "(state.forceRunOnLoad = )" + state.forceRunOnLoad);
+  Logger.info("[bg.js] Matching rules/workflows on state " + checkOn + " (state.forceRunOnLoad = " + state.forceRunOnLoad + " )");
 
   // "complete" => onload event
   // "loading" => DOMContentLoader event
   if (changeInfo.status) {
+    Logger.info("[bg.js] Currenty state of tab " + tabId + " = " + changeInfo.status);
     if (changeInfo.status === checkOn) {
       runWorkflowOrRule(tabId);
     } else if (changeInfo.status === "loading" && state.optionSettings.matchOnLoad === true) {
