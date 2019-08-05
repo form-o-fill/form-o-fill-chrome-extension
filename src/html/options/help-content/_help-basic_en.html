@@ -37,7 +37,8 @@
     A regular expression that is matched against the current full URL.<br />
     Can be omitted if you use <code>content</code>.<br />
     Can also be a string like<br />
-    <code>url: "http://example.com/test.html"</code>. In this case the rule matches when the complete URL matches.
+    <code>url: "http://example.com/test.html"</code>. In this case the rule matches when the
+    complete URL matches.
   </div>
   <div class="code">
     &nbsp;&nbsp;url: /^http.*test.html$/,
@@ -54,6 +55,15 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
+    If you want to match <code>url</code> AND <code>content</code> at the same time use this!<br />
+    Default is to match either <code>url</code> OR <code>content</code>.
+  </div>
+  <div class="code">
+    &nbsp;&nbsp;matchBoth: true,
+  </div>
+</div>
+<div class="block-of-code">
+  <div class="explaining">
     If you set this to <code>true</code> and only this rule matches, it will be auto-executed.<br />
     You can also pass in a number of milliseconds that this rule will wait until it is run.<br />
     Optional, default is <code>false</code>.
@@ -64,7 +74,8 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    Takes a <a href="#help-screenshot">screenshot</a> the moment the last field definition is done executing.
+    Takes a <a href="#help-screenshot">screenshot</a> the moment the last field definition is done
+    executing.
   </div>
   <div class="code">
     &nbsp;&nbsp;screenshot: true,
@@ -98,16 +109,19 @@
   </div>
 </div>
 <div class="block-of-code">
-  <div class="explaining">
-    A field must have a <code>selector</code> and a <code>value</code>.
-  </div>
+  <div class="explaining">A field must have a <code>selector</code> and a <code>value</code>.</div>
   <div class="code">
     &nbsp;&nbsp;{
   </div>
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    A <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors" target="_blank">CSS selector</a>. Will be applied via <code>document.querySelectorAll</code>
+    A
+    <a
+      href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors"
+      target="_blank"
+      >CSS selector</a
+    >. Will be applied via <code>document.querySelectorAll</code>
   </div>
   <div class="code">
     &nbsp;&nbsp;&nbsp;&nbsp;selector: "#myfield",
@@ -124,7 +138,8 @@
 </div>
 <div class="block-of-code">
   <div class="explaining">
-    Limits the <code>selector</code> to an area specified by the <code>within</code> CSS selector.<br />
+    Limits the <code>selector</code> to an area specified by the <code>within</code> CSS
+    selector.<br />
     Use this if you want to fill a form inside an <code>iframe</code>!
   </div>
   <div class="code">
@@ -134,8 +149,8 @@
 <div class="block-of-code">
   <div class="explaining">
     Only fill this field if currently empty.<br />
-    Can also be set for the whole rule (see above).
-    Can be omitted and defaults to <code>false</code>.
+    Can also be set for the whole rule (see above). Can be omitted and defaults to
+    <code>false</code>.
   </div>
   <div class="code">
     &nbsp;&nbsp;&nbsp;&nbsp;onlyEmpty: true
