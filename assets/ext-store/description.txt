@@ -29,6 +29,7 @@ Permissions requested:
 ★ Version 3.10.0
 - Add a privacy policy to comply with chrome store regulations ("Strobe"). No data will be transfered anyway
 - Matching rules with "content" AND "url" is now possible
+- Remove all traces of the planned (but not implemented) workflow step delay
 
 ★ Version 3.9.2
 - Inline settings page to try to fix settings loading not working
@@ -37,7 +38,6 @@ Permissions requested:
 - Extract input fields that have no type attribute
 
 ★ Version 3.9.0
-- Configure a delay for each step of a workflow
 - Update jQuery to 3.3.1
 - Update chance.js to 1.0.16
 - Update math.js to 5.2.0

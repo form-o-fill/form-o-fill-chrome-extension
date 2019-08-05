@@ -198,7 +198,7 @@ var onTabReadyRules = function(tabId) {
 
               // Set state -> rule was triggered via autorun
               state.ruleRuntime.triggered = "autorun";
-
+n
               FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
             } else if (
               parseInt(lastMatchingRules[0].autorun, 10) > 0 &&
@@ -299,8 +299,6 @@ var onTabReadyWorkflow = function() {
             Logger.info("[bg.js] setting rule.screenshot = true because Wf config said so");
             rule.screenshot = true;
           }
-
-          // How long should we delay the execution of the workflow step
 
           // Fill with this rule
           FormUtil.displayMessage(
