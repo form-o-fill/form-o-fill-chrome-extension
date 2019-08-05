@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Form-O-Fill Testpage</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
   </head>
@@ -19,9 +19,11 @@
     Using moment.js : some date (now; like "2016-05-06T14:20:03+02:00")
     Using the ENV in a before function : "Hello ENV: {"url":{"url":"http://localhost:9292/form-o-fill-testing/13-simple.html","protocol":"http:","host":"localhost","port":"9292","path":"/form-o-fill-testing/13-simple.html","query":"","hash":""},"storage":{"base":{}}}"
     undefined in before function : "undefined in before function" + notification. Click -> rule editor with message "Cannot read property 'goAway' of undefined"
+    Rule "Matching CONTENT + URL (should not appear!)" should not be visible
     </pre>
-    Input field: <input value="Value from pageload" id="target" /><br>
-    Rules Import: <textarea id="form-o-fill-testing-import">
+    Input field: <input value="Value from pageload" id="target" /><br />
+    Rules Import:
+    <textarea id="form-o-fill-testing-import">
 {
   "workflows": [],
   "rules": {
@@ -41,11 +43,15 @@
       {
         "id": "6",
         "name": "All Types"
+      },
+      {
+        "id": "7",
+        "name": "content+url"
       }
     ],
     "rules": [
       {
-        "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"Library function\",\n  fields: [{\n    selector: \"input\",\n    value: function() {\n      return Libs.sayHello();\n    }\n  }]\n}, {\n  export: \"sayHello\",\n  lib: function() {\n    return \"Hello from a library function!\";\n  }\n}, {\n  url: /.*test.*/,\n  name: \"Using moment.js\",\n  fields: [{\n    selector: \"#target\",\n    value: function($e, data) {\n      return Libs.moment().format();\n    }\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Using chance.js\",\n  fields: [{\n    selector: \"#target\",\n    value: function($e, data) {\n      return Libs.chance.name();\n    }\n  }]\n}];",
+        "code": "",
         "tabId": 1
       },
       {
@@ -53,17 +59,33 @@
         "tabId": 3
       },
       {
-        "code": "var rules = [{\n  content: /TESTING SERVER RUNNING/,\n  name: \"Matching by content\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by content\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Matching by URL\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by URL\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Requesting external JSON\",\n  before: function(resolve) {\n    jQuery.getJSON(\"http://localhost:9292/form-o-fill-testing/json.json\").done(resolve);\n  },\n  fields: [{\n    selector: \"input\",\n    value: function($e, data) {\n      return data.data;\n    }\n  }]\n}\n];",
+        "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"Requesting external JSON\",\n  before: function(resolve) {\n    jQuery.getJSON(\"http://localhost:9292/form-o-fill-testing/json.json\").done(resolve);\n  },\n  fields: [{\n    selector: \"input\",\n    value: function($e, data) {\n      return data.data;\n    }\n  }]\n}\n];",
         "tabId": 5
       },
       {
-        "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"All recognized <form> field types\",\n  before: function(resolve) {\n    jQuery.getJSON(\"http://www.openthesaurus.de/synonyme/search?q=test&format=application/json\").done(function(data) {\n      resolve(data);\n    });\n  },\n  fields: [{\n    selector: \"input[type=text]\",\n    value: function(e, $data) {\n      var item = Math.round(Math.random() * ($data.synsets.length - 1));\n      return $data.synsets[item].terms[0].term;\n    }\n  }, {\n    selector: \"input[type=button]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=checkbox]\",\n    value: \"checkbox\"\n  }, {\n    selector: \"input[type=image]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=password]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=radio]\",\n    value: \"radio\"\n  }, {\n    selector: \"textarea\",\n    value: \"123\"\n  }, {\n    selector: \"select.single\",\n    value: \"option2\"\n  }, {\n    selector: \"select[multiple]\",\n    value: [\"multiple1\", \"multiple2\"]\n  }, {\n    selector: \"input[type=search]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=email]\",\n    value: \"someone@example.com\"\n  }, {\n    selector: \"input[type=url]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=tel]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=number]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=range]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=date]\",\n    value: function() {\n      return Libs.moment().format(\"YYYY-MM-DD\");\n    }\n  }, {\n    selector: \"input[type=month]\",\n    value: \"2014-06\"\n  }, {\n    selector: \"input[type=week]\",\n    value: \"2014-W42\"\n  }, {\n    selector: \"input[type=time]\",\n    value: \"12:01:02.123\"\n  }, {\n    selector: \"input[type=datetime]\",\n    value: \"1996-12-19T16:39:57-08:00\"\n  }, {\n    selector: \"input[type=datetime-local]\",\n    value: \"1996-12-19T16:39:57.123\"\n  }, {\n    selector: \"input[type=color]\",\n    value: \"#FF0000\"\n  }]\n}\n];",
+        "code": "var rules = [{\n  url: /.*test.*/,\n  name: \"All recognized <form> field types\",\n  before: function(resolve) {\n    jQuery.getJSON(\"http://www.openthesaurus.de/synonyme/search?q=test&format=application/json\").done(function(data) {\n      resolve(data);\n    });\n  },\n  fields: [{\n    selector: \"input[type=text]\",\n    value: function(e, $data) {\n      var item = Math.round(Math.random() * ($data.synsets.length - 1));\n      return $data.synsets[item].terms[0].term;\n    }\n  }, {\n    selector: \"input[type=button]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=checkbox]\",\n    value: \"checkbox\"\n  }, {\n    selector: \"input[type=image]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=password]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=radio]\",\n    value: \"radio\"\n  }, {\n    selector: \"textarea\",\n    value: \"123\"\n  }, {\n    selector: \"select.single\",\n    value: \"option2\"\n  }, {\n    selector: \"select[multiple]\",\n    value: [\"multiple1\", \"multiple2\"]\n  }, {\n    selector: \"input[type=search]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=email]\",\n    value: \"someone example.com\"\n  }, {\n    selector: \"input[type=url]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=tel]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=number]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=range]\",\n    value: \"123\"\n  }, {\n    selector: \"input[type=date]\",\n    value: function() {\n      return Libs.moment().format(\"YYYY-MM-DD\");\n    }\n  }, {\n    selector: \"input[type=month]\",\n    value: \"2014-06\"\n  }, {\n    selector: \"input[type=week]\",\n    value: \"2014-W42\"\n  }, {\n    selector: \"input[type=time]\",\n    value: \"12:01:02.123\"\n  }, {\n    selector: \"input[type=datetime]\",\n    value: \"1996-12-19T16:39:57-08:00\"\n  }, {\n    selector: \"input[type=datetime-local]\",\n    value: \"1996-12-19T16:39:57.123\"\n  }, {\n    selector: \"input[type=color]\",\n    value: \"#FF0000\"\n  }]\n}\n];",
         "tabId": 6
+      },
+      {
+        "code": "var rules = [{\n  content: /TESTING SERVER RUNNING/,\n  name: \"Matching by CONTENT\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by content\"\n  }]\n}, {\n  url: /.*test.*/,\n  name: \"Matching by URL\",\n  fields: [{\n    selector: \"input\",\n    value: \"found by URL\"\n  }]\n}, {\n  url: /13-simple\\.html/,\n  content: /TESTING SERVER RUNNING/,\n  matchBoth: true,\n  name: \"Matching CONTENT + URL\",\n  fields: [{\n    selector: \"input\",\n    value: \"Matching CONTENT + URL\"\n  }]\n}, {\n  url: /13-simple\\.html/,\n  content: \"Should never match\",\n  matchBoth: true,\n  name: \"Matching CONTENT + URL (should not appear!)\",\n  fields: [{\n    selector: \"input\",\n    value: \"Matching CONTENT + URL (should not appear!)\"\n  }]\n}\n];",
+        "tabId": 7
       }
     ]
+  },
+  "settings": {
+    "alwaysShowPopup": false,
+    "decryptionPassword": "undefined",
+    "dontFireEvents": false,
+    "dontMatchOnTabSwitch": false,
+    "importActive": false,
+    "importUrl": "",
+    "jpegQuality": "50",
+    "matchOnLoad": false,
+    "reevalRules": false
   }
 }
-    </textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
+    </textarea>
+    <button id="form-o-fill-testing-import-submit" value="import">Import</button>
     <table id="form-o-fill-testing-info"></table>
   </body>
 </html>

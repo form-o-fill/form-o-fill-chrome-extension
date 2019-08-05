@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Form-O-Fill Testpage</title>
     <link href="styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="jquery.min.js"></script>
   </head>
   <body>
     <h1>TESTING SERVER RUNNING</h1>
@@ -14,13 +14,15 @@
     2. Click "Usage of onlyEmpty in field definition" -> Fill empty input field.
     </pre>
 
-    Empty field: <input type=text id="empty" value="" /> .val()<br>
-    Filled field: <input type=text id="full" value="original content" /> .val()<br>
+    Empty field: <input type="text" id="empty" value="" /> .val()<br />
+    Filled field: <input type="text" id="full" value="original content" /> .val()<br />
 
-    Empty Textarea: <textarea id="textarea"></textarea> .val()<br>
-    Filled Textarea: <textarea id="textarea-filled">original content</textarea> .val()<br>
+    Empty Textarea: <textarea id="textarea"></textarea> .val()<br />
+    Filled Textarea: <textarea id="textarea-filled">original content</textarea> .val()<br />
     <table id="form-o-fill-testing-info"></table>
-    Rules Import: <textarea id="form-o-fill-testing-import">{
+    Rules Import:
+    <textarea id="form-o-fill-testing-import">
+{
   "workflows": [],
   "rules": {
     "tabSettings": [
@@ -36,7 +38,7 @@
       }
     ]
   }
-}</textarea><button id="form-o-fill-testing-import-submit" value="import">Import</button>
-
+}</textarea
+    ><button id="form-o-fill-testing-import-submit" value="import">Import</button>
   </body>
 </html>
