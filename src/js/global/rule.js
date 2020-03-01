@@ -12,11 +12,11 @@ var Rule = function() {
     delete clone.type;
     delete clone.autorun;
     delete clone.screenshot;
-    //TODO: check to see if onlyEmpty should be included (FS, 2015-12-04)
     delete clone.onlyEmpty;
     delete clone.color;
     delete clone.shadow;
     delete clone._escapeForRegexp;
+    delete clone.matchBoth;
     return JSON.stringify(clone, null, 2);
   };
 
