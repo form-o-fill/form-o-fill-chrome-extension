@@ -13,17 +13,7 @@
     "128": "images/icon_128.png"
   },
   "default_locale": "en",
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "storage",
-    "contextMenus",
-    "notifications",
-    "alarms",
-    "http://*/",
-    "https://*/",
-    "<all_urls>"
-  ],
+  "permissions": ["activeTab", "tabs", "storage", "contextMenus", "notifications", "alarms"],
   "web_accessible_resources": [
     "html/options.html",
     "vendor/moment.js/moment-with-locales.min.js",
