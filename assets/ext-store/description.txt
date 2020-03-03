@@ -21,12 +21,17 @@ Features:
 Requires:
 Chrome 49+
 
+ATTENTION! 
+VERSION 4.0 doesn't require permissions to every visited page anymore. 
+This was neccessary to comply with google's store rules ¯\_(ツ)_/¯
+If you are running into problems because of that please contact the author!
+
 Permissions requested:
-- Read and change all data on all sites (It's a form filler :) It should work everywhere)
 - Notifications (Show problems and extract notification)
 - Communicate with websites (Used for the live tutorials)
 
-★ Version 3.10.0
+★ Version 4.0
+- Remove unwanted permission to keep FoF in the store.
 - Add a privacy policy to comply with chrome store regulations ("Strobe"). No data will be transfered anyway
 - Matching rules with "content" AND "url" is now possible
 - Remove all traces of the planned (but not implemented) workflow step delay

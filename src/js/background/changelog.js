@@ -45,6 +45,11 @@ var Changelog = {
       title: "Major release 3.0",
       message: "Faster ruleset searching. Please read the blogpost.",
       target: "https://form-o-fill.github.io/releasing-version-3"
+    },
+    "4.0": {
+      title: "Major release 4.0",
+      message: "Removal of unwanted permission for compliance",
+      target: "#changelog"
     }
   },
   findForVersion: function(version) {
