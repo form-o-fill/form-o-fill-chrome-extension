@@ -60,8 +60,6 @@ var Utils = {
     "  }]\n" +
     "}\n" +
     "];",
-  usageReportEndpoint:
-    "https://script.google.com/macros/s/AKfycby3DJt1KiGPQlzdfLhNws2sGhrpP1zFG1AF_7xddZsKMbhH6yd0/exec",
   isLiveExtension: function() {
     return window.location.host === Utils.liveExtensionId;
   },
