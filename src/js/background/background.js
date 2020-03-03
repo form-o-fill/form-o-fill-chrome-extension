@@ -36,7 +36,7 @@ var reportMatchingRulesForTesting = function(matchingRules, lastMatchingWorkflow
 };
 
 // Finds rules that have "matchBoth" set and both url and content specified
-var findRuleIdsWithMatchBoth = function(rules, filter) {
+var findRuleIdsWithMatchBoth = function(rules) {
   return rules.filter(function(rule) {
     return rule.matchBoth === true && typeof rule.url !== "undefined" && typeof rule.content !== "undefined";
   }).map(function(rule) {
@@ -113,7 +113,7 @@ var onTabReadyRules = function(tabId) {
           // and matchingRules contains only those matching by URL
           // If one of this sets contains a rule with "matchBoth" === true we must
           // remove them from the array unless the rule.id is present in both arrays.
-          let rulesToRemove = new Set();
+          var rulesToRemove = new Set();
           var contentMatchesWithMatchBoth = findRuleIdsWithMatchBoth(lastMatchingRules);
           var urlMatchesWithMatchBoth = findRuleIdsWithMatchBoth(matchingRules);
 
@@ -198,7 +198,7 @@ var onTabReadyRules = function(tabId) {
 
               // Set state -> rule was triggered via autorun
               state.ruleRuntime.triggered = "autorun";
-n
+
               FormUtil.applyRule(lastMatchingRules[0], state.lastActiveTab);
             } else if (
               parseInt(lastMatchingRules[0].autorun, 10) > 0 &&
