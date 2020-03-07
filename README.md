@@ -1,5 +1,16 @@
 # Form-O-Fill Chrome Extension
- <img src="https://api.travis-ci.org/form-o-fill/form-o-fill-chrome-extension.svg?branch=master" style="float: right;" />
+
+
+## Important notice about store removal!
+
+The chrome store "team" has decided to removed Form-O-Fill from the store because it required too many and too broad permissions.  
+On 7th of march the extension was removed even though I changed the permission as required.   
+Since it is impossible to get helpful information from the store "team" I decided **to not publish** this extension in the store anymore.  
+I'm sorry for those still using it but coping with the store system of allowing or disallowing extensions feels too tedious for now.
+
+The extension still works as expected if you build and install it locally.
+
+-----------
 
 ### The programmable form filler for developers.
 
