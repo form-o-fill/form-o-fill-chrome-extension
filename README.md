@@ -10,6 +10,8 @@ I'm sorry for those still using it but coping with the store system of allowing 
 
 The extension still works as expected if you build and install it locally.
 
+UPDATE: [This is also happening to others](https://blog.pushbullet.com/2020/05/13/lets-guess-what-google-requires-in-14-days-or-they-kill-our-extension/)
+
 -----------
 
 ### The programmable form filler for developers.
@@ -23,7 +25,7 @@ The configuration is done via a rule definition file written in javascript.
 The extension requires these permissions at the moment:
 
 1. `Read and change all your data on the websites that you visit`  
-  Form-O-Fill is built to work on every website thus requiring very broad permissions to access all form-fields on every site you visit.
+    Form-O-Fill is built to work on every website thus requiring very broad permissions to access all form-fields on every site you visit.
   
 2. `Display notifications`  
    Used for notify you of failed actions.
@@ -31,7 +33,7 @@ The extension requires these permissions at the moment:
 3. `Communicate with cooperating websites`  
    This permission is used to make the "[Live Tutorials](https://form-o-fill.github.io/tutorial/)" and the "remote rule import" (See help under "Using Remote Rules") possible. It allows the extension to "talk" to two sites that are used for these features.  
    Sites are defined [here](https://github.com/form-o-fill/form-o-fill-chrome-extension/blob/master/src/manifest.json#L35-L38).
- 
+
 
 # HOW TO REPORT ERRORS
 Got an error you want to report? Perfect!  
