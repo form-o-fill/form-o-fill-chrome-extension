@@ -10,7 +10,7 @@ I'm sorry for those still using it but coping with the store system of allowing 
 
 The extension still works as expected if you build and install it locally.
 
-UPDATE: [This is also happening to others](https://blog.pushbullet.com/2020/05/13/lets-guess-what-google-requires-in-14-days-or-they-kill-our-extension/)
+UPDATE: This is also [happening](https://blog.pushbullet.com/2020/05/13/lets-guess-what-google-requires-in-14-days-or-they-kill-our-extension/) to [others](https://kodfabrik.com/journal/why-am-i-shutting-down-kozmos).
 
 -----------
 
